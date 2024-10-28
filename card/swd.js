@@ -641,6 +641,7 @@ game.import("card", function () {
 			jiguantong: {
 				fullskin: true,
 				type: "jiguan",
+				cardnature: "fire",
 				enable: true,
 				wuxieable: true,
 				selectTarget: -1,
@@ -2142,6 +2143,7 @@ game.import("card", function () {
 		},
 		skill: {
 			qiankundai: {
+				equipSkill: true,
 				mod: {
 					maxHandcard: function (player, num) {
 						return num + 1;
@@ -2339,6 +2341,7 @@ game.import("card", function () {
 			yuchandui_equip4: {},
 			yuchandui_equip5: {},
 			lianyaohu_skill: {
+				equipSkill: true,
 				mark: true,
 				intro: {
 					content: function (storage, player) {
@@ -2444,6 +2447,7 @@ game.import("card", function () {
 			},
 			shenmiguo2: {},
 			yuruyi: {
+				equipSkill: true,
 				trigger: { player: "drawBegin" },
 				silent: true,
 				filter: function () {
@@ -2481,6 +2485,7 @@ game.import("card", function () {
 				},
 			},
 			shuchui: {
+				equipSkill: true,
 				enable: "phaseUse",
 				usable: 1,
 				filterTarget: function (card, player, target) {
@@ -2529,6 +2534,7 @@ game.import("card", function () {
 				},
 			},
 			shuchui2: {
+				charlotte: true,
 				trigger: { source: "damageEnd" },
 				forced: true,
 				popup: false,
@@ -2976,6 +2982,7 @@ game.import("card", function () {
 				inherit: "qinglongzhigui_equip1",
 			},
 			kunlunjingc: {
+				equipSkill: true,
 				enable: "phaseUse",
 				usable: 1,
 				filter: function (event, player) {
@@ -3018,6 +3025,7 @@ game.import("card", function () {
 				},
 			},
 			lianhua: {
+				equipSkill: true,
 				enable: "phaseUse",
 				filter: function (event, player) {
 					var hu = player.getEquip("lianyaohu");
@@ -3066,6 +3074,7 @@ game.import("card", function () {
 				},
 			},
 			shouna: {
+				equipSkill: true,
 				enable: "phaseUse",
 				filter: function (event, player) {
 					return player.countCards("h") > 0;
@@ -3107,6 +3116,7 @@ game.import("card", function () {
 				},
 			},
 			donghuangzhong: {
+				equipSkill: true,
 				trigger: { player: "phaseEnd" },
 				direct: true,
 				filter: function (event, player) {
@@ -3154,6 +3164,7 @@ game.import("card", function () {
 				},
 			},
 			xuanyuanjian: {
+				equipSkill: true,
 				trigger: { player: "changeHp" },
 				forced: true,
 				popup: false,
@@ -3171,6 +3182,7 @@ game.import("card", function () {
 				},
 			},
 			xuanyuanjian2: {
+				equipSkill: true,
 				trigger: { source: "damageBefore" },
 				forced: true,
 				filter: function (event) {
@@ -3183,6 +3195,7 @@ game.import("card", function () {
 				},
 			},
 			xuanyuanjian3: {
+				equipSkill: true,
 				trigger: { source: "damageAfter" },
 				forced: true,
 				popup: false,
@@ -3194,6 +3207,7 @@ game.import("card", function () {
 				},
 			},
 			pangufu: {
+				equipSkill: true,
 				trigger: { source: "damageEnd" },
 				forced: true,
 				priority: 55,
@@ -3206,6 +3220,7 @@ game.import("card", function () {
 				},
 			},
 			haotianta: {
+				equipSkill: true,
 				trigger: { global: "judgeBefore" },
 				direct: true,
 				content: function () {
@@ -3295,6 +3310,7 @@ game.import("card", function () {
 				},
 			},
 			shennongding: {
+				equipSkill: true,
 				enable: "phaseUse",
 				usable: 1,
 				filterCard: true,
@@ -3319,6 +3335,7 @@ game.import("card", function () {
 				},
 			},
 			kongdongyin: {
+				equipSkill: true,
 				trigger: { player: "dieBefore" },
 				forced: true,
 				filter: function (event, player) {
@@ -3333,6 +3350,7 @@ game.import("card", function () {
 				},
 			},
 			nvwashi: {
+				equipSkill: true,
 				trigger: { global: "dying" },
 				priority: 6,
 				filter: function (event, player) {
@@ -3354,6 +3372,7 @@ game.import("card", function () {
 				},
 			},
 			kongxin: {
+				equipSkill: true,
 				enable: "phaseUse",
 				usable: 1,
 				filterTarget: function (card, player, target) {
@@ -3430,6 +3449,7 @@ game.import("card", function () {
 				},
 			},
 			qinglianxindeng: {
+				equipSkill: true,
 				trigger: { player: "damageBefore" },
 				forced: true,
 				priority: 15,
@@ -3468,6 +3488,7 @@ game.import("card", function () {
 				},
 			},
 			yiluan: {
+				equipSkill: true,
 				enable: "phaseUse",
 				usable: 1,
 				filterTarget: function (card, player, target) {
@@ -4335,6 +4356,7 @@ game.import("card", function () {
 				},
 			},
 			qinglonglingzhu: {
+				equipSkill: true,
 				trigger: { source: "damageEnd" },
 				direct: true,
 				filter: function (event, player) {
@@ -4356,6 +4378,7 @@ game.import("card", function () {
 				},
 			},
 			xingjunyan: {
+				equipSkill: true,
 				trigger: { source: "damageBegin", player: "damageBegin" },
 				forced: true,
 				filter: function (event, player) {
@@ -4375,6 +4398,7 @@ game.import("card", function () {
 				},
 			},
 			baihupifeng: {
+				equipSkill: true,
 				trigger: { player: "phaseEnd" },
 				frequent: true,
 				filter: function (event, player) {
@@ -4385,6 +4409,7 @@ game.import("card", function () {
 				},
 			},
 			fengxueren: {
+				equipSkill: true,
 				trigger: { player: "shaHit" },
 				check: function (event, player) {
 					var att = get.attitude(player, event.target);
@@ -4407,6 +4432,7 @@ game.import("card", function () {
 				},
 			},
 			chilongya: {
+				equipSkill: true,
 				trigger: { source: "damageBegin" },
 				forced: true,
 				filter: function (event) {
@@ -4440,6 +4466,7 @@ game.import("card", function () {
 				},
 			},
 			shentou: {
+				equipSkill: true,
 				enable: "phaseUse",
 				usable: 1,
 				filterCard: true,
@@ -4596,6 +4623,7 @@ game.import("card", function () {
 				},
 			},
 			longfan: {
+				equipSkill: true,
 				enable: "phaseUse",
 				usable: 1,
 				content: function () {
@@ -4644,6 +4672,7 @@ game.import("card", function () {
 				},
 			},
 			touzhi: {
+				equipSkill: true,
 				enable: "phaseUse",
 				usable: 1,
 				filterCard: function (card) {
@@ -4677,6 +4706,7 @@ game.import("card", function () {
 				},
 			},
 			xixue: {
+				equipSkill: true,
 				trigger: { source: "damageEnd" },
 				forced: true,
 				filter: function (event, player) {
@@ -4687,6 +4717,7 @@ game.import("card", function () {
 				},
 			},
 			guangshatianyi: {
+				equipSkill: true,
 				trigger: { player: "damageBegin" },
 				forced: true,
 				filter: function (event, player) {
@@ -4707,6 +4738,7 @@ game.import("card", function () {
 				},
 			},
 			nigong: {
+				equipSkill: true,
 				trigger: { player: "damageAfter" },
 				group: ["nigong2", "nigong3"],
 				forced: true,
@@ -4729,6 +4761,7 @@ game.import("card", function () {
 				},
 			},
 			nigong2: {
+				equipSkill: true,
 				enable: "phaseUse",
 				filter: function (event, player) {
 					return player.storage.nigong > 1;
@@ -4769,6 +4802,7 @@ game.import("card", function () {
 				},
 			},
 			nigong3: {
+				equipSkill: true,
 				enable: "phaseUse",
 				filter: function (event, player) {
 					return player.storage.nigong == 1;
@@ -4786,6 +4820,7 @@ game.import("card", function () {
 				},
 			},
 			sadengjinhuan: {
+				equipSkill: true,
 				trigger: { player: "shaMiss" },
 				check: function (event, player) {
 					return get.attitude(player, event.target) < 0;
@@ -4831,6 +4866,7 @@ game.import("card", function () {
 				},
 			},
 			guiyanfadao: {
+				equipSkill: true,
 				trigger: { player: "shaHit" },
 				check: function (event, player) {
 					var att = get.attitude(player, event.target);

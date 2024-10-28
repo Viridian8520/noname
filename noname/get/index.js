@@ -25,6 +25,12 @@ export class Get extends GetCompatible {
 	 */
 	skillsFromEquips(cards) {
 		return cards.reduce((skills, card) => {
+			//@ts-ignore
+			if (Array.isArray(card.skills)) {
+				//@ts-ignore
+				skills.addArray(card.skills);
+				return skills;
+			}
 			const info = get.info(card, false);
 			if (info.skills) skills.addArray(info.skills);
 			return skills;
@@ -363,10 +369,10 @@ export class Get extends GetCompatible {
 	}
 	/**
 	 * 用于获取武将的姓氏和名字
-	 * @param { string } str
-	 * @param { string|undefined } defaultSurname
-	 * @param { string|undefined } defaultName
-	 * @returns { Array }
+	 * @param { string } str 武将ID
+	 * @param { string | undefined } defaultSurname 默认姓氏
+	 * @param { string | undefined } defaultName 默认名字，为空则设“某”
+	 * @returns { Array } 返回由[姓氏, 名字]组成的数组
 	 */
 	characterSurname(str, defaultSurname, defaultName) {
 		const info = get.character(str).names;
@@ -715,15 +721,19 @@ export class Get extends GetCompatible {
 	}
 	/**
 	 * Get the source of the skill or event
-	 *
-	 * 获取一个技能或事件的源技能
+	 * 
+	 * 获取一个技能或事件的某个属性的源技能
+	 * @param { string | Object } skill - 传入的技能或事件
+	 * @param { string } text - 要获取的属性（不填写默认获取sourceSkill）
+	 * @returns { string }
 	 */
-	sourceSkillFor(skill) {
-		if (typeof skill !== "string") skill = skill.sourceSkill || skill.skill;
+	sourceSkillFor(skill, text) {
+		if (!text) text = "sourceSkill";
+		if (typeof skill !== "string") skill = skill[text] || skill.skill;
 		let info = get.info(skill);
 		while (true) {
-			if (info && !info.sourceSkill) break;
-			skill = info.sourceSkill;
+			if (!info || typeof info[text] !== "string") break;
+			skill = info[text];
 			info = get.info(skill);
 		}
 		return skill;
@@ -1111,6 +1121,7 @@ export class Get extends GetCompatible {
 		if (!require) return "";
 		var interfaces = require("os").networkInterfaces();
 		for (var devName in interfaces) {
+			if (devName.includes("VMware")) continue;
 			var iface = interfaces[devName];
 			for (var i = 0; i < iface.length; i++) {
 				var alias = iface[i];
@@ -2368,6 +2379,10 @@ export class Get extends GetCompatible {
 	 */
 	number(card, player) {
 		if (typeof card !== "object") return;
+		if (Array.isArray(card)) {
+			if (card.length == 1) return get.number(card[0], player);
+			return null;
+		}
 		//狗卡你是真敢出啊
 		var number = null;
 		if ("number" in card) {
@@ -2659,6 +2674,10 @@ export class Get extends GetCompatible {
 		//哪个大聪明在返回牌位置的函数写返回玩家位置的功能
 		if (get.itemtype(card) == "player") return parseInt(card.dataset.position);
 		if (!card) return null;
+		if (get.itemtype(card) == "vcard") {
+			if (card.cards) return get.position(card.cards[0], ordering);
+			return null;
+		}
 		if (card.timeout && card.destiny && card.destiny.classList) {
 			if (card.destiny.classList.contains("equips")) return "e";
 			if (card.destiny.classList.contains("judges")) return "j";
@@ -2758,10 +2777,7 @@ export class Get extends GetCompatible {
 					}
 				}
 				if ((str.suit && str.number) || str.isCard) {
-					var cardnum = get.number(str, false) || "";
-					if ([1, 11, 12, 13].includes(cardnum)) {
-						cardnum = { 1: "A", 11: "J", 12: "Q", 13: "K" }[cardnum];
-					}
+					var cardnum = get.strNumber(get.number(str, false), true) || "";
 					if (arg == "viewAs" && str.viewAs != str.name && str.viewAs) {
 						str2 += "（" + get.translation(str) + "）";
 					} else {
@@ -2828,40 +2844,29 @@ export class Get extends GetCompatible {
 	/**
 	 * 返回数字在扑克牌中的表示形式
 	 * @param { number } num
+	 * @param { boolean } [forced] 未获取点数字母对应元素时，若此参数不为false，则返回字符串格式
 	 * @returns { string }
 	 */
-	strNumber(num) {
-		switch (num) {
-			case 1:
-				return "A";
-			case 11:
-				return "J";
-			case 12:
-				return "Q";
-			case 13:
-				return "K";
-			default:
-				return num.toString();
-		}
+	strNumber(num, forced) {
+		if (typeof num !== "number") return;
+		let result = lib.numstrList.get(num);
+		if (result === undefined && forced !== false) result = num.toString();
+		return result;
 	}
 	/**
 	 * 返回扑克牌中的表示形式对应的数字
 	 * @param { string } str
+	 * @param { boolean } [forced] 未获取字母点数对应元素时，若此参数不为false，则返回数字格式
 	 * @returns { number }
 	 */
-	numString(str) {
-		switch (str) {
-			case "A":
-				return 1;
-			case "J":
-				return 11;
-			case "Q":
-				return 12;
-			case "K":
-				return 13;
-			default:
-				return parseInt(str);
-		}
+	numString(str, forced) {
+		if (typeof str !== "string") return;
+		let result = lib.numstrList.entries().reduce((map, list) => {
+			map[list[1]] = list[0];
+			return map;
+		}, {})[str];
+		if (result === undefined && forced !== false) result = parseInt(str);
+		return result;
 	}
 	/**
 	 * 将阿拉伯数字转换为中文的表达形式
@@ -3057,7 +3062,7 @@ export class Get extends GetCompatible {
 	selectableTargets(sort) {
 		var selectable = [];
 		var players = game.players.slice(0);
-		if (_status.event.deadTarget) players.addArray(game.dead);
+		if (_status.event.deadTarget || (_status.event.skill && get.info(_status.event.skill)?.deadTarget)) players.addArray(game.dead);
 		for (var i = 0; i < players.length; i++) {
 			if (players[i].classList.contains("selectable") && players[i].classList.contains("selected") == false) {
 				selectable.push(players[i]);
@@ -4553,6 +4558,9 @@ export class Get extends GetCompatible {
 			if (uiintro.content.firstChild) {
 				uiintro.content.firstChild.style.paddingTop = "3px";
 			}
+		} else if (node.classList.contains("nodeintro")) {
+			if (node.nodeTitle) uiintro.add(node.nodeTitle);
+			uiintro._place_text = uiintro.add('<div class="text">' + node.nodeContent + "</div>");
 		}
 		if (lib.config.touchscreen) {
 			lib.setScroll(uiintro.contentContainer);
@@ -5066,12 +5074,18 @@ export class Get extends GetCompatible {
 			if (!info || !info.ai || !info.ai.canLink) {
 				if (target.isLinked())
 					game.players.forEach(function (current) {
-						if (current != target && current.isLinked()) final += cache.get.effect(current, card, player, player2, true);
+						if (current != target && current.isLinked()) final += cache.get.effect(current, card, player, player2, { source: target });
 					});
-			} else if (info.ai.canLink(player, target, card)) {
-				game.players.forEach(function (current) {
-					if (current != target && current.isLinked()) final += cache.get.effect(current, card, player, player2, true);
-				});
+			}
+			else {
+				let canLink = info.ai.canLink(player, target, card);
+				if (canLink) {
+					if (typeof canLink !== "object") canLink = {};
+					canLink.source = target;
+					game.players.forEach(function (current) {
+						if (current != target && current.isLinked()) final += cache.get.effect(current, card, player, player2, canLink);
+					});
+				}
 			}
 		}
 		return final;
@@ -5231,12 +5245,18 @@ export class Get extends GetCompatible {
 			if (!info || !info.ai || !info.ai.canLink) {
 				if (target.isLinked())
 					game.players.forEach(function (current) {
-						if (current != target && current.isLinked()) final += cache.get.effect(current, card, player, player2, true);
+						if (current != target && current.isLinked()) final += cache.get.effect(current, card, player, player2, { source: target });
 					});
-			} else if (info.ai.canLink(player, target, card)) {
-				game.players.forEach(function (current) {
-					if (current != target && current.isLinked()) final += cache.get.effect(current, card, player, player2, true);
-				});
+			}
+			else {
+				let canLink = info.ai.canLink(player, target, card);
+				if (canLink) {
+					if (typeof canLink !== "object") canLink = {};
+					canLink.source = target;
+					game.players.forEach(function (current) {
+						if (current != target && current.isLinked()) final += cache.get.effect(current, card, player, player2, canLink);
+					});
+				}
 			}
 		}
 		return final;

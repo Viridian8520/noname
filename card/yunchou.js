@@ -45,6 +45,15 @@ game.import("card", function () {
 					dialog.videoId = lib.status.videoId++;
 					game.addVideo("cardDialog", null, ["调兵遣将", get.cardsInfo(cards), dialog.videoId]);
 					event.getParent().preResult = dialog.videoId;
+					game.broadcast(
+						function (cards, id) {
+							var dialog = ui.create.dialog("调兵遣将", cards, true);
+							_status.dieClose.push(dialog);
+							dialog.videoId = id;
+						},
+						cards,
+						dialog.videoId
+					);
 				},
 				content: function () {
 					"step 0";
@@ -144,6 +153,13 @@ game.import("card", function () {
 					var dialog = event.dialog;
 					dialog.close();
 					_status.dieClose.remove(dialog);
+					game.broadcast(function (id) {
+						var dialog = get.idDialog(id);
+						if (dialog) {
+							dialog.close();
+							_status.dieClose.remove(dialog);
+						}
+					}, event.preResult);
 					game.addVideo("cardDialog", null, event.preResult);
 				},
 				ai: {
@@ -891,9 +907,9 @@ game.import("card", function () {
 						},
 					},
 					tag: {
-						// damage:1,
-						// natureDamage:1,
-						// fireDamage:1,
+						damage: 0.15,
+						natureDamage: 0.15,
+						fireDamage: 0.15,
 						expose: 0.2,
 					},
 				},
@@ -962,6 +978,7 @@ game.import("card", function () {
 			toulianghuanzhu_ai1: {},
 			toulianghuanzhu_ai2: {},
 			suolianjia: {
+				equipSkill: true,
 				trigger: { player: "damageBefore" },
 				filter: function (event, player) {
 					if (
@@ -973,7 +990,7 @@ game.import("card", function () {
 						})
 					)
 						return;
-					if (event.nature) return true;
+					if (event.hasNature()) return true;
 				},
 				forced: true,
 				content: function () {
@@ -998,8 +1015,7 @@ game.import("card", function () {
 								})
 							)
 								return;
-							if (card.name == "tiesuo" || get.tag(card, "natureDamage"))
-								return "zeroplayertarget";
+							if (card.name == "tiesuo" || get.tag(card, "natureDamage")) return "zeroplayertarget";
 						},
 					},
 				},
