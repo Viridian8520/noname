@@ -216,6 +216,7 @@ game.import("card", function () {
 						return 4;
 					},
 					equipValue: function (card, player) {
+						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return 0.4;
 						return -get.value(player.getCards("e"));
 					},
@@ -253,6 +254,7 @@ game.import("card", function () {
 				ai: {
 					order: 9,
 					equipValue: function (card, player) {
+						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return -2;
 						return 2;
 					},
@@ -286,6 +288,7 @@ game.import("card", function () {
 				ai: {
 					order: 9,
 					equipValue: function (card, player) {
+						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") {
 							if (player.hasSex("male")) return -7;
 							return 0;
@@ -326,6 +329,7 @@ game.import("card", function () {
 				ai: {
 					order: 9,
 					equipValue: function (card, player) {
+						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return -8;
 						return 1;
 					},
@@ -553,7 +557,7 @@ game.import("card", function () {
 				forced: true,
 				equipSkill: true,
 				filter(event, player){
-					if(event.card.name!="qixingbaodao") return false;
+					if (event.card?.name!="qixingbaodao") return false;
 					return event.card?.cards.length > 0 && player.hasCard(card => {
 						return !event.card.cards.includes(card) && lib.filter.cardDiscardable(card, player, "qixingbaodao");
 					}, "ej");

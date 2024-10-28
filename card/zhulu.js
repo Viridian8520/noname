@@ -384,6 +384,7 @@ game.import("card", function () {
 						return 4;
 					},
 					equipValue: function (card, player) {
+						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return 0;
 						return -get.value(player.getCards("e"));
 					},
@@ -455,6 +456,7 @@ game.import("card", function () {
 				ai: {
 					order: 9,
 					equipValue: function (card, player) {
+						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return -2;
 						return 2;
 					},
@@ -496,6 +498,7 @@ game.import("card", function () {
 				ai: {
 					order: 9,
 					equipValue: function (card, player) {
+						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return -2;
 						return 2;
 					},
@@ -534,6 +537,7 @@ game.import("card", function () {
 				ai: {
 					order: 9,
 					equipValue: function (card, player) {
+						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return -7;
 						return 1;
 					},
@@ -604,6 +608,7 @@ game.import("card", function () {
 				ai:{
 					order: 9.5,
 					equipValue: function (card, player) {
+						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return 0;
 						return 1;
 					},
@@ -922,6 +927,7 @@ game.import("card", function () {
 				}
 			},
 			wufengjian_skill: {
+				equipSkill: true,
 				trigger: { player: "useCard" },
 				forced: true,
 				filter: function (event, player) {
@@ -941,14 +947,10 @@ game.import("card", function () {
 				},
 			},
 			yajiaoqiang_skill: {
+				equipSkill: true,
 				trigger: { player: "useCardAfter" },
 				filter: function (event, player) {
-					if (
-						_status.currentPhase == player ||
-						get.color(event.card) != "black" ||
-						event.cards.filterInD().length == 0
-					)
-						return false;
+					if (_status.currentPhase == player || get.color(event.card) != "black" || event.cards.filterInD().length == 0) return false;
 					return (
 						player
 							.getHistory("useCard", function (evt) {

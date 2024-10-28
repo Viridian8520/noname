@@ -516,6 +516,7 @@ game.import("card", function () {
 				audio: "shuiyanqijun",
 				fullskin: true,
 				type: "trick",
+				cardnature: "thunder",
 				filterTarget: function (card, player, target) {
 					return (
 						target != player &&
@@ -1021,11 +1022,11 @@ game.import("card", function () {
 						equipValue: 6,
 					},
 					result: {
-						player: function (player, target) {
-							let cards=target.getEquips(2);
-							for (let card of cards){
-								if (card) {
-									let equip_value = get.equipValue(card);
+						target_use: function (player, target, card) {
+							let cards = target.getEquips(2);
+							for (let i of cards) {
+								if (i) {
+									let equip_value = get.equipValue(i);
 									if (equip_value > 6) {
 										return -1;
 									} else if (equip_value <= 0) {
@@ -1044,6 +1045,7 @@ game.import("card", function () {
 				fullskin: true,
 				audio: true,
 				type: "trick",
+				cardnature: "fire",
 				filterTarget: function (card, player, target) {
 					if (get.mode() == "guozhan") {
 						var next = player.getNext();
@@ -1466,7 +1468,7 @@ game.import("card", function () {
 				equipSkill: true,
 				mod: {
 					canBeReplaced: function (card, player) {
-						if (player.getEquips("liulongcanjia").includes(card)) return false;
+						if (player.getVEquips("liulongcanjia").includes(card)) return false;
 					},
 				},
 			},
