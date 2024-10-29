@@ -962,6 +962,21 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					y: [0, 0.5],
 				},
 			},
+			舞惑群心: {
+				name: "貂蝉/舞惑群心/XingXiang",
+				x: [0, -0.5],
+				y: [0, 0.2],
+				scale: 0.5,
+				angle: 0,
+				// speed: 1,
+				// action: 'DaiJi',
+				beijing: {
+					name: "貂蝉/舞惑群心/BeiJing",
+					x: [0, -0.5],
+					y: [0, 0.2],
+					scale: 0.5,
+				},
+			},
 		},
 		dingshangwan: {
 			// 丁尚涴
@@ -3293,6 +3308,24 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					x: [0, 0.8],
 					y: [0, 0.4],
 					scale: 0.3,
+				},
+			},
+		},
+		simayi: {
+			// 司马懿
+			重张区宇: {
+				name: "司马懿/重张区宇/XingXiang",
+				x: [0, -0.25],
+				y: [0, 0.1],
+				scale: 0.5,
+				angle: 0,
+				// speed: 1,
+				// action: 'DaiJi',
+				beijing: {
+					name: "司马懿/重张区宇/BeiJing",
+					x: [0, -0.25],
+					y: [0, 0.1],
+					scale: 0.5,
 				},
 			},
 		},
@@ -6160,6 +6193,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		re_diaochan: decadeUI.dynamicSkin.diaochan,
 		sb_diaochan: decadeUI.dynamicSkin.diaochan,
 		sp_diaochan: decadeUI.dynamicSkin.diaochan,
+		yue_diaochan: decadeUI.dynamicSkin.diaochan,
 
 		// 丁尚涴
 		ol_dingshangwan: decadeUI.dynamicSkin.dingshangwan,
@@ -6175,6 +6209,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		jsrg_dongzhuo: decadeUI.dynamicSkin.dongzhuo,
 		sp_dongzhuo: decadeUI.dynamicSkin.dongzhuo,
 		yj_dongzhuo: decadeUI.dynamicSkin.dongzhuo,
+		new_yj_dongzhuo: decadeUI.dynamicSkin.dongzhuo,
 
 		// 杜预
 		dc_duyu: decadeUI.dynamicSkin.duyu,
@@ -6374,6 +6409,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		jin_simashi: decadeUI.dynamicSkin.simashi,
 		std_simashi: decadeUI.dynamicSkin.simashi,
 		jd_jin_simashi: decadeUI.dynamicSkin.simashi,
+
+		// 司马懿
+		re_simayi: decadeUI.dynamicSkin.simayi,
+		dc_sb_simayi: decadeUI.dynamicSkin.simayi,
+		jsrg_simayi: decadeUI.dynamicSkin.simayi,
+		ps_simayi: decadeUI.dynamicSkin.simayi,
+		ps2068_simayi: decadeUI.dynamicSkin.simayi,
+		yy_simayi: decadeUI.dynamicSkin.simayi,
 
 		// 孙策
 		re_sunce: decadeUI.dynamicSkin.sunce,
