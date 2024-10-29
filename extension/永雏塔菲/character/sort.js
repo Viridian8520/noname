@@ -46,6 +46,8 @@ const characterSort = {
 		"taffyold_shen_caopi",
 		"taffyold_clan_xuncai",
 		"taffyold_shen_xunyu",
+		"taffyold_xunyuxunyou",
+		"taffyold_tw_shen_lvmeng",
 	],
 	taffy_ol: ["taffyboss_lvbu1"],
 	taffy_shou: ["taffymb_shen_caocao"],

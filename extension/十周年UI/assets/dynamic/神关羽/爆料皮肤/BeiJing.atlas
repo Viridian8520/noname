@@ -1,0 +1,54 @@
+
+BeiJing.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ShenGuanYu_297
+  rotate: false
+  xy: 1067, 2
+  size: 865, 335
+  orig: 866, 338
+  offset: 0, 1
+  index: -1
+ShenGuanYu_299
+  rotate: false
+  xy: 1067, 339
+  size: 898, 608
+  orig: 900, 613
+  offset: 0, 3
+  index: -1
+ShenGuanYu_301
+  rotate: true
+  xy: 2, 241
+  size: 706, 1063
+  orig: 711, 1074
+  offset: 4, 1
+  index: -1
+ShenGuanYu_302
+  rotate: false
+  xy: 2, 949
+  size: 1877, 1009
+  orig: 1878, 1009
+  offset: 0, 0
+  index: -1
+
+BeiJing2.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ShenGuanYu_298
+  rotate: false
+  xy: 2, 2
+  size: 884, 465
+  orig: 884, 469
+  offset: 0, 1
+  index: -1
+ShenGuanYu_300
+  rotate: false
+  xy: 888, 57
+  size: 619, 410
+  orig: 622, 413
+  offset: 3, 0
+  index: -1
