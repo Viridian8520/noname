@@ -222,13 +222,10 @@ const translates = {
 	taffyshendc_guanning: "新杀神管宁",
 	taffyshendc_dunshi: "遁世",
 	taffyshendc_dunshi_info: "每回合限一次。你可以视为使用或打出一张【杀】/【闪】/【桃】/【酒】，然后当前回合角色于本回合内下一次造成伤害时，你可以防止此伤害，并令系统从技能名中包含“仁/义/礼/智/信”字样的技能中随机选择三个技能，然后你令一名角色获得其中一个技能。",
-	taffyshendc_dunshi_append: `<span style="font-family: yuanli">骑鹤仙人下九天，飘然来去似飞烟。<br/>
-  身轻如燕随风舞，心静如水伴月眠。<br/>
-  高飞远举逍遥乐，俯视人间万象全。<br/>
-  鹤影飘摇仙气溢，长风万里永留连。</span>`,
+	taffyshendc_dunshi_append: `<span style="font-family: yuanli">骑鹤仙人下九天，飘然来去似飞烟。</span>`,
 	taffyre_xushao: "界许劭",
 	taffyre_pingjian: "评荐",
-	taffyre_pingjian_info: "①每回合限两次，回合开始前/结束阶段开始前/当你即将受到伤害前/出牌阶段限一次，你可以失去至多1个非Charlotte技能并令系统随机检索出3张“评荐关系”中对应的武将牌，然后你可以获得其中至多X个技能。（X为你以此法失去的技能数）（你于“当你即将受到伤害前”发动此技能无次数限制。）②当你发动〖评荐〗时，若你拥有的非Charlotte技能数小于2，则你令本次〖评荐〗中的X+1。",
+	taffyre_pingjian_info: "①回合开始前/结束阶段开始前/当你即将受到伤害前/出牌阶段限一次，你可以失去至多1个非Charlotte技能并令系统随机检索出3张“评荐关系”中对应的武将牌，然后你可以获得其中至多X个技能。（X为你以此法失去的技能数）（每回合你至多以此法获得2个技能，你于“当你即将受到伤害前”发动此技能不计入此限制）②当你发动〖评荐〗时，若你拥有的非Charlotte技能数小于2，则你令本次〖评荐〗中的X+1。",
 	taffyre_pingjian_use: "评荐",
 	taffyre_pingjian_append: '<span style="font-family: yuanli">一人说尽千秋业，半纸雅评万世人。</span>',
 	taffyre_pingjian_faq: "关于评荐关系",

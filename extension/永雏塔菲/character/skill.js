@@ -5494,12 +5494,10 @@ const skills = {
 					var name2 = event.triggername;
 					if (name2 === "phaseBefore") {
 						name2 = ["phaseBeforeStart", "phaseBefore", "phaseBeforeEnd", "phaseBeginStart", "phaseBegin", "phaseChange", "phaseZhunbeiBefore", "phaseZhunbeiBegin", "phaseZhunbei", "phaseZhunbeiEnd", "phaseZhunbeiAfter", "phaseJudgeBefore", "phaseJudgeBegin", "phaseJudge", "phaseJudgeEnd", "phaseJudgeAfter", "phaseDrawBefore", "phaseDrawBegin", "phaseDrawBegin1", "phaseDrawBegin2", "phaseDraw", "phaseDrawEnd", "phaseDrawAfter", "phaseUseBefore", "phaseUseBegin"];
-						player.storage.taffyre_pingjianCounts++;
 					} else if (name2 === "damageBefore") {
 						name2 = ["damageBefore", "damageBegin", "damageBegin2", "damageBegin3", "damageBegin4", "damage", "damageSource", "damageEnd", "damageAfter"];
 					} else if (name2 === "phaseJieshuBefore") {
 						name2 = ["phaseJieshuBefore", "phaseJieshuBegin", "phaseJieshu", "phaseJieshuEnd", "phaseJieshuAfter", "phaseEnd", "phaseAfter"];
-						player.storage.taffyre_pingjianCounts++;
 					}
 					for (let i = 0; i < allList.length; i++) {
 						var name = allList[i];
@@ -5652,6 +5650,9 @@ const skills = {
 			("step 2");
 			var map = event.result || result;
 			if (map && map.skills && map.skills.length) {
+				if (event.triggername !== "damageBefore") {
+					player.storage.taffyre_pingjianCounts++;
+				}
 				for (var i of map.skills) {
 					player.addSkill(i);
 					game.log(player, "获得了技能", "#g【" + get.translation(i) + "】");
@@ -5733,7 +5734,6 @@ const skills = {
 					var map = [];
 					let guaranteeList = [];
 					let set = [];
-					player.storage.taffyre_pingjianCounts++;
 					allList.randomSort();
 					for (let i = 0; i < allList.length; i++) {
 						var name = allList[i];
@@ -5900,6 +5900,7 @@ const skills = {
 			("step 2");
 			var map = event.result || result;
 			if (map && map.skills && map.skills.length) {
+				player.storage.taffyre_pingjianCounts++;
 				for (var i of map.skills) {
 					player.addSkill(i);
 					game.log(player, "获得了技能", "#g【" + get.translation(i) + "】");
@@ -11888,7 +11889,7 @@ const skills = {
 	//旧神黄忠
 	//丁真神将，赤矢神将，爆头神将，吃人神将
 	"taffyold_1！5！": {
-		audio: "1！5！",
+		audio: "dclieqiong",
 		trigger: { source: "damageSource" },
 		filter(event, player) {
 			return event.player.isIn() && event.source != event.player;
@@ -12209,7 +12210,7 @@ const skills = {
 		},
 	},
 	taffyold_chiren: {
-		audio: "chiren",
+		audio: "dczhanjue",
 		trigger: {
 			player: "phaseUseBegin",
 		},
@@ -15154,7 +15155,7 @@ const skills = {
 	},
 	//旧荀彧荀攸
 	taffyold_zhinang: {
-    audio: "zhinang",
+		audio: "zhinang",
 		getMap() {
 			if (!_status.taffyold_zhinang_map) {
 				_status.taffyold_zhinang_map = {
@@ -15208,15 +15209,14 @@ const skills = {
 							break findaudio;
 						}
 					}
-				}
-				else player.flashAvatar("taffyold_zhinang", map[type][skill])
+				} else player.flashAvatar("taffyold_zhinang", map[type][skill]);
 				player.popup(skill);
 				await player.addSkills(skill);
 			}
 		},
 	},
 	taffyold_gouzhu: {
-    audio: "gouzhu",
+		audio: "gouzhu",
 		trigger: {
 			player: ["useSkillAfter", "logSkill"],
 		},
@@ -15236,16 +15236,16 @@ const skills = {
 		},
 		frequent: true,
 		effectMap: {
-			"锁定技": async function () {
+			锁定技: async function () {
 				let player = _status.event.player;
 				if (player.isDamaged()) await player.recover();
 			},
-			"觉醒技": async function () {
+			觉醒技: async function () {
 				let player = _status.event.player;
 				let card = get.cardPile(card => get.type(card) == "basic");
 				if (card) await player.gain(card, "gain2");
 			},
-			"限定技": async function () {
+			限定技: async function () {
 				let player = _status.event.player;
 				let target = game.filterPlayer(current => current != player).randomGet();
 				if (target) {
@@ -15253,13 +15253,13 @@ const skills = {
 					await target.damage(player);
 				}
 			},
-			"转换技": async function () {
+			转换技: async function () {
 				let player = _status.event.player;
 				player.addMark("taffyold_gouzhu", 1, false);
-				game.log(player, '手牌上限+1');
+				game.log(player, "手牌上限+1");
 				await game.asyncDelay();
 			},
-			"主公技": async function () {
+			主公技: async function () {
 				let player = _status.event.player;
 				await player.gainMaxHp();
 			},
@@ -15337,7 +15337,7 @@ const skills = {
 					"step 0";
 					player.addTempSkill("taffyold_twshelie_round", "roundStart");
 					player.chooseControl("摸牌阶段", "出牌阶段").set("prompt", "涉猎：请选择要执行的额外阶段");
-					"step 1";
+					("step 1");
 					if (result.index == 0) {
 						var next = player.phaseDraw();
 						event.next.remove(next);
@@ -15369,7 +15369,7 @@ const skills = {
 			event.num = target.getCards("h").reduce(function (arr, card) {
 				return arr.add(get.suit(card, player)), arr;
 			}, []).length;
-			"step 1";
+			("step 1");
 			var cards = target.getCards("h");
 			player
 				.chooseButton(2, ["攻心", cards, [["弃置此牌", "置于牌堆顶"], "tdnodes"]])
@@ -15383,7 +15383,7 @@ const skills = {
 					var type = typeof button.link;
 					if (type == "object") return get.value(button.link, target);
 				});
-			"step 2";
+			("step 2");
 			if (result.bool) {
 				if (typeof result.links[0] != "string") result.links.reverse();
 				var card = result.links[1],
@@ -15395,7 +15395,7 @@ const skills = {
 					game.log(card, "被置于了牌堆顶");
 				}
 			}
-			"step 3";
+			("step 3");
 			if (
 				event.num ==
 				target.getCards("h").reduce(function (arr, card) {
@@ -15403,7 +15403,7 @@ const skills = {
 				}, []).length
 			)
 				event.finish();
-			"step 4";
+			("step 4");
 			var num1 = 0;
 			for (var card of target.getCards("h")) {
 				if (get.color(card) == "red") num1++;
@@ -15415,7 +15415,7 @@ const skills = {
 				.set("ai", function () {
 					return num1 >= num2 ? "红色" : "黑色";
 				});
-			"step 5";
+			("step 5");
 			if (result.control != "cancel2") {
 				player.line(target);
 				target.addTempSkill("taffyold_twgongxin2");
