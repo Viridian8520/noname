@@ -9361,7 +9361,7 @@ const skills = {
 		audio: 3,
 		trigger: { player: "phaseUseBegin" },
 		frequent: true,
-		chargeSkill: true,
+		chargeSkill: 10,
 		init: function (player) {
 			player.addSkill("hoshino_shuiyuan_charge");
 			player.addSkill("hoshino_shuiyuan_die");
@@ -14993,7 +14993,7 @@ const skills = {
 	himari_jianshi: {
 		audio: 3,
 		trigger: { global: ["phaseBegin", "phaseUseBegin"] },
-		chargeSkill: true,
+		chargeSkill: 10,
 		init: function (player) {
 			player.addSkill("himari_jianshi_charge");
 		},
