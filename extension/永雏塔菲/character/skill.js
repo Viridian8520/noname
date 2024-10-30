@@ -12548,7 +12548,7 @@ const skills = {
 	//旧手杀神司马？
 	//旧极略神司马！
 	taffyold_xinrenjie: {
-		audio: "renjie2",
+		audio: "xinrenjie",
 		trigger: {
 			player: ["chooseToUseAfter", "chooseToRespondAfter"],
 			global: "useCardAfter",
@@ -12586,7 +12586,7 @@ const skills = {
 		},
 	},
 	taffyold_xinbaiyin: {
-		audio: "sbaiyin",
+		audio: "xinbaiyin",
 		inherit: "sbaiyin",
 		filter(event, player) {
 			return player.countMark("taffyold_xinrenjie") >= 4;
@@ -12656,7 +12656,7 @@ const skills = {
 		},
 	},
 	taffyold_xinjilve: {
-		audio: "jilue",
+		audio: "xinjilve",
 		trigger: {
 			player: "phaseUseBegin",
 		},
@@ -12748,6 +12748,7 @@ const skills = {
 		group: "taffyold_xinjilve_gain",
 		subSkill: {
 			gain: {
+				audio: "xinjilve",
 				trigger: {
 					player: "changeSkillsAfter",
 				},
