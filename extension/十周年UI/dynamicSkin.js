@@ -6376,6 +6376,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 
 		// 神吕蒙
 		tw_shen_lvmeng: decadeUI.dynamicSkin.shen_lvmeng,
+		taffyold_tw_shen_lvmeng: decadeUI.dynamicSkin.shen_lvmeng,
 
 		// 神马超
 		ps_shen_machao: decadeUI.dynamicSkin.shen_machao,
