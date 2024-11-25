@@ -1246,7 +1246,7 @@ const skills = {
 		// skillAnimation:true,
 		// animationColor:'fire',
 		filter: function (event, player) {
-			game.hasPlayer(current => {
+			return game.hasPlayer(current => {
 				return current.hasSex("male") && current.countMark("taffyzuoai") > 2;
 			});
 		},
