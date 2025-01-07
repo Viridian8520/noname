@@ -49,6 +49,11 @@ const characterReplaces = {
 	shen_xunyu: ["shen_xunyu", "taffyold_shen_xunyu"],
 	xunyuxunyou: ["xunyuxunyou", "taffyold_xunyuxunyou"],
 	shen_lvmeng: ["shen_lvmeng", "tw_shen_lvmeng", "mini_lvmeng", "taffyold_tw_shen_lvmeng"],
+	zhugeguo: ["zhugeguo", "tw_zhugeguo", "yue_zhugeguo", "huan_zhugeguo", "taffyold_huan_zhugeguo"],
+	mb_wangjing: ["mb_wangjing", "taffyold_mb_wangjing"],
+	majun: ["majun", "yj_majun", "old_majun", "taffyold_yj_majun"],
+	dongzhuo: ["dongzhuo", "ol_dongzhuo", "re_dongzhuo", "star_dongzhuo", "jsrg_dongzhuo", "sp_dongzhuo", "yj_dongzhuo", "new_yj_dongzhuo", "taffyold_new_yj_dongzhuo"],
+	wu_huangfusong: ["wu_huangfusong", "taffyold_wu_huangfusong"],
 };
 
 export default characterReplaces;

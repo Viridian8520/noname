@@ -1,0 +1,153 @@
+
+beijing.png
+size: 1844,1844
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bg_1
+  rotate: false
+  xy: 2, 2
+  size: 1306, 568
+  orig: 1306, 568
+  offset: 0, 0
+  index: -1
+bg_2
+  rotate: false
+  xy: 2, 572
+  size: 1306, 640
+  orig: 1306, 640
+  offset: 0, 0
+  index: -1
+bg_3
+  rotate: false
+  xy: 2, 1214
+  size: 1416, 628
+  orig: 1416, 630
+  offset: 0, 2
+  index: -1
+fushi_1
+  rotate: true
+  xy: 1701, 743
+  size: 68, 127
+  orig: 68, 127
+  offset: 0, 0
+  index: -1
+fushi_2
+  rotate: true
+  xy: 1442, 2
+  size: 209, 263
+  orig: 210, 263
+  offset: 1, 0
+  index: -1
+fushi_3
+  rotate: false
+  xy: 1310, 15
+  size: 97, 163
+  orig: 97, 163
+  offset: 0, 0
+  index: -1
+fushi_4
+  rotate: true
+  xy: 1420, 1241
+  size: 161, 273
+  orig: 162, 274
+  offset: 0, 0
+  index: -1
+fushi_5
+  rotate: false
+  xy: 1409, 99
+  size: 30, 79
+  orig: 30, 79
+  offset: 0, 0
+  index: -1
+fushi_6
+  rotate: false
+  xy: 1772, 1491
+  size: 45, 73
+  orig: 45, 73
+  offset: 0, 0
+  index: -1
+fushi_7
+  rotate: true
+  xy: 1472, 686
+  size: 125, 227
+  orig: 125, 227
+  offset: 0, 0
+  index: -1
+fushi_8
+  rotate: true
+  xy: 1420, 1220
+  size: 19, 39
+  orig: 19, 39
+  offset: 0, 0
+  index: -1
+fushi_9
+  rotate: true
+  xy: 1581, 813
+  size: 117, 261
+  orig: 117, 261
+  offset: 0, 0
+  index: -1
+yun_10
+  rotate: true
+  xy: 1772, 1566
+  size: 276, 66
+  orig: 277, 66
+  offset: 1, 0
+  index: -1
+yun_11
+  rotate: true
+  xy: 1683, 1416
+  size: 426, 87
+  orig: 427, 87
+  offset: 1, 0
+  index: -1
+yun_12
+  rotate: true
+  xy: 1472, 851
+  size: 388, 107
+  orig: 389, 107
+  offset: 1, 0
+  index: -1
+yun_13
+  rotate: true
+  xy: 1694, 990
+  size: 249, 58
+  orig: 249, 59
+  offset: 0, 0
+  index: -1
+yun_15
+  rotate: true
+  xy: 1442, 213
+  size: 464, 177
+  orig: 468, 177
+  offset: 1, 0
+  index: -1
+yun_6
+  rotate: true
+  xy: 1420, 1404
+  size: 438, 261
+  orig: 439, 262
+  offset: 1, 1
+  index: -1
+yun_7
+  rotate: true
+  xy: 1581, 932
+  size: 307, 111
+  orig: 310, 125
+  offset: 1, 14
+  index: -1
+yun_8
+  rotate: true
+  xy: 1310, 180
+  size: 497, 130
+  orig: 499, 132
+  offset: 1, 2
+  index: -1
+yun_9
+  rotate: true
+  xy: 1310, 679
+  size: 533, 160
+  orig: 534, 161
+  offset: 1, 0
+  index: -1

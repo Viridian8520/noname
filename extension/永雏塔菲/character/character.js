@@ -79,6 +79,11 @@ const characters = {
 	himari: ["female", "shen", 3, ["himari_jianshi", "himari_yiwai", "himari_linghua", "himari_zhensui"], ["qun", "name:明星|日鞠"]],
 	taffyold_xunyuxunyou: ["male", "wei", 3, ["taffyold_zhinang", "taffyold_gouzhu"], ["name:荀|彧-荀|攸", "character:xunyuxunyou", "die:xunyuxunyou"]],
 	taffyold_tw_shen_lvmeng: ["male", "shen", 3, ["taffyold_twshelie", "taffyold_twgongxin"], ["wu", "character:tw_shen_lvmeng", "die:tw_shen_lvmeng"]],
+	taffyold_huan_zhugeguo: ["female", "shu", 3, ["taffyold_rexianyuan", "twlingyin"], ["character:huan_zhugeguo", "die:huan_zhugeguo"]],
+	taffyold_mb_wangjing: ["male", "wei", 3, ["mbzujin", "taffyold_mbjiejian"], ["character:mb_wangjing", "die:mb_wangjing"]],
+	taffyold_yj_majun: ["male", "wei", 3, ["yjgongqiao", "taffyold_yjjingyi"], ["character:yj_majun", "die:yj_majun"]],
+	taffyold_new_yj_dongzhuo: ["male", "qun", "4/5", ["taffyold_xiongjin", "taffyold_xiawei", "taffyold_baoxi"], ["character:new_yj_dongzhuo", "die:new_yj_dongzhuo"]],
+	taffyold_wu_huangfusong: ["male", "qun", 4, ["dcchaozhen", "taffyold_dclianjie", "taffyold_dcjiangxian"], ["name:皇甫|嵩", "character:wu_huangfusong", "die:wu_huangfusong"]],
 	aruijier: ["female", "shen", "", [], ["unseen", "qun"]],
 };
 

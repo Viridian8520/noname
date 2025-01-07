@@ -1,0 +1,160 @@
+
+beijing.png
+size: 2046,2046
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bj_0
+  rotate: true
+  xy: 1475, 1419
+  size: 625, 362
+  orig: 625, 362
+  offset: 0, 0
+  index: -1
+bj_1
+  rotate: false
+  xy: 2, 537
+  size: 971, 472
+  orig: 981, 475
+  offset: 0, 0
+  index: -1
+bj_x_1
+  rotate: false
+  xy: 2, 29
+  size: 427, 506
+  orig: 441, 506
+  offset: 14, 0
+  index: -1
+bj_x_2
+  rotate: false
+  xy: 1839, 1802
+  size: 133, 242
+  orig: 133, 242
+  offset: 0, 0
+  index: -1
+bj_x_3
+  rotate: true
+  xy: 1333, 950
+  size: 59, 129
+  orig: 59, 129
+  offset: 0, 0
+  index: -1
+bj_x_4
+  rotate: false
+  xy: 2, 1011
+  size: 1471, 1033
+  orig: 1471, 1033
+  offset: 0, 0
+  index: -1
+vx/vx_daiji/vx_dj_guangtiao
+  rotate: false
+  xy: 1839, 1532
+  size: 103, 268
+  orig: 128, 271
+  offset: 12, 3
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_00
+  rotate: false
+  xy: 1124, 263
+  size: 334, 248
+  orig: 371, 248
+  offset: 11, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_01
+  rotate: false
+  xy: 1475, 922
+  size: 341, 245
+  orig: 371, 248
+  offset: 10, 3
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_02
+  rotate: false
+  xy: 780, 13
+  size: 339, 248
+  orig: 371, 248
+  offset: 12, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_03
+  rotate: false
+  xy: 975, 513
+  size: 344, 246
+  orig: 371, 248
+  offset: 13, 2
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_04
+  rotate: false
+  xy: 1333, 676
+  size: 335, 244
+  orig: 371, 248
+  offset: 17, 4
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_05
+  rotate: false
+  xy: 1670, 672
+  size: 335, 248
+  orig: 371, 248
+  offset: 21, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_06
+  rotate: false
+  xy: 1460, 172
+  size: 330, 248
+  orig: 371, 248
+  offset: 25, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_07
+  rotate: false
+  xy: 1121, 13
+  size: 337, 248
+  orig: 371, 248
+  offset: 26, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_08
+  rotate: false
+  xy: 1475, 1169
+  size: 350, 248
+  orig: 371, 248
+  offset: 20, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_09
+  rotate: false
+  xy: 431, 287
+  size: 349, 248
+  orig: 371, 248
+  offset: 21, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_10
+  rotate: false
+  xy: 1460, 422
+  size: 335, 248
+  orig: 371, 248
+  offset: 21, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_11
+  rotate: false
+  xy: 782, 263
+  size: 340, 248
+  orig: 371, 248
+  offset: 22, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_12
+  rotate: false
+  xy: 431, 37
+  size: 347, 248
+  orig: 371, 248
+  offset: 18, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_13
+  rotate: false
+  xy: 975, 761
+  size: 356, 248
+  orig: 371, 248
+  offset: 15, 0
+  index: -1
+vx/vx_daiji/vx_dj_xuehualizi/vx_dj_xuehualizi_14
+  rotate: true
+  xy: 1797, 345
+  size: 325, 247
+  orig: 371, 248
+  offset: 13, 1
+  index: -1

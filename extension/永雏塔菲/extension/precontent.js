@@ -134,6 +134,18 @@ export const PRECONTENT = function (config) {
 			 */
 			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("TW")}${get.prefixSpan("神")}`,
 		});
+		lib.namePrefix.set("旧幻", {
+			/**
+			 * @returns {string}
+			 */
+			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("幻")}`,
+		});
+		lib.namePrefix.set("旧☆", {
+			/**
+			 * @returns {string}
+			 */
+			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("☆")}`,
+		});
 		characterPackFunc();
 		lib.config.all.characters.splice(21, 0, "taffy_character");
 		if (!lib.config.characters.includes("taffy_character")) {
