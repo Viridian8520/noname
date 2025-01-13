@@ -1,0 +1,69 @@
+
+BeiJing.png
+size: 1756,1772
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bg
+  rotate: true
+  xy: 2, 7
+  size: 1763, 933
+  orig: 1763, 933
+  offset: 0, 0
+  index: -1
+bg-yun2
+  rotate: false
+  xy: 937, 907
+  size: 621, 350
+  orig: 679, 350
+  offset: 56, 0
+  index: -1
+bg-yun3
+  rotate: false
+  xy: 937, 556
+  size: 616, 349
+  orig: 618, 349
+  offset: 0, 0
+  index: -1
+bg-yun4
+  rotate: false
+  xy: 937, 57
+  size: 434, 497
+  orig: 434, 498
+  offset: 0, 1
+  index: -1
+bg-yun5
+  rotate: true
+  xy: 1560, 657
+  size: 311, 126
+  orig: 311, 126
+  offset: 0, 0
+  index: -1
+bg-yun6
+  rotate: true
+  xy: 1560, 970
+  size: 287, 194
+  orig: 287, 194
+  offset: 0, 0
+  index: -1
+bg-yun7
+  rotate: false
+  xy: 937, 1259
+  size: 768, 511
+  orig: 768, 512
+  offset: 0, 0
+  index: -1
+bg-yun8
+  rotate: false
+  xy: 1373, 240
+  size: 372, 314
+  orig: 372, 314
+  offset: 0, 0
+  index: -1
+faguang2
+  rotate: false
+  xy: 1373, 2
+  size: 282, 236
+  orig: 282, 236
+  offset: 0, 0
+  index: -1
