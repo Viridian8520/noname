@@ -56,7 +56,7 @@ const characterSort = {
 	],
 	taffy_ol: ["taffyboss_lvbu1"],
 	taffy_shou: ["taffymb_shen_caocao"],
-	taffy_shi: ["taffydc_guanning", "taffydc_xushao"],
+	taffy_shi: ["taffydc_guanning", "taffydc_xushao", "taffydc_jiangfei"],
 	taffy_baby: ["taffybaby_shen_simayi"],
 	taffy_diy: ["taffyboss_xushao", "taffyhuiwan_xushao", "taffyshen_yuji", "taffyshen_duyu", "taffyshen_chengui", "taffyshendc_guanning", "taffyre_xushao", "taffyshen_xushao", "taffyre_xuyou"],
 	taffy_tang: ["acetaffy", "minitaffy"],

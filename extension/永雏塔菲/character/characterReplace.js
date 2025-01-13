@@ -54,6 +54,7 @@ const characterReplaces = {
 	majun: ["majun", "yj_majun", "old_majun", "taffyold_yj_majun"],
 	dongzhuo: ["dongzhuo", "ol_dongzhuo", "re_dongzhuo", "star_dongzhuo", "jsrg_dongzhuo", "sp_dongzhuo", "yj_dongzhuo", "new_yj_dongzhuo", "taffyold_new_yj_dongzhuo"],
 	wu_huangfusong: ["wu_huangfusong", "taffyold_wu_huangfusong"],
+	jiangfei: ["jiangfei", "taffydc_jiangfei"],
 };
 
 export default characterReplaces;

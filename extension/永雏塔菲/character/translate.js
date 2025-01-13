@@ -557,6 +557,8 @@ const translates = {
 	taffyold_dclianjie_info: "你使用手牌指定目标后，若此牌点数不大于你的所有手牌，你可令一名角色将其一张点数最小的手牌置于牌堆底，然后你将手牌摸至体力上限，以此法获得的牌本回合无距离次数限制（每个点数每回合限摸一次，无点数视为0）。",
 	taffyold_dcjiangxian: "将贤",
 	taffyold_dcjiangxian_info: "限定技，出牌阶段，你可以获得以下效果直到本回合结束：当你使用因〖连捷〗获得的牌造成伤害时，此伤害+X（X为你本回合造成伤害的次数且至多为5）。若如此做，本回合结束后你失去〖连捷〗或〖朝镇〗。",
+	taffydc_jiangfei: "新杀蒋琬费祎",
+	taffydc_jiangfei_prefix: "新杀",
 	aruijier: "瑞吉儿",
 };
 

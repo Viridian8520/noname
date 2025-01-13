@@ -933,7 +933,7 @@ const skills = {
 		},
 		initList: function () {
 			var skills = [];
-			skills = ["rerende", "renxin", "renzheng", "juyi", "yicong", "new_yijue", "yishe", "reyixiang", "tianyi", "dcchongyi", "tongli", "relixia", "cslilu", "nzry_yili", "zhiyu", "zhichi", "rejizhi", "xinfu_qianxin"];
+			skills = ["rerende", "renxin", "renzheng", "juyi", "yicong", "new_yijue", "yishe", "reyixiang", "tianyi", "dcchongyi", "tongli", "relixia", "cslilu", "nzry_yili", "zhiyu", "zhichi", "rejizhi", "xinfu_qianxin", "lirang", "dcsbhaoyi"];
 			_status.taffydc_dunshi_list = skills;
 		},
 		subSkill: {
@@ -1375,6 +1375,9 @@ const skills = {
 				"wuxian",
 				"zhugeruoxue",
 				"dc_huanghao",
+				"caohong",
+				"taffydc_jiangfei", // 本体生息的发动时机是弃牌阶段结束时，故新增
+				"chentai",
 				// 受到伤害
 				"re_quancong",
 				"guohuanghou",
@@ -1402,6 +1405,8 @@ const skills = {
 				"caomao",
 				"ol_yangyi", // 结束阶段没有狷狭
 				"dukui",
+				"zangba",
+				"liuchongluojun",
 			];
 			var list = [];
 			var skills = [];
@@ -1526,7 +1531,7 @@ const skills = {
 				"taishici",
 				"liuchen",
 				"huaman",
-				"dc_wangyun", // 技能描述好像有点不对，但是无名杀暂时没有完全一致的
+				"dc_wangyun",
 				"re_zhangyi",
 				"dingfeng", // 桶面的原画师国战版本的，但是无名杀没有找到国战版本的丁奉
 				"pangtong",
@@ -1596,6 +1601,21 @@ const skills = {
 				"dc_sunchen",
 				"re_hansui",
 				"gaoxiang",
+				"malingli",
+				"kuaiqi",
+				"yj_sufei",
+				"star_yuanshao",
+				"dc_liuli",
+				"star_zhangchunhua",
+				"gongsunxiu",
+				"liqueguosi",
+				"dc_shen_huatuo",
+				"sp_zhenji",
+				"dc_jiachong",
+				"zhugemengxue",
+				"dc_wangjun",
+				"chentai",
+				"xizheng",
 			];
 			allList.randomSort();
 			for (var i = 0; i < allList.length; i++) {
@@ -1618,7 +1638,7 @@ const skills = {
 						skills.add("nzry_feijun");
 						continue;
 					}
-					if (["rejijiang", "kanpo", "jijiu", "spniluan", "qinwang", "aocai"].includes(skills2[j])) {
+					if (["rejijiang", "kanpo", "jijiu", "spniluan", "qinwang", "aocai", "dcshizong"].includes(skills2[j])) {
 						continue;
 					}
 					if (get.is.locked(skills2[j], player)) continue;
@@ -5323,7 +5343,7 @@ const skills = {
 		},
 		initList: function () {
 			var skills = [];
-			skills = ["rerende", "renxin", "renzheng", "juyi", "yicong", "new_yijue", "yishe", "reyixiang", "tianyi", "dcchongyi", "tongli", "relixia", "cslilu", "nzry_yili", "zhiyu", "zhichi", "rejizhi", "xinfu_qianxin"];
+			skills = ["rerende", "renxin", "renzheng", "juyi", "yicong", "new_yijue", "yishe", "reyixiang", "tianyi", "dcchongyi", "tongli", "relixia", "cslilu", "nzry_yili", "zhiyu", "zhichi", "rejizhi", "xinfu_qianxin", "lirang", "dcsbhaoyi"];
 			_status.taffyshendc_dunshi_list = skills;
 		},
 		subSkill: {

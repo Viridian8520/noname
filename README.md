@@ -95,6 +95,7 @@
     - 旧马钧：未通渠的马钧
     - 旧☆董卓：初版爆料的☆董卓
     - 旧武皇甫嵩：未通渠的武皇甫嵩
+    - 新杀蒋琬费祎：〖生息〗发动时机为结束阶段的蒋琬费祎
   - 为乱斗模式添加了轮回七阴模式
   - 视频背景功能
 - 引入来自 [noname-server](https://github.com/nonameShijian/noname-server) 的 `index.js`，用于启动 Web 端文件读写服务
