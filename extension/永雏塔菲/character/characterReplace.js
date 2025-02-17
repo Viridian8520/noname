@@ -54,6 +54,8 @@ const characterReplaces = {
 	majun: ["majun", "yj_majun", "old_majun", "taffyold_yj_majun"],
 	dongzhuo: ["dongzhuo", "ol_dongzhuo", "re_dongzhuo", "star_dongzhuo", "jsrg_dongzhuo", "sp_dongzhuo", "yj_dongzhuo", "new_yj_dongzhuo", "taffyold_new_yj_dongzhuo"],
 	wu_huangfusong: ["wu_huangfusong", "taffyold_wu_huangfusong"],
+	xurong: ["xurong", "taffyold_xurong"],
+	yj_jushou: ["yj_jushou", "re_jushou", "xin_jushou", "dc_sb_jushou", "taffyred_xin_jushou"],
 	jiangfei: ["jiangfei", "taffydc_jiangfei"],
 };
 

@@ -45,6 +45,7 @@ export const characterPackFunc = function () {
 				swimsuit_hoshino: "#gViridian",
 				taffyre_xuyou: "#gViridian",
 				himari: "#gViridian",
+				taffyred_xin_jushou: "#gViridian",
 				limulu: "#gLazysun Viridian",
 			},
 			dynamicTranslate: { ...dynamicTranslates },

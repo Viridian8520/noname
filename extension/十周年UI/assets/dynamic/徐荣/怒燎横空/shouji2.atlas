@@ -1,0 +1,251 @@
+
+shouji2.png
+size: 1740,1740
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+shouji/shouji2_tx1_00
+  rotate: false
+  xy: 228, 211
+  size: 433, 167
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_01
+  rotate: true
+  xy: 228, 380
+  size: 434, 167
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_02
+  rotate: true
+  xy: 397, 380
+  size: 434, 167
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_03
+  rotate: true
+  xy: 566, 402
+  size: 434, 167
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_04
+  rotate: false
+  xy: 735, 640
+  size: 434, 167
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_05
+  rotate: false
+  xy: 735, 471
+  size: 434, 167
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_06
+  rotate: true
+  xy: 1572, 1187
+  size: 434, 166
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_07
+  rotate: true
+  xy: 1572, 751
+  size: 434, 166
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_08
+  rotate: true
+  xy: 1171, 373
+  size: 434, 166
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_09
+  rotate: false
+  xy: 735, 303
+  size: 434, 166
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_10
+  rotate: true
+  xy: 1339, 373
+  size: 434, 166
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_11
+  rotate: false
+  xy: 228, 43
+  size: 434, 166
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_12
+  rotate: true
+  xy: 1507, 315
+  size: 434, 166
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_13
+  rotate: false
+  xy: 664, 135
+  size: 434, 166
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx1_14
+  rotate: false
+  xy: 1100, 135
+  size: 434, 166
+  orig: 560, 392
+  offset: 82, 107
+  index: -1
+shouji/shouji2_tx2_00
+  rotate: false
+  xy: 954, 18
+  size: 173, 115
+  orig: 840, 350
+  offset: 72, 115
+  index: -1
+shouji/shouji2_tx2_01
+  rotate: false
+  xy: 664, 18
+  size: 288, 115
+  orig: 840, 350
+  offset: 72, 112
+  index: -1
+shouji/shouji2_tx2_02
+  rotate: true
+  xy: 114, 152
+  size: 662, 112
+  orig: 840, 350
+  offset: 57, 109
+  index: -1
+shouji/shouji2_tx2_03
+  rotate: false
+  xy: 816, 809
+  size: 663, 108
+  orig: 840, 350
+  offset: 57, 109
+  index: -1
+shouji/shouji2_tx2_04
+  rotate: false
+  xy: 816, 919
+  size: 671, 120
+  orig: 840, 350
+  offset: 57, 109
+  index: -1
+shouji/shouji2_tx2_05
+  rotate: false
+  xy: 2, 1604
+  size: 785, 134
+  orig: 840, 350
+  offset: 25, 105
+  index: -1
+shouji/shouji2_tx2_06
+  rotate: true
+  xy: 2, 816
+  size: 786, 129
+  orig: 840, 350
+  offset: 24, 102
+  index: -1
+shouji/shouji2_tx2_07
+  rotate: true
+  xy: 465, 843
+  size: 759, 119
+  orig: 840, 350
+  offset: 51, 102
+  index: -1
+shouji/shouji2_tx2_08
+  rotate: true
+  xy: 2, 30
+  size: 784, 110
+  orig: 840, 350
+  offset: 25, 101
+  index: -1
+shouji/shouji2_tx2_09
+  rotate: true
+  xy: 359, 816
+  size: 786, 104
+  orig: 840, 350
+  offset: 25, 105
+  index: -1
+shouji/shouji2_tx2_10
+  rotate: false
+  xy: 789, 1623
+  size: 787, 115
+  orig: 840, 350
+  offset: 25, 99
+  index: -1
+shouji/shouji2_tx2_11
+  rotate: true
+  xy: 251, 820
+  size: 782, 106
+  orig: 840, 350
+  offset: 25, 104
+  index: -1
+shouji/shouji2_tx2_12
+  rotate: true
+  xy: 133, 826
+  size: 776, 116
+  orig: 840, 350
+  offset: 24, 98
+  index: -1
+shouji/shouji2_tx2_13
+  rotate: true
+  xy: 586, 838
+  size: 764, 113
+  orig: 840, 350
+  offset: 29, 99
+  index: -1
+shouji/shouji2_tx2_14
+  rotate: true
+  xy: 701, 845
+  size: 757, 113
+  orig: 840, 350
+  offset: 28, 98
+  index: -1
+shouji/shouji2_tx2_15
+  rotate: false
+  xy: 816, 1150
+  size: 754, 109
+  orig: 840, 350
+  offset: 29, 102
+  index: -1
+shouji/shouji2_tx2_16
+  rotate: false
+  xy: 816, 1041
+  size: 750, 107
+  orig: 840, 350
+  offset: 30, 107
+  index: -1
+shouji/shouji2_tx2_17
+  rotate: false
+  xy: 816, 1261
+  size: 745, 116
+  orig: 840, 350
+  offset: 32, 100
+  index: -1
+shouji/shouji2_tx2_18
+  rotate: false
+  xy: 816, 1502
+  size: 745, 119
+  orig: 840, 350
+  offset: 32, 104
+  index: -1
+shouji/shouji2_tx2_19
+  rotate: false
+  xy: 816, 1379
+  size: 742, 121
+  orig: 840, 350
+  offset: 35, 102
+  index: -1

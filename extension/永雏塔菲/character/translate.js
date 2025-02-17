@@ -559,6 +559,17 @@ const translates = {
 	taffyold_dcjiangxian_info: "限定技，出牌阶段，你可以获得以下效果直到本回合结束：当你使用因〖连捷〗获得的牌造成伤害时，此伤害+X（X为你本回合造成伤害的次数且至多为5）。若如此做，本回合结束后你失去〖连捷〗或〖朝镇〗。",
 	taffydc_jiangfei: "新杀蒋琬费祎",
 	taffydc_jiangfei_prefix: "新杀",
+	taffyold_xurong: "旧OL徐荣",
+	taffyold_xurong_prefix: "旧OL",
+	taffyold_xinfu_xionghuo: "凶镬",
+	taffyold_xinfu_xionghuo_info: "游戏开始时，你获得3个“暴戾”标记。出牌阶段，你可以交给一名其他角色一个“暴戾”标记。当你对有“暴戾”标记的其他角色造成伤害时，此伤害+1。有“暴戾”标记的其他角色的出牌阶段开始时，其移去所有“暴戾”标记并随机执行一项：1.受到1点火焰伤害且本回合不能对你使用【杀】；2.失去1点体力且本回合手牌上限-1；3.你随机获得其一张手牌和一张装备区的牌。",
+	taffyold_xinfu_shajue: "杀绝",
+	taffyold_xinfu_shajue_info: "锁定技，其他角色进入濒死状态时，你获得一个“暴戾”标记。然后若其体力值小于0，你获得使其进入濒死状态的牌。",
+	taffyred_xin_jushou: "红利期手杀界沮授",
+	taffyred_xin_jushou_prefix: "红利期手杀界",
+	taffyred_xinjianying: "渐营",
+	taffyred_xinjianying_info: "①当你于出牌阶段内使用与此阶段你使用的上一张牌点数或花色相同的牌时，你可以从牌堆中获得一张与此牌或你手牌中点数或花色相同的牌/【诸葛连弩】（没有则改为摸一张牌）。②出牌阶段限一次，你可以将一张牌当做任意基本牌使用。若你于此阶段内使用的上一张牌有花色，则此牌的花色视为上一张牌的花色。",
+	taffyred_shibei_append: '<span style="font-family: yuanli">得胜已是定局，你尔多龙吗？</span>',
 	aruijier: "瑞吉儿",
 };
 

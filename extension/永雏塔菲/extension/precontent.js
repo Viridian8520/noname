@@ -146,6 +146,17 @@ export const PRECONTENT = function (config) {
 			 */
 			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("☆")}`,
 		});
+		lib.namePrefix.set("红利期", {
+			color: "#fd8359",
+			nature: "soilmm",
+			showName: "红",
+		});
+		lib.namePrefix.set("红利期手杀界", {
+			/**
+			 * @returns {string}
+			 */
+			getSpan: () => `${get.prefixSpan("红利期")}${get.prefixSpan("手杀")}${get.prefixSpan("界")}`,
+		});
 		characterPackFunc();
 		lib.config.all.characters.splice(21, 0, "taffy_character");
 		if (!lib.config.characters.includes("taffy_character")) {

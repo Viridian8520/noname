@@ -16054,6 +16054,329 @@ const skills = {
 			combo: "taffyold_dclianjie",
 		},
 	},
+	// 旧OL徐荣
+	taffyold_xinfu_xionghuo: {
+		audio: "xinfu_xionghuo",
+		enable: "phaseUse",
+		filter: function (event, player) {
+			return player.countMark("taffyold_xinfu_xionghuo") > 0;
+		},
+		filterTarget: function (card, player, target) {
+			return player != target && !target.hasMark("taffyold_xinfu_xionghuo");
+		},
+		content: function () {
+			player.removeMark("taffyold_xinfu_xionghuo", 1);
+			target.addMark("taffyold_xinfu_xionghuo", 1);
+		},
+		ai: {
+			order: 11,
+			result: {
+				target: function (player, target) {
+					if (
+						(player.countMark("taffyold_xinfu_xionghuo") >= 2 ||
+							!game.hasPlayer(function (current) {
+								return current != player && get.attitude(player, current) < 0 && current.hasMark("taffyold_xinfu_xionghuo");
+							})) &&
+						player.countCards("h", function (card) {
+							return (
+								get.tag(card, "damage") &&
+								player.canUse(card, target, null, true) &&
+								player.getUseValue(card) > 0 &&
+								get.effect_use(target, card, player) > 0 &&
+								target.hasSkillTag("filterDamage", null, {
+									player: player,
+									card: card,
+								})
+							);
+						})
+					)
+						return 3 / Math.max(1, target.hp);
+					if (
+						(!player.hasUnknown() &&
+							game.countPlayer(function (current) {
+								return get.attitude(player, current) < 0;
+							}) <= 1) ||
+						player.countMark("taffyold_xinfu_xionghuo") >= 2
+					) {
+						return -1;
+					}
+					return 0;
+				},
+			},
+			effect: {
+				player: function (card, player, target) {
+					if (
+						player != target &&
+						get.tag(card, "damage") &&
+						target &&
+						target.hasMark("taffyold_xinfu_xionghuo") &&
+						!target.hasSkillTag("filterDamage", null, {
+							player: player,
+							card: card,
+						})
+					)
+						return [1, 0, 1, -2];
+				},
+			},
+			threaten: 1.6,
+		},
+		marktext: "戾",
+		intro: {
+			name: "暴戾",
+			content: "mark",
+		},
+		group: ["taffyold_xinfu_xionghuo_init", "taffyold_xinfu_xionghuo_damage", "taffyold_xinfu_xionghuo_effect"],
+		subSkill: {
+			init: {
+				audio: "taffyold_xinfu_xionghuo",
+				trigger: {
+					global: "phaseBefore",
+					player: "enterGame",
+				},
+				filter: function (event, player) {
+					return event.name != "phase" || game.phaseNumber == 0;
+				},
+				forced: true,
+				locked: false,
+				content: function () {
+					player.addMark("taffyold_xinfu_xionghuo", 3);
+				},
+			},
+			damage: {
+				audio: "taffyold_xinfu_xionghuo",
+				trigger: { source: "damageBegin1" },
+				filter: function (event, player) {
+					return event.player.countMark("taffyold_xinfu_xionghuo") > 0 && event.player != player;
+				},
+				forced: true,
+				locked: false,
+				logTarget: "player",
+				content: function () {
+					trigger.num++;
+				},
+			},
+			effect: {
+				audio: "taffyold_xinfu_xionghuo",
+				trigger: { global: "phaseUseBegin" },
+				filter: function (event, player) {
+					return event.player.countMark("taffyold_xinfu_xionghuo") > 0 && event.player != player;
+				},
+				line: false,
+				forced: true,
+				locked: false,
+				logTarget: "player",
+				content: function () {
+					"step 0";
+					trigger.player.removeMark("taffyold_xinfu_xionghuo", trigger.player.countMark("taffyold_xinfu_xionghuo"));
+					("step 1");
+					var num = get.rand(0, 2);
+					switch (num) {
+						case 0:
+							player.line(trigger.player, "fire");
+							trigger.player.damage("fire");
+							trigger.player.addTempSkill("taffyold_xinfu_xionghuo_disable");
+							trigger.player.markAuto("taffyold_xinfu_xionghuo_disable", [player]);
+							break;
+						case 1:
+							player.line(trigger.player, "water");
+							trigger.player.loseHp();
+							trigger.player.addMark("taffyold_xinfu_xionghuo_low", 1, false);
+							trigger.player.addTempSkill("taffyold_xinfu_xionghuo_low");
+							break;
+						case 2:
+							player.line(trigger.player, "green");
+							var card1 = trigger.player.getCards("h").randomGet();
+							var card2 = trigger.player.getCards("e").randomGet();
+							var list = [];
+							if (card1) list.push(card1);
+							if (card2) list.push(card2);
+							if (list.length) player.gain(list, trigger.player, "giveAuto", "bySelf");
+							break;
+					}
+					("step 2");
+					game.delay();
+				},
+			},
+			disable: {
+				mod: {
+					playerEnabled: function (card, player, target) {
+						if (card.name == "sha" && player.getStorage("taffyold_xinfu_xionghuo_disable").includes(target)) return false;
+					},
+				},
+				charlotte: true,
+				onremove: true,
+				mark: true,
+				marktext: "禁",
+				intro: { content: "不能对$使用【杀】" },
+			},
+			low: {
+				mod: {
+					maxHandcard: function (player, num) {
+						return num - player.countMark("taffyold_xinfu_xionghuo_low");
+					},
+				},
+				charlotte: true,
+				onremove: true,
+				mark: true,
+				marktext: "减",
+				intro: { content: "手牌上限-#" },
+			},
+		},
+	},
+	taffyold_xinfu_shajue: {
+		audio: "xinfu_shajue",
+		trigger: { global: "dying" },
+		filter: function (event, player) {
+			return event.player != player;
+		},
+		forced: true,
+		content: function () {
+			player.addMark("taffyold_xinfu_xionghuo", 1);
+			if (trigger.player.hp < 0 && get.itemtype(trigger.parent.cards) == "cards" && get.position(trigger.parent.cards[0], true) == "o") {
+				player.gain(trigger.parent.cards, "gain2");
+			}
+		},
+	},
+	//界沮授大人
+	taffyred_xinjianying: {
+		audio: 2,
+		subfrequent: ["draw"],
+		enable: "phaseUse",
+		usable: 1,
+		filter: function (event, player) {
+			if (!player.countCards("he")) return false;
+			for (var i of lib.inpile) {
+				if (i != "du" && get.type(i, null, false) == "basic") {
+					if (event.filterCard({ name: i }, player, event)) return true;
+					if (i == "sha") {
+						for (var j of lib.inpile_nature) {
+							if (event.filterCard({ name: i, nature: j }, player, event)) return true;
+						}
+					}
+				}
+			}
+			return false;
+		},
+		onChooseToUse: function (event) {
+			if (event.type == "phase" && !game.online) {
+				var last = event.player.getLastUsed();
+				if (last && last.getParent("phaseUse") == event.getParent()) {
+					var suit = get.suit(last.card, false);
+					if (suit != "none") event.set("taffyred_xinjianying_suit", suit);
+				}
+			}
+		},
+		chooseButton: {
+			dialog: function (event, player) {
+				var list = [];
+				var suit = event.taffyred_xinjianying_suit || "",
+					str = get.translation(suit);
+				for (var i of lib.inpile) {
+					if (i != "du" && get.type(i, null, false) == "basic") {
+						if (event.filterCard({ name: i }, player, event)) list.push(["基本", str, i]);
+						if (i == "sha") {
+							for (var j of lib.inpile_nature) {
+								if (event.filterCard({ name: i, nature: j }, player, event)) list.push(["基本", str, i, j]);
+							}
+						}
+					}
+				}
+				return ui.create.dialog("渐营", [list, "vcard"]);
+			},
+			check: function (button) {
+				if (button.link[2] == "jiu") return 0;
+				return _status.event.player.getUseValue({
+					name: button.link[2],
+					nature: button.link[3],
+				});
+			},
+			backup: function (links, player) {
+				var next = {
+					audio: "taffyred_xinjianying",
+					filterCard: true,
+					popname: true,
+					position: "he",
+					viewAs: {
+						name: links[0][2],
+						nature: links[0][3],
+					},
+					ai1: function (card) {
+						return 7 - _status.event.player.getUseValue(card, null, true);
+					},
+				};
+				if (_status.event.taffyred_xinjianying_suit) next.viewAs.suit = _status.event.taffyred_xinjianying_suit;
+				return next;
+			},
+			prompt: function (links) {
+				return "将一张牌当做" + (get.translation(links[0][3]) || "") + get.translation(links[0][2]) + (_status.event.taffyred_xinjianying_suit ? "(" + get.translation(_status.event.taffyred_xinjianying_suit) + ")" : "") + "使用";
+			},
+		},
+		ai: {
+			order: function (item, player) {
+				if (_status.event.taffyred_xinjianying_suit) return 16;
+				return 3;
+			},
+			result: { player: 7 },
+		},
+		group: ["taffyred_xinjianying_draw", "jianying_mark"],
+		init: function (player) {
+			if (player.isPhaseUsing()) {
+				var evt = _status.event.getParent("phaseUse");
+				var history = player.getHistory("useCard", function (evt2) {
+					return evt2.getParent("phaseUse") == evt;
+				});
+				if (history.length) {
+					var trigger = history[history.length - 1];
+					player.storage.jianying_mark = trigger.card;
+					player.markSkill("jianying_mark");
+					game.broadcastAll(
+						function (player, suit) {
+							if (player.marks.jianying_mark) player.marks.jianying_mark.firstChild.innerHTML = get.translation(suit);
+						},
+						player,
+						get.suit(trigger.card, player)
+					);
+					player.when("phaseUseAfter").then(() => {
+						player.unmarkSkill("jianying_mark");
+						delete player.storage.jianying_mark;
+					});
+				}
+			}
+		},
+		onremove: function (player) {
+			player.unmarkSkill("jianying_mark");
+			delete player.storage.jianying_mark;
+		},
+		subSkill: {
+			draw: {
+				inherit: "jianying",
+				audio: "taffyred_xinjianying",
+				content: function () {
+					const cards = [];
+					const hs = player.getCards("h");
+					const list = [...hs, player.storage.jianying_mark];
+					const card1 = get.cardPile2(function (card) {
+						return get.number(card, false) == get.number(list.randomGet(), player);
+					});
+					if (card1) cards.push(card1);
+					const card2 = get.cardPile(function (card) {
+						return get.suit(card, false) == get.suit(list.randomGet(), player);
+					});
+					if (card2) cards.push(card2);
+					const card3 = get.cardPile2(function (card) {
+						return card.name === "zhuge";
+					});
+					if (card3) cards.push(card3);
+					if (cards.length) player.gain(cards.randomGet(), "draw");
+					else player.draw();
+				},
+			},
+		},
+	},
+	taffyred_shibei: {
+		inherit: "shibei",
+		audio: 2,
+	},
 };
 
 export default skills;

@@ -58,4 +58,9 @@ export default {
 	"#himari_zhensui1": "天才美少女ハッカーの真髄、お見せしましょう。", // 天才美少女黑客的真正实力，就让你见识一下吧。
 	"#himari_zhensui2": "ふふっ…。簡単なことです。", // 呵呵。简简单单。
 	"#himari_zhensui3": "これをこうして…えいっ。", // 把这个这样...呵呵。
+	"#taffyred_xinjianying1": "主公坐占胜机，缓行亦无所碍。",
+	"#taffyred_xinjianying2": "得胜已是定局，何必急功近利？",
+	"#taffyred_shibei1": "尽忠竭命，绝不动摇。",
+	"#taffyred_shibei2": "身困敌营，不改向北赤心。",
+	"#taffyred_xin_jushou:die": "只望河北……不受战火侵扰。",
 };

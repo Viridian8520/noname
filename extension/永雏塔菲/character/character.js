@@ -85,6 +85,8 @@ const characters = {
 	taffyold_new_yj_dongzhuo: ["male", "qun", "4/5", ["taffyold_xiongjin", "taffyold_xiawei", "taffyold_baoxi"], ["character:new_yj_dongzhuo", "die:new_yj_dongzhuo"]],
 	taffyold_wu_huangfusong: ["male", "qun", 4, ["dcchaozhen", "taffyold_dclianjie", "taffyold_dcjiangxian"], ["name:皇甫|嵩", "character:wu_huangfusong", "die:wu_huangfusong"]],
 	taffydc_jiangfei: ["male", "shu", 3, ["reshengxi", "dcshoucheng"], ["name:蒋|琬-费|祎", "character:jiangfei", "die:jiangfei"]],
+	taffyold_xurong: ["male", "qun", 4, ["taffyold_xinfu_xionghuo", "taffyold_xinfu_shajue"], ["character:xurong", "die:xurong"]],
+	taffyred_xin_jushou: ["male", "qun", "2/3/3", ["taffyred_xinjianying", "taffyred_shibei"]],
 	aruijier: ["female", "shen", "", [], ["unseen", "qun"]],
 };
 
