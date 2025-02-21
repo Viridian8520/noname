@@ -9,6 +9,7 @@ game.import("card", function () {
 				derivation: "ty_shamoke",
 				type: "equip",
 				subtype: "equip1",
+				cardcolor: "spade",
 				distance: {
 					attackRange(card, player) {
 						return player.storage.tiejili_skill || 2;
@@ -269,6 +270,7 @@ game.import("card", function () {
 			},
 			ty_feilongduofeng: {
 				fullskin: true,
+				cardimage: "feilongduofeng",
 				type: "equip",
 				subtype: "equip1",
 				distance: { attackFrom: -1 },
@@ -317,7 +319,7 @@ game.import("card", function () {
 					player.unmarkSkill("mengchong_skill");
 				},
 				ai: {
-					equipValue: function (card, player) {
+					equipValue(card, player) {
 						if (player.countCards("e", { subtype: ["equip3", "equip4"] }) > 1) return 1;
 						return 7.2;
 					},
@@ -367,7 +369,7 @@ game.import("card", function () {
 				audio: true,
 				usable: 1,
 				logTarget: "target",
-				filter: function (event, player) {
+				filter(event, player) {
 					if (event.card.name != "sha") return false;
 					return true;
 				},
@@ -407,7 +409,7 @@ game.import("card", function () {
 				trigger: { global: "useCardToPlayered" },
 				audio: true,
 				logTarget: "target",
-				filter: function (event, player) {
+				filter(event, player) {
 					if (event.card.name != "sha") return false;
 					if (event.player.countCards("h") + player.countCards("h") == 0) return false;
 					return event.player.group == player.group && event.player != player;
@@ -455,6 +457,14 @@ game.import("card", function () {
 						},
 						content() {
 							trigger.cards.removeArray(player.getEquips("shangfangbaojian"));
+						},
+						mod: {
+							canBeDiscarded(card, source, player) {
+								if (player.getEquips("shangfangbaojian").includes(card)) return false;
+							},
+							cardDiscardable(card, player) {
+								if (player.getEquips("shangfangbaojian").includes(card)) return false;
+							},
 						},
 					},
 				},
@@ -541,7 +551,7 @@ game.import("card", function () {
 						trigger: {
 							player: "phaseBegin",
 						},
-						content: function () {
+						content() {
 							player.storage.mengchong_skill = 0;
 							player.unmarkSkill("mengchong_skill");
 						},

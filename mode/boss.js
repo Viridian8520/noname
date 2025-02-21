@@ -3602,6 +3602,7 @@ export default () => {
 				mark: true,
 				intro: { content: "mark" },
 				forced: true,
+				sourceSkill: "boss_duqu",
 				filter: function (event, player) {
 					return player.storage.boss_shedu && player.storage.boss_shedu > 0;
 				},
@@ -3639,6 +3640,7 @@ export default () => {
 			boss_echou_switch: {
 				unique: true,
 				charlotte: true,
+				sourceSkill: "boss_echou",
 				group: ["boss_echou_switch_on", "boss_echou_switch_off"],
 				subSkill: {
 					off: {
@@ -3709,6 +3711,7 @@ export default () => {
 			boss_xushi_switch: {
 				unique: true,
 				charlotte: true,
+				sourceSkill: "boss_xushi",
 				group: ["boss_xushi_switch_on", "boss_xushi_switch_off"],
 				subSkill: {
 					off: {
@@ -3824,6 +3827,7 @@ export default () => {
 			boss_yanyu_switch: {
 				unique: true,
 				charlotte: true,
+				sourceSkill: "boss_yanyu",
 				group: ["boss_yanyu_switch_on", "boss_yanyu_switch_off"],
 				subSkill: {
 					off: {
@@ -3906,6 +3910,7 @@ export default () => {
 			boss_sipu_switch: {
 				unique: true,
 				charlotte: true,
+				sourceSkill: "boss_sipu",
 				group: ["boss_sipu_switch_on", "boss_sipu_switch_off"],
 				subSkill: {
 					off: {
@@ -4304,6 +4309,7 @@ export default () => {
 			boss_yinzei_switch: {
 				unique: true,
 				charlotte: true,
+				sourceSkill: "boss_yinzei",
 				group: ["boss_yinzei_switch_on", "boss_yinzei_switch_off"],
 				subSkill: {
 					off: {
@@ -4331,6 +4337,7 @@ export default () => {
 			boss_jicai_switch: {
 				unique: true,
 				charlotte: true,
+				sourceSkill: "boss_jicai",
 				group: ["boss_jicai_switch_on", "boss_jicai_switch_off"],
 				subSkill: {
 					off: {
@@ -4358,6 +4365,7 @@ export default () => {
 			boss_luanchang_switch: {
 				unique: true,
 				charlotte: true,
+				sourceSkill: "boss_luanchang",
 				group: ["boss_luanchang_switch_on", "boss_luanchang_switch_off"],
 				subSkill: {
 					off: {
@@ -4385,6 +4393,7 @@ export default () => {
 			boss_yandu_switch: {
 				unique: true,
 				charlotte: true,
+				sourceSkill: "boss_yandu",
 				group: ["boss_yandu_switch_on", "boss_yandu_switch_off"],
 				subSkill: {
 					off: {
@@ -5557,6 +5566,7 @@ export default () => {
 				},
 				trigger: { player: "phaseDrawBegin" },
 				forced: true,
+				sourceSkill: "boss_shenen",
 				filter: function (event, player) {
 					return !player.side;
 				},
@@ -5589,6 +5599,7 @@ export default () => {
 			boss_fentian2: {
 				trigger: { player: "useCard" },
 				forced: true,
+				sourceSkill: "boss_fentian",
 				filter: function (event, player) {
 					return get.color(event.card) == "red";
 				},
@@ -5700,6 +5711,7 @@ export default () => {
 				forced: true,
 				globalFixed: true,
 				unique: true,
+				sourceSkill: "boss_huihuo",
 				filter: function (event, player) {
 					return event.player.hasSkill("boss_huihuo") && event.player.isDead() && player.isEnemyOf(event.player);
 				},
@@ -5732,6 +5744,7 @@ export default () => {
 				position: "he",
 				viewAs: { name: "tao" },
 				prompt: "将一张红色牌当桃使用",
+				sourceSkill: "boss_furan",
 				check: function (card) {
 					return 8 - get.value(card);
 				},
@@ -5795,6 +5808,7 @@ export default () => {
 				trigger: { player: "damageBegin3" },
 				forced: true,
 				popup: false,
+				sourceSkill: "boss_chiyi",
 				content: function () {
 					trigger.num++;
 				},
@@ -6379,6 +6393,54 @@ export default () => {
 						return game.players.length == 2;
 					},
 				},
+				ai: {
+					combo: "xiangxing",
+					neg: true,
+					effect: {
+						target(card, player, target) {
+							if (!target.hasSkill("xiangxing") || !target.storage.xiangxing || target.storage.xiangxing_count < 6) return;
+							switch (target.storage.xiangxing) {
+								case 7:
+									if (get.tag(card, "discard") || get.tag(card, "lose")) {
+										if (player !== target) return [1, 0, 1, 6 / (1 + target.countCards("h"))];
+									}
+									if (get.tag(card, "damage") || get.tag(card, "losehp")) {
+										if (target.countCards("h")) return [1, 7, 1, -7];
+									}
+									break;
+								case 6:
+									if (typeof card === "object" && game.hasNature(card, "fire")) return;
+									if (get.tag(card, "damage") || get.tag(card, "losehp")) return [1, 6, 1, -6];
+									break;
+								case 5:
+									if (typeof card !== "object" || game.hasNature(card, "thunder")) return;
+									if (get.tag(card, "damage") || get.tag(card, "losehp")) return [1, 5, 1, -5];
+									break;
+								case 4:
+									if (get.tag(card, "damage")) return [1, 2, 1, -2];
+									if (get.tag(card, "losehp")) return [1, -4];
+									break;
+								case 3:
+									if (get.tag(card, "damage") || get.tag(card, "losehp")) {
+										if (!game.hasPlayer(current => {
+											return current !== target && current.countCards("e") >= 4;
+										})) return [1, 3, 1, -3];
+									}
+									break;
+								case 2:
+									if (typeof card === "object" && get.type(card) === "delay") {
+										if (target.countCards("j")) return [1, -4];
+									}
+									if (get.tag(card, "damage") || get.tag(card, "losehp")) {
+										if (target.countCards("j") <= 2) return [1, 2, 1, -3];
+									}
+									break;
+								case 1:
+									if (game.players.length !== 2) return [1, 2, 1, -3];
+							}
+						}
+					}
+				},
 			},
 			xiangxing: {
 				unique: true,
@@ -6510,14 +6572,7 @@ export default () => {
 					}
 				},
 				ai: {
-					threaten: 1.5,
-				},
-			},
-			fengqi2: {
-				mod: {
-					wuxieRespondable: function () {
-						return false;
-					},
+					threaten: 3,
 				},
 			},
 			gaiming: {
@@ -6597,6 +6652,15 @@ export default () => {
 					trigger.result.node.delete();
 					game.delay();
 				},
+				ai: {
+					effect: {
+						target(card, player, target) {
+							if (typeof card !== "object" || get.type(card) !== "delay") return;
+							if (target.storage.xiangxing === 2 && target.storage.xiangxing_count > 4 && target.hasSkill("xiangxing") && target.hasSkill("yueyin")) return;
+							return 0.13;
+						}
+					}
+				}
 			},
 			tiandao: {
 				audio: true,
@@ -6723,7 +6787,12 @@ export default () => {
 			mazui2: {
 				trigger: { source: "damageBegin1" },
 				forced: true,
-				mark: "card",
+				mark: true,
+				sourceSkill: "mazui",
+				intro: {
+					content: "expansion",
+					markcount: "expansion",
+				},
 				filter: function (event) {
 					return event.num > 0;
 				},
@@ -6740,6 +6809,7 @@ export default () => {
 				trigger: { source: ["damageEnd", "damageZero"] },
 				forced: true,
 				popup: false,
+				sourceSkill: "mazui",
 				content: function () {
 					player.gain(player.storage.mazui2, "gain2");
 					game.log(player, "获得了", player.storage.mazui2);
@@ -7408,6 +7478,7 @@ export default () => {
 				trigger: { target: ["useCardToBefore", "shaBegin"] },
 				forced: true,
 				priority: 6,
+				sourceSkill: "boss_manjia",
 				filter: function (event, player, name) {
 					if (player.getEquip(2)) return false;
 					if (name == "shaBegin") return lib.skill.tengjia3.filter(event, player);
@@ -7427,6 +7498,7 @@ export default () => {
 			},
 			boss_manjia2: {
 				trigger: { player: "damageBegin3" },
+				sourceSkill: "boss_manjia",
 				filter: function (event, player) {
 					if (player.getEquip(2)) return false;
 					if (event.hasNature("fire")) return true;
@@ -7491,6 +7563,7 @@ export default () => {
 				trigger: { global: "dieAfter" },
 				forced: true,
 				globalFixed: true,
+				sourceSkill: "boss_minbao",
 				filter: function (event, player) {
 					return event.player.hasSkill("boss_minbao") && event.player.isDead();
 				},
@@ -7573,6 +7646,7 @@ export default () => {
 				trigger: { global: "dieAfter" },
 				forced: true,
 				globalFixed: true,
+				sourceSkill: "boss_shanbeng",
 				filter: function (event, player) {
 					return player.countCards("e") > 0 && event.player.hasSkill("boss_shanbeng") && event.player.isDead();
 				},
@@ -7817,6 +7891,7 @@ export default () => {
 				trigger: { player: "phaseZhunbeiBegin" },
 				forced: true,
 				popup: false,
+				sourceSkill: "boss_konghun",
 				content: function () {
 					var players = game.players.concat(game.dead);
 					for (var i = 0; i < players.length; i++) {
@@ -7919,6 +7994,7 @@ export default () => {
 				priority: 10,
 				forced: true,
 				popup: false,
+				sourceSkill: "huanhua",
 				check: function () {
 					return false;
 				},
@@ -7929,6 +8005,7 @@ export default () => {
 			huanhua3: {
 				trigger: { global: "drawAfter" },
 				forced: true,
+				sourceSkill: "huanhua",
 				filter: function (event, player) {
 					if (event.parent.name != "phaseDraw") return false;
 					return event.player != player;
@@ -7940,6 +8017,7 @@ export default () => {
 			huanhua4: {
 				trigger: { global: "discardAfter" },
 				forced: true,
+				sourceSkill: "huanhua",
 				filter: function (event, player) {
 					if (event.parent.parent.name != "phaseDiscard") return false;
 					return event.player != player;
@@ -8422,6 +8500,7 @@ export default () => {
 				trigger: { player: "phaseJieshuBegin" },
 				forced: true,
 				unique: true,
+				sourceSkill: "shangshix",
 				filter: function (event, player) {
 					return player.hp > 1;
 				},
@@ -8619,6 +8698,7 @@ export default () => {
 			shenqu2: {
 				trigger: { player: "damageAfter" },
 				direct: true,
+				sourceSkill: "shenqu",
 				filter: function (event, player) {
 					return player.hasSkillTag("respondTao") || player.countCards("h", "tao") > 0;
 				},
@@ -9438,7 +9518,7 @@ export default () => {
 			boss_remen: "热闷",
 			boss_remen_info: "锁定技，若你的装备区内没有防具牌，则【南蛮入侵】、【万箭齐发】和普通【杀】对你无效。",
 			boss_zhifen: "炙焚",
-			boss_zhifen_info: "锁定技，准备阶段，你随机选择一名其他角色，获得其1张手牌（没有则不获得），并对其造成1点火属性伤害。",
+			boss_zhifen_info: "锁定技，准备阶段，你随机选择一名其他角色，获得其一张手牌（没有则不获得），并对其造成1点火属性伤害。",
 			boss_huoxing: "火刑",
 			boss_huoxing_info: "锁定技，你死亡时，你对所有其他角色造成1点火属性伤害。",
 			boss_pingdengwang_ab: "平等王",

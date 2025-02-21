@@ -27,8 +27,12 @@ const characters = {
 	mp_wangrong: ["male", "wei", 3, ["mpjianlin", "mpsixiao"]],
 	mp_liuling: ["male", "jin", 3, ["mpjiusong", "mpmaotao", "mpbishi"], ["doublegroup:wei:qun:jin"]],
 	mp_xiangxiu: ["male", "jin", 3, ["mpmiaoxi", "mpsijiu"], ["doublegroup:wei:jin"]],
-	yj_majun: ["male", "wei", 3, ["yjgongqiao", "yjjingyi"]],
-	new_yj_dongzhuo: ["male", "qun", "4/5", ["xiongjin", "xiawei", "baoxi"]],
+	yj_majun: ["male", "wei", 3, ["gongqiao", "jingyi"], ["name:马|钧"]],
+	cx_majun: ["male", "wei", 3, ["chuanxie", "yjqiaosi"], [...["character", "die"].map(i => i + ":yj_majun"), "name:马|钧"]],
+	qq_majun: ["male", "wei", 3, ["yuliao", "qiqiao", "yanxie"], [...["character", "die"].map(i => i + ":yj_majun"), "name:马|钧"]],
+	new_yj_dongzhuo: ["male", "qun", "3/4", ["xiongjin", "zhenbian", "baoxi"]],
+	fj_peixiu: ["male", "qun", 3, ["fjzhitu", "dcfujue"], ["name:裴|秀"]],
+	xj_peixiu: ["male", "qun", 3, ["xjzhitu", "dcxiujue"], [...["character", "die"].map(i => i + ":fj_peixiu"), "name:裴|秀"]],
 };
 
 export default characters;

@@ -9,8 +9,6 @@ const characters = {
 	xiaoqiao: ["female", "wu", 3, ["retianxiang", "hongyan"], ["name:桥|null"]],
 	sp_zhangjiao: ["male", "qun", 3, ["releiji", "guidao", "huangtian"], ["zhu"]],
 	re_yuji: ["male", "qun", 3, ["xinfu_guhuo"]],
-	// yuji:['male','qun',3,['guhuo']],
-	// xin_yuji:['male','qun',3,['guhuo']],
 
 	sp_zhugeliang: ["male", "shu", 3, ["bazhen", "huoji", "kanpo"], ["name:诸葛|亮"]],
 	pangtong: ["male", "shu", 3, ["lianhuan", "oldniepan"]],
@@ -21,7 +19,7 @@ const characters = {
 	re_yuanshao: ["male", "qun", 4, ["luanji", "xueyi"], ["zhu", "die:yuanshao"]],
 
 	menghuo: ["male", "shu", 4, ["huoshou", "zaiqixx", "twqiushou"], ["zhu", "doublegroup:shu:qun"]],
-	zhurong: ["female", "shu", 4, ["juxiang", "lieren"], ["doublegroup:shu:qun"]],
+	zhurong: ["female", "shu", 4, ["juxiang", "lieren"], ["doublegroup:shu:qun", "name:null|null"]],
 	caopi: ["male", "wei", 3, ["xingshang", "fangzhu", "songwei"], ["zhu"]],
 	re_lusu: ["male", "wu", 3, ["haoshi", "dimeng"]],
 	sunjian: ["male", "wu", 4, ["gzyinghun"]],

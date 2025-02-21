@@ -351,6 +351,14 @@ body > .background {
 	height: 150px;
 }
 
+.buttons.smallzoom {
+	zoom: 0.65;
+}
+
+.menu-buttons.leftbutton>.button.card.noclick {
+	zoom: 0.95;
+}
+
 .button.card {
 	width: 108px;
 	height: 150px;

@@ -204,6 +204,7 @@ export const startMenu = function (connectMenu) {
 							30: "30秒",
 							60: "60秒",
 							90: "90秒",
+							300: "5分钟",
 						},
 						connect: true,
 						frequent: true,
