@@ -1117,7 +1117,7 @@ export default () => {
 			tafang_mech_mutong_skill_info: "每一轮对距离3格以内的一名随机敌人造成1点伤害。",
 			tafang_mech_nengliangqiu: "能量球",
 			tafang_mech_nengliangqiu_skill: "充能",
-			tafang_mech_nengliangqiu_skill_info: "每一轮令距离3格以内的所有友方角色摸1张牌，距离1以内改为摸2张。",
+			tafang_mech_nengliangqiu_skill_info: "每一轮令距离3格以内的所有友方角色摸一张牌，距离1以内改为摸2张。",
 			tafang_mech_jiguanren: "机关人",
 			tafang_mech_jiguanren_skill: "掠夺",
 			tafang_mech_jiguanren_skill_info: "每一轮弃置3格以内的所有敌方角色各1~2张牌。",

@@ -1,25 +1,27 @@
 const characterSort = {
-	sp2_huben: ["dc_zhangren", "dc_jiangqing", "chendong", "wangshuang", "wenyang", "re_liuzan", "dc_huangzu", "wulan", "leitong", "chentai", "dc_duyu", "dc_wangjun", "dc_xiahouba", "old_huangfusong", "huzun", "dc_lingcao"],
+	sp2_huben: ["lvju", "dc_zhangren", "dc_jiangqing", "chendong", "wangshuang", "wenyang", "re_liuzan", "dc_huangzu", "wulan", "leitong", "chentai", "dc_duyu", "dc_wangjun", "dc_xiahouba", "old_huangfusong", "huzun", "dc_lingcao"],
 	sp2_shengun: ["puyuan", "guanlu", "gexuan", "wufan", "re_zhangbao", "dukui", "zhaozhi", "zhujianping", "dc_zhouxuān", "zerong"],
 	sp2_bizhe: ["dc_luotong", "dc_wangchang", "chengbing", "dc_yangbiao", "ruanji", "cuimao"],
-	sp2_huangjia: ["caomao", "liubian", "dc_liuyu", "quanhuijie", "dingshangwan", "yuanji", "xielingyu", "sunyu", "ganfurenmifuren", "dc_ganfuren", "dc_mifuren", "dc_shixie", "caofang", "zhupeilan", "bianyue"],
+	sp2_huangjia: ["caomao", "liubian", "dc_liuyu", "quanhuijie", "dingshangwan", "yuanji", "xielingyu", "sunyu", "ganfurenmifuren", "dc_ganfuren", "dc_mifuren", "dc_shixie", "caofang", "zhupeilan", "bianyue", "sunba", "xuxin"],
 	sp2_zhangtai: ["guozhao", "fanyufeng", "ruanyu", "yangwan", "re_panshu"],
-	sp2_jinse: ["wenyuan", "liutan", "caojinyu", "re_sunyi", "re_fengfangnv", "caohua", "laiyinger", "zhangfen", "zhugeruoxue", "caoxian", "dc_qinghegongzhu", "zhugemengxue"],
+	sp2_jinse: ["zhanghuai", "wenyuan", "liutan", "caojinyu", "re_sunyi", "re_fengfangnv", "caohua", "laiyinger", "zhangfen", "zhugeruoxue", "caoxian", "dc_qinghegongzhu", "zhugemengxue"],
 	sp2_yinyu: ["zhouyi", "luyi", "sunlingluan", "caoyi", "pangfengyi"],
 	sp2_wangzhe: ["dc_daxiaoqiao", "dc_sp_machao", "sp_zhenji"],
-	sp2_doukou: ["re_xinxianying", "huaman", "xuelingyun", "dc_ruiji", "duanqiaoxiao", "tianshangyi", "malingli", "bailingyun"],
+	sp2_doukou: ["re_xinxianying", "huaman", "xuelingyun", "dc_ruiji", "duanqiaoxiao", "tianshangyi", "malingli", "bailingyun", "moqiongshu"],
 	sp2_jichu: ["zhaoang", "dc_liuye", "dc_wangyun", "yanghong", "huanfan", "xizheng", "lvfan", "dc_tianfeng"],
 	sp2_yuxiu: ["dongguiren", "dc_tengfanglan", "zhangjinyun", "zhoubuyi", "dc_xujing", "guanyue", "zhugejing"],
 	sp2_qifu: ["dc_guansuo", "xin_baosanniang", "dc_zhaoxiang", "xurong", "zhangqiying"],
 	sp2_gaoshan: ["wanglang", "liuhui", "zhangjian"],
-	sp2_wumiao: ["wu_zhugeliang", "wu_luxun", "wu_guanyu", "wu_huangfusong"],
+	sp2_wumiao: ["wu_zhugeliang", "wu_luxun", "wu_guanyu", "wu_huangfusong", "wu_lukang"],
 	sp2_mouding: ["dc_sb_jiaxu", "dc_sb_lusu", "dc_sb_zhouyu", "dc_sb_simayi"],
 	sp2_zhonghu: ["dc_jiangji", "dc_wangling", "dc_simashi", "dc_caoshuang"],
 	sp2_zijing: ["dc_sb_zhugejin", "dc_sb_guanping"],
 	sp2_dushi: ["dc_sb_caoang", "dc_sb_zhangxiu", "dc_sb_dianwei", "dc_sb_hucheer"],
 	sp2_zhoulang: ["dc_sb_chengyu", "dc_sb_huanggai"],
 	sp2_qizuo: ["dc_sb_jushou", "dc_sb_chenlin"],
-	sp2_waitingforsort: [],
+	sp2_weizhen_shu: ["v_zhangliao", "v_lvbu"],
+	sp2_weizhen_jun: ["v_sunquan"],
+	sp2_waitingforsort: ["onedcspzhuiji", "twodcspzhuiji"],
 };
 
 const characterSortTranslate = {
@@ -43,6 +45,8 @@ const characterSortTranslate = {
 	sp2_dushi: "毒士鸩计",
 	sp2_zhoulang: "周郎将计",
 	sp2_qizuo: "奇佐论胜",
+	sp2_weizhen_shu: "威震天下·戍",
+	sp2_weizhen_jun: "威震天下·君",
 	sp2_waitingforsort: "等待分包",
 };
 

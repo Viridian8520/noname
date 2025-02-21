@@ -6,11 +6,11 @@ game.import("card", function () {
 			mtg_lindixiliu: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					"step 0";
 					game.changeLand("mtg_lindixiliu", player);
 					var card = get.cardPile2(function (card) {
@@ -68,11 +68,11 @@ game.import("card", function () {
 			mtg_longlushanfeng: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					"step 0";
 					game.changeLand("mtg_longlushanfeng", player);
 					player
@@ -102,12 +102,12 @@ game.import("card", function () {
 			mtg_cangbaohaiwan: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					if (!lib.cardPack.mode_derivation || !lib.cardPack.mode_derivation.length) return false;
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					"step 0";
 					game.changeLand("mtg_cangbaohaiwan", player);
 					event.map = {};
@@ -164,11 +164,11 @@ game.import("card", function () {
 			mtg_linzhongjianta: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					"step 0";
 					game.changeLand("mtg_linzhongjianta", player);
 					player.discoverCard(
@@ -188,7 +188,7 @@ game.import("card", function () {
 					useful: 3,
 					order: 9,
 					result: {
-						player: function (player) {
+						player(player) {
 							if (player.getEquip(1)) return 0;
 							return 1;
 						},
@@ -198,11 +198,11 @@ game.import("card", function () {
 			mtg_youlin: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					game.changeLand("mtg_youlin", player);
 					var list = get.inpile("trick");
 					while (list.length) {
@@ -233,11 +233,11 @@ game.import("card", function () {
 			mtg_haidao: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					"step 0";
 					game.changeLand("mtg_haidao", player);
 					if (player.isHealthy()) {
@@ -273,11 +273,11 @@ game.import("card", function () {
 			mtg_yixialan: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					"step 0";
 					game.changeLand("mtg_yixialan", player);
 					player
@@ -307,11 +307,11 @@ game.import("card", function () {
 			mtg_shuimomuxue: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					"step 0";
 					game.changeLand("mtg_shuimomuxue", player);
 					if (player.countDiscardableCards("he")) {
@@ -331,7 +331,7 @@ game.import("card", function () {
 					useful: 3,
 					order: 4,
 					result: {
-						player: function (player) {
+						player(player) {
 							if (
 								!player.countCards("h", function (card) {
 									return card.name != "mtg_shuimomuxue" && get.value(card) < 8;
@@ -347,11 +347,11 @@ game.import("card", function () {
 			mtg_feixu: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					game.changeLand("mtg_feixu", player);
 					player.discoverCard(ui.discardPile.childNodes);
 				},
@@ -367,11 +367,11 @@ game.import("card", function () {
 			mtg_shamolvzhou: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					game.changeLand("mtg_shamolvzhou", player);
 					player.discoverCard(get.inpile("basic"));
 				},
@@ -387,11 +387,11 @@ game.import("card", function () {
 			mtg_duzhao: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					"step 0";
 					game.changeLand("mtg_duzhao", player);
 					player.chooseTarget("选择一名角色令其获得一张毒", true).set("ai", function (target) {
@@ -410,7 +410,7 @@ game.import("card", function () {
 					useful: 3,
 					order: 4,
 					result: {
-						player: function (player) {
+						player(player) {
 							if (
 								game.countPlayer(function (current) {
 									if (current.hasSkillTag("nodu")) return false;
@@ -431,11 +431,11 @@ game.import("card", function () {
 			mtg_bingheyaosai: {
 				type: "land",
 				fullborder: "wood",
-				enable: function (card, player) {
+				enable(card, player) {
 					return !player.hasSkill("land_used");
 				},
 				notarget: true,
-				content: function () {
+				content() {
 					"step 0";
 					game.changeLand("mtg_bingheyaosai", player);
 					player.draw(2);
@@ -456,12 +456,12 @@ game.import("card", function () {
 			mtg_bingheyaosai_skill: {
 				trigger: { player: "useCard" },
 				forced: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					if (player.countCards("he") == 0) return false;
 					return event.card.name == "sha";
 				},
 				autodelay: true,
-				content: function () {
+				content() {
 					player.chooseToDiscard(true, "he");
 				},
 				ai: {
@@ -471,7 +471,7 @@ game.import("card", function () {
 			mtg_duzhao_skill: {
 				trigger: { player: "phaseEnd" },
 				forced: true,
-				content: function () {
+				content() {
 					player.gain(game.createCard("du"), "gain2");
 				},
 				ai: {
@@ -480,7 +480,7 @@ game.import("card", function () {
 			},
 			mtg_shamolvzhou_skill: {
 				mod: {
-					ignoredHandcard: function (card) {
+					ignoredHandcard(card) {
 						if (get.type(card) == "basic") {
 							return true;
 						}
@@ -493,10 +493,10 @@ game.import("card", function () {
 			mtg_haidao_skill: {
 				trigger: { player: "changeHujiaBefore" },
 				forced: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					return player.isDamaged() && !player._temp_mtg_haidao && event.num > 0;
 				},
-				content: function () {
+				content() {
 					player.recover(trigger.num);
 					trigger.cancel();
 				},
@@ -511,11 +511,11 @@ game.import("card", function () {
 				filterCard: (card, player) => get.type(card) == "basic" && player.canRecast(card),
 				discard: false,
 				lose: false,
-				check: function (card) {
+				check(card) {
 					return 7 - get.value(card);
 				},
 				usable: 1,
-				content: function () {
+				content() {
 					player.recast(cards, void 0, (player, cards) => {
 						var cardsToGain = [];
 						for (var repetition = 0; repetition < cards.length; repetition++) {
@@ -537,16 +537,16 @@ game.import("card", function () {
 			},
 			mtg_shuimomuxue_skill: {
 				mod: {
-					maxHandcard: function (player, num) {
+					maxHandcard(player, num) {
 						return num - 1;
 					},
 				},
 				trigger: { player: "phaseDiscardEnd" },
 				forced: true,
-				filter: function (event) {
+				filter(event) {
 					return event.cards && event.cards.length > 0;
 				},
-				content: function () {
+				content() {
 					player.draw();
 				},
 				ai: {
@@ -556,7 +556,7 @@ game.import("card", function () {
 			mtg_feixu_skill: {
 				trigger: { player: "phaseBegin" },
 				silent: true,
-				content: function () {
+				content() {
 					var num = ui.discardPile.childNodes.length;
 					if (num) {
 						var card = ui.discardPile.childNodes[get.rand(num)];
@@ -572,16 +572,16 @@ game.import("card", function () {
 			mtg_youlin_skill: {
 				enable: "phaseUse",
 				usable: 1,
-				filter: function (event, player) {
+				filter(event, player) {
 					return player.countCards("h", { type: ["trick", "delay"] });
 				},
-				filterCard: function (card) {
+				filterCard(card) {
 					return get.type(card, "trick") == "trick";
 				},
-				check: function (card) {
+				check(card) {
 					return 7 - get.value(card);
 				},
-				content: function () {
+				content() {
 					player.discoverCard();
 				},
 				ai: {
@@ -594,26 +594,26 @@ game.import("card", function () {
 			},
 			mtg_linzhongjianta_skill: {
 				enable: "chooseToUse",
-				filterCard: function (card) {
+				filterCard(card) {
 					return get.type(card) == "basic";
 				},
 				usable: 1,
 				viewAs: { name: "sha" },
-				viewAsFilter: function (player) {
+				viewAsFilter(player) {
 					if (!player.getEquip(1)) return false;
 					if (!player.countCards("h", { type: "basic" })) return false;
 				},
 				prompt: "将一张基本牌当杀使用",
-				check: function (card) {
+				check(card) {
 					return 6 - get.value(card);
 				},
 				ai: {
 					mapValue: 2,
 					respondSha: true,
-					order: function () {
+					order() {
 						return get.order({ name: "sha" }) - 0.1;
 					},
-					skillTagFilter: function (player, tag, arg) {
+					skillTagFilter(player, tag, arg) {
 						if (arg != "use") return false;
 						if (!player.getEquip(1)) return false;
 						if (!player.countCards("h", { type: "basic" })) return false;
@@ -623,7 +623,7 @@ game.import("card", function () {
 			mtg_cangbaohaiwan_skill: {
 				trigger: { player: "drawBegin" },
 				silent: true,
-				content: function () {
+				content() {
 					if (Math.random() < 1 / 3) {
 						var list = [];
 						for (var i = 0; i < lib.cardPack.mode_derivation.length; i++) {
@@ -646,7 +646,7 @@ game.import("card", function () {
 			},
 			mtg_longlushanfeng_skill: {
 				mod: {
-					cardUsable: function (card, player, num) {
+					cardUsable(card, player, num) {
 						if (card.name == "sha") return num + 1;
 					},
 				},
@@ -657,10 +657,10 @@ game.import("card", function () {
 			mtg_lindixiliu_skill: {
 				trigger: { player: "phaseBegin" },
 				direct: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					return player.countCards("he", { suit: "heart" }) && player.countCards("j");
 				},
-				content: function () {
+				content() {
 					"step 0";
 					player
 						.chooseToDiscard("he", { suit: "heart" }, get.prompt2("mtg_lindixiliu_skill"))

@@ -29,8 +29,6 @@ const translates = {
 	old_huatuo_prefix: "OL",
 	old_guanyu: "旧关羽",
 	old_guanyu_prefix: "旧",
-	ol_liaohua: "OL廖化",
-	ol_liaohua_prefix: "OL",
 	ol_zhuran: "OL朱然",
 	ol_zhuran_prefix: "OL",
 	ol_manchong: "OL满宠",

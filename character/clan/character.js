@@ -1,4 +1,5 @@
 const characters = {
+	clan_wuyi: ["male", "shu", 4, ["clangaojin", "clanpoxi", "clanmuyin"], ["clan:陈留吴氏"]],
 	clan_wuxian: ["female", "shu", 3, ["clanyirong", "clanguixiang", "clanmuyin"], ["clan:陈留吴氏"]],
 	clan_wuban: ["male", "shu", 4, ["clanzhanding", "clanmuyin"], ["clan:陈留吴氏"]],
 	clan_xunshu: ["male", "qun", 3, ["clanshenjun", "clanbalong", "clandaojie"], ["clan:颍川荀氏"]],
@@ -12,7 +13,7 @@ const characters = {
 	clan_zhongyan: ["female", "jin", 3, ["clanguangu", "clanxiaoyong", "clanbaozu"], ["clan:颍川钟氏"]],
 	clan_wangyun: ["male", "qun", 3, ["clanjiexuan", "clanmingjie", "clanzhongliu"], ["clan:太原王氏"]],
 	clan_wanghun: ["male", "jin", 3, ["clanfuxun", "clanchenya", "clanzhongliu"], ["clan:太原王氏"]],
-	clan_zhonghui: ["male", "wei", "3/4", ["clanyuzhi", "clanxieshu", "clanbaozu"], ["clan:颍川钟氏", "die:true", "die:3"]],
+	clan_zhonghui: ["male", "wei", "3/4", ["clanyuzhi", "clanxieshu", "clanbaozu"], ["clan:颍川钟氏", "die:3"]],
 	clan_zhongyu: ["male", "wei", 3, ["clanjiejian", "clanhuanghan", "clanbaozu"], ["clan:颍川钟氏"]],
 	clan_wanglun: ["male", "wei", 3, ["clanqiuxin", "clanjianyuan", "clanzhongliu"], ["clan:太原王氏", "border:jin"]],
 	clan_xunyou: ["male", "wei", 3, ["clanbaichu", "clandaojie"], ["clan:颍川荀氏"]],
@@ -20,6 +21,8 @@ const characters = {
 	clan_wangguang: ["male", "wei", 3, ["clanlilun", "clanjianji", "clanzhongliu"], ["clan:太原王氏"]],
 	clan_wangmingshan: ["male", "wei", 3, ["clantanque", "clanshengmo", "clanzhongliu"], ["clan:太原王氏"]],
 	clan_zhongyao: ["male", "wei", 3, ["clanchengqi", "clanjieli", "clanbaozu"], ["clan:颍川钟氏"]],
+	clan_wangchang: ["male", "wei", 4, ["clankaiji", "clanzhongliu"], ["clan:太原王氏"]],
+	clan_wangshen: ["male", "wei", 3, ["clananran", "clangaobian", "clanzhongliu"], ["clan:太原王氏"]],
 };
 
 export default characters;

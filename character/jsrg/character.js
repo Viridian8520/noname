@@ -251,6 +251,7 @@ const characters = {
 		hp: 4,
 		names: "夏侯|恩",
 		skills: ["jsrghujian", "jsrgshili"],
+		trashBin: ["character:tw_xiahouen"],
 		dieAudios: ["tw_xiahouen"],
 	},
 	jsrg_fanjiangzhangda: {
@@ -389,7 +390,7 @@ const characters = {
 		sex: "male",
 		group: "qun",
 		hp: 4,
-		skills: ["jsrgsaojian"],
+		skills: ["mbsaojian"],
 	},
 	jsrg_dongzhuo: {
 		sex: "male",
@@ -488,12 +489,14 @@ const characters = {
 		hp: 3,
 		maxHp: 4,
 		skills: ["jsrgsheju", "jsrgzuwang"],
+		names: "司马|亮",
 	},
 	jsrg_tufashujineng: {
 		sex: "male",
 		group: "qun",
 		hp: 4,
 		skills: ["jsrgqinrao", "jsrgfuran"],
+		names: "秃发|树机能",
 	},
 	jsrg_lukang: {
 		sex: "male",

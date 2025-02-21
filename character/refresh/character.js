@@ -44,7 +44,7 @@ const characters = {
 	re_guanping: ["male", "shu", 4, ["relongyin", "jiezhong"]],
 	re_guotufengji: ["male", "qun", 3, ["rejigong", "shifei"], ["name:郭|图-逢|记"]],
 	re_zhoucang: ["male", "shu", 4, ["rezhongyong"]],
-	ol_zhurong: ["female", "shu", 4, ["juxiang", "lieren", "changbiao"], ["doublegroup:shu:qun"]],
+	ol_zhurong: ["female", "shu", 4, ["juxiang", "lieren", "changbiao"], ["doublegroup:shu:qun", "name:null|null"]],
 	re_zhangchunhua: ["female", "wei", 3, ["rejueqing", "shangshi"]],
 	re_gongsunyuan: ["male", "qun", 4, ["rehuaiyi"], ["name:公孙|渊"]],
 	re_caozhen: ["male", "wei", 4, ["residi"]],

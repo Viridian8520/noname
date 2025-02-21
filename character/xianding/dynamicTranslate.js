@@ -120,5 +120,24 @@ const dynamicTranslates = {
 		if (storage) str += "</span>";
 		return str;
 	},
+	dcjueyan(player, skill) {
+		let storage = player.storage[skill];
+		let str = lib.translate[skill + "_info"];
+		if (!storage) return str;
+		let regex = /\[\d+\]/g;
+		let index = 0;
+		let result = str.replace(regex, (match, offset, string) => {
+			if (index < storage.length - 1) {
+				const resultx = `[${storage[index]}]`;
+				index++;
+				return resultx;
+			}
+			return match;
+		});
+		if (storage[3]) {
+			result = result.replace("{与其拼点，若你赢，你}", "").replace("若你已经选择过所有选项，则你修改此技能，删除描述中{ }的内容。", "");
+		}
+		return result;
+	},
 };
 export default dynamicTranslates;

@@ -6,6 +6,14 @@ on:
     paths-ignore:
       - 'docker/**'
       - 'docs/**'
+      - .editorconfig
+      - .eslintrc.json
+      - .gitignore
+      - .mise.toml
+      - .prettierrc
+      - eslint.config.mjs
+      - prettier.config.mjs
+      - deno.json
       - README.md
     branches:
       - "master"

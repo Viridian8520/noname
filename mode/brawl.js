@@ -3876,10 +3876,12 @@ export default () => {
 									target.directgain(hs);
 								}
 								for (var j = 0; j < info.equips.length; j++) {
-									target.$equip(createCard(info.equips[j]));
+									let card = createCard(info.equips[j]);
+									target.addVirtualEquip(get.autoViewAs(card, void 0, false), [card]);
 								}
 								for (var j = 0; j < info.judges.length; j++) {
-									target.node.judges.appendChild(createCard(info.judges[j]));
+									let card = createCard(info.judges[j]);
+									target.addVirtualJudge(get.autoViewAs(card, void 0, false), [card]);
 								}
 								target = target.next;
 							}
@@ -4430,10 +4432,12 @@ export default () => {
 								player.node.handcards1.appendChild(ui.create.card());
 							}
 							for (var i = 0; i < info.equips.length; i++) {
-								player.$equip(fakecard(info.equips[i]));
+								let card = fakecard(info.equips[i]);
+								player.addVirtualEquip(get.autoViewAs(card, void 0, false), [card]);
 							}
 							for (var i = 0; i < info.judges.length; i++) {
-								player.node.judges.appendChild(fakecard(info.judges[i]));
+								let card = fakecard(info.judges[i]);
+								player.addVirtualJudge(get.autoViewAs(card, void 0, false), [card]);
 							}
 							player.setIdentity(info.identity);
 							var pos = info.position;
@@ -4513,18 +4517,7 @@ export default () => {
 						line8.style.display = "none";
 						line8.style.marginTop = "10px";
 						line8.style.marginBottom = "10px";
-						var turnslist = [
-							["1", "一"],
-							["2", "两"],
-							["3", "三"],
-							["4", "四"],
-							["5", "五"],
-							["6", "六"],
-							["7", "七"],
-							["8", "八"],
-							["9", "九"],
-							["10", "十"],
-						];
+						var turnslist = [...Array.from({ length: 10 }).map((_, i) => [(i + 1).toString(), get.cnNumber(i + 1)])];
 						var results = [
 							["none", "无"],
 							["win", "胜利"],

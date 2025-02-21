@@ -442,12 +442,14 @@ export default () => {
 			game.gameDraw(game.zhu, function (player) {
 				if (_status.mode == "dianjiang") return 4;
 				if (_status.mode == "wuxianhuoli") return 4;
-				if (_status.mode == "normal") return player == game.zhu ? 3 : 4;
-				if (_status.mode == "changban") return player == game.fan ? 5 : 4;
-				if (player.hasSkill("cuorui")) {
-					player.logSkill("cuorui");
-					return 2 + _status.characterChoice[player.identity].length;
+				if (_status.mode == "normal") {
+					if (player.hasSkill("cuorui")) {
+						player.logSkill("cuorui");
+						return 2 + _status.characterChoice[player.identity].length;
+					}
+					return player == game.zhu ? 3 : 4;
 				}
+				if (_status.mode == "changban") return player == game.fan ? 5 : 4;
 				return player.maxHp;
 			});
 			if (_status.connectMode && lib.configOL.change_card) game.replaceHandcards(game.players.slice(0));
@@ -604,6 +606,10 @@ export default () => {
 					setTimeout(function () {
 						ui.arena.classList.remove("choose-character");
 					}, 500);
+					if (get.config("single_control")) {
+						game.addGlobalSkill("autoswap");
+						game.me.next._trueMe = game.me;
+					}
 				});
 			},
 			chooseCharacterWuxianhuoli() {
@@ -2153,7 +2159,7 @@ export default () => {
 			sgzhiheng: "制衡",
 			sgzhiheng_info: "出牌阶段限一次，你可以弃置至多两张牌，然后摸等量的牌。",
 			xiechan: "挟缠",
-			xiechan_info: "限定技，出牌阶段，你可以和对手拼点。若你赢/没赢，你/其视为对其/你使用一张【决斗】。",
+			xiechan_info: "限定技，出牌阶段，你可以和对手拼点。然后赢的角色视为对没赢的角色使用一张【决斗】。",
 			huwei: "虎威",
 			huwei_info: "当你登场时，你可以视为使用一张【水淹七军】。",
 			sgliegong: "烈弓",

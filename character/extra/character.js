@@ -1,4 +1,5 @@
 const characters = {
+	shen_pangtong: ["male", "shen", "1/1", ["luansuo", "fengliao", "kunyu"]],
 	junk_zhangjiao: ["male", "shen", 3, ["yizhao", "junksijun", "tianjie"], ["qun", "die:shen_zhangjiao"]],
 	junk_sunquan: ["male", "shen", 4, ["dili", "yuheng"], ["wu", "die:shen_sunquan"]],
 	shen_huangzhong: ["male", "shen", 4, ["new_dclieqiong", "dczhanjue"], ["shu"]],
