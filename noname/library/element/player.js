@@ -984,21 +984,9 @@ export class Player extends HTMLDivElement {
 	 */
 	getGiftAIResultTarget(card, target) {
 		if (!card || target.refuseGifts(card, this)) return 0;
-		if (get.type(card, null, target) == "equip"){
-			var target_equip_cards=target.getEquips(get.equipNum(card));
-			for (let target_equip_card of target_equip_cards){
-				if (target_equip_card){
-					if (get.equipValue(target_equip_card)<=0&&get.equipValue(card)<=0) return 0;
-					if (get.equipValue(target_equip_card)>0&&get.equipValue(card)<=0) return -1+get.equipValue(card);
-				}
-			}
-			return get.effect(target, card, target, target);
-		}
+		if (get.type(card, null, target) == "equip") return get.effect(target, card, target, target);
 		if (card.name == "du") return this.hp > target.hp ? -1 : 0;
 		if (target.hasSkillTag("nogain")) return 0;
-		if (game.hasPlayer(function(current){
-			return current.getEquip('shanrangzhaoshu')&&get.attitude(target,current)<0;
-		})) return 0;
 		return Math.max(1, get.value(card, this) - get.value(card, target));
 	}
 	/**
@@ -1356,30 +1344,6 @@ export class Player extends HTMLDivElement {
 		next.setContent("expandEquip");
 		return next;
 	}
-  // taffy: 重新修复装备栏排序喵
-  /**
-	 * @author: adeFuLoDgu
-	 * @description: 装备栏排序
-	 */
-	SortEquipNodes() {
-		var player=this;
-		if (!player.node.equips.childNodes) return;
-		var childnodes_Array=[];
-		for (var i in player.node.equips.childNodes){
-			if (player.node.equips.childNodes[i].nodeType==1) childnodes_Array.push(player.node.equips.childNodes[i]);
-		}
-		childnodes_Array.sort(function(a,b){
-			var sort_equip_num=function(old_equip_num){
-				if (old_equip_num==5) return -1;
-				return old_equip_num;
-			}
-			return sort_equip_num(get.equipNum(a))-sort_equip_num(get.equipNum(b));
-		});
-		for (i=0;i<childnodes_Array.length;++i){
-			player.node.equips.appendChild(childnodes_Array[i]);
-		}
-	}
-  /* taffy分界线 */
 	/**
 	 * 判断判定区是否被废除
 	 */
@@ -1447,10 +1411,10 @@ export class Player extends HTMLDivElement {
 					card.classList.remove("drawinghidden");
 					card.classList.add("feichu");
 					delete card._transform;
-					const equipNum = get.sort_equipNum(get.equipNum(card));
+					const equipNum = get.equipNum(card);
 					let equipped = false;
 					for (let j = 0; j < this.node.equips.childNodes.length; j++) {
-						if (get.sort_equipNum(get.equipNum(this.node.equips.childNodes[j])) >= equipNum) {
+						if (get.equipNum(this.node.equips.childNodes[j]) >= equipNum) {
 							this.node.equips.insertBefore(card, this.node.equips.childNodes[j]);
 							equipped = true;
 							break;
@@ -1473,9 +1437,6 @@ export class Player extends HTMLDivElement {
 				}
 			}
 		}
-    // taffy: 重新修复装备栏排序喵
-    this.SortEquipNodes();
-    /* taffy分界线 */
 	}
 	//以下函数涉及到本次更新内容而进行修改
 	/**
@@ -5602,7 +5563,7 @@ export class Player extends HTMLDivElement {
 					if (
 						aimTargets.some(current2 => {
 							if (withatt) {
-								if (get.sgn(get.equipValue(es[i])) != -att) return false;
+								if (get.sgn(get.value(es[i], current)) != -att) return false;
 								var att2 = get.sgn(get.attitude(player, current2));
 								if (!canReplace || (att < 0 && current2.countEquipableSlot(get.subtype(es[i])))) {
 									if (att == att2 || att2 != get.sgn(get.effect(current2, es[i], player, current2))) return false;
@@ -7866,7 +7827,6 @@ export class Player extends HTMLDivElement {
 					id: id,
 				};
 				player.marks[id].setBackground(target, "character");
-				if (window.decadeUI) player.marks[id].style.backgroundSize = "cover !important";
 				game.addVideo("changeMarkCharacter", player, {
 					id: id,
 					name: name,
@@ -11590,10 +11550,10 @@ export class Player extends HTMLDivElement {
 				card.classList.add("emptyequip");
 				card.classList.add("hidden");
 				delete card._transform;
-				const equipNum = get.sort_equipNum(get.equipNum(card));
+				const equipNum = get.equipNum(card);
 				let equipped = false;
 				for (let j = 0; j < player.node.equips.childNodes.length; j++) {
-					if (get.sort_equipNum(get.equipNum(player.node.equips.childNodes[j])) >= equipNum) {
+					if (get.equipNum(player.node.equips.childNodes[j]) >= equipNum) {
 						player.node.equips.insertBefore(card, player.node.equips.childNodes[j]);
 						equipped = true;
 						break;
@@ -11604,9 +11564,6 @@ export class Player extends HTMLDivElement {
 					if (_status.discarded) {
 						_status.discarded.remove(card);
 					}
-          // taffy: 重新修复装备栏排序喵
-          player.SortEquipNodes();
-          /* taffy分界线 */
 				}
 			}
 		}
@@ -11668,7 +11625,7 @@ export class Player extends HTMLDivElement {
 		game.addVideo("addVirtualEquip", player, [get.vcardInfo(card), get.cardsInfo(cards)]);
 		player.vcardsMap?.equips.push(card);
 		player.vcardsMap?.equips.sort((a, b) => {
-			return get.sort_equipNum(get.equipNum(a)) - get.sort_equipNum(get.equipNum(b));
+			return get.equipNum(a) - get.equipNum(b);
 		});
 		player.$addVirtualEquip(card, cards);
 		var info = get.info(card, false);
@@ -11710,10 +11667,10 @@ export class Player extends HTMLDivElement {
 			cardx.classList.remove("fakeequip");
 		}
 		let equipped = false,
-			equipNum = get.sort_equipNum(get.equipNum(cardx));
+			equipNum = get.equipNum(cardx);
 		if (player.node.equips.childNodes.length) {
 			for (let i = 0; i < player.node.equips.childNodes.length; i++) {
-				if (get.sort_equipNum(get.equipNum(player.node.equips.childNodes[i])) >= equipNum) {
+				if (get.equipNum(player.node.equips.childNodes[i]) >= equipNum) {
 					equipped = true;
 					player.node.equips.insertBefore(cardx, player.node.equips.childNodes[i]);
 					break;
@@ -11738,10 +11695,10 @@ export class Player extends HTMLDivElement {
 		card.classList.remove("drawinghidden");
 		delete card._transform;
 		var player = this;
-		var equipNum = get.sort_equipNum(get.equipNum(card));
+		var equipNum = get.equipNum(card);
 		var equipped = false;
 		for (var i = 0; i < player.node.equips.childNodes.length; i++) {
-			if (get.sort_equipNum(get.equipNum(player.node.equips.childNodes[i])) >= equipNum) {
+			if (get.equipNum(player.node.equips.childNodes[i]) >= equipNum) {
 				player.node.equips.insertBefore(card, player.node.equips.childNodes[i]);
 				equipped = true;
 				break;
@@ -11759,9 +11716,6 @@ export class Player extends HTMLDivElement {
 				player.addSkillTrigger(info.skills[i]);
 			}
 		}
-    // taffy: 重新修复装备栏排序喵
-    player.SortEquipNodes();
-    /* taffy分界线 */
 		return player;
 	}
 	$gain(card, log, init) {
@@ -12263,35 +12217,6 @@ export class Player extends HTMLDivElement {
 		}
 		if (this.$dieAfter) {
 			this.$dieAfter();
-			
-			if (window.decadeUI) {
-				this.stopDynamic();
-				
-				if (decadeUI.config.playerDieEffect) {
-					if (!this.node.dieidentity) this.node.dieidentity = ui.create.div('died-identity', this);
-					this.node.dieidentity.classList.add('died-identity');
-
-					var that = this;
-					var image = new Image();
-					var identity = decadeUI.getPlayerIdentity(this);
-					var url = decadeUIPath + 'image/decoration/dead_' + identity + '.png';
-					image.onerror = function () {
-						that.node.dieidentity.innerHTML = decadeUI.getPlayerIdentity(that, that.identity, true) + '<br>阵亡';
-					};
-
-					that.node.dieidentity.innerHTML = '';
-					that.node.dieidentity.style.backgroundImage = 'url("' + url + '")';
-					image.src = url;
-					setTimeout(function () {
-						var rect = that.getBoundingClientRect();
-						decadeUI.animation.playSpine('effect_zhenwang', {
-							x: rect.left + rect.width / 2 - 7,
-							y: decadeUI.get.bodySize().height - rect.top - rect.height / 2 + 1,
-							scale: 0.8,
-						});
-					}, 250);
-				}
-			}
 		}
 	}
 	$dieflip(type) {
@@ -12363,7 +12288,6 @@ export class Player extends HTMLDivElement {
 				game.delay();
 			}
 		}
-		if (window.decadeUI) dui.delay(451);
 	}
 }
 

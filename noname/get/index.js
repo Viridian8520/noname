@@ -2374,13 +2374,6 @@ export class Get extends GetCompatible {
 		return 0;
 	}
 	/**
-	 * 裝備欄排序用函數
-	 */
-	sort_equipNum(old_equip_num) {
-		if (old_equip_num==5) return -1;
-		return old_equip_num;
-	}
-	/**
 	 * 返回对象的实际类型
 	 * @overload
 	 * @param { Array } obj

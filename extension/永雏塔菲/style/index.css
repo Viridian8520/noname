@@ -1,4 +1,15 @@
-.equips-wrap > .equips > .emptyequip,
+/* .equips-wrap > .equips > .emptyequip,
 .player > .equips > .emptyequip {
   display: none;
+} */
+
+/* taffy: 修复娴静按钮显示异常的问题喵 */
+.control > div > span.thundertext,
+.control > div > span.firetext,
+.control > div > span.greentext,
+.control > div > span.yellowtext {
+  background-image: none;
+  padding: 0 !important;
+  margin: 0 !important;
 }
+/* taffy分界线 */

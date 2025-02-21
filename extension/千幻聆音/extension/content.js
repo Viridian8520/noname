@@ -273,11 +273,11 @@ export let CONTENT = function (config, pack) {
               dstInfo.deputy = !isPrimary
               setTimeout(() => {
                 player.stopDynamic(isPrimary, !isPrimary)
-                // taffy: 注释contennt.js原版代码喵
+                // taffy: 注释content.js原版代码喵
                 // player.playDynamic(dstInfo, !isPrimary);
                 /* taffy分界线 */
                 // taffy: 修复变身后动态背景裁剪丢失的问题
-                player.playDynamic(dstInfo, !isPrimary, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on', lib.config['extension_千幻聆音_qhly_ignoreClips']);
+                player.playDynamic(dstInfo, !isPrimary, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on', lib.config['extension_千幻聆音_qhly_ignoreClips']);
                 /* taffy分界线 */
               }, (huanfuEff.delay || 0) * 1000)
               if (dstInfo.background) {
@@ -322,7 +322,12 @@ export let CONTENT = function (config, pack) {
           };
           // @ts-ignore
           EpicFX.playDynamic = (player, character, character2, play, transform, cutdybg) => {
-            if (!cutdybg) cutdybg = ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on';
+            // taffy: 注释content.js原版代码喵
+            // if (!cutdybg) cutdybg = ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on';
+            /* taffy分界线 */
+            // taffy: 适配一将成名UI
+            if (!cutdybg) cutdybg = ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on';
+            /* taffy分界线 */
             let res2 = {
               status: false,
               zhu: "default",
@@ -450,7 +455,12 @@ export let CONTENT = function (config, pack) {
                 }
                 // @ts-ignore
                 var editSkin = game.qhly_getSkin(game.qhly_getRealName(avatars[i]));
-                var theme = ui.arena.dataset.newDecadeStyle == 'on' ? 'decade' : 'shousha';
+                // taffy: 注释content.js原版代码喵
+                // var theme = ui.arena.dataset.newDecadeStyle == 'on' ? 'decade' : 'shousha';
+                /* taffy分界线 */
+                // taffy: 适配一将成名UI
+                var theme = ui.arena.dataset.decadeLayout == 'on' ? 'decade' : 'shousha';
+                /* taffy分界线 */
                 // @ts-ignore
                 if (lib.config['extension_千幻聆音_qhly_editDynamic'] && lib.qhly_skinEdit[game.qhly_getRealName(avatars[i])] && lib.qhly_skinEdit[game.qhly_getRealName(avatars[i])][editSkin] && lib.qhly_skinEdit[game.qhly_getRealName(avatars[i])][editSkin]['player'] && lib.qhly_skinEdit[game.qhly_getRealName(avatars[i])][editSkin]['player'][editArgument1] && lib.qhly_skinEdit[game.qhly_getRealName(avatars[i])][editSkin]['player'][editArgument1][theme]) {
                   // @ts-ignore
@@ -1295,8 +1305,14 @@ export let CONTENT = function (config, pack) {
       }
       // @ts-ignore
       if (window.qhly_newDynamicExt && lib.config['extension_EpicFX_skinEffects']) {
+        // taffy: 注释content.js原版代码喵
+        // // @ts-ignore
+        // let res = EpicFX.playDynamic(this, character, character2, undefined, undefined, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on');
+        /* taffy分界线 */
+        // taffy: 适配一将成名UI
         // @ts-ignore
-        let res = EpicFX.playDynamic(this, character, character2, undefined, undefined, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on');
+        let res = EpicFX.playDynamic(this, character, character2, undefined, undefined, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on');
+        /* taffy分界线 */
         // @ts-ignore
         EpicFX.initSkinPackOrRefreshAll(this, {
           doubleAvatar: this.doubleAvatar,
@@ -1388,7 +1404,12 @@ export let CONTENT = function (config, pack) {
                 if (dynamicExt.selectSkinData && dynamicExt.selectSkinData.value) dynamicExt.selectSkinData.value = keys[i];
               }
             }
-            var theme = ui.arena.dataset.newDecadeStyle == 'on' ? 'decade' : 'shousha';
+            // taffy: 注释content.js原版代码喵
+            // var theme = ui.arena.dataset.newDecadeStyle == 'on' ? 'decade' : 'shousha';
+            /* taffy分界线 */
+            // taffy: 适配一将成名UI
+            var theme = ui.arena.dataset.decadeLayout == 'on' ? 'decade' : 'shousha';
+            /* taffy分界线 */
             // @ts-ignore
             if (lib.config['extension_千幻聆音_qhly_editDynamic'] && lib.qhly_skinEdit[realName] && lib.qhly_skinEdit[realName][skinName] && lib.qhly_skinEdit[realName][skinName].player && lib.qhly_skinEdit[realName][skinName].player.dynamic && lib.qhly_skinEdit[realName][skinName].player.dynamic[theme]) {
               // @ts-ignore
@@ -1409,11 +1430,11 @@ export let CONTENT = function (config, pack) {
             }
             // taffy: 注释content.js原版代码喵
             // // @ts-ignore
-            // this.playDynamic(skinCopy, i == 1, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on', lib.config['extension_千幻聆音_ignoreClips']);
+            // this.playDynamic(skinCopy, i == 1, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on', lib.config['extension_千幻聆音_ignoreClips']);
             /* taffy分界线 */
             // taffy: 修复忽略clipSlots选项失效的问题喵
             // @ts-ignore
-            this.playDynamic(skinCopy, i == 1, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on', lib.config['extension_千幻聆音_qhly_ignoreClips']);
+            this.playDynamic(skinCopy, i == 1, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on', lib.config['extension_千幻聆音_qhly_ignoreClips']);
             /* taffy分界线 */
             // 修改3 start  此处修改是因为动皮和背景加载需要时间, 在动皮加载好之前用一个默认背景代替, 防止武将框黑一片
             // @ts-ignore
@@ -1730,8 +1751,14 @@ export let CONTENT = function (config, pack) {
           data.to = to;
           // @ts-ignore
           this.stopDynamic(false, true);
+          // taffy: 注释content.js原版代码喵
+          // // @ts-ignore
+          // data.state = EpicFX.playDynamic(this, undefined, to, true, undefined, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on');
+          /* taffy分界线 */
+          // taffy: 适配一将成名UI
           // @ts-ignore
-          data.state = EpicFX.playDynamic(this, undefined, to, true, undefined, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on');
+          data.state = EpicFX.playDynamic(this, undefined, to, true, undefined, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on');
+          /* taffy分界线 */
         }
       } else if (this.name == from || this.name1 == from) {
         if (this.name1 == from) {
@@ -1762,8 +1789,14 @@ export let CONTENT = function (config, pack) {
           data.to = to;
           // @ts-ignore
           this.stopDynamic(true, false);
+          // taffy: 注释content.js原版代码喵
+          // // @ts-ignore
+          // data.state = EpicFX.playDynamic(this, to, undefined, true, undefined, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on');
+          /* taffy分界线 */
+          // taffy: 适配一将成名UI
           // @ts-ignore
-          data.state = EpicFX.playDynamic(this, to, undefined, true, undefined, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on');
+          data.state = EpicFX.playDynamic(this, to, undefined, true, undefined, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on');
+          /* taffy分界线 */
         }
       } else {
         return this;
@@ -1846,7 +1879,12 @@ export let CONTENT = function (config, pack) {
           if (skinCopy.action && skinCopy.pos) skinCopy.action = "ChuChang";
           if (skinCopy.speed == undefined) skinCopy.speed = 1;
           skinCopy.player = skinCopy;
-          var theme = ui.arena.dataset.newDecadeStyle == 'on' ? 'decade' : 'shousha';
+          // taffy: 注释content.js原版代码喵
+          // var theme = ui.arena.dataset.newDecadeStyle == 'on' ? 'decade' : 'shousha';
+          /* taffy分界线 */
+          // taffy: 适配一将成名UI
+          var theme = ui.arena.dataset.decadeLayout == 'on' ? 'decade' : 'shousha';
+          /* taffy分界线 */
           // @ts-ignore
           if (lib.config['extension_千幻聆音_qhly_editDynamic'] && lib.qhly_skinEdit[realName] && lib.qhly_skinEdit[realName][skinName] && lib.qhly_skinEdit[realName][skinName].player && lib.qhly_skinEdit[realName][skinName].player.dynamic && lib.qhly_skinEdit[realName][skinName].player.dynamic[theme]) {
             // @ts-ignore
@@ -1882,11 +1920,11 @@ export let CONTENT = function (config, pack) {
           if (skin) {
             // taffy: 注释content.js原版代码喵
             // // @ts-ignore
-            // this.playDynamic(skinCopy, deputy, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on', lib.config['extension_千幻聆音_ignoreClips']);
+            // this.playDynamic(skinCopy, deputy, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on', lib.config['extension_千幻聆音_ignoreClips']);
             /* taffy分界线 */
             // taffy: 修复忽略clipSlots选项失效的问题喵
             // @ts-ignore
-            this.playDynamic(skinCopy, deputy, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on', lib.config['extension_千幻聆音_qhly_ignoreClips']);
+            this.playDynamic(skinCopy, deputy, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on', lib.config['extension_千幻聆音_qhly_ignoreClips']);
             /* taffy分界线 */
             // @ts-ignore
             decadeUI.CUR_DYNAMIC++;
@@ -1904,11 +1942,11 @@ export let CONTENT = function (config, pack) {
           if (skin) {
             // taffy: 注释content.js原版代码喵
             // // @ts-ignore
-            // this.playDynamic(skinCopy, false, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on', lib.config['extension_千幻聆音_ignoreClips']);
+            // this.playDynamic(skinCopy, false, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on', lib.config['extension_千幻聆音_ignoreClips']);
             /* taffy分界线 */
             // taffy: 修复忽略clipSlots选项失效的问题喵
             // @ts-ignore
-            this.playDynamic(skinCopy, false, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on', lib.config['extension_千幻聆音_qhly_ignoreClips']);
+            this.playDynamic(skinCopy, false, ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on', lib.config['extension_千幻聆音_qhly_ignoreClips']);
             /* taffy分界线 */
             // @ts-ignore
             decadeUI.CUR_DYNAMIC++;
@@ -2604,7 +2642,12 @@ export let CONTENT = function (config, pack) {
           if (skinCopy.action && skinCopy.pos && nodeType == 'player') skinCopy.action = "ChuChang";
           // 动态背景切割 4 -> 判断提前
           if (nodeType == 'player') {
-            cutdybg = ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on';
+            // taffy: 注释content.js原版代码喵
+            // cutdybg = ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.newDecadeStyle == 'on';
+            /* taffy分界线 */
+            // taffy: 适配一将成名UI
+            cutdybg = ui.arena.dataset.dynamicSkinOutcrop == 'on' && ui.arena.dataset.decadeLayout == 'on';
+            /* taffy分界线 */
           } else {
             cutdybg = lib.config.qhly_lutou && node.className.indexOf('shousha') < 0 && node.className.indexOf('qh-image') < 0;
           }
@@ -2614,7 +2657,12 @@ export let CONTENT = function (config, pack) {
           var editSkin = name || game.qhly_getSkin(character);
           if (editSkin == null) editSkin = '经典形象';
           if (editSkin.indexOf('.') < 0) editSkin += '.jpg';
-          var themeType = ui.arena.dataset.newDecadeStyle == 'on' ? 'decade' : 'shousha';
+          // taffy: 注释content.js原版代码喵
+          // var themeType = ui.arena.dataset.newDecadeStyle == 'on' ? 'decade' : 'shousha';
+          /* taffy分界线 */
+          // taffy: 适配一将成名UI
+          var themeType = ui.arena.dataset.decadeLayout == 'on' ? 'decade' : 'shousha';
+          /* taffy分界线 */
           if (!node.classList.contains('qh-isBigAvatar') && nodeType != 'player') nodeType = 'player';
           var theme = nodeType == 'player' ? themeType : lib.config.qhly_currentViewSkin;
           // @ts-ignore
@@ -2726,7 +2774,12 @@ export let CONTENT = function (config, pack) {
             // 动态背景切 2  -> end
             //if (get.itemtype(node) != 'player' && !_status.qhly_dynamic[character][skinCopy.name]) _status.qhly_dynamic[character][skinCopy.name] = node.dynamic;
             if (skinCopy.background) {
-              if (node.doubleAvatar && ui.arena.dataset.newDecadeStyle == 'on') {
+              // taffy: 注释content.js原版代码喵
+              // if (node.doubleAvatar && ui.arena.dataset.newDecadeStyle == 'on') {
+              /* taffy分界线 */
+              // taffy: 适配一将成名UI
+              if (node.doubleAvatar && ui.arena.dataset.decadeLayout == 'on') {
+              /* taffy分界线 */
                 let background1, background2;
                 if (character2) {
                   background1 = node.dynamic.primary && node.dynamic.primary != null && node.dynamic.primary.background ? (lib.assetURL + 'extension/十周年UI/assets/dynamic/' + node.dynamic.primary.background) : '';
@@ -2940,7 +2993,12 @@ export let CONTENT = function (config, pack) {
       // @ts-ignore
       if (!window.decadeUI) return;
       var str = 'huanpifu_', act = '';
-      var huanfuType = lib.config['extension_十周年UI_newDecadeStyle'] == 'on' ? 'huanpifu' : 'huanfu';
+      // taffy: 注释content.js原版代码喵
+      // var huanfuType = lib.config['extension_十周年UI_newDecadeStyle'] == 'on' ? 'huanpifu' : 'huanfu';
+      /* taffy分界线 */
+      // taffy: 适配一将成名UI
+      var huanfuType = ui.arena.dataset.decadeLayout == 'on' ? 'huanpifu' : 'huanfu';
+      /* taffy分界线 */
       // @ts-ignore
       if (!decadeUI.animation.hasSpine(window.qhlyUI.assets[huanfuType]['name'])) return;
       var currentScale = 0.7;
@@ -2968,7 +3026,12 @@ export let CONTENT = function (config, pack) {
         str = 'play';
         currentScale *= 0.65;
       }
-      let bool1 = lib.config['extension_十周年UI_newDecadeStyle'] == 'on' ? true : false;
+      // taffy: 注释content.js原版代码喵
+      // let bool1 = lib.config['extension_十周年UI_newDecadeStyle'] == 'on' ? true : false;
+      /* taffy分界线 */
+      // taffy: 适配一将成名UI
+      let bool1 = ui.arena.dataset.decadeLayout == 'on' ? true : false;
+      /* taffy分界线 */
       // @ts-ignore
       if (this.doubleAvatar) {
         var currentWidth = bool1 ? 0.068 : 0.06;
@@ -3037,7 +3100,12 @@ export let CONTENT = function (config, pack) {
     // @ts-ignore
     game.qhly_checkYH = function (player, group) {
       if(lib.config.qhly_close_circle_top === true)return;
-      if (lib.config['extension_十周年UI_newDecadeStyle'] == "on") return;
+      // taffy: 注释content.js原版代码喵
+      // if (lib.config['extension_十周年UI_newDecadeStyle'] == "on") return;
+      /* taffy分界线 */
+      // taffy: 适配一将成名UI
+      if (ui.arena.dataset.decadeLayout == 'on') return;
+      /* taffy分界线 */
       // @ts-ignore
       if (!player || get.itemtype(player) != 'player') return;
       let gro = player.group || group;
@@ -3745,7 +3813,12 @@ export let CONTENT = function (config, pack) {
       touchbg.id = 'qhly_bigBackground';
       touchbg.addEventListener(lib.config.touchscreen ? 'touchstart' : 'mousedown', exit);
       var blackbg = ui.create.div('.qhly-playerwindowbg', player);
-      if (ui.arena.dataset.newDecadeStyle != 'on' && player.dynamic && (player.dynamic.primary != null || player.dynamic.deputy != null)) blackbg.style.cssText += 'top:-12%;width:101%;height:113%;border-radius: 300px 182px 20px 20px/80px 65px 20px 20px;'
+      // taffy: 注释content.js原版代码喵
+      // if (ui.arena.dataset.newDecadeStyle != 'on' && player.dynamic && (player.dynamic.primary != null || player.dynamic.deputy != null)) blackbg.style.cssText += 'top:-12%;width:101%;height:113%;border-radius: 300px 182px 20px 20px/80px 65px 20px 20px;'
+      /* taffy分界线 */
+      // taffy: 适配一将成名UI
+      if (ui.arena.dataset.decadeLayout != 'on' && player.dynamic && (player.dynamic.primary != null || player.dynamic.deputy != null)) blackbg.style.cssText += 'top:-12%;width:101%;height:113%;border-radius: 300px 182px 20px 20px/80px 65px 20px 20px;'
+      /* taffy分界线 */
       blackbg.id = 'qhly_playerwindowbg';
       blackbg.addEventListener(lib.config.touchscreen ? 'touchstart' : 'mousedown', exit);
       var buttons = new Array(3);
@@ -5064,7 +5137,12 @@ export let CONTENT = function (config, pack) {
       const editObject = get.itemtype(state) == 'player' ? 'player' : 'bigAvatar';
       // @ts-ignore
       var name = game.qhly_getRealName(state.name);
-      const themeType = ui.arena.dataset.newDecadeStyle == 'on' ? 'decade' : 'shousha';
+      // taffy: 注释content.js原版代码喵
+      // const themeType = ui.arena.dataset.newDecadeStyle == 'on' ? 'decade' : 'shousha';
+      /* taffy分界线 */
+      // taffy: 适配一将成名UI
+      const themeType = ui.arena.dataset.decadeLayout == 'on' ? 'decade' : 'shousha';
+      /* taffy分界线 */
       const theme = editObject == 'player' ? themeType : lib.config.qhly_currentViewSkin;
       // @ts-ignore
       var skin = game.qhly_getSkin(state.name);

@@ -1,24 +1,35 @@
-import { ChildNodesWatcher } from "../../noname/library/cache/childNodesWatcher.js";
-import { nonameInitialized } from "../../noname/util/index.js";
-game.import("extension", function (lib, game, ui, get, ai, _status) {
-	const decadeUIName = (window.decadeUIName = "十周年UI");
-	const decadeUIPath = (window.decadeUIPath = lib.assetURL + "extension/" + decadeUIName + "/");
-	const decadeUIResolvePath = (window.decadeUIResolvePath = nonameInitialized + "extension/" + decadeUIName + "/");
+import {
+	ChildNodesWatcher
+} from "../../noname/library/cache/childNodesWatcher.js";
+import {
+	nonameInitialized
+} from "../../noname/util/index.js";
+import {
+	lib,
+	game,
+	ui,
+	get,
+	ai,
+	_status
+} from "../../noname.js";
+export const type = "extension";
+export default async function() {
+	const {
+		name,
+		...otherInfo
+	} = await lib.init.promises.json(`${lib.assetURL}extension/十周年UI/info.json`);
+	const decadeUIName = (window.decadeUIName = name);
+	const decadeUIPath = (window.decadeUIPath = `${lib.assetURL}extension/${decadeUIName}/`);
+	const decadeUIResolvePath = (window.decadeUIResolvePath = `${nonameInitialized}extension/${decadeUIName}/`);
 	return {
-		name: "十周年UI",
-		content: function (config, pack) {
-			/*-----------------分割线-----------------*/
-			if (get.mode() == "chess" || get.mode() == "tafang") return;
-			var extension = lib.extensionMenu["extension_" + decadeUIName];
-			if (!(extension && extension.enable && extension.enable.init)) return;
-			/*-----------------分割线-----------------*/
-
+		name,
+		editable: false,
+		content(config, pack) {
+			if (get.mode() === "chess" || get.mode() === "tafang" || get.mode === "hs_hearthstone") return;
 			//菜单栏错位bugfix
 			game.menuZoom = 1;
-
 			//单独装备栏
 			_status.nopopequip = lib.config.extension_十周年UI_aloneEquip;
-
 			//布局
 			switch (lib.config.layout) {
 				case "long2":
@@ -34,7 +45,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 			window.duicfg = config;
 			window.dui = window.decadeUI = {
-				init: function () {
+				init() {
 					this.extensionName = decadeUIName;
 
 					var sensor = decadeUI.element.create("sensor", document.body);
@@ -63,14 +74,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					var duoLPath = duol.appendChild(document.createElementNS(SVG_NS, "path"));
 					var duoRPath = duor.appendChild(document.createElementNS(SVG_NS, "path"));
 					var dskinPath = dskin.appendChild(document.createElementNS(SVG_NS, "path"));
-					soloPath.setAttribute("d", "M0 0 H1 Q1 0.05 0.9 0.06 Q1 0.06 1 0.11 V1 H0 V0.11 Q0 0.06 0.1 0.06 Q0 0.05 0 0 Z");
+					soloPath.setAttribute("d",
+						"M0 0 H1 Q1 0.05 0.9 0.06 Q1 0.06 1 0.11 V1 H0 V0.11 Q0 0.06 0.1 0.06 Q0 0.05 0 0 Z"
+						);
 					duoLPath.setAttribute("d", "M1 0 H0 Q0 0.06 0.15 0.06 Q0 0.06 0 0.11 V1 H1 Z");
 					duoRPath.setAttribute("d", "M0 0 H1 Q1 0.06 0.85 0.06 Q1 0.06 1 0.11 V1 H0 Z");
-					dskinPath.setAttribute("d", "M0 0 H1 Q1 0.1 0.94 0.1 Q0.985 0.1 1 0.13 V1 H0 V0.14 Q0 0.11 0.06 0.1 Q0 0.1 0 0 Z");
+					dskinPath.setAttribute("d",
+						"M0 0 H1 Q1 0.1 0.94 0.1 Q0.985 0.1 1 0.13 V1 H0 V0.14 Q0 0.11 0.06 0.1 Q0 0.1 0 0 Z"
+						);
 
 					document.addEventListener(
 						"click",
-						function (e) {
+						function(e) {
 							dui.set.activeElement(e.target);
 						},
 						true
@@ -78,7 +93,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					this.initOverride();
 					return this;
 				},
-				initOverride: function () {
+				initOverride() {
 					function override(dest, src) {
 						var ok = true;
 						for (const key in src) {
@@ -94,33 +109,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 						return ok;
 					}
-					/*
-          function override(dest, src) {
-            const getCover = function (from, to, getCover) {
-              if (get.is.object(from)) {
-                console.log(from);
-                for (const key in from) {
-                  getCover(from[key], to[key], getCover);
-                }
-              }
-              else {
-                to = from;
-              }
-            };
-            getCover(src, dest, getCover);
-          };
-          */
-					//暂时用不上你了
-					/*
-          function overrides(dest, src) {
-            if (!dest._super) dest._super = {};
-            for (var key in src) {
-              if (dest[key]) dest._super[key] = dest[key];
-              dest[key] = src[key];
-            }
-          };
-          */
-					var base = {
+					const base = {
 						ui: {
 							create: {
 								cards: ui.create.cards,
@@ -165,11 +154,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						},
 					};
 
-					var ride = {};
+					const ride = {};
 					ride.lib = {
 						element: {
 							dialog: {
-								open: function () {
+								open() {
 									if (this.noopen) return;
 									for (let i = 0; i < ui.dialogs.length; i++) {
 										if (ui.dialogs[i] == this) {
@@ -192,7 +181,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 									return this;
 								},
-								close: function () {
+								close() {
 									if (this.intersection) {
 										this.intersection.disconnect();
 										this.intersection = undefined;
@@ -201,7 +190,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								},
 							},
 							event: {
-								addMessageHook: function (message, callback) {
+								addMessageHook(message, callback) {
 									if (this._messages == undefined) this._messages = {};
 
 									message = message.toLowerCase();
@@ -210,7 +199,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									message = this._messages[message];
 									message.push(callback);
 								},
-								triggerMessage: function (message) {
+								triggerMessage(message) {
 									if (this._messages == undefined) return;
 
 									message = message.toLowerCase();
@@ -225,7 +214,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								},
 							},
 							card: {
-								$init: function (card) {
+								$init(card) {
 									base.lib.element.card.$init.apply(this, arguments);
 
 									this.node.range.innerHTML = "";
@@ -259,11 +248,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 									const verticalName = this.$vertname;
 									this.$name.innerHTML = verticalName.innerHTML;
-									let cardNumber = this.number || "";
-									const parsedCardNumber = parseInt(cardNumber);
-									if (parsedCardNumber == cardNumber) cardNumber = parsedCardNumber;
-									this.$suitnum.$num.innerHTML = get.strNumber(cardNumber, true) || "";
-									this.$suitnum.$suit.innerHTML = get.translation((this.dataset.suit = this.suit));
+									let cardNumber = this.number;
+									this.$suitnum.$num.innerHTML = (cardNumber !== 0 ? get.strNumber(
+										cardNumber) : false) || cardNumber || "";
+									this.$suitnum.$suit.innerHTML = get.translation((this.dataset.suit =
+										this.suit));
 
 									const equip = this.$equip;
 									const innerHTML = equip.innerHTML;
@@ -289,7 +278,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 									const verticalNameStyle = verticalName.style;
 
-									if (verticalNameStyle.opacity) verticalNameStyle.removeProperty("opacity");
+									if (verticalNameStyle.opacity) verticalNameStyle.removeProperty(
+										"opacity");
 
 									if (info.childElementCount)
 										while (info.firstChild) {
@@ -308,9 +298,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										if (!this.classList.contains("infohidden")) {
 											//不同属性的【杀】的图片素材
 											//仅针对单一属性【杀】
-											if (Array.isArray(card) && card[2] == "sha" && card[3] && !Array.isArray(card[3])) {
+											if (Array.isArray(card) && card[2] == "sha" && card[3] && !Array
+												.isArray(card[3])) {
 												filename += "_";
-												filename += get.natureList(card[3]).sort(lib.sort.nature).join("_");
+												filename += get.natureList(card[3]).sort(lib.sort.nature)
+													.join("_");
 											}
 											var res = dui.statics.cards;
 											var asset = res[filename];
@@ -321,7 +313,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 													this.style.background = 'url("' + asset.url + '")';
 												}
 											} else {
-												var url = lib.assetURL + "extension/" + decadeUIName + "/image/card/" + filename + "." + imgFormat;
+												var url = lib.assetURL + "extension/" + decadeUIName +
+													"/image/card/" + filename + "." + imgFormat;
 												if (!asset) {
 													res[filename] = asset = {
 														name: filename,
@@ -334,13 +327,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												if (asset.loaded !== false) {
 													if (asset.loaded == undefined) {
 														var image = new Image();
-														image.onload = function () {
+														image.onload = function() {
 															asset.loaded = true;
 															image.onload = undefined;
 														};
 
 														var card = this;
-														image.onerror = function () {
+														image.onerror = function() {
 															asset.loaded = false;
 															image.onerror = undefined;
 															card.style.background = asset.rawUrl;
@@ -348,7 +341,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 														};
 
 														asset.url = url;
-														asset.rawUrl = this.style.background || this.style.backgroundImage;
+														asset.rawUrl = this.style.background || this.style
+															.backgroundImage;
 														asset.image = image;
 														image.src = url;
 													}
@@ -364,45 +358,52 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 									return this;
 								},
-								updateTransform: function (bool, delay) {
+								updateTransform(bool, delay) {
 									if (delay) {
 										var that = this;
-										setTimeout(function () {
-											that.updateTransform(that.classList.contains("selected"));
+										setTimeout(function() {
+											that.updateTransform(that.classList.contains(
+												"selected"));
 										}, delay);
 									} else {
 										if (_status.event.player != game.me) return;
-										if (this._transform && this.parentNode && this.parentNode.parentNode && this.parentNode.parentNode.parentNode == ui.me && (!_status.mousedown || _status.mouseleft)) {
+										if (this._transform && this.parentNode && this.parentNode
+											.parentNode && this.parentNode.parentNode.parentNode == ui.me &&
+											(!_status.mousedown || _status.mouseleft)) {
 											if (bool) {
-												this.style.transform = this._transform + " translateY(-" + (decadeUI.isMobile() ? 10 : 12) + "px)";
+												this.style.transform = this._transform + " translateY(-" + (
+													decadeUI.isMobile() ? 10 : 12) + "px)";
 											} else {
 												this.style.transform = this._transform || "";
 											}
 										}
 									}
 								},
-								moveTo: function (player) {
+								moveTo(player) {
 									if (!player) return;
 									var arena = dui.boundsCaches.arena;
 									if (!arena.updated) arena.update();
 
 									player.checkBoundsCache();
 									this.fixed = true;
-									var x = Math.round((player.cacheWidth - arena.cardWidth) / 2 + player.cacheLeft);
-									var y = Math.round((player.cacheHeight - arena.cardHeight) / 2 + player.cacheTop);
+									var x = Math.round((player.cacheWidth - arena.cardWidth) / 2 + player
+										.cacheLeft);
+									var y = Math.round((player.cacheHeight - arena.cardHeight) / 2 + player
+										.cacheTop);
 									var scale = arena.cardScale;
 
 									this.tx = x;
 									this.ty = y;
 									this.scaled = true;
-									this.style.transform = "translate(" + x + "px," + y + "px) scale(" + scale + ")";
+									this.style.transform = "translate(" + x + "px," + y + "px) scale(" +
+										scale + ")";
 									return this;
 								},
-								moveDelete: function (player) {
+								moveDelete(player) {
 									this.fixed = true;
 									this.moveTo(player);
 									setTimeout(
-										function (card) {
+										function(card) {
 											card.delete();
 										},
 										460,
@@ -412,22 +413,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							},
 
 							control: {
-								add: function (item) {
+								add(item) {
 									var node = document.createElement("div");
 									node.link = item;
 									node.innerHTML = get.translation(item);
-									node.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
+									node.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui
+										.click.control);
 									this.appendChild(node);
 									this.updateLayout();
 								},
 
-								open: function () {
+								open() {
 									ui.control.insertBefore(this, _status.createControl || ui.confirm);
 									ui.controls.unshift(this);
 									return this;
 								},
 
-								close: function () {
+								close() {
 									this.remove();
 									ui.controls.remove(this);
 									if (ui.confirm == this) ui.confirm = null;
@@ -436,7 +438,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									if (ui.skills3 == this) ui.skills3 = null;
 								},
 
-								replace: function () {
+								replace() {
 									var items;
 									var index = 0;
 									var nodes = this.childNodes;
@@ -473,11 +475,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									return this;
 								},
 
-								updateLayout: function () {
+								updateLayout() {
 									var nodes = this.childNodes;
 									if (nodes.length >= 2) {
 										this.classList.add("combo-control");
-										for (var i = 0; i < nodes.length; i++) nodes[i].classList.add("control");
+										for (var i = 0; i < nodes.length; i++) nodes[i].classList.add(
+											"control");
 									} else {
 										this.classList.remove("combo-control");
 										if (nodes.length == 1) nodes[0].classList.remove("control");
@@ -486,14 +489,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							},
 
 							player: {
-								mark: function (item, info, skill) {
-									if (item && lib.config["extension_十周年UI_newDecadeStyle"] != "on") {
+								mark(item, info, skill) {
+									if (item && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" &&
+										lib.config.extension_十周年UI_newDecadeStyle != "on") {
 										const info = get.info(item);
 										if (info && (info.zhuanhuanji || info.limited)) return;
 									}
 									if (get.itemtype(item) == "cards") {
 										var marks = new Array(item.length);
-										for (var i = 0; i < item.length; i++) marks.push(this.mark(item[i], info));
+										for (var i = 0; i < item.length; i++) marks.push(this.mark(item[i],
+											info));
 										return marks;
 									}
 									var mark;
@@ -504,8 +509,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										if (item.classList.contains("fullborder")) {
 											mark.classList.add("fakejudge");
 											mark.classList.add("fakemark");
-											if (!mark.node.mark) mark.node.mark = mark.querySelector(".mark-text") || decadeUI.element.create("mark-text", mark);
-											mark.node.mark.innerHTML = lib.translate[name.name + "_bg"] || get.translation(name.name)[0];
+											if (!mark.node.mark) mark.node.mark = mark.querySelector(
+												".mark-text") || decadeUI.element.create("mark-text",
+												mark);
+											mark.node.mark.innerHTML = lib.translate[name.name + "_bg"] ||
+												get.translation(name.name)[0];
 										}
 										item = item.name;
 									} else {
@@ -527,7 +535,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											mark.text.style.backgroundSize = "contain";
 											mark.text.style.backgroundRepeat = "no-repeat";
 											mark.text.classList.add("before-hidden");
-										} else if (markText.length == 2) mark.text.classList.add("small-text");
+										} else if (markText.length == 2) mark.text.classList.add(
+											"small-text");
 										if (lib.skill[item] && lib.skill[item].zhuanhuanji) {
 											mark.text.style.animation = "none";
 											mark.text.classList.add("before-hidden");
@@ -543,7 +552,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										mark.markidentifer = info;
 									}
 
-									mark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
+									mark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui
+										.click.card);
 									if (!lib.config.touchscreen) {
 										if (lib.config.hover_all) {
 											lib.setHover(mark, ui.click.hoverplayer);
@@ -558,21 +568,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									ui.updatem(this);
 									return mark;
 								},
-								markSkill: function (name, info, card, nobroadcast) {
-									if (name && lib.config["extension_十周年UI_newDecadeStyle"] != "on") {
+								markSkill(name, info, card, nobroadcast) {
+									if (name && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" &&
+										lib.config.extension_十周年UI_newDecadeStyle != "on") {
 										const info = get.info(name);
 										if (info && (info.zhuanhuanji || info.limited)) return;
 									}
 									return base.lib.element.player.markSkill.apply(this, arguments);
 								},
-								unmarkSkill: function (name, info, card, nobroadcast) {
-									if (name && lib.config["extension_十周年UI_newDecadeStyle"] != "on") {
+								unmarkSkill(name, info, card, nobroadcast) {
+									if (name && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" &&
+										lib.config.extension_十周年UI_newDecadeStyle != "on") {
 										const info = get.info(name);
 										if (info && (info.zhuanhuanji || info.limited)) return;
 									}
 									return base.lib.element.player.unmarkSkill.apply(this, arguments);
 								},
-								markCharacter: function (name, info, learn, learn2) {
+								markCharacter(name, info, learn, learn2) {
 									if (typeof name == "object") name = name.name;
 
 									var nodeMark = ui.create.div(".card.mark");
@@ -594,7 +606,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									nodeMark.name = name + "_charactermark";
 									nodeMark.info = info;
 									nodeMark.text = nodeMarkText;
-									nodeMark.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
+									nodeMark.addEventListener(lib.config.touchscreen ? "touchend" : "click",
+										ui.click.card);
 									if (!lib.config.touchscreen) {
 										if (lib.config.hover_all) {
 											lib.setHover(nodeMark, ui.click.hoverplayer);
@@ -608,10 +621,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									ui.updatem(this);
 									return nodeMark;
 								},
-								markSkillCharacter: function (id, target, name, content) {
+								markSkillCharacter(id, target, name, content) {
 									if (typeof target == "object") target = target.name;
 									game.broadcastAll(
-										function (player, target, name, content, id) {
+										function(player, target, name, content, id) {
 											if (player.marks[id]) {
 												player.marks[id].name = name + "_charactermark";
 												player.marks[id].info = {
@@ -640,8 +653,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											}
 											player.marks[id].setBackground(target, "character");
 											player.marks[id]._name = target;
-											player.marks[id].style.setProperty("background-size", "cover", "important");
-											player.marks[id].text.style.setProperty("font-size", "0px", "important");
+											player.marks[id].style.setProperty("background-size",
+												"cover", "important");
+											player.marks[id].text.style.setProperty("font-size", "0px",
+												"important");
 										},
 										this,
 										target,
@@ -651,9 +666,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									);
 									return this;
 								},
-								playDynamic: function (animation, deputy) {
+								playDynamic(animation, deputy) {
 									deputy = deputy === true;
-									if (animation == undefined) return console.error("playDynamic: 参数1不能为空");
+									if (animation == undefined) return console.error(
+									"playDynamic: 参数1不能为空");
 									var dynamic = this.dynamic;
 									if (!dynamic) {
 										dynamic = new duilib.DynamicPlayer("assets/dynamic/");
@@ -670,7 +686,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										}
 									}
 
-									if (typeof animation == "string") animation = { name: animation };
+									if (typeof animation == "string") animation = {
+										name: animation
+									};
 									if (this.doubleAvatar) {
 										if (Array.isArray(animation.x)) {
 											animation.x = animation.x.concat();
@@ -692,7 +710,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										};
 									}
 
-									if (this.$dynamicWrap.parentNode != this) this.appendChild(this.$dynamicWrap);
+									if (this.$dynamicWrap.parentNode != this) this.appendChild(this
+										.$dynamicWrap);
 
 									dynamic.outcropMask = duicfg.dynamicSkinOutcrop;
 									var avatar = dynamic.play(animation);
@@ -705,7 +724,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									this.classList.add(deputy ? "d-skin2" : "d-skin");
 								},
 
-								stopDynamic: function (primary, deputy) {
+								stopDynamic(primary, deputy) {
 									var dynamic = this.dynamic;
 									if (!dynamic) return;
 
@@ -731,7 +750,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 								},
 
-								say: function (str) {
+								say(str) {
 									str = str.replace(/##assetURL##/g, lib.assetURL);
 
 									if (!this.$chatBubble) {
@@ -746,7 +765,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 									if (bubble.timeout) clearTimeout(bubble.timeout);
 									bubble.timeout = setTimeout(
-										function (bubble) {
+										function(bubble) {
 											bubble.timeout = undefined;
 											bubble.delete();
 										},
@@ -755,7 +774,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									);
 
 									var name = get.translation(this.name);
-									var info = [name ? name + "[" + this.nickname + "]" : this.nickname, str];
+									var info = [name ? name + "[" + this.nickname + "]" : this.nickname,
+										str];
 									lib.chatHistory.push(info);
 									if (_status.addChatEntry) {
 										if (_status.addChatEntry._origin.parentNode) {
@@ -765,14 +785,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										}
 									}
 									if (lib.config.background_speak && lib.quickVoice.indexOf(str) != -1) {
-										game.playAudio("voice", this.sex == "female" ? "female" : "male", lib.quickVoice.indexOf(str));
+										game.playAudio("voice", this.sex == "female" ? "female" : "male",
+											lib.quickVoice.indexOf(str));
 									}
 								},
 
 								/*-----------------分割线-----------------*/
-								updateMark: function (name, storage) {
+								updateMark(name, storage) {
 									if (!this.marks[name]) {
-										if (lib.skill[name] && lib.skill[name].intro && (this.storage[name] || lib.skill[name].intro.markcount)) {
+										if (lib.skill[name] && lib.skill[name].intro && (this.storage[
+												name] || lib.skill[name].intro.markcount)) {
 											this.markSkill(name);
 											if (!this.marks[name]) return this;
 										} else {
@@ -782,7 +804,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 									var mark = this.marks[name];
 									if (storage && this.storage[name]) this.syncStorage(name);
-									if (lib.skill[name] && lib.skill[name].intro && !lib.skill[name].intro.nocount && (this.storage[name] || lib.skill[name].intro.markcount)) {
+									if (lib.skill[name] && lib.skill[name].intro && !lib.skill[name].intro
+										.nocount && (this.storage[name] || lib.skill[name].intro.markcount)
+										) {
 										var num = 0;
 										if (typeof lib.skill[name].intro.markcount == "function") {
 											num = lib.skill[name].intro.markcount(this.storage[name], this);
@@ -799,7 +823,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											num = this.storage[name].length;
 										}
 										if (num) {
-											if (!mark.markcount) mark.markcount = decadeUI.element.create("mark-count", mark);
+											if (!mark.markcount) mark.markcount = decadeUI.element.create(
+												"mark-count", mark);
 											mark.markcount.textContent = num;
 										} else if (mark.markcount) {
 											mark.markcount.delete();
@@ -819,38 +844,45 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									return this;
 								},
 
-								$dieAfter: function () {
+								$dieAfter() {
 									if (!config.dynamicSkin_dieAfter) this.stopDynamic();
 									this.node.gainSkill.innerHTML = null;
 
 									if (!decadeUI.config.playerDieEffect) {
-										if (base.lib.element.player.$dieAfter) base.lib.element.player.$dieAfter.apply(this, arguments);
+										if (base.lib.element.player.$dieAfter) base.lib.element.player
+											.$dieAfter.apply(this, arguments);
 										return;
 									}
 
-									if (!this.node.dieidentity) this.node.dieidentity = ui.create.div("died-identity", this);
+									if (!this.node.dieidentity) this.node.dieidentity = ui.create.div(
+										"died-identity", this);
 									this.node.dieidentity.classList.add("died-identity");
 
-									var that = this;
-									var image = new Image();
-									var identity = decadeUI.getPlayerIdentity(this);
-									var url = decadeUIPath + "image/decoration" + (decadeUI.config.newDecadeStyle == "on" ? "" : "s") + "/dead" + (decadeUI.config.newDecadeStyle == "on" ? "" : "2") + "_" + identity + ".png";
-									image.onerror = function () {
-										that.node.dieidentity.innerHTML = decadeUI.getPlayerIdentity(that, that.identity, true) + "<br>阵亡";
+									var that = this,
+										image = new Image(),
+										identity = decadeUI.getPlayerIdentity(this);
+									const goon = decadeUI.config.newDecadeStyle === "on" || decadeUI.config
+										.newDecadeStyle === "othersOff";
+									var url = decadeUIPath + "image/decoration" + (goon ? "/dead" :
+										"s/dead2") + "_" + identity + ".png";
+									image.onerror = function() {
+										that.node.dieidentity.innerHTML = decadeUI.getPlayerIdentity(
+											that, that.identity, true) + "<br>阵亡";
 									};
 
 									// 随机离开效果
-									if ((that._trueMe || that) != game.me && that != game.me && Math.random() < 0.5) {
-										if (lib.config.extension_十周年UI_newDecadeStyle == "on") {
-											that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:0px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
-										}
-
-										if (lib.config.extension_十周年UI_newDecadeStyle == "off") {
-											that.node.dieidentity.innerHTML = '<div style="width:21px; height:81px; left:22px; top:-12px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_2.png);background-size: 100% 100%;"></div>';
-										}
-
-										if (lib.config.extension_十周年UI_newDecadeStyle == "othersOn") {
-											that.node.dieidentity.innerHTML = '<div style="width:21px; height:81px; left:18px; top:-12px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_2.png);background-size: 100% 100%;"></div>';
+									if ((that._trueMe || that) != game.me && that != game.me && Math
+										.random() < 0.5) {
+										if (goon) {
+											that.node.dieidentity.innerHTML =
+												'<div style="width:40.2px; height:20px; left:0px; top:-32px; position:absolute; background-image: url(' +
+												lib.assetURL +
+												'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
+										} else {
+											that.node.dieidentity.innerHTML =
+												'<div style="width:21px; height:81px; left:18px; top:-12px; position:absolute; background-image: url(' +
+												lib.assetURL +
+												'extension/十周年UI/assets/image/likai_2.png);background-size: 100% 100%;"></div>';
 										}
 									} else {
 										that.node.dieidentity.innerHTML = "";
@@ -858,24 +890,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 									that.node.dieidentity.style.backgroundImage = 'url("' + url + '")';
 									image.src = url;
-									setTimeout(function () {
+									setTimeout(function() {
 										var rect = that.getBoundingClientRect();
 										decadeUI.animation.playSpine("effect_zhenwang", {
-											x: rect.left + rect.width / 2 - 7,
-											y: decadeUI.get.bodySize().height - rect.top - rect.height / 2 + 1,
+											parent: that,
 											scale: 0.8,
 										});
 									}, 250);
 								},
 
-								$skill: function (name, type, color, avatar) {
-									if (!decadeUI.config.gameAnimationEffect || !decadeUI.animation.gl) return base.lib.element.player.$skill.apply(this, arguments);
+								$skill(name, type, color, avatar) {
+									if (!decadeUI.config.gameAnimationEffect || !decadeUI.animation.gl)
+										return base.lib.element.player.$skill.apply(this, arguments);
 									var _this = this;
 									if (typeof type != "string") type = "legend";
 
 									game.addVideo("skill", this, [name, type, color, avatar]);
 									game.broadcastAll(
-										function (player, type, name, color, avatar) {
+										function(player, type, name, color, avatar) {
 											if (window.decadeUI == void 0) {
 												game.delay(2.5);
 												if (name) player.$fullscreenpop(name, color, avatar);
@@ -892,13 +924,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										avatar
 									);
 								},
-								$syncExpand: function (map) {
+								$syncExpand(map) {
 									if (this != game.me) return;
 									//if (base.lib.element.player.$syncExpand) base.lib.element.player.$syncExpand.apply(this, arguments);
 									if (!map) map = this.expandedSlots || {};
 									game.addVideo("$syncExpand", this, get.copy(map));
 									game.broadcast(
-										function (player, map) {
+										function(player, map) {
 											player.expandedSlots = map;
 											player.$syncExpand(map);
 										},
@@ -916,8 +948,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										equipSolts = ui.equipSolts;
 									for (var repetition = 0; repetition < 5; repetition++) {
 										if (storage && storage["equip" + (repetition + 1)]) {
-											for (var adde = 0; adde < storage["equip" + (repetition + 1)]; adde++) {
-												var addediv = decadeUI.element.create(null, equipSolts.back);
+											for (var adde = 0; adde < storage["equip" + (repetition +
+												1)]; adde++) {
+												var addediv = decadeUI.element.create(null, equipSolts
+												.back);
 												addediv.dataset.type = repetition;
 											}
 										}
@@ -925,9 +959,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										ediv.dataset.type = repetition;
 									}
 								},
-								$init: function (character, character2) {
+								$init(character, character2) {
 									base.lib.element.player.$init.apply(this, arguments);
-									this.doubleAvatar = (character2 && lib.character[character2]) != undefined;
+									this.doubleAvatar = (character2 && lib.character[character2]) !=
+										undefined;
 
 									var CUR_DYNAMIC = decadeUI.CUR_DYNAMIC;
 									var MAX_DYNAMIC = decadeUI.MAX_DYNAMIC;
@@ -943,11 +978,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 
 									if (this.dynamic) this.stopDynamic();
-									var showDynamic = (this.dynamic || CUR_DYNAMIC < MAX_DYNAMIC) && duicfg.dynamicSkin;
+									var showDynamic = (this.dynamic || CUR_DYNAMIC < MAX_DYNAMIC) && duicfg
+										.dynamicSkin;
 									if (showDynamic && _status.mode != null) {
 										var skins;
 										var dskins = decadeUI.dynamicSkin;
-										var avatars = this.doubleAvatar ? [character, character2] : [character];
+										var avatars = this.doubleAvatar ? [character, character2] : [
+											character
+										];
 										var increased;
 
 										for (var i = 0; i < avatars.length; i++) {
@@ -962,9 +1000,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 											var skin = skins[Object.keys(skins)[0]];
 											if (skin.speed == undefined) skin.speed = 1;
-											this.playDynamic(
-												{
-													name: skin.name, //	string 骨骼文件名，一般是assets/dynamic 下的动皮文件，也可以使用.. 来寻找其他文件目录
+											this.playDynamic({
+													name: skin
+													.name, //	string 骨骼文件名，一般是assets/dynamic 下的动皮文件，也可以使用.. 来寻找其他文件目录
 													action: skin.action, // string 播放动作 不填为默认
 													loop: true, // boolean 是否循环播放
 													loopCount: -1, // number 循环次数，只有loop为true时生效
@@ -980,13 +1018,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 													// (2) y: [10, 0.5]，相当于 top: calc(50% + 10px)；
 													scale: skin.scale, // 缩放
 													angle: skin.angle, // 角度
-													hideSlots: skin.hideSlots, // 隐藏不需要的部件，想知道具体部件名称请使用SpineAltasSplit工具查看
+													hideSlots: skin
+													.hideSlots, // 隐藏不需要的部件，想知道具体部件名称请使用SpineAltasSplit工具查看
 													clipSlots: skin.clipSlots, // 剪掉超出头的部件，仅针对露头动皮，其他勿用
 												},
 												i == 1
 											);
 
-											this.$dynamicWrap.style.backgroundImage = 'url("' + decadeUIPath + "assets/dynamic/" + skin.background + '")';
+											this.$dynamicWrap.style.backgroundImage = 'url("' +
+												decadeUIPath + "assets/dynamic/" + skin.background + '")';
 											if (!increased) {
 												increased = true;
 												decadeUI.CUR_DYNAMIC++;
@@ -995,7 +1035,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 									return this;
 								},
-								$uninit: function () {
+								$uninit() {
 									this.stopDynamic();
 									this.doubleAvatar = false;
 									delete this.node.campWrap.dataset.camp;
@@ -1009,15 +1049,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									base.lib.element.player.$uninit.apply(this, arguments);
 									return this;
 								},
-								setSeatNum: function () {
+								setSeatNum() {
 									base.lib.element.player.setSeatNum.apply(this, arguments);
 									this.seat = this.getSeatNum();
-									game.broadcastAll(function (player) {
-										if (!player.node.seat) player.node.seat = decadeUI.element.create("seat", player);
-										player.node.seat.innerHTML = get.cnNumber(player.seat, true);
+									game.broadcastAll(function(player) {
+										if (!player.node.seat) player.node.seat = decadeUI.element
+											.create("seat", player);
+										player.node.seat.innerHTML = get.cnNumber(player.seat,
+										true);
 									}, this);
 								},
-								$update: function () {
+								$update() {
 									base.lib.element.player.$update.apply(this, arguments);
 									//护甲显示修改
 									let hujiat = this.node.hpWrap.querySelector(".hujia");
@@ -1029,14 +1071,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										hujiat.innerText = this.hujia == Infinity ? "∞" : this.hujia;
 									} else if (hujiat) hujiat.remove();
 									//体力条显示修改
-									const hidden = this.classList.contains("unseen_show") || this.classList.contains("unseen2_show");
+									const hidden = this.classList.contains("unseen_show") || this.classList
+										.contains("unseen2_show");
 									let hp = this.hp,
 										hpMax = hidden ? 1 : this.maxHp,
 										hpNode = this.node.hp;
 									const goon = hpMax > 5 || (this.hujia && hpMax > 3);
 									if (!this.storage.nohp) {
 										if (goon) {
-											hpNode.innerHTML = (isNaN(hp) ? "×" : hp == Infinity ? "∞" : hp) + "<br>/<br>" + (isNaN(hpMax) ? "×" : hpMax == Infinity ? "∞" : hpMax) + "<div></div>";
+											hpNode.innerHTML = (isNaN(hp) ? "×" : hp == Infinity ? "∞" :
+												hp) + "<br>/<br>" + (isNaN(hpMax) ? "×" : hpMax ==
+													Infinity ? "∞" : hpMax) + "<div></div>";
 											if (hp == 0) hpNode.lastChild.classList.add("lost");
 											hpNode.classList.add("textstyle");
 										}
@@ -1047,7 +1092,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									if (count >= 10) this.node.count.innerHTML = count;
 									return this;
 								},
-								directgain: function (cards, broadcast, gaintag) {
+								directgain(cards, broadcast, gaintag) {
 									if (!cards || !cards.length) return;
 									var player = this;
 									var handcards = player.node.handcards1;
@@ -1086,7 +1131,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 									if (broadcast !== false) {
 										game.broadcast(
-											function (player, cards) {
+											function(player, cards) {
 												player.directgain(cards);
 											},
 											this,
@@ -1104,29 +1149,33 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										card.style.transform = "";
 										card.classList.remove("drawinghidden");
 										delete card._transform;
-										const bgMark = lib.translate[VCard.name + "_bg"] || get.translation(VCard.name)[0];
+										const bgMark = lib.translate[VCard.name + "_bg"] || get
+											.translation(VCard.name)[0];
 										if (isViewAsCard) {
 											card.viewAs = VCard.name;
 											if (window.decadeUI) {
 												card.classList.add("fakejudge");
 												card.node.judgeMark.node.judge.innerHTML = bgMark;
-											} else if (card.classList.contains("fullskin") || card.classList.contains("fullborder")) {
+											} else if (card.classList.contains("fullskin") || card
+												.classList.contains("fullborder")) {
 												card.classList.add("fakejudge");
 												card.node.background.innerHTML = bgMark;
 											}
 										} else {
 											delete card.viewAs;
 											card.classList.remove("fakejudge");
-											if (window.decadeUI) card.node.judgeMark.node.judge.innerHTML = bgMark;
+											if (window.decadeUI) card.node.judgeMark.node.judge
+												.innerHTML = bgMark;
 										}
 										card.classList.add("drawinghidden");
-										player.node.judges.insertBefore(card, player.node.judges.firstChild);
+										player.node.judges.insertBefore(card, player.node.judges
+											.firstChild);
 									});
 									ui.updatej(player);
 								},
-								useCard: function () {
+								useCard() {
 									var event = base.lib.element.player.useCard.apply(this, arguments);
-									event.finish = function () {
+									event.finish = function() {
 										this.finished = true;
 										var targets = this.targets;
 										for (var i = 0; i < targets.length; i++) {
@@ -1134,16 +1183,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										}
 									};
 									event.pushHandler("decadeUI_LineAnimation", (event, option) => {
-										if (event.step === 1 && option.state === "begin" && !event.hideTargets) {
+										if (event.step === 1 && option.state === "begin" && !event
+											.hideTargets) {
 											const player = event.player;
 											for (var i = 0; i < targets.length; i++) {
-												if (targets[i] != player) targets[i].classList.add("target");
+												if (targets[i] != player) targets[i].classList.add(
+													"target");
 											}
 										}
 									});
 									return event;
 								},
-								lose: function () {
+								lose() {
 									var next = base.lib.element.player.lose.apply(this, arguments);
 									var event = _status.event;
 									if (event.name == "useCard") {
@@ -1153,7 +1204,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 									return next;
 								},
-								line: function (target, config) {
+								line(target, config) {
 									if (get.itemtype(target) == "players") {
 										for (var i = 0; i < target.length; i++) {
 											this.line(target[i], config);
@@ -1163,7 +1214,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 										var player = this;
 										game.broadcast(
-											function (player, target, config) {
+											function(player, target, config) {
 												player.line(target, config);
 											},
 											player,
@@ -1198,12 +1249,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										game.linexy([x1, y1, x2, y2], config, true);
 									}
 								},
-								checkBoundsCache: function (forceUpdate) {
+								checkBoundsCache(forceUpdate) {
 									var update;
 									var refer = dui.boundsCaches.arena;
 									refer.check();
 
-									if (this.cacheReferW != refer.width || this.cacheReferH != refer.height || this.cachePosition != this.dataset.position) update = true;
+									if (this.cacheReferW != refer.width || this.cacheReferH != refer
+										.height || this.cachePosition != this.dataset.position) update =
+										true;
 
 									this.cacheReferW = refer.width;
 									this.cacheReferH = refer.height;
@@ -1217,13 +1270,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										this.cacheHeight = this.offsetHeight;
 									}
 								},
-								queueCssAnimation: function (animation) {
+								queueCssAnimation(animation) {
 									var current = this.style.animation;
 									var animations = this._cssanimations;
 									if (animations == undefined) {
 										animations = [];
 										this._cssanimations = animations;
-										this.addEventListener("animationend", function (e) {
+										this.addEventListener("animationend", function(e) {
 											if (this.style.animationName != e.animationName) return;
 
 											var current = this.style.animation;
@@ -1248,12 +1301,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									animations.current = animation;
 									this.style.animation = animation;
 								},
-								$draw: function (num, init, config) {
-									if (game.chess) return base.lib.element.player.$draw.call(this, num, init, config);
+								$draw(num, init, config) {
+									if (game.chess) return base.lib.element.player.$draw.call(this, num,
+										init, config);
 
 									if (init !== false && init !== "nobroadcast") {
 										game.broadcast(
-											function (player, num, init, config) {
+											function(player, num, init, config) {
 												player.$draw(num, init, config);
 											},
 											this,
@@ -1287,8 +1341,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 									if (_status.event && _status.event.name) {
 										if (
-											(function (event) {
-												return event.name != "gain" && !event.name.includes("raw");
+											(function(event) {
+												return event.name != "gain" && !event.name.includes(
+													"raw");
 											})(_status.event)
 										)
 											isDrawCard = true;
@@ -1300,7 +1355,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									var card;
 									for (var i = 0; i < cards.length; i++) {
 										card = cards[i];
-										if (card == null) card = dui.element.create("card thrown drawingcard");
+										if (card == null) card = dui.element.create(
+											"card thrown drawingcard");
 										else card = card.copy("thrown", "drawingcard", false);
 
 										card.fixed = true;
@@ -1311,12 +1367,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									var player = this;
 									dui.layoutDrawCards(cards, player, true);
 									ui.arena.appendChild(fragment);
-									dui.queueNextFrameTick(function () {
+									dui.queueNextFrameTick(function() {
 										dui.layoutDrawCards(cards, player);
 										dui.delayRemoveCards(cards, 460, 220);
 									});
 								},
-								$give: function (cards, target, log, record) {
+								$give(cards, target, log, record) {
 									var itemtype;
 									var duiMod = cards.duiMod && game.me == target;
 									if (typeof cards == "number") {
@@ -1339,11 +1395,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											cards2 = cards.length;
 											game.addVideo("give", this, [cards2, target.dataset.position]);
 										} else {
-											game.addVideo("giveCard", this, [get.cardsInfo(cards2), target.dataset.position]);
+											game.addVideo("giveCard", this, [get.cardsInfo(cards2), target
+												.dataset.position
+											]);
 										}
 
 										game.broadcast(
-											function (source, cards2, target, record) {
+											function(source, cards2, target, record) {
 												source.$give(cards2, target, false, record);
 											},
 											this,
@@ -1354,7 +1412,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 
 									if (log != false) {
-										if (itemtype == "number") game.log(target, "从", this, "获得了" + get.cnNumber(cards.length) + "张牌");
+										if (itemtype == "number") game.log(target, "从", this, "获得了" + get
+											.cnNumber(cards.length) + "张牌");
 										else game.log(target, "从", this, "获得了", cards);
 									}
 
@@ -1389,7 +1448,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												cp.tx = Math.round(hand.x + card.tx);
 												cp.ty = Math.round(hand.y + 30 + card.ty);
 												cp.scaled = true;
-												cp.style.transform = "translate(" + cp.tx + "px," + cp.ty + "px) scale(" + hand.cardScale + ")";
+												cp.style.transform = "translate(" + cp.tx + "px," + cp.ty +
+													"px) scale(" + hand.cardScale + ")";
 											} else {
 												draws.push(cp);
 											}
@@ -1407,12 +1467,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									if (draws.length) dui.layoutDrawCards(draws, player);
 
 									ui.arena.appendChild(fragment);
-									dui.queueNextFrameTick(function () {
+									dui.queueNextFrameTick(function() {
 										dui.layoutDrawCards(cards, target);
 										dui.delayRemoveCards(cards, 460, 220);
 									});
 								},
-								$gain2: function (cards, log) {
+								$gain2(cards, log) {
 									var type = get.itemtype(cards);
 									if (type != "cards") {
 										if (type != "card") return;
@@ -1424,7 +1484,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									if (log === true) game.log(this, "获得了", cards);
 
 									game.broadcast(
-										function (player, cards) {
+										function(player, cards) {
 											player.$gain2(cards);
 										},
 										this,
@@ -1463,21 +1523,22 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									for (var i = 0; i < cards.length; i++) fragment.appendChild(cards[i]);
 
 									ui.arena.appendChild(fragment);
-									dui.queueNextFrameTick(function () {
+									dui.queueNextFrameTick(function() {
 										dui.layoutDrawCards(cards, player);
 										dui.delayRemoveCards(cards, 460, 220);
 									});
 								},
-								$handleEquipChange: function () {
+								$handleEquipChange() {
 									base.lib.element.player.$handleEquipChange.apply(this, arguments);
 									const player = this;
 									if (!(player == game.me && ui.equipSolts)) return;
 									const sum = Array.from(player.node.equips.childNodes).filter(card => {
 										return ![1, 2, 3, 4, 5].includes(get.equipNum(card));
 									}).length;
-									const current = Array.from(ui.equipSolts.back.children).filter(elements => {
-										return elements.dataset.type == 5;
-									}).length;
+									const current = Array.from(ui.equipSolts.back.children).filter(
+										elements => {
+											return elements.dataset.type == 5;
+										}).length;
 									let delta = sum - current;
 									if (delta > 0) {
 										while (delta > 0) {
@@ -1487,25 +1548,26 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										}
 									} else if (delta < 0) {
 										for (let i = 0; i > sum; i--) {
-											const element = Array.from(ui.equipSolts.back.children).find(elements => {
-												return elements.dataset.type == 5;
-											});
+											const element = Array.from(ui.equipSolts.back.children).find(
+												elements => {
+													return elements.dataset.type == 5;
+												});
 											if (element?.dataset.type == 5) element.remove();
 										}
 									}
 								},
-								removeVirtualEquip: function () {
+								removeVirtualEquip() {
 									base.lib.element.player.removeVirtualEquip.apply(this, arguments);
 									if (!lib.config.equip_span) this.$handleEquipChange();
 								},
-								$damage: function (source) {
+								$damage(source) {
 									if (get.itemtype(source) == "player") {
 										game.addVideo("damage", this, source.dataset.position);
 									} else {
 										game.addVideo("damage", this);
 									}
 									game.broadcast(
-										function (player, source) {
+										function(player, source) {
 											player.$damage(source);
 										},
 										this,
@@ -1514,7 +1576,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 									this.queueCssAnimation("player-hurt 0.3s");
 								},
-								$throw: function (cards, time, record, nosource) {
+								$throw(cards, time, record, nosource) {
 									var itemtype;
 									var duiMod = cards.duiMod && game.me == this && !nosource;
 									if (typeof cards == "number") {
@@ -1529,8 +1591,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										} else {
 											var evt = _status.event;
 											if (evt && evt.card && evt.cards === cards) {
-												var card = ui.create.card().init([evt.card.suit, evt.card.number, evt.card.name, evt.card.nature]);
-												if (evt.card.suit == "none") card.node.suitnum.style.display = "none";
+												var card = ui.create.card().init([evt.card.suit, evt.card
+													.number, evt.card.name, evt.card.nature
+												]);
+												if (evt.card.suit == "none") card.node.suitnum.style
+													.display = "none";
 												card.dataset.virtual = 1;
 												cards = [card];
 											}
@@ -1547,12 +1612,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										card = cards[i];
 										if (card) {
 											clone = card.copy("thrown");
-											if (duiMod && (card.throwWith == "h" || card.throwWith == "s")) {
+											if (duiMod && (card.throwWith == "h" || card.throwWith ==
+												"s")) {
 												clone.tx = Math.round(hand.x + card.tx);
 												clone.ty = Math.round(hand.y + 30 + card.ty);
 												clone.scaled = true;
 												clone.throwordered = true;
-												clone.style.transform = "translate(" + clone.tx + "px," + clone.ty + "px) scale(" + hand.cardScale + ")";
+												clone.style.transform = "translate(" + clone.tx + "px," +
+													clone.ty + "px) scale(" + hand.cardScale + ")";
 											}
 											card = clone;
 										} else {
@@ -1567,7 +1634,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									if (record !== false) {
 										if (record !== "nobroadcast") {
 											game.broadcast(
-												function (player, cards, time, record, nosource) {
+												function(player, cards, time, record, nosource) {
 													player.$throw(cards, time, record, nosource);
 												},
 												this,
@@ -1582,24 +1649,27 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 
 									if (duiMod && cards.length > 2) {
-										cards.sort(function (a, b) {
+										cards.sort(function(a, b) {
 											if (a.tx == undefined && b.tx == undefined) return 0;
 
-											if (a.tx == undefined) return duicfg.rightLayout ? -1 : 1;
+											if (a.tx == undefined) return duicfg.rightLayout ? -1 :
+												1;
 
-											if (b.tx == undefined) return duicfg.rightLayout ? 1 : -1;
+											if (b.tx == undefined) return duicfg.rightLayout ? 1 : -
+												1;
 
 											return b.tx - a.tx;
 										});
 									}
 
-									for (var i = 0; i < cards.length; i++) player.$throwordered2(cards[i], nosource);
+									for (var i = 0; i < cards.length; i++) player.$throwordered2(cards[i],
+										nosource);
 
 									if (game.chess) this.chessFocus();
 
 									return cards[cards.length - 1];
 								},
-								$throwordered2: function (card, nosource) {
+								$throwordered2(card, nosource) {
 									if (_status.connectMode) ui.todiscard = [];
 
 									if (card.throwordered == undefined) {
@@ -1623,7 +1693,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										card.ty = y;
 										card.scaled = true;
 										card.classList.add("thrown");
-										card.style.transform = "translate(" + x + "px, " + y + "px)" + "scale(" + bounds.cardScale + ")";
+										card.style.transform = "translate(" + x + "px, " + y + "px)" +
+											"scale(" + bounds.cardScale + ")";
 									} else {
 										card.throwordered = undefined;
 									}
@@ -1639,7 +1710,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 
 									var tagNode = card.querySelector(".used-info");
-									if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
+									if (tagNode == null) tagNode = card.appendChild(dui.element.create(
+										"used-info"));
 
 									card.$usedtag = tagNode;
 									ui.thrown.unshift(card);
@@ -1650,7 +1722,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									dui.queueNextFrameTick(dui.layoutDiscard, dui);
 									return card;
 								},
-								$phaseJudge: function (card) {
+								$phaseJudge(card) {
 									game.addVideo("phaseJudge", this, get.cardInfo(card));
 									if (card.cards?.length) {
 										const cards = card.cards;
@@ -1663,9 +1735,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								},
 							},
 							content: {
-								changeHp: function () {
+								changeHp() {
 									game.getGlobalHistory().changeHp.push(event);
-									if (num < 0 && player.hujia > 0 && event.getParent().name == "damage" && !player.hasSkillTag("nohujia")) {
+									if (num < 0 && player.hujia > 0 && event.getParent().name == "damage" &&
+										!player.hasSkillTag("nohujia")) {
 										event.hujia = Math.min(-num, player.hujia);
 										event.getParent().hujia = event.hujia;
 										event.num += event.hujia;
@@ -1682,7 +1755,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 									if (_status.dying.includes(player) && player.hp > 0) {
 										_status.dying.remove(player);
-										game.broadcast(function (list) {
+										game.broadcast(function(list) {
 											_status.dying = list;
 										}, _status.dying);
 										var evt = event.getParent("_save");
@@ -1693,87 +1766,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									event.trigger("changeHp");
 									dui.delay(68);
 								},
-								respond: function () {
-									"step 0";
-									var cardaudio = true;
-									if (event.skill) {
-										if (lib.skill[event.skill].audio) {
-											cardaudio = false;
-										}
-										player.logSkill(event.skill);
-										player.checkShow(event.skill, true);
-										if (lib.skill[event.skill].onrespond && !game.online) {
-											lib.skill[event.skill].onrespond(event, player);
-										}
-									} else if (!event.nopopup) player.tryCardAnimate(card, card.name, "wood");
-									if (cardaudio && event.getParent(3).name == "useCard") {
-										game.broadcastAll(
-											function (player, card) {
-												if (lib.config.background_audio) {
-													var sex = player.sex == "female" ? "female" : "male";
-													var audioinfo = lib.card[card.name].audio;
-													if (typeof audioinfo == "string" && audioinfo.indexOf("ext:") == 0) {
-														game.playAudio("..", "extension", audioinfo.slice(4), card.name + "_" + sex);
-													} else {
-														game.playAudio("card", sex, card.name);
-													}
-												}
-											},
-											player,
-											card
-										);
-									}
-									if (event.skill) {
-										if (player.stat[player.stat.length - 1].skill[event.skill] == undefined) {
-											player.stat[player.stat.length - 1].skill[event.skill] = 1;
-										} else {
-											player.stat[player.stat.length - 1].skill[event.skill]++;
-										}
-										var sourceSkill = get.info(event.skill).sourceSkill;
-										if (sourceSkill) {
-											if (player.stat[player.stat.length - 1].skill[sourceSkill] == undefined) {
-												player.stat[player.stat.length - 1].skill[sourceSkill] = 1;
-											} else {
-												player.stat[player.stat.length - 1].skill[sourceSkill]++;
-											}
-										}
-									}
-									if (cards.length && (cards.length > 1 || cards[0].name != card.name)) {
-										game.log(player, "打出了", card, "（", cards, "）");
-									} else {
-										game.log(player, "打出了", card);
-									}
-									player.actionHistory[player.actionHistory.length - 1].respond.push(event);
-									var cards2 = cards.concat();
-									if (cards2.length) {
-										var next = player.lose(cards2, ui.ordering, "visible");
-										cards2.removeArray(next.cards);
-										if (event.noOrdering) next.noOrdering = true;
-
-										if (event.animate != false && event.throw !== false) {
-											next.animate = true;
-											next.blameEvent = event;
-										}
-
-										if (cards2.length) {
-											var next2 = game.cardsGotoOrdering(cards2);
-											if (event.noOrdering) next2.noOrdering = true;
-										}
-									} else {
-										var evt = _status.event;
-										if (evt && evt.card && evt.cards === cards) {
-											var card = ui.create.card().init([evt.card.suit, evt.card.number, evt.card.name, evt.card.nature]);
-											if (evt.card.suit == "none") card.node.suitnum.style.display = "none";
-											card.dataset.virtual = 1;
-											cards2 = [card];
-										}
-									}
-									player.$throw(cards2);
-									event.trigger("respond");
-									"step 1";
-									game.delayx(0.5);
-								},
-								gain: function () {
+								gain() {
 									"step 0";
 									if (event.animate == "give") event.visible = true;
 									if (cards) {
@@ -1782,17 +1775,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											var owner = get.owner(i, "judge");
 											if (owner && (owner != player || get.position(i) != "h")) {
 												var id = owner.playerid;
-												if (!map[id]) map[id] = [[], [], []];
+												if (!map[id]) map[id] = [
+													[],
+													[],
+													[]
+												];
 												map[id][0].push(i);
 												var position = get.position(i);
 												if (position == "h") map[id][1].push(i);
 												else map[id][2].push(i);
-											} else if (!event.updatePile && get.position(i) == "c") event.updatePile = true;
+											} else if (!event.updatePile && get.position(i) == "c") event
+												.updatePile = true;
 										}
 										event.losing_map = map;
 										for (var i in map) {
-											var owner = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
-											var next = owner.lose(map[i][0], ui.special).set("type", "gain").set("forceDie", true).set("getlx", false);
+											var owner = (_status.connectMode ? lib.playerOL : game
+												.playerMap)[i];
+											var next = owner.lose(map[i][0], ui.special).set("type", "gain")
+												.set("forceDie", true).set("getlx", false);
 											if (event.visible == true) next.visible = true;
 
 											event.relatedLose = next;
@@ -1809,12 +1809,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										} else if (event.losing_map) {
 											for (var id in event.losing_map) {
 												if (event.losing_map[id][0].includes(cards[i])) {
-													var source = (_status.connectMode ? lib.playerOL : game.playerMap)[id];
+													var source = (_status.connectMode ? lib.playerOL : game
+														.playerMap)[id];
 													var hs = source.getCards("hejsx");
 													if (hs.includes(cards[i])) {
 														cards.splice(i--, 1);
 													} else {
-														cards[i].addKnower(event.visible ? "everyone" : source);
+														cards[i].addKnower(event.visible ? "everyone" :
+															source);
 													}
 												}
 											}
@@ -1861,12 +1863,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											if (card.vanishtag[j][0] != "_") card.vanishtag.splice(j--, 1);
 										}
 									}
-									var gainTo = function (cards, nodelay) {
+									var gainTo = function(cards, nodelay) {
 										cards.duiMod = event.source;
 										if (player == game.me) {
 											dui.layoutHandDraws(cards.reverse());
 											dui.queueNextFrameTick(dui.layoutHand, dui);
-											game.addVideo("gain12", player, [get.cardsInfo(fragment.childNodes), gaintag]);
+											game.addVideo("gain12", player, [get.cardsInfo(fragment
+												.childNodes), gaintag]);
 										}
 
 										var s = player.getCards("s");
@@ -1874,7 +1877,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										else handcards.appendChild(fragment);
 
 										game.broadcast(
-											function (player, cards, num, gaintag) {
+											function(player, cards, num, gaintag) {
 												player.directgain(cards, null, gaintag);
 												_status.cardPileNum = num;
 											},
@@ -1886,7 +1889,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 										if (nodelay !== true) {
 											setTimeout(
-												function (player) {
+												function(player) {
 													player.update();
 													game.resume();
 												},
@@ -1915,20 +1918,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										var evtmap = event.losing_map;
 										if (event.animate == "give") {
 											for (var i in evtmap) {
-												var source = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
+												var source = (_status.connectMode ? lib.playerOL : game
+													.playerMap)[i];
 												source.$give(evtmap[i][0], player, event.log);
 											}
 										} else {
 											for (var i in evtmap) {
-												var source = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
-												if (evtmap[i][1].length) source.$giveAuto(evtmap[i][1], player, event.log);
-												if (evtmap[i][2].length) source.$give(evtmap[i][2], player, event.log);
+												var source = (_status.connectMode ? lib.playerOL : game
+													.playerMap)[i];
+												if (evtmap[i][1].length) source.$giveAuto(evtmap[i][1],
+													player, event.log);
+												if (evtmap[i][2].length) source.$give(evtmap[i][2], player,
+													event.log);
 											}
 										}
 									} else if (typeof event.animate == "function") {
 										var time = event.animate(event);
 										game.pause();
-										setTimeout(function () {
+										setTimeout(function() {
 											gainTo(cards, true);
 											game.resume();
 										}, get.delayx(time, time));
@@ -1938,7 +1945,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									"step 4";
 									if (event.updatePile) game.updateRoundNumber();
 								},
-								judge: function () {
+								judge() {
 									"step 0";
 									var judgestr = get.translation(player) + "的" + event.judgestr + "判定";
 									event.videoId = lib.status.videoId++;
@@ -1955,11 +1962,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										if (event.position != ui.discardPile) nextj.noOrdering = true;
 									}
 									player.judging.unshift(cardj);
-									game.addVideo("judge1", player, [get.cardInfo(player.judging[0]), judgestr, event.videoId]);
+									game.addVideo("judge1", player, [get.cardInfo(player.judging[0]),
+										judgestr, event.videoId
+									]);
 									game.broadcastAll(
-										function (player, card /*, str*/, id, cardid) {
+										function(player, card /*, str*/ , id, cardid) {
 											var event = game.online ? {} : _status.event;
-											if (game.chess) event.node = card.copy("thrown", "center", ui.arena).animate("start");
+											if (game.chess) event.node = card.copy("thrown", "center",
+												ui.arena).animate("start");
 											else event.node = player.$throwordered2(card.copy(), true);
 
 											if (lib.cardOL) lib.cardOL[cardid] = event.node;
@@ -1969,18 +1979,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												event.node.classList.add("thrownhighlight");
 											}
 											/*
-                    event.dialog = ui.create.dialog(str);
-                    event.dialog.classList.add('center');
-                    event.dialog.videoId = id;
-                    */
+					event.dialog = ui.create.dialog(str);
+					event.dialog.classList.add('center');
+					event.dialog.videoId = id;
+					*/
 										},
 										player,
-										player.judging[0] /*, judgestr*/,
+										player.judging[0] /*, judgestr*/ ,
 										event.videoId,
 										get.id()
 									);
 
-									game.log(player, "进行" + event.judgestr + "判定，亮出的判定牌为", player.judging[0]);
+									game.log(player, "进行" + event.judgestr + "判定，亮出的判定牌为", player.judging[
+										0]);
 									game.delay(2);
 									if (!event.noJudgeTrigger) event.trigger("judge");
 									"step 1";
@@ -2013,12 +2024,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 									//event.dialog.close();
 									game.broadcast(
-										function (/*id*/) {
+										function( /*id*/ ) {
 											/*
-                    var dialog = get.idDialog(id);
-                    if (dialog) dialog.close();
-                    */
-											if (!window.decadeUI) ui.arena.classList.remove("thrownhighlight");
+					var dialog = get.idDialog(id);
+					if (dialog) dialog.close();
+					*/
+											if (!window.decadeUI) ui.arena.classList.remove(
+												"thrownhighlight");
 										} /*, event.videoId*/
 									);
 
@@ -2034,23 +2046,27 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										next.setContent(event.callback);
 									} else {
 										if (!get.owner(event.result.card)) {
-											if (event.position != ui.discardPile) event.position.appendChild(event.result.card);
+											if (event.position != ui.discardPile) event.position
+												.appendChild(event.result.card);
 										}
 									}
 								},
-								lose: function () {
+								lose() {
 									"step 0";
 									var evt = event.getParent();
-									if ((evt.name != "discard" || event.type != "discard") && (evt.name != "loseToDiscardpile" || event.type != "loseToDiscardpile")) {
+									if ((evt.name != "discard" || event.type != "discard") && (evt.name !=
+											"loseToDiscardpile" || event.type != "loseToDiscardpile")) {
 										event.delay = false;
 										if (event.blameEvent == undefined) event.animate = false;
 									} else {
 										if (evt.delay === false) event.delay = false;
-										if (event.blameEvent && event.animate == undefined) event.animate = evt.animate;
+										if (event.blameEvent && event.animate == undefined) event.animate =
+											evt.animate;
 									}
 									"step 1";
 									event.gaintag_map = {};
-									if (event.insert_card && event.position == ui.cardPile) event.cards.reverse();
+									if (event.insert_card && event.position == ui.cardPile) event.cards
+										.reverse();
 									event.stockcards = event.cards.slice(0);
 									var hs = [],
 										es = [],
@@ -2076,28 +2092,35 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												cardx.addArray(loseCards);
 												loseCards.forEach(cardi => {
 													es.push(cardi);
-													event.vcard_map.set(cardi, card.card || get.autoViewAs(card, void 0, false));
+													event.vcard_map.set(cardi, card.card || get
+														.autoViewAs(card, void 0, false));
 												});
 											} else if (pileNode.classList.contains("judges")) {
 												card.throwWith = card.original = "j";
 												js.push(card);
-												const VJudge = player.getVCards("j").find(card => card.cards?.includes(card));
+												const VJudge = player.getVCards("j").find(card => card.cards
+													?.includes(card));
 												if (VJudge) event.vcard_map.set(card, VJudge);
-												else event.vcard_map.set(card, get.autoViewAs(card, void 0, false));
+												else event.vcard_map.set(card, get.autoViewAs(card, void 0,
+													false));
 											} else if (pileNode.classList.contains("expansions")) {
 												card.throwWith = card.original = "x";
 												xs.push(card);
-												event.vcard_map.set(card, get.autoViewAs(card, void 0, false));
-												if (card.gaintag && card.gaintag.length) unmarks.addArray(card.gaintag);
+												event.vcard_map.set(card, get.autoViewAs(card, void 0,
+													false));
+												if (card.gaintag && card.gaintag.length) unmarks.addArray(
+													card.gaintag);
 											} else if (pileNode.classList.contains("handcards")) {
 												if (card.classList.contains("glows")) {
 													card.throwWith = card.original = "s";
 													ss.push(card);
-													event.vcard_map.set(card, get.autoViewAs(card, void 0, false));
+													event.vcard_map.set(card, get.autoViewAs(card, void 0,
+														false));
 												} else {
 													card.throwWith = card.original = "h";
 													hs.push(card);
-													event.vcard_map.set(card, get.autoViewAs(card, void 0, player));
+													event.vcard_map.set(card, get.autoViewAs(card, void 0,
+														player));
 												}
 											} else {
 												card.throwWith = card.original = null;
@@ -2105,7 +2128,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										}
 										for (var j = 0; j < cardx.length; j++) {
 											if (cardx[j].gaintag && cardx[j].gaintag.length) {
-												event.gaintag_map[cardx[j].cardid] = cardx[j].gaintag.slice(0);
+												event.gaintag_map[cardx[j].cardid] = cardx[j].gaintag.slice(
+													0);
 												cardx[j].removeGaintag(true);
 											}
 
@@ -2121,7 +2145,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 													continue;
 												}
 											} else if ("destroyed" in cardx[j]) {
-												if (event.getlx !== false && event.position && cardx[j].willBeDestroyed(event.position.id, null, event)) {
+												if (event.getlx !== false && event.position && cardx[j]
+													.willBeDestroyed(event.position.id, null, event)) {
 													cardx[j].selfDestroy(event);
 													continue;
 												}
@@ -2140,10 +2165,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												}
 												if (event.insert_index) {
 													cardx[j].fix();
-													event.position.insertBefore(cardx[j], event.insert_index(event, cardx[j]));
+													event.position.insertBefore(cardx[j], event
+														.insert_index(event, cardx[j]));
 												} else if (event.insert_card) {
 													cardx[j].fix();
-													event.position.insertBefore(cardx[j], event.position.firstChild);
+													event.position.insertBefore(cardx[j], event.position
+														.firstChild);
 												} else {
 													if (event.position == ui.cardPile) cardx[j].fix();
 													event.position.appendChild(cardx[j]);
@@ -2156,7 +2183,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									if (player == game.me) dui.queueNextFrameTick(dui.layoutHand, dui);
 									ui.updatej(player);
 									game.broadcast(
-										function (player, cards, num) {
+										function(player, cards, num) {
 											for (var i = 0; i < cards.length; i++) {
 												cards[i].classList.remove("glow");
 												cards[i].classList.remove("glows");
@@ -2174,7 +2201,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									if (event.animate != false) {
 										evt.discardid = lib.status.videoId++;
 										game.broadcastAll(
-											function (player, cards, id, visible) {
+											function(player, cards, id, visible) {
 												const cardx = cards
 													.slice()
 													.map(i => (i.cards ? i.cards : [i]))
@@ -2197,8 +2224,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											if (evt.delay != false) {
 												var waitingForTransition = get.time();
 												evt.waitingForTransition = waitingForTransition;
-												cards[0].clone.listenTransition(function () {
-													if (_status.waitingForTransition == waitingForTransition && _status.paused) {
+												cards[0].clone.listenTransition(function() {
+													if (_status.waitingForTransition ==
+														waitingForTransition && _status.paused) {
 														game.resume();
 													}
 													delete evt.waitingForTransition;
@@ -2207,8 +2235,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												delete evt.getParent().discardTransition;
 												var waitingForTransition = get.time();
 												evt.getParent().waitingForTransition = waitingForTransition;
-												cards[0].clone.listenTransition(function () {
-													if (_status.waitingForTransition == waitingForTransition && _status.paused) {
+												cards[0].clone.listenTransition(function() {
+													if (_status.waitingForTransition ==
+														waitingForTransition && _status.paused) {
 														game.resume();
 													}
 													delete evt.getParent().waitingForTransition;
@@ -2216,7 +2245,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											}
 										}
 									}
-									game.addVideo("lose", player, [get.cardsInfo(hs), get.cardsInfo(es), get.cardsInfo(js), get.cardsInfo(ss), get.cardsInfo(xs)]);
+									game.addVideo("lose", player, [get.cardsInfo(hs), get.cardsInfo(es), get
+										.cardsInfo(js), get.cardsInfo(ss), get.cardsInfo(xs)
+									]);
 									event.cards2 = hs.concat(es);
 									player.getHistory("lose").push(event);
 									game.getGlobalHistory().cardMove.push(event);
@@ -2228,20 +2259,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										if (!evt.orderingCards) evt.orderingCards = [];
 										if (!event.noOrdering && !event.cardsOrdered) {
 											event.cardsOrdered = true;
-											var next = game.createEvent("orderingDiscard", false, evt.getParent());
+											var next = game.createEvent("orderingDiscard", false);
+											event.next.remove(next);
+											evt.after.push(next);
 											next.relatedEvent = evt;
 											next.setContent("orderingDiscard");
 										}
 										if (!event.noOrdering) {
 											evt.orderingCards.addArray(cards);
-											evt.orderingCards.addArray(ss);
 										}
 									} else if (event.position == ui.cardPile) {
 										game.updateRoundNumber();
 									}
 									if (unmarks.length) {
 										for (var i of unmarks) {
-											player[(lib.skill[i] && lib.skill[i].mark) || player.hasCard(card => card.hasGaintag(i), "x") ? "markSkill" : "unmarkSkill"](i);
+											player[(lib.skill[i] && lib.skill[i].mark) || player.hasCard(
+													card => card.hasGaintag(i), "x") ? "markSkill" :
+												"unmarkSkill"](i);
 										}
 									}
 									event.hs = hs;
@@ -2255,14 +2289,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 									"step 2";
 									if (num < cards.length) {
-										if (event.es.includes(cards[num]) || cards[num].cards?.some(i => event.es.includes(i))) {
+										if (event.es.includes(cards[num]) || cards[num].cards?.some(i =>
+												event.es.includes(i))) {
 											event.loseEquip = true;
 											const VEquip = cards[num][cards[num].cardSymbol];
 											if (VEquip) {
 												player.removeVirtualEquip(VEquip);
 												//player.removeEquipTrigger(cards[num]);
 												var info = get.info(VEquip, false);
-												if (info.onLose && (!info.filterLose || info.filterLose(VEquip, player))) {
+												if (info.onLose && (!info.filterLose || info.filterLose(
+														VEquip, player))) {
 													event.goto(3);
 													event.currentVEquip = VEquip;
 													return;
@@ -2314,7 +2350,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									event.cards = cards.map(i => (i.cards ? i.cards : [i])).flat();
 									if (event.toRenku) {
 										_status.renku.addArray(
-											cards.filter(function (card) {
+											cards.filter(function(card) {
 												return !card.willBeDestroyed("renku", null, event);
 											})
 										);
@@ -2327,7 +2363,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 									"step 5";
 									var evt = event.getParent();
-									if (evt.name != "discard" && event.type != "discard" && evt.name != "loseToDiscardpile" && event.type != "loseToDiscardpile") return;
+									if (evt.name != "discard" && event.type != "discard" && evt.name !=
+										"loseToDiscardpile" && event.type != "loseToDiscardpile") return;
 									if (event.animate === false || event.delay === false) return;
 									if (evt.delay != false) {
 										if (evt.waitingForTransition) {
@@ -2339,13 +2376,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									}
 								},
 								/*-----------------分割线-----------------*/
-								turnOver: function () {
+								turnOver() {
 									game.log(player, "翻面");
 									player.classList.toggle("turnedover");
-									game.broadcast(function (player) {
+									game.broadcast(function(player) {
 										player.classList.toggle("turnedover");
 									}, player);
-									game.addVideo("turnOver", player, player.classList.contains("turnedover"));
+									game.addVideo("turnOver", player, player.classList.contains(
+										"turnedover"));
 									player.queueCssAnimation("turned-over 0.5s linear");
 								},
 							},
@@ -2354,11 +2392,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 					ride.ui = {
 						create: {
-							prebutton: function (item, type, position, noclick) {
+							prebutton(item, type, position, noclick) {
 								var button = ui.create.div();
 								button.style.display = "none";
 								button.link = item;
-								button.activate = function () {
+								button.activate = function() {
 									var node = ui.create.button(item, type, undefined, noclick, button);
 									node.activate = undefined;
 								};
@@ -2367,7 +2405,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								return button;
 							},
 						},
-						updatec: function () {
+						updatec() {
 							var controls = ui.control.childNodes;
 							var stayleft;
 							var offsetLeft;
@@ -2395,11 +2433,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							}
 						},
 
-						updatehl: function () {
+						updatehl() {
 							dui.queueNextFrameTick(dui.layoutHand, dui);
 						},
 
-						updatej: function (player) {
+						updatej(player) {
 							if (!player) return;
 
 							var judges = player.node.judges.childNodes;
@@ -2407,15 +2445,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								if (judges[i].classList.contains("removing")) continue;
 								judges[i].classList.remove("drawinghidden");
 								if (_status.connectMode) {
-									const bgMark = lib.translate[judges[i].name + "_bg"] || get.translation(judges[i].name)[0];
+									const bgMark = lib.translate[judges[i].name + "_bg"] || get.translation(
+										judges[i].name)[0];
 									judges[i].node.judgeMark.node.judge.innerHTML = bgMark;
 								}
 							}
 						},
 
-						updatem: function (player) {},
+						updatem(player) {},
 
-						updatez: function () {
+						updatez() {
 							window.documentZoom = game.documentZoom;
 							document.body.style.zoom = game.documentZoom;
 							document.body.style.width = "100%";
@@ -2423,20 +2462,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							document.body.style.transform = "";
 						},
 
-						update: function () {
+						update() {
 							for (var i = 0; i < ui.updates.length; i++) ui.updates[i]();
 							if (ui.dialog == undefined || ui.dialog.classList.contains("noupdate")) return;
 							if (game.chess) return base.ui.update();
 
-							if ((!ui.dialog.buttons || !ui.dialog.buttons.length) && !ui.dialog.forcebutton && ui.dialog.classList.contains("fullheight") == false && get.mode() != "stone") {
+							if ((!ui.dialog.buttons || !ui.dialog.buttons.length) && !ui.dialog
+								.forcebutton && ui.dialog.classList.contains("fullheight") == false && get
+								.mode() != "stone") {
 								ui.dialog.classList.add("prompt");
 							} else {
 								ui.dialog.classList.remove("prompt");
 								var height = ui.dialog.content.offsetHeight;
-								if (decadeUI.isMobile()) height = decadeUI.get.bodySize().height * 0.75 - 80;
+								if (decadeUI.isMobile()) height = decadeUI.get.bodySize().height * 0.75 -
+								80;
 								else height = decadeUI.get.bodySize().height * 0.45;
 
-								ui.dialog.style.height = Math.min(height, ui.dialog.content.offsetHeight) + "px";
+								ui.dialog.style.height = Math.min(height, ui.dialog.content.offsetHeight) +
+									"px";
 							}
 
 							if (!ui.dialog.forcebutton && !ui.dialog._scrollset) {
@@ -2449,23 +2492,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						},
 
 						create: {
-							rarity: function (button) {
+							rarity(button) {
 								if (!lib.config.show_rarity) return;
 								var rarity = game.getRarity(button.link);
 								var intro = button.node.intro;
 								intro.classList.add("showintro");
 								intro.classList.add("rarity");
 								if (intro.innerText) intro.innerText = "";
-								intro.style.backgroundImage = 'url("' + decadeUIPath + "assets/image/rarity_" + rarity + '.png")';
+								intro.style.backgroundImage = 'url("' + decadeUIPath +
+									"assets/image/rarity_" + rarity + '.png")';
 							},
 
-							button: function (item, type, position, noclick, node) {
+							button(item, type, position, noclick, node) {
 								const button = base.ui.create.button.apply(this, arguments);
 								if (position) position.appendChild(button);
 								return button;
 							},
 
-							control: function () {
+							control() {
 								var i, controls;
 								var nozoom = false;
 								if (Array.isArray(arguments[0])) {
@@ -2493,11 +2537,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								}
 								ui.controls.unshift(control);
 								ui.control.insertBefore(control, _status.createControl || ui.confirm);
-								control.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control2);
+								control.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui
+									.click.control2);
 								return control;
 							},
 
-							dialog: function () {
+							dialog() {
 								var hidden = false;
 								var notouchscroll = false;
 								var forcebutton = false;
@@ -2505,8 +2550,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								dialog.supportsPagination = false;
 								dialog.paginationMap = new Map();
 								dialog.paginationMaxCount = new Map();
-								dialog.contentContainer = decadeUI.element.create("content-container", dialog);
-								dialog.content = decadeUI.element.create("content", dialog.contentContainer);
+								dialog.contentContainer = decadeUI.element.create("content-container",
+									dialog);
+								dialog.content = decadeUI.element.create("content", dialog
+								.contentContainer);
 								dialog.buttons = [];
 								//for (let i in lib.element.dialog) dialog[i] = lib.element.dialog[i];
 								Object.setPrototypeOf(dialog, lib.element.Dialog.prototype);
@@ -2533,7 +2580,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								return dialog;
 							},
 
-							selectlist: function (list, init, position, onchange) {
+							selectlist(list, init, position, onchange) {
 								var select = document.createElement("select");
 								for (var i = 0; i < list.length; i++) {
 									var option = document.createElement("option");
@@ -2552,20 +2599,22 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								return select;
 							},
 
-							identityCard: function (identity, position, info, noclick) {
+							identityCard(identity, position, info, noclick) {
 								const card = ui.create.card(position, info, noclick);
-								card.removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
+								card.removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui
+									.click.card);
 								card.classList.add("button");
-								card._customintro = function (uiintro) {
+								card._customintro = function(uiintro) {
 									uiintro.add(`${get.translation(identity + 2)}的身份牌`);
 								};
-								const fileName = "extension/十周年UI/image/identityCard/mougong_" + identity + ".jpg";
+								const fileName = "extension/十周年UI/image/identityCard/mougong_" + identity +
+									".jpg";
 								new Promise((resolve, reject) => {
-									const image = new Image();
-									image.onload = () => resolve();
-									image.onerror = reject;
-									image.src = `${lib.assetURL}${fileName}`;
-								})
+										const image = new Image();
+										image.onload = () => resolve();
+										image.onerror = reject;
+										image.src = `${lib.assetURL}${fileName}`;
+									})
 									.then(() => {
 										card.classList.add("fullimage");
 										card.setBackgroundImage(fileName);
@@ -2577,7 +2626,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								return card;
 							},
 
-							spinningIdentityCard: function (identity, dialog) {
+							spinningIdentityCard(identity, dialog) {
 								const card = ui.create.identityCard(identity);
 								const buttons = ui.create.div(".buttons", dialog.content);
 								buttons.appendChild(card);
@@ -2588,7 +2637,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							},
 
 							buttonPresets: {
-								character: function (item, type, position, noclick, node) {
+								character(item, type, position, noclick, node) {
 									if (node) {
 										node.classList.add("button");
 										node.classList.add("character");
@@ -2602,13 +2651,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									if (type == "characterx") {
 										if (_status.noReplaceCharacter) {
 											type = "character";
-										} else if (lib.characterReplace[item] && lib.characterReplace[item].length) {
+										} else if (lib.characterReplace[item] && lib.characterReplace[item]
+											.length) {
 											item = lib.characterReplace[item].randomGet();
 										}
 									}
-									if (_status.noReplaceCharacter && type == "characterx") type = "character";
+									if (_status.noReplaceCharacter && type == "characterx") type =
+										"character";
 									if (type == "characterx") {
-										if (lib.characterReplace[item] && lib.characterReplace[item].length) item = lib.characterReplace[item].randomGet();
+										if (lib.characterReplace[item] && lib.characterReplace[item].length)
+											item = lib.characterReplace[item].randomGet();
 									}
 
 									node.link = item;
@@ -2617,11 +2669,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									var doubleCamp = get.is.double(node._link, true);
 
 									if (doubleCamp) node._changeGroup = true;
-									if (type == "characterx" && lib.characterReplace[node._link] && lib.characterReplace[node._link].length > 1) {
+									if (type == "characterx" && lib.characterReplace[node._link] && lib
+										.characterReplace[node._link].length > 1) {
 										node._replaceButton = true;
 									}
 
-									node.refresh = function (node, item, intersection) {
+									node.refresh = function(node, item, intersection) {
 										if (intersection) {
 											node.awaitItem = item;
 											intersection.observe(node);
@@ -2634,7 +2687,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											node.node.hp.remove();
 											node.node.group.remove();
 											node.node.intro.remove();
-											if (node.node.replaceButton) node.node.replaceButton.remove();
+											if (node.node.replaceButton) node.node.replaceButton
+											.remove();
 										}
 										node.node = {
 											name: decadeUI.element.create("name", node),
@@ -2645,25 +2699,34 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										var infoitem = get.character(item);
 
 										node.node.name.innerHTML = get.slimName(item);
-										if (lib.config.buttoncharacter_style == "default" || lib.config.buttoncharacter_style == "simple") {
+										if (lib.config.buttoncharacter_style == "default" || lib.config
+											.buttoncharacter_style == "simple") {
 											if (lib.config.buttoncharacter_style == "simple") {
 												node.node.group.style.display = "none";
 											}
 											node.classList.add("newstyle");
-											node.node.name.dataset.nature = get.groupnature(get.bordergroup(infoitem));
-											node.node.group.dataset.nature = get.groupnature(get.bordergroup(infoitem), "raw");
+											node.node.name.dataset.nature = get.groupnature(get
+												.bordergroup(infoitem));
+											node.node.group.dataset.nature = get.groupnature(get
+												.bordergroup(infoitem), "raw");
 											ui.create.div(node.node.hp);
 											var hp = get.infoHp(infoitem[2]),
 												maxHp = get.infoMaxHp(infoitem[2]),
 												hujia = get.infoHujia(infoitem[2]);
 											const check =
-												(get.mode() == "single" && _status.mode == "changban") ||
+												(get.mode() == "single" && _status.mode ==
+												"changban") ||
 												((get.mode() == "guozhan" ||
-													(function (config) {
-														if (typeof config === "string") return config === "double";
-														return Boolean(config) === true;
-													})(_status.connectMode ? lib.configOL.double_character : get.config("double_character"))) &&
-													(_status.connectMode || (_status.connectMode ? lib.configOL.double_hp : get.config("double_hp")) == "pingjun"));
+														(function(config) {
+															if (typeof config === "string")
+															return config === "double";
+															return Boolean(config) === true;
+														})(_status.connectMode ? lib.configOL
+															.double_character : get.config(
+																"double_character"))) &&
+													(_status.connectMode || (_status.connectMode ? lib
+														.configOL.double_hp : get.config(
+															"double_hp")) == "pingjun"));
 											var str = get.numStr(hp / (check ? 2 : 1));
 											if (hp != maxHp) {
 												str += "/";
@@ -2686,7 +2749,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											var maxHp = get.infoMaxHp(infoitem[2]);
 											var shield = get.infoHujia(infoitem[2]);
 											if (maxHp > 14) {
-												if (typeof infoitem[2] == "string") node.node.hp.innerHTML = infoitem[2];
+												if (typeof infoitem[2] == "string") node.node.hp
+													.innerHTML = infoitem[2];
 												else node.node.hp.innerHTML = get.numStr(infoitem[2]);
 												node.node.hp.classList.add("text");
 											} else {
@@ -2705,8 +2769,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										if (node.node.name.querySelectorAll("br").length >= 4) {
 											node.node.name.classList.add("long");
 											if (lib.config.buttoncharacter_style == "old") {
-												node.addEventListener("mouseenter", ui.click.buttonnameenter);
-												node.addEventListener("mouseleave", ui.click.buttonnameleave);
+												node.addEventListener("mouseenter", ui.click
+													.buttonnameenter);
+												node.addEventListener("mouseleave", ui.click
+													.buttonnameleave);
 											}
 										}
 
@@ -2715,12 +2781,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										if (infoitem[1]) {
 											if (doubleCamp) {
 												var text = "";
-												node.node.group.innerHTML = doubleCamp.reduce((previousValue, currentValue) => `${previousValue}<div data-nature="${get.groupnature(currentValue)}">${get.translation(currentValue)}</div>`, "");
+												node.node.group.innerHTML = doubleCamp.reduce((
+														previousValue, currentValue) =>
+													`${previousValue}<div data-nature="${get.groupnature(currentValue)}">${get.translation(currentValue)}</div>`,
+													"");
 												if (doubleCamp.length > 4)
-													if (new Set([5, 6, 9]).has(doubleCamp.length)) node.node.group.style.height = "48px";
+													if (new Set([5, 6, 9]).has(doubleCamp.length)) node
+														.node.group.style.height = "48px";
 													else node.node.group.style.height = "64px";
-											} else node.node.group.innerHTML = `<div>${get.translation(infoitem[1])}</div>`;
-											node.node.group.style.backgroundColor = get.translation(`${get.bordergroup(infoitem)}Color`);
+											} else node.node.group.innerHTML =
+												`<div>${get.translation(infoitem[1])}</div>`;
+											node.node.group.style.backgroundColor = get.translation(
+												`${get.bordergroup(infoitem)}Color`);
 										} else {
 											node.node.group.style.display = "none";
 										}
@@ -2729,25 +2801,27 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											node.node.replaceButton = intro;
 											intro.innerText = "切换";
 											intro._node = node;
-											intro.addEventListener(lib.config.touchscreen ? "touchend" : "click", function () {
-												_status.tempNoButton = true;
-												var node = this._node;
-												var list = lib.characterReplace[node._link];
-												var link = node.link;
-												var index = list.indexOf(link);
-												if (index == list.length - 1) index = 0;
-												else index++;
-												link = list[index];
-												node.link = link;
-												node.refresh(node, link);
-												setTimeout(
-													function (_status) {
-														_status.tempNoButton = undefined;
-													},
-													200,
-													_status
-												);
-											});
+											intro.addEventListener(lib.config.touchscreen ? "touchend" :
+												"click",
+												function() {
+													_status.tempNoButton = true;
+													var node = this._node;
+													var list = lib.characterReplace[node._link];
+													var link = node.link;
+													var index = list.indexOf(link);
+													if (index == list.length - 1) index = 0;
+													else index++;
+													link = list[index];
+													node.link = link;
+													node.refresh(node, link);
+													setTimeout(
+														function(_status) {
+															_status.tempNoButton = undefined;
+														},
+														200,
+														_status
+													);
+												});
 										}
 									};
 									node.refresh(node, item, position ? position.intersection : undefined);
@@ -2758,13 +2832,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						},
 
 						click: {
-							card: function (e) {
+							card(e) {
 								delete this._waitingfordrag;
 								if (_status.dragged) return;
 								if (_status.clicked) return;
 								if (ui.intro) return;
 								_status.clicked = true;
-								if (this.parentNode && (this.parentNode.classList.contains("judges") || this.parentNode.classList.contains("dui-marks"))) {
+								if (this.parentNode && (this.parentNode.classList.contains("judges") || this
+										.parentNode.classList.contains("dui-marks"))) {
 									if (!(e && e instanceof MouseEvent)) {
 										var rect = this.getBoundingClientRect();
 										e = {
@@ -2813,8 +2888,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									this.classList.add("selected");
 									this.updateTransform(true);
 									const skill = _status.event.skill;
-									if (get.info(skill) && get.info(skill).viewAs && !get.info(skill).ignoreMod) {
-										const cardskb = typeof get.info(skill).viewAs == "function" ? get.info(skill).viewAs([this], _status.event.player) : get.info(skill).viewAs;
+									if (get.info(skill) && get.info(skill).viewAs && !get.info(skill)
+										.ignoreMod) {
+										const cardskb = typeof get.info(skill).viewAs == "function" ? get
+											.info(skill).viewAs([this], _status.event.player) : get.info(
+												skill).viewAs;
 										const rsuit = get.suit(this),
 											rnum = get.number(this),
 											rname = get.name(this);
@@ -2831,7 +2909,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												delete this._tempName;
 											}
 											if (lib.config.extension_十周年UI_showTemp) {
-												if (!this._tempName) this._tempName = ui.create.div(".temp-name", this);
+												if (!this._tempName) this._tempName = ui.create.div(
+													".temp-name", this);
 												let tempname = "",
 													tempname2 = get.translation(vname);
 												if (vnature) {
@@ -2845,7 +2924,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												this._tempName.tempname = tempname;
 											} else {
 												const nodeviewas = ui.create.cardTempName(cardskb, this);
-												if (lib.config.cardtempname !== "default") nodeviewas.classList.remove("vertical");
+												if (lib.config.cardtempname !== "default") nodeviewas
+													.classList.remove("vertical");
 											}
 											this.dataset.low = 1;
 											this.dataset.view = 1;
@@ -2860,14 +2940,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										}
 									}
 								}
-								if (game.chess && get.config("show_range") && !_status.event.skill && this.classList.contains("selected") && _status.event.isMine() && _status.event.name == "chooseToUse") {
+								if (game.chess && get.config("show_range") && !_status.event.skill && this
+									.classList.contains("selected") && _status.event.isMine() && _status
+									.event.name == "chooseToUse") {
 									var player = _status.event.player;
 									var range = get.info(this).range;
 									if (range) {
 										if (typeof range.attack === "number") {
-											player.createRangeShadow(Math.min(8, player.getAttackRange(true) + range.attack - 1));
+											player.createRangeShadow(Math.min(8, player.getAttackRange(
+												true) + range.attack - 1));
 										} else if (typeof range.global === "number") {
-											player.createRangeShadow(Math.min(8, player.getGlobalFrom() + range.global));
+											player.createRangeShadow(Math.min(8, player.getGlobalFrom() +
+												range.global));
 										}
 									}
 								}
@@ -2876,7 +2960,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								}
 								game.check();
 
-								if (lib.config.popequip && get.is.phoneLayout() && arguments[0] != "popequip" && ui.arena && ui.arena.classList.contains("selecting") && this.parentNode.classList.contains("popequip")) {
+								if (lib.config.popequip && get.is.phoneLayout() && arguments[0] !=
+									"popequip" && ui.arena && ui.arena.classList.contains("selecting") &&
+									this.parentNode.classList.contains("popequip")) {
 									var rect = this.getBoundingClientRect();
 									ui.click.touchpop();
 									ui.click.intro.call(this.parentNode, {
@@ -2889,7 +2975,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					};
 
 					ride.game = {
-						logv: function (player, card, targets, event, forced, logvid) {
+						logv(player, card, targets, event, forced, logvid) {
 							if (!player) {
 								player = _status.event.getParent().logvid;
 								if (!player) return;
@@ -2897,15 +2983,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							const node = ui.create.div(".hidden");
 							node.node = {};
 							logvid = logvid || get.id();
-							game.broadcast((player, card, targets, event, forced, logvid) => game.logv(player, card, targets, event, forced, logvid), player, card, targets, event, forced, logvid);
+							game.broadcast((player, card, targets, event, forced, logvid) => game.logv(
+									player, card, targets, event, forced, logvid), player, card,
+								targets, event, forced, logvid);
 							if (typeof player == "string") {
-								const childNode = Array.from(ui.historybar.childNodes).find(value => value.logvid == player);
+								const childNode = Array.from(ui.historybar.childNodes).find(value => value
+									.logvid == player);
 								if (childNode) childNode.added.push(card);
 								return;
 							}
 							if (typeof card == "string") {
 								if (card != "die") {
-									if (lib.skill[card] && lib.skill[card].logv === false && !forced) return;
+									if (lib.skill[card] && lib.skill[card].logv === false && !forced)
+								return;
 									if (!lib.translate[card]) return;
 								}
 								let avatar;
@@ -2923,7 +3013,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									avatar.appendChild(avatar2);
 									avatar.style.opacity = 0.6;
 								} else {
-									node.node.text = ui.create.div("", get.translation(card, "skill"), avatar);
+									node.node.text = ui.create.div("", get.translation(card, "skill"),
+										avatar);
 									node.node.text.dataset.nature = "water";
 									node.skill = card;
 								}
@@ -2933,7 +3024,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									player = targets;
 									if (!player.isUnseen(0)) avatar = player.node.avatar.cloneNode();
 									else if (!player.isUnseen(1)) avatar = player.node.avatar2.cloneNode();
-									else if (get.mode() == "guozhan" && player.node && player.node.name_seat) {
+									else if (get.mode() == "guozhan" && player.node && player.node
+										.name_seat) {
 										avatar = ui.create.div(".avatar.cardbg");
 										avatar.innerHTML = player.node.name_seat.innerHTML[0];
 									} else return;
@@ -2945,12 +3037,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							} else if (Array.isArray(card)) {
 								node.cards = card[1].slice(0);
 								card = card[0];
-								const info = [card.suit || "", card.number || "", card.name || "", card.nature || ""];
+								const info = [card.suit || "", card.number || "", card.name || "", card
+									.nature || ""
+								];
 								if (!Array.isArray(node.cards) || !node.cards.length) {
 									node.cards = [ui.create.card(node, "noclick", true).init(info)];
 								}
 								if (card.name == "wuxie") {
-									if (ui.historybar.firstChild && ui.historybar.firstChild.type == "wuxie") {
+									if (ui.historybar.firstChild && ui.historybar.firstChild.type ==
+										"wuxie") {
 										ui.historybar.firstChild.players.push(player);
 										ui.historybar.firstChild.cards.addArray(node.cards);
 										return;
@@ -2975,7 +3070,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								avatar.classList.add("avatar2");
 								node.appendChild(avatar);
 
-								if (targets && targets.length == 1 && targets[0] != player && get.itemtype(targets[0]) == "player")
+								if (targets && targets.length == 1 && targets[0] != player && get.itemtype(
+										targets[0]) == "player")
 									(() => {
 										var avatar2;
 										var target = targets[0];
@@ -2983,7 +3079,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											avatar2 = target.node.avatar.cloneNode();
 										} else if (!player.isUnseen(1)) {
 											avatar2 = target.node.avatar2.cloneNode();
-										} else if (get.mode() == "guozhan" && target.node && target.node.name_seat) {
+										} else if (get.mode() == "guozhan" && target.node && target.node
+											.name_seat) {
 											avatar2 = ui.create.div(".avatar.cardbg");
 											avatar2.innerHTML = target.node.name_seat.innerHTML[0];
 										} else {
@@ -3015,7 +3112,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							node.classList.remove("hidden");
 							Array.from(ui.historybar.childNodes).forEach((value, index) => {
 								if (index < num) {
-									value.style.transform = `scale(1) translateY(${margin + index * (42 + margin) - 4}px)`;
+									value.style.transform =
+										`scale(1) translateY(${margin + index * (42 + margin) - 4}px)`;
 									return;
 								}
 								if (value.removetimeout) return;
@@ -3024,14 +3122,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								value.removetimeout = setTimeout(
 									(
 										current => () =>
-											current.remove()
+										current.remove()
 									)(value),
 									500
 								);
 							});
 							if (lib.config.touchscreen) node.addEventListener("touchstart", ui.click.intro);
 							else {
-								node.addEventListener(lib.config.pop_logv ? "mousemove" : "click", ui.click.logv);
+								node.addEventListener(lib.config.pop_logv ? "mousemove" : "click", ui.click
+									.logv);
 								node.addEventListener("mouseleave", ui.click.logvleave);
 							}
 							node.logvid = logvid;
@@ -3042,14 +3141,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							}
 							return node;
 						},
-						swapSeat: function (player1, player2, prompt, behind, noanimate) {
+						swapSeat(player1, player2, prompt, behind, noanimate) {
 							base.game.swapSeat.apply(this, arguments);
 							player1.seat = player1.getSeatNum();
-							if (player1.node.seat) player1.node.seat.innerHTML = get.cnNumber(player1.seat, true);
+							if (player1.node.seat) player1.node.seat.innerHTML = get.cnNumber(player1.seat,
+								true);
 							player2.seat = player2.getSeatNum();
-							if (player2.node.seat) player2.node.seat.innerHTML = get.cnNumber(player2.seat, true);
+							if (player2.node.seat) player2.node.seat.innerHTML = get.cnNumber(player2.seat,
+								true);
 						},
-						addOverDialog: function (dialog, result) {
+						addOverDialog(dialog, result) {
 							var sprite = decadeUI.backgroundAnimation.current;
 							if (!(sprite && sprite.name == "skin_xiaosha_default")) return;
 
@@ -3071,7 +3172,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					};
 
 					ride.get = {
-						objtype: function (obj) {
+						objtype(obj) {
 							obj = Object.prototype.toString.call(obj);
 							switch (obj) {
 								case "[object Array]":
@@ -3116,7 +3217,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					var playerRemoveSkillFunction = lib.element.player.removeSkill;
 					var playerDieFlipFunction = lib.element.player.$dieflip;
 
-					ui.updatejm = function (player, nodes, start, inv) {
+					ui.updatejm = function(player, nodes, start, inv) {
 						if (typeof start != "number") start = 0;
 
 						for (var i = 0; i < nodes.childElementCount; i++) {
@@ -3135,7 +3236,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					document.body.onresize = ui.updatexr;
 
 					//十周年UI技能排除
-					get.skillState = function (player) {
+					get.skillState = function(player) {
 						var skills = base.get.skillState.apply(this, arguments);
 						if (game.me != player) {
 							var global = (skills.global = skills.global.concat());
@@ -3150,20 +3251,25 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					//添加target的un-selectable classList显示
 					lib.hooks["checkTarget"].push(function decadeUI_selectable(target, event) {
 						const list = ["selected", "selectable"];
-						target.classList[list.some(select => target.classList.contains(select)) ? "remove" : "add"]("un-selectable");
+						target.classList[list.some(select => target.classList.contains(select)) ?
+							"remove" : "add"]("un-selectable");
 					});
 					//对十周年UI和本体的视为卡牌样式的同时适配
-					const updateTempname = lib.hooks["checkCard"].indexOf(lib.hooks["checkCard"].find(i => i.name && i.name == "updateTempname"));
+					const updateTempname = lib.hooks["checkCard"].indexOf(lib.hooks["checkCard"].find(i => i
+						.name && i.name == "updateTempname"));
 					lib.hooks["checkCard"][updateTempname] = function updateTempname(card, event) {
 						if (lib.config.cardtempname === "off") return;
 						const skill = _status.event.skill,
-							goon = skill && get.info(skill) && get.info(skill).viewAs && !get.info(skill).ignoreMod && (ui.selected.cards || []).includes(card);
+							goon = skill && get.info(skill) && get.info(skill).viewAs && !get.info(skill)
+							.ignoreMod && (ui.selected.cards || []).includes(card);
 						let cardname, cardnature, cardskb;
 						if (!goon) {
 							cardname = get.name(card);
 							cardnature = get.nature(card);
 						} else {
-							cardskb = typeof get.info(skill).viewAs == "function" ? get.info(skill).viewAs([card], _status.event.player || game.me) : get.info(skill).viewAs;
+							cardskb = typeof get.info(skill).viewAs == "function" ? get.info(skill).viewAs([
+								card
+							], _status.event.player || game.me) : get.info(skill).viewAs;
 							cardname = get.name(cardskb);
 							cardnature = get.nature(cardskb);
 						}
@@ -3182,14 +3288,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								card._tempName.innerHTML = tempname;
 								card._tempName.tempname = tempname;
 							} else {
-								const node = goon ? ui.create.cardTempName(cardskb, card) : ui.create.cardTempName(card);
-								if (lib.config.cardtempname !== "default") node.classList.remove("vertical");
+								const node = goon ? ui.create.cardTempName(cardskb, card) : ui.create
+									.cardTempName(card);
+								if (lib.config.cardtempname !== "default") node.classList.remove(
+								"vertical");
 							}
 							card.dataset.low = 1;
 						}
 						const cardnumber = get.number(card),
 							cardsuit = get.suit(card);
-						if (card.dataset.views != 1 && (card.number != cardnumber || card.suit != cardsuit)) {
+						if (card.dataset.views != 1 && (card.number != cardnumber || card.suit !=
+							cardsuit)) {
 							dui.cardTempSuitNum(card, cardsuit, cardnumber);
 						}
 					};
@@ -3197,7 +3306,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					lib.hooks["checkEnd"].push(function decadeUI_UIconfirm() {
 						if (ui.confirm && ui.confirm.lastChild.link == "cancel") {
 							if (_status.event.type == "phase") {
-								const innerHTML = lib.config["extension_十周年UI_newDecadeStyle"] == "on" ? "回合结束" : "结束出牌";
+								const innerHTML = lib.config.extension_十周年UI_newDecadeStyle !=
+									"othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" :
+									"结束出牌";
 								ui.confirm.lastChild.innerHTML = _status.event.skill ? "取消" : innerHTML;
 							}
 						}
@@ -3205,7 +3316,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 					//game.uncheck修改
 					//对十周年UI和本体的视为卡牌样式的同时适配
-					const removeTempname = lib.hooks["uncheckCard"].indexOf(lib.hooks["uncheckCard"].find(i => i.name && i.name == "removeTempname"));
+					const removeTempname = lib.hooks["uncheckCard"].indexOf(lib.hooks["uncheckCard"].find(i => i
+						.name && i.name == "removeTempname"));
 					lib.hooks["uncheckCard"][removeTempname] = function removeTempname(card, event) {
 						if (card._tempName) {
 							card._tempName.delete();
@@ -3224,8 +3336,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						target.classList.remove("un-selectable");
 					});
 
-					const updateDialog = lib.hooks["checkOverflow"].indexOf(lib.hooks["checkOverflow"].find(i => i.name && i.name == "updateDialog"));
-					lib.hooks["checkOverflow"][updateDialog] = function updateDialog(itemOption, itemContainer, addedItems, game) {
+					const updateDialog = lib.hooks["checkOverflow"].indexOf(lib.hooks["checkOverflow"].find(i =>
+						i.name && i.name == "updateDialog"));
+					lib.hooks["checkOverflow"][updateDialog] = function updateDialog(itemOption, itemContainer,
+						addedItems, game) {
 						//计算压缩折叠的量
 						const gap = 5;
 						const L = itemContainer.originWidth / game.documentZoom;
@@ -3240,7 +3354,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					};
 
-					game.swapPlayer = function (player, player2) {
+					game.swapPlayer = function(player, player2) {
 						var result = swapPlayerFunction.call(this, player, player2);
 						/*-----------------分割线-----------------*/
 						// 单独装备栏
@@ -3257,7 +3371,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return result;
 					};
 
-					game.swapControl = function (player) {
+					game.swapControl = function(player) {
 						var result = swapControlFunction.call(this, player);
 						/*-----------------分割线-----------------*/
 						// 单独装备栏
@@ -3273,13 +3387,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						return result;
 					};
+					
+					// game.linexy = function(path) {
+					// 	if (!decadeUI.config.playerLineEffect) return gameLinexyFunction.apply(this,
+					// 		arguments);
+					// 	decadeUI.effect.line(path);
+					// };
 
-					game.linexy = function (path) {
-						if (!decadeUI.config.playerLineEffect) return gameLinexyFunction.apply(this, arguments);
-						decadeUI.effect.line(path);
-					};
-
-					ui.click.intro = function (e) {
+					ui.click.intro = function(e) {
 						if (this.classList.contains("infohidden") || _status.dragged) return;
 						_status.clicked = true;
 						if (this.classList.contains("player") && !this.name) return;
@@ -3300,14 +3415,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						uiintro.classList.add("static");
 						ui.window.appendChild(uiintro);
 						var layer = ui.create.div(".poplayer", ui.window);
-						var clicklayer = function (e) {
+						var clicklayer = function(e) {
 							if (_status.touchpopping) return;
 							delete _status.removePop;
 							uiintro.delete();
 							this.remove();
 							ui.historybar.style.zIndex = "";
 							delete _status.currentlogv;
-							if (!ui.arena.classList.contains("menupaused") && !uiintro.noresume) game.resume2();
+							if (!ui.arena.classList.contains("menupaused") && !uiintro.noresume) game
+								.resume2();
 							if (e && e.stopPropagation) e.stopPropagation();
 							if (uiintro._onclose) {
 								uiintro._onclose();
@@ -3335,20 +3451,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 
 						uiintro.style.zIndex = 21;
-						var clickintro = function () {
+						var clickintro = function() {
 							if (_status.touchpopping) return;
 							delete _status.removePop;
 							layer.remove();
 							this.delete();
 							ui.historybar.style.zIndex = "";
 							delete _status.currentlogv;
-							if (!ui.arena.classList.contains("menupaused") && !uiintro.noresume) game.resume2();
+							if (!ui.arena.classList.contains("menupaused") && !uiintro.noresume) game
+								.resume2();
 							if (uiintro._onclose) {
 								uiintro._onclose();
 							}
 						};
 						var currentpop = this;
-						_status.removePop = function (node) {
+						_status.removePop = function(node) {
 							if (node == currentpop) return false;
 							layer.remove();
 							uiintro.delete();
@@ -3356,7 +3473,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							return true;
 						};
 						if (uiintro.clickintro) {
-							uiintro.listen(function () {
+							uiintro.listen(function() {
 								_status.clicked = true;
 							});
 							uiintro._clickintro = clicklayer;
@@ -3372,8 +3489,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return uiintro;
 					};
 
-					ui.click.identity = function (e) {
-						if (_status.dragged || !game.getIdentityList || _status.video || this.parentNode.forceShown) return;
+					ui.click.identity = function(e) {
+						if (_status.dragged || !game.getIdentityList || _status.video || this.parentNode
+							.forceShown) return;
 						_status.clicked = true;
 						var identityList = game.getIdentityList(this.parentNode);
 						if (!identityList) return;
@@ -3409,7 +3527,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 							if (!dui.$identityMarkBox) {
 								dui.$identityMarkBox = decadeUI.element.create("identity-mark-box");
-								dui.$identityMarkBox.ondeactive = function () {
+								dui.$identityMarkBox.ondeactive = function() {
 									dui.$identityMarkBox.remove();
 									_status.clicked = false;
 									if (!ui.arena.classList.contains("menupaused")) game.resume2();
@@ -3422,12 +3540,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							for (const key in identityList) {
 								node = nodes[index];
 								if (!node) {
-									node = decadeUI.element.create("identity-mark-item", dui.$identityMarkBox);
-									node.addEventListener(lib.config.touchscreen ? "touchend" : "click", function () {
-										this.player.setIdentity(this.link);
-										dui.$identityMarkBox.remove();
-										_status.clicked = false;
-									});
+									node = decadeUI.element.create("identity-mark-item", dui
+										.$identityMarkBox);
+									node.addEventListener(lib.config.touchscreen ? "touchend" : "click",
+										function() {
+											this.player.setIdentity(this.link);
+											dui.$identityMarkBox.remove();
+											_status.clicked = false;
+										});
 								} else {
 									node.style.display = "";
 								}
@@ -3445,7 +3565,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 							game.pause2();
 							setTimeout(
-								function (player) {
+								function(player) {
 									player.appendChild(dui.$identityMarkBox);
 									dui.set.activeElement(dui.$identityMarkBox);
 								},
@@ -3455,21 +3575,22 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					};
 
-					ui.click.volumn = function () {
+					ui.click.volumn = function() {
 						var setting = ui.create.dialog("hidden");
-						setting.listen(function (e) {
+						setting.listen(function(e) {
 							e.stopPropagation();
 						});
 
-						var backVolume = decadeUI.component.slider(0, 8, parseInt(lib.config.volumn_background));
+						var backVolume = decadeUI.component.slider(0, 8, parseInt(lib.config
+							.volumn_background));
 						var gameVolume = decadeUI.component.slider(0, 8, parseInt(lib.config.volumn_audio));
 
-						backVolume.onchange = function () {
+						backVolume.onchange = function() {
 							game.saveConfig("volumn_background", backVolume.value);
 							ui.backgroundMusic.volume = backVolume.value / 8;
 						};
 
-						gameVolume.onchange = function () {
+						gameVolume.onchange = function() {
 							game.saveConfig("volumn_audio", gameVolume.value);
 						};
 
@@ -3481,13 +3602,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return setting;
 					};
 
-					ui.create.pause = function () {
+					ui.create.pause = function() {
 						var dialog = createPauseFunction.call(this);
 						dialog.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
 						return dialog;
 					};
 
-					ui.clear = function () {
+					ui.clear = function() {
 						game.addVideo("uiClear");
 						var nodes = document.getElementsByClassName("thrown");
 						for (var i = nodes.length - 1; i >= 0; i--) {
@@ -3497,7 +3618,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					};
 
-					ui.create.arena = function () {
+					ui.create.arena = function() {
 						ui.updatez();
 						var result = createArenaFunction.apply(this, arguments);
 						ui.arena.classList.remove("slim_player");
@@ -3513,7 +3634,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return result;
 					};
 
-					ui.create.me = function (hasme) {
+					ui.create.me = function(hasme) {
 						ui.arena.dataset.layout = game.layout;
 
 						ui.mebg = ui.create.div("#mebg", ui.arena);
@@ -3527,12 +3648,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var equipSolts = (ui.equipSolts = decadeUI.element.create("equips-wrap"));
 						equipSolts.back = decadeUI.element.create("equips-back", equipSolts);
 						/*
-            decadeUI.element.create('icon icon-treasure', decadeUI.element.create('equip0', equipSolts.back));
-            decadeUI.element.create('icon icon-saber', decadeUI.element.create('equip1', equipSolts.back));
-            decadeUI.element.create('icon icon-shield', decadeUI.element.create('equip2', equipSolts.back));
-            decadeUI.element.create('icon icon-mount', decadeUI.element.create('equip3', equipSolts.back));
-            decadeUI.element.create('icon icon-mount', decadeUI.element.create('equip4', equipSolts.back));
-            */
+			decadeUI.element.create('icon icon-treasure', decadeUI.element.create('equip0', equipSolts.back));
+			decadeUI.element.create('icon icon-saber', decadeUI.element.create('equip1', equipSolts.back));
+			decadeUI.element.create('icon icon-shield', decadeUI.element.create('equip2', equipSolts.back));
+			decadeUI.element.create('icon icon-mount', decadeUI.element.create('equip3', equipSolts.back));
+			decadeUI.element.create('icon icon-mount', decadeUI.element.create('equip4', equipSolts.back));
+			*/
 						for (var repetition = 0; repetition < 5; repetition++) {
 							var ediv = decadeUI.element.create(null, equipSolts.back);
 							ediv.dataset.type = repetition;
@@ -3572,12 +3693,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					};
 
-					ui.create.player = function (position, noclick) {
+					ui.create.player = function(position, noclick) {
 						var player = ui.create.div(".player", position);
 						var playerExtend = {
 							node: {
-								avatar: ui.create.div(".primary-avatar", player, ui.click.avatar).hide(),
-								avatar2: ui.create.div(".deputy-avatar", player, ui.click.avatar2).hide(),
+								avatar: ui.create.div(".primary-avatar", player, ui.click.avatar)
+								.hide(),
+								avatar2: ui.create.div(".deputy-avatar", player, ui.click.avatar2)
+								.hide(),
 								turnedover: decadeUI.element.create("turned-over", player),
 								framebg: ui.create.div(".framebg", player),
 								intro: ui.create.div(".intro", player),
@@ -3612,25 +3735,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							popups: [],
 							damagepopups: [],
 							judging: [],
-							stat: [
-								{
-									card: {},
-									skill: {},
-								},
-							],
-							actionHistory: [
-								{
-									useCard: [],
-									respond: [],
-									skipped: [],
-									lose: [],
-									gain: [],
-									sourceDamage: [],
-									damage: [],
-									custom: [],
-									useSkill: [],
-								},
-							],
+							stat: [{
+								card: {},
+								skill: {},
+							}, ],
+							actionHistory: [{
+								useCard: [],
+								respond: [],
+								skipped: [],
+								lose: [],
+								gain: [],
+								sourceDamage: [],
+								damage: [],
+								custom: [],
+								useSkill: [],
+							}, ],
 							tempSkills: {},
 							storage: {},
 							marks: {},
@@ -3656,9 +3775,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						};
 
 						var chainImg = new Image();
-						chainImg.onerror = function () {
+						chainImg.onerror = function() {
 							var node = decadeUI.element.create("chain-back", player.node.chain);
-							for (var i = 0; i < 40; i++) decadeUI.element.create("cardbg", node).style.transform = "translateX(" + (i * 5 - 5) + "px)";
+							for (var i = 0; i < 40; i++) decadeUI.element.create("cardbg", node).style
+								.transform = "translateX(" + (i * 5 - 5) + "px)";
 							chainImg.onerror = undefined;
 						};
 						chainImg.src = decadeUIPath + "assets/image/tie_suo.png";
@@ -3667,8 +3787,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							$cardCount: playerExtend.node.count,
 							$dynamicWrap: decadeUI.element.create("dynamic-wrap"),
 						};
-						playerExtend.node.handcards1._childNodesWatcher = new ChildNodesWatcher(playerExtend.node.handcards1);
-						playerExtend.node.handcards2._childNodesWatcher = new ChildNodesWatcher(playerExtend.node.handcards2);
+						playerExtend.node.handcards1._childNodesWatcher = new ChildNodesWatcher(playerExtend
+							.node.handcards1);
+						playerExtend.node.handcards2._childNodesWatcher = new ChildNodesWatcher(playerExtend
+							.node.handcards2);
 						decadeUI.get.extend(player, extend);
 						decadeUI.get.extend(player, playerExtend);
 						//decadeUI.get.extend(player, lib.element.player);
@@ -3684,24 +3806,29 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								if (mutation.type === "childList") {
 									const addedNodes = Array.from(mutation.addedNodes);
 									const removedNodes = Array.from(mutation.removedNodes);
-									if (addedNodes.some(card => !card.classList.contains("emptyequip")) || removedNodes.some(card => !card.classList.contains("emptyequip"))) {
+									if (addedNodes.some(card => !card.classList.contains(
+											"emptyequip")) || removedNodes.some(card => !card
+											.classList.contains("emptyequip"))) {
 										player.$handleEquipChange();
 									}
 								}
 							}
 						});
-						const config = { childList: true };
+						const config = {
+							childList: true
+						};
 						observer.observe(playerExtend.node.equips, config);
 						//}
 
 						Object.defineProperties(realIdentity, {
 							innerHTML: {
 								configurable: true,
-								get: function () {
+								get() {
 									return this.innerText;
 								},
-								set: function (value) {
-									if (get.mode() == "guozhan" || _status.mode == "jiange" || _status.mode == "siguo") {
+								set(value) {
+									if (get.mode() == "guozhan" || _status.mode == "jiange" ||
+										_status.mode == "siguo") {
 										this.style.display = "none";
 										this.innerText = value;
 										this.parentNode.classList.add("guozhan-mode");
@@ -3735,7 +3862,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											break;
 										case "主":
 											filename = "zhu";
-											if (get.mode() == "versus" && get.translation(player.side + "Color") == "wei") {
+											if (get.mode() == "versus" && get.translation(player
+													.side + "Color") == "wei") {
 												filename += "_blue";
 												this.player.classList.add("opposite-camp");
 												checked = true;
@@ -3746,9 +3874,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											break;
 										case "忠":
 											filename = "zhong";
-											if (gameMode == "identity" && _status.mode == "purple") {
+											if (gameMode == "identity" && _status.mode ==
+												"purple") {
 												filename = "qianfeng";
-											} else if (get.mode() == "versus" && get.translation(player.side + "Color") == "wei") {
+											} else if (get.mode() == "versus" && get
+												.translation(player.side + "Color") == "wei") {
 												filename += "_blue";
 												this.player.classList.add("opposite-camp");
 												checked = true;
@@ -3756,7 +3886,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											break;
 										case "内":
 											if (_status.mode == "purple") {
-												filename = identity == "rNei" ? "xizuo" : "xizuo_blue";
+												filename = identity == "rNei" ? "xizuo" :
+													"xizuo_blue";
 												checked = true;
 											} else {
 												filename = "nei";
@@ -3773,14 +3904,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											break;
 										case "将":
 											filename = "dajiang";
-											if (_status.mode == "three" || get.translation(player.side + "Color") == "wei") {
+											if (_status.mode == "three" || get.translation(
+													player.side + "Color") == "wei") {
 												filename = "zhushuai_blue";
 												checked = true;
 											}
 											break;
 										case "兵":
 										case "卒":
-											filename = this.player.side === false ? "qianfeng_blue" : "qianfeng";
+											filename = this.player.side === false ?
+												"qianfeng_blue" : "qianfeng";
 											checked = true;
 											break;
 										case "师":
@@ -3823,18 +3956,25 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										this.style.visibility = "hidden";
 										var image = new Image();
 										image.node = this;
-										image.onerror = function () {
+										image.onerror = function() {
 											this.node.style.visibility = "";
 										};
 
 										/*-----------------分割线-----------------*/
 										// 不同样式身份标记
-										if (lib.config.extension_十周年UI_newDecadeStyle == "on") {
-											image.src = decadeUIPath + "image/decoration/identity_" + filename + ".png";
+										if (lib.config.extension_十周年UI_newDecadeStyle == "on" ||
+											lib.config.extension_十周年UI_newDecadeStyle ==
+											"othersOff") {
+											image.src = decadeUIPath +
+												"image/decoration/identity_" + filename +
+												".png";
 										} else {
-											image.src = decadeUIPath + "image/decorations/identity2_" + filename + ".png";
+											image.src = decadeUIPath +
+												"image/decorations/identity2_" + filename +
+												".png";
 										}
-										this.parentNode.style.backgroundImage = 'url("' + image.src + '")';
+										this.parentNode.style.backgroundImage = 'url("' + image
+											.src + '")';
 									} else {
 										this.style.visibility = "";
 									}
@@ -3845,10 +3985,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						Object.defineProperties(player.node.count, {
 							innerHTML: {
 								configurable: true,
-								get: function () {
+								get() {
 									return this.textContent;
 								},
-								set: function (value) {
+								set(value) {
 									if (this.textContent == value) return;
 									this.textContent = value;
 									this.dataset.text = value;
@@ -3857,8 +3997,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						});
 
 						if (!noclick) {
-							player.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.target);
-							player.node.identity.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.identity);
+							player.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click
+								.target);
+							player.node.identity.addEventListener(lib.config.touchscreen ? "touchend" :
+								"click", ui.click.identity);
 							if (lib.config.touchscreen) {
 								player.addEventListener("touchstart", ui.click.playertouchstart);
 							}
@@ -3881,7 +4023,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								border: decadeUI.element.create("camp-border", campWrap),
 								campName: decadeUI.element.create("camp-name", campWrap),
 								avatarName: player.node.name,
-								avatarDefaultName: decadeUI.element.create("avatar-name-default", campWrap),
+								avatarDefaultName: decadeUI.element.create("avatar-name-default",
+									campWrap),
 							},
 						};
 
@@ -3889,17 +4032,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						campWrap.appendChild(player.node.name);
 						campWrap.node.avatarName.className = "avatar-name";
-						campWrap.node.avatarDefaultName.innerHTML = "主将";
+						campWrap.node.avatarDefaultName.innerHTML = get.mode() === "guozhan" ? "主将" : "隐匿";
+						//结束
 
 						var node = {
-							mask: player.insertBefore(decadeUI.element.create("mask"), player.node.identity),
+							mask: player.insertBefore(decadeUI.element.create("mask"), player.node
+								.identity),
 							gainSkill: decadeUI.element.create("gain-skill", player),
 						};
 
 						var properties = {
 							gainSkill: {
 								player: player,
-								gain: function (skill) {
+								gain(skill) {
 									var sender = this;
 									if (!sender.skills) sender.skills = [];
 									if (!sender.skills.includes(skill) && lib.translate[skill]) {
@@ -3911,7 +4056,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										var html = "";
 										for (var i = 0; i < sender.skills.length; i++) {
 											/*-----------------分割线-----------------*/
-											if (lib.config.extension_十周年UI_newDecadeStyle == "on") {
+											if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib
+												.config.extension_十周年UI_newDecadeStyle == "othersOff") {
 												html += "[" + lib.translate[sender.skills[i]] + "]";
 											} else {
 												html += "" + lib.translate[sender.skills[i]] + " ";
@@ -3920,7 +4066,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										}
 									}
 								},
-								lose: function (skill) {
+								lose(skill) {
 									var sender = this;
 									var index = sender.skills.indexOf(skill);
 									if (index >= 0) {
@@ -3928,7 +4074,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										var html = "";
 										for (var i = 0; i < sender.skills.length; i++) {
 											/*-----------------分割线-----------------*/
-											if (lib.config.extension_十周年UI_newDecadeStyle == "on") {
+											if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib
+												.config.extension_十周年UI_newDecadeStyle == "othersOff") {
 												html += "[" + lib.translate[sender.skills[i]] + "]";
 											} else {
 												html += "" + lib.translate[sender.skills[i]] + " ";
@@ -3947,7 +4094,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return player;
 					};
 
-					ui.create.card = function (position, info, noclick) {
+					ui.create.card = function(position, info, noclick) {
 						var card = ui.create.div(".card");
 						card.node = {
 							image: ui.create.div(".image", card),
@@ -3983,7 +4130,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						card.gaintag = [];
 						card._uncheck = [];
 						if (info != "noclick") {
-							card.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.card);
+							card.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click
+								.card);
 							if (lib.config.touchscreen) {
 								card.addEventListener("touchstart", ui.click.cardtouchstart);
 								card.addEventListener("touchmove", ui.click.cardtouchmove);
@@ -3996,10 +4144,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 
 						card.$suitnum.$num = decadeUI.element.create(null, card.$suitnum, "span");
-						card.$suitnum.$num.style.fontFamily = '"STHeiti","SimHei","Microsoft JhengHei","Microsoft YaHei","WenQuanYi Micro Hei",Helvetica,Arial,sans-serif';
+						card.$suitnum.$num.style.fontFamily =
+							'"STHeiti","SimHei","Microsoft JhengHei","Microsoft YaHei","WenQuanYi Micro Hei",Helvetica,Arial,sans-serif';
 						card.$suitnum.$br = decadeUI.element.create(null, card.$suitnum, "br");
 						card.$suitnum.$suit = decadeUI.element.create("suit", card.$suitnum, "span");
-						card.$suitnum.$suit.style.fontFamily = '"STHeiti","SimHei","Microsoft JhengHei","Microsoft YaHei","WenQuanYi Micro Hei",Helvetica,Arial,sans-serif';
+						card.$suitnum.$suit.style.fontFamily =
+							'"STHeiti","SimHei","Microsoft JhengHei","Microsoft YaHei","WenQuanYi Micro Hei",Helvetica,Arial,sans-serif';
 						card.$equip.$suitnum = decadeUI.element.create(null, card.$equip, "span");
 						card.$equip.$name = decadeUI.element.create(null, card.$equip, "span");
 
@@ -4013,25 +4163,27 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return card;
 					};
 
-					ui.create.cards = function () {
+					ui.create.cards = function() {
 						var result = base.ui.create.cards.apply(this, arguments);
 						game.updateRoundNumber();
 						return result;
 					};
 
-					lib.init.cssstyles = function () {
+					lib.init.cssstyles = function() {
 						var temp = lib.config.glow_phase;
 						lib.config.glow_phase = "";
 						initCssstylesFunction.call(this);
 						lib.config.glow_phase = temp;
-						ui.css.styles.sheet.insertRule('.avatar-name, .avatar-name-default { font-family: "' + (lib.config.name_font || "xinkai") + '", "xinwei" }', 0);
+						ui.css.styles.sheet.insertRule(
+							'.avatar-name, .avatar-name-default { font-family: "' + (lib.config
+								.name_font || "xinkai") + '", "xinwei" }', 0);
 					};
 
-					lib.init.layout = function (layout, nosave) {
+					lib.init.layout = function(layout, nosave) {
 						if (!nosave) game.saveConfig("layout", layout);
 						game.layout = layout;
 
-						var relayout = function () {
+						var relayout = function() {
 							ui.arena.dataset.layout = game.layout;
 							if (get.is.phoneLayout()) {
 								ui.css.phone.href = lib.assetURL + "layout/default/phone.css";
@@ -4057,13 +4209,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 							ui.updatej();
 							ui.updatem();
-							setTimeout(function () {
+							setTimeout(function() {
 								if (game.me) game.me.update();
-								setTimeout(function () {
+								setTimeout(function() {
 									ui.updatex();
 								}, 500);
 
-								setTimeout(function () {
+								setTimeout(function() {
 									ui.updatec();
 								}, 1000);
 							}, 100);
@@ -4072,23 +4224,29 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						setTimeout(relayout, 500);
 					};
 
-					lib.element.content.chooseToCompare = function () {
+					lib.element.content.chooseToCompare = function() {
 						"step 0";
-						if (((!event.fixedResult || !event.fixedResult[player.playerid]) && player.countCards("h") == 0) || ((!event.fixedResult || !event.fixedResult[target.playerid]) && target.countCards("h") == 0)) {
-							event.result = { cancelled: true, bool: false };
+						if (((!event.fixedResult || !event.fixedResult[player.playerid]) && player
+								.countCards("h") == 0) || ((!event.fixedResult || !event.fixedResult[target
+								.playerid]) && target.countCards("h") == 0)) {
+							event.result = {
+								cancelled: true,
+								bool: false
+							};
 							event.finish();
 							return;
 						}
 						game.log(player, "对", target, "发起拼点");
 						if (!event.filterCard) event.filterCard = lib.filter.all;
 						// 更新拼点框
-						event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
-						event.addMessageHook("finished", function () {
+						event.compareName = event.getParent()?.name === "trigger" ? event.name : event
+							.getParent().name;
+						event.addMessageHook("finished", function() {
 							var dialog = ui.dialogs[this.compareName];
 							if (dialog) dialog.close();
 						});
 						game.broadcastAll(
-							function (player, target, eventName) {
+							function(player, target, eventName) {
 								if (!window.decadeUI) return;
 								var dialog = decadeUI.create.compareDialog();
 								dialog.caption = get.translation(eventName) + "拼点";
@@ -4103,19 +4261,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							event.compareName
 						);
 						"step 1";
-						event.list = [player, target].filter(function (current) {
+						event.list = [player, target].filter(function(current) {
 							return !event.fixedResult || !event.fixedResult[current.playerid];
 						});
 						if (event.list.length) {
-							player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
+							player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event
+								.filterCard).set("type", "compare").set("ai", event.ai).set("source",
+								player).aiCard = function(target) {
 								var hs = target.getCards("h");
 								var event = _status.event;
 								event.player = target;
-								hs.sort(function (a, b) {
+								hs.sort(function(a, b) {
 									return event.ai(b) - event.ai(a);
 								});
 								delete event.player;
-								return { bool: true, cards: [hs[0]] };
+								return {
+									bool: true,
+									cards: [hs[0]]
+								};
 							};
 						}
 						"step 2";
@@ -4123,7 +4286,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						if (event.fixedResult && event.fixedResult[player.playerid]) {
 							lose_list.push([player, [event.fixedResult[player.playerid]]]);
 						} else {
-							if (result[0].skill && lib.skill[result[0].skill] && lib.skill[result[0].skill].onCompare) {
+							if (result[0].skill && lib.skill[result[0].skill] && lib.skill[result[0].skill]
+								.onCompare) {
 								player.logSkill(result[0].skill);
 								result[0].cards = lib.skill[result[0].skill].onCompare(player);
 							}
@@ -4131,7 +4295,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 						event.card1 = lose_list[0][1][0];
 						// 更新拼点框
-						game.broadcastAll(function (eventName) {
+						game.broadcastAll(function(eventName) {
 							if (!window.decadeUI) return;
 							var dialog = ui.dialogs[eventName];
 							dialog.$playerCard.classList.add("infohidden");
@@ -4139,7 +4303,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}, event.compareName);
 						if (event.list.includes(target)) {
 							let index = event.list.indexOf(target);
-							if (result[index].skill && lib.skill[result[index].skill] && lib.skill[result[index].skill].onCompare) {
+							if (result[index].skill && lib.skill[result[index].skill] && lib.skill[result[
+									index].skill].onCompare) {
 								target.logSkill(result[index].skill);
 								result[index].cards = lib.skill[result[index].skill].onCompare(target);
 							}
@@ -4149,7 +4314,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 						event.card2 = lose_list[1][1][0];
 						// 更新拼点框
-						game.broadcastAll(function (eventName) {
+						game.broadcastAll(function(eventName) {
 							if (!window.decadeUI) return;
 							var dialog = ui.dialogs[eventName];
 							dialog.$playerCard.classList.add("infohidden");
@@ -4171,7 +4336,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						"step 6";
 						// 更新拼点框
 						game.broadcastAll(
-							function (eventName, player, target, playerCard, targetCard) {
+							function(eventName, player, target, playerCard, targetCard) {
 								ui.arena.classList.add("thrownhighlight");
 								if (!window.decadeUI) {
 									ui.arena.classList.add("thrownhighlight");
@@ -4191,9 +4356,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						game.addVideo("thrownhighlight1");
 						game.log(player, "的拼点牌为", event.card1);
 						game.log(target, "的拼点牌为", event.card2);
-						var getNum = function (card) {
+						var getNum = function(card) {
 							for (var i of event.lose_list) {
-								if (i[1] == card) return get.number(card, i[0]);
+								if (i[1].includes(card)) return get.number(card, i[0]);
 							}
 							return get.number(card, false);
 						};
@@ -4211,7 +4376,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						event.trigger("compareFixing");
 						"step 8";
 						var str;
-						if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
+						if (event.forceWinner === player || (event.forceWinner !== target && event.num1 >
+								event.num2)) {
 							event.result.bool = true;
 							event.result.winner = player;
 							str = get.translation(player) + "拼点成功";
@@ -4232,12 +4398,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 						// 更新拼点框
 						game.broadcastAll(
-							function (str, eventName, result) {
+							function(str, eventName, result) {
 								if (!window.decadeUI) {
 									var dialog = ui.create.dialog(str);
 									dialog.classList.add("center");
 									setTimeout(
-										function (dialog) {
+										function(dialog) {
 											dialog.close();
 										},
 										1000,
@@ -4248,12 +4414,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								var dialog = ui.dialogs[eventName];
 								dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
 								setTimeout(
-									function (dialog, eventName) {
+									function(dialog, eventName) {
 										dialog.close();
 										setTimeout(
-											function (dialog) {
-												dialog.player.$throwordered2(dialog.playerCard, true);
-												dialog.target.$throwordered2(dialog.targetCard, true);
+											function(dialog) {
+												dialog.player.$throwordered2(dialog.playerCard,
+													true);
+												dialog.target.$throwordered2(dialog.targetCard,
+													true);
 											},
 											180,
 											dialog
@@ -4271,10 +4439,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						);
 						decadeUI.delay(1800);
 						"step 9";
-						if (typeof event.target.ai.shown == "number" && event.target.ai.shown <= 0.85 && event.addToAI) {
+						if (typeof event.target.ai.shown == "number" && event.target.ai.shown <= 0.85 &&
+							event.addToAI) {
 							event.target.ai.shown += 0.1;
 						}
-						game.broadcastAll(function () {
+						game.broadcastAll(function() {
 							ui.arena.classList.remove("thrownhighlight");
 						});
 						game.addVideo("thrownhighlight2");
@@ -4290,7 +4459,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					};
 
-					lib.element.content.chooseToCompareMultiple = function () {
+					lib.element.content.chooseToCompareMultiple = function() {
 						"step 0";
 						event.forceDie = true;
 						if (player.countCards("h") == 0) {
@@ -4317,13 +4486,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						game.log(player, "对", targets, "发起拼点");
 						if (!event.filterCard) event.filterCard = lib.filter.all;
 						// 更新拼点框
-						event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
-						event.addMessageHook("finished", function () {
+						event.compareName = event.getParent()?.name === "trigger" ? event.name : event
+							.getParent().name;
+						event.addMessageHook("finished", function() {
 							var dialog = ui.dialogs[this.compareName];
 							if (dialog) dialog.close();
 						});
 						game.broadcastAll(
-							function (player, target, eventName) {
+							function(player, target, eventName) {
 								if (!window.decadeUI) return;
 								var dialog = decadeUI.create.compareDialog();
 								dialog.caption = get.translation(eventName) + "拼点";
@@ -4339,16 +4509,20 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						);
 						"step 1";
 						event._result = [];
-						event.list = targets.filter(function (current) {
+						event.list = targets.filter(function(current) {
 							return !event.fixedResult || !event.fixedResult[current.playerid];
 						});
-						if (event.list.length || !event.fixedResult || !event.fixedResult[player.playerid]) {
-							if (!event.fixedResult || !event.fixedResult[player.playerid]) event.list.unshift(player);
-							player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
+						if (event.list.length || !event.fixedResult || !event.fixedResult[player
+							.playerid]) {
+							if (!event.fixedResult || !event.fixedResult[player.playerid]) event.list
+								.unshift(player);
+							player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event
+								.filterCard).set("type", "compare").set("ai", event.ai).set("source",
+								player).aiCard = function(target) {
 								var hs = target.getCards("h");
 								var event = _status.event;
 								event.player = target;
-								hs.sort(function (a, b) {
+								hs.sort(function(a, b) {
 									return event.ai(b) - event.ai(a);
 								});
 								delete event.player;
@@ -4362,9 +4536,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var cards = [];
 						var lose_list = [];
 						event.lose_list = lose_list;
-						event.getNum = function (card) {
+						event.getNum = function(card) {
 							for (var i of event.lose_list) {
-								if (i[1].includes && i[1].includes(card)) return get.number(card, i[0]);
+								if (i[1].includes(card)) return get.number(card, i[0]);
 							}
 							return get.number(card, false);
 						};
@@ -4376,7 +4550,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							});
 							lose_list.push([player, [event.fixedResult[player.playerid]]]);
 						} else {
-							if (result[0].skill && lib.skill[result[0].skill] && lib.skill[result[0].skill].onCompare) {
+							if (result[0].skill && lib.skill[result[0].skill] && lib.skill[result[0].skill]
+								.onCompare) {
 								player.logSkill(result[0].skill);
 								result[0].cards = lib.skill[result[0].skill].onCompare(player);
 							} else lose_list.push([player, result[0].cards]);
@@ -4384,14 +4559,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						for (var j = 0; j < targets.length; j++) {
 							if (event.list.includes(targets[j])) {
 								var i = event.list.indexOf(targets[j]);
-								if (result[i].skill && lib.skill[result[i].skill] && lib.skill[result[i].skill].onCompare) {
+								if (result[i].skill && lib.skill[result[i].skill] && lib.skill[result[i]
+										.skill].onCompare) {
 									event.list[i].logSkill(result[i].skill);
 									result[i].cards = lib.skill[result[i].skill].onCompare(event.list[i]);
 								} else lose_list.push([targets[j], result[i].cards]);
 								cards.push(result[i].cards[0]);
 							} else if (event.fixedResult && event.fixedResult[targets[j].playerid]) {
 								cards.push(event.fixedResult[targets[j].playerid]);
-								lose_list.push([targets[j], [event.fixedResult[targets[j].playerid]]]);
+								lose_list.push([targets[j],
+									[event.fixedResult[targets[j].playerid]]
+								]);
 							}
 						}
 						if (lose_list.length) {
@@ -4416,7 +4594,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						game.log(player, "的拼点牌为", event.card1);
 						// 更新拼点框
 						game.broadcastAll(
-							function (eventName, playerCard) {
+							function(eventName, playerCard) {
 								if (!window.decadeUI) return;
 								var dialog = ui.dialogs[eventName];
 								dialog.playerCard = playerCard.copy();
@@ -4433,7 +4611,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							player.line(event.target);
 							// 更新拼点框
 							game.broadcastAll(
-								function (eventName, player, target, playerCard, targetCard) {
+								function(eventName, player, target, playerCard, targetCard) {
 									if (!window.decadeUI) {
 										player.$compare(playerCard, target, targetCard);
 										return;
@@ -4453,13 +4631,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							decadeUI.delay(400);
 						} else {
 							// 更新拼点框
-							game.broadcastAll(function (eventName) {
+							game.broadcastAll(function(eventName) {
 								if (!window.decadeUI) return;
 
 								var dialog = ui.dialogs[eventName];
 								dialog.close();
 								setTimeout(
-									function (dialog) {
+									function(dialog) {
 										dialog.player.$throwordered2(dialog.playerCard, true);
 									},
 									110,
@@ -4476,7 +4654,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						event.result.num1[event.iiwhile] = event.num1;
 						event.result.num2[event.iiwhile] = event.num2;
 						var str, result;
-						if (event.forceWinner === player || (event.forceWinner !== target && event.num1 > event.num2)) {
+						if (event.forceWinner === player || (event.forceWinner !== target && event.num1 >
+								event.num2)) {
 							result = true;
 							event.winner = player;
 							str = get.translation(player) + "拼点成功";
@@ -4496,12 +4675,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 						// 更新拼点框
 						game.broadcastAll(
-							function (str, eventName, result) {
+							function(str, eventName, result) {
 								if (!window.decadeUI) {
 									var dialog = ui.create.dialog(str);
 									dialog.classList.add("center");
 									setTimeout(
-										function (dialog) {
+										function(dialog) {
 											dialog.close();
 										},
 										1000,
@@ -4512,12 +4691,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								var dialog = ui.dialogs[eventName];
 								dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
 								setTimeout(
-									function (dialog, eventName) {
+									function(dialog, eventName) {
 										dialog.hide();
 										dialog.$playerCard.dataset.result = "";
 										setTimeout(
-											function (dialog) {
-												dialog.target.$throwordered2(dialog.targetCard, true);
+											function(dialog) {
+												dialog.target.$throwordered2(dialog.targetCard,
+													true);
 											},
 											180,
 											dialog
@@ -4536,7 +4716,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						"step 8";
 						if (event.callback) {
 							game.broadcastAll(
-								function (card1, card2) {
+								function(card1, card2) {
 									if (!window.decadeUI) {
 										if (card1.clone) card1.clone.style.opacity = 0.5;
 										if (card2.clone) card2.clone.style.opacity = 0.5;
@@ -4566,17 +4746,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						event.cards.add(event.card1);
 					};
 
-					lib.element.content.chooseToGuanxing = function () {
+					lib.element.content.chooseToGuanxing = function() {
 						"step 0";
 						if (player.isUnderControl()) game.modeSwapPlayer(player);
 						var cards = get.cards(num);
-						var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
-						guanxing.caption = event.getParent() && event.getParent().name && get.translation(event.getParent().name) != event.getParent().name ? "【" + get.translation(event.getParent().name) + "】" : "请按顺序排列牌";
+						var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null,
+							cards.length);
+						guanxing.caption = event.getParent() && event.getParent().name && get.translation(
+							event.getParent().name) != event.getParent().name ? "【" + get.translation(
+							event.getParent().name) + "】" : "请按顺序排列牌";
 
 						game.broadcast(
-							function (player, cards, callback) {
+							function(player, cards, callback) {
 								if (!window.decadeUI) return;
-								var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
+								var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards
+									.length, null, cards.length);
 								guanxing.caption = "观星";
 								guanxing.callback = callback;
 								game.log(guanxing.callback);
@@ -4587,8 +4771,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						);
 
 						if (event.isOnline()) {
-							event.player.send(function () {
-								if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
+							event.player.send(function() {
+								if (!window.decadeUI && decadeUI.eventDialog) _status.event
+							.finish();
 							}, event.player);
 
 							event.player.wait();
@@ -4596,7 +4781,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						} else if (!(typeof event.isMine == "function" && event.isMine())) {
 							const processAI =
 								event.processAI ||
-								function (list) {
+								function(list) {
 									let cards = list[0][1],
 										player = _status.event.player,
 										target = _status.currentPhase || player,
@@ -4606,19 +4791,22 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												return get.name(card, current) === "wuxie";
 											});
 											if (num && current !== player) return num;
-											let skills = current.getSkills("invisible").concat(lib.skill.global);
+											let skills = current.getSkills("invisible").concat(lib.skill
+												.global);
 											game.expandSkills(skills);
 											for (let i = 0; i < skills.length; i++) {
 												let ifo = get.info(skills[i]);
 												if (!ifo) continue;
-												if (ifo.viewAs && typeof ifo.viewAs != "function" && ifo.viewAs.name == "wuxie") {
+												if (ifo.viewAs && typeof ifo.viewAs != "function" && ifo
+													.viewAs.name == "wuxie") {
 													if (!ifo.viewAsFilter || ifo.viewAsFilter(current)) {
 														num++;
 														break;
 													}
 												} else {
 													let hiddenCard = ifo.hiddenCard;
-													if (typeof hiddenCard == "function" && hiddenCard(current, "wuxie")) {
+													if (typeof hiddenCard == "function" && hiddenCard(
+															current, "wuxie")) {
 														num++;
 														break;
 													}
@@ -4635,10 +4823,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												judges = target.getCards("j"),
 												needs = 0,
 												wuxie = countWuxie(target);
-											for (let i = Math.min(cards.length, judges.length) - 1; i >= 0; i--) {
+											for (let i = Math.min(cards.length, judges.length) - 1; i >=
+												0; i--) {
 												let j = judges[i],
-													cardj = j.viewAs ? { name: j.viewAs, cards: j.cards || [j] } : j;
-												if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
+													cardj = j.viewAs ? {
+														name: j.viewAs,
+														cards: j.cards || [j]
+													} : j;
+												if (wuxie > 0 && get.effect(target, j, target, target) <
+													0) {
 													wuxie--;
 													continue;
 												}
@@ -4657,13 +4850,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												return [top, cards];
 											}
 											cards.sort((a, b) => {
-												return (get.value(b, target) - get.value(a, target)) * att;
+												return (get.value(b, target) - get.value(a,
+													target)) * att;
 											});
 											while (needs--) {
 												top.unshift(cards.shift());
 											}
 											while (cards.length) {
-												if (get.value(cards[0], target) > 6 == att > 0) top.push(cards.shift());
+												if (get.value(cards[0], target) > 6 == att > 0) top.push(
+													cards.shift());
 												else break;
 											}
 											return [top, cards];
@@ -4672,17 +4867,20 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												return get.value(b, target) - get.value(a, target);
 											});
 											while (cards.length) {
-												if (get.value(cards[0], target) > 6) top.push(cards.shift());
+												if (get.value(cards[0], target) > 6) top.push(cards
+											.shift());
 												else break;
 											}
 											return [top, cards];
 									}
 								};
-							var [cards, cheats] = processAI([[" ", guanxing.cards[0].slice()]]),
+							var [cards, cheats] = processAI([
+									[" ", guanxing.cards[0].slice()]
+								]),
 								time = 500;
 							for (var i = 0; i < cheats.length; i++) {
 								setTimeout(
-									function (card, index, finished) {
+									function(card, index, finished) {
 										guanxing.move(card, index, 0);
 										if (finished) guanxing.finishTime(1000);
 									},
@@ -4696,7 +4894,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 							for (var i = 0; i < cards.length; i++) {
 								setTimeout(
-									function (card, index, finished) {
+									function(card, index, finished) {
 										guanxing.move(card, index, 1);
 										if (finished) guanxing.finishTime(1000);
 									},
@@ -4710,20 +4908,25 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 						"step 1";
 						var [top, bottom] = [event.cards1, event.cards2];
-						event.result = { bool: true, moved: [top, bottom] };
+						event.result = {
+							bool: true,
+							moved: [top, bottom]
+						};
 						game.addCardKnower(top, player);
 						game.addCardKnower(bottom, player);
 						player.popup(get.cnNumber(event.num1) + "上" + get.cnNumber(event.num2) + "下");
-						game.logv(player, "将" + get.cnNumber(event.num1) + "张牌置于牌堆顶，" + get.cnNumber(event.num2) + "张牌置于牌堆底");
+						game.logv(player, "将" + get.cnNumber(event.num1) + "张牌置于牌堆顶，" + get.cnNumber(event
+							.num2) + "张牌置于牌堆底");
 						game.updateRoundNumber();
 					};
 
-					lib.element.player.setIdentity = function (identity) {
+					lib.element.player.setIdentity = function(identity) {
 						if (!identity) identity = this.identity;
 
 						this.node.identity.dataset.color = identity;
 						if (get.mode() == "guozhan") {
-							if (identity == "ye" && get.is.jun(this)) this.identity = identity = lib.character[this.name1][1];
+							if (identity == "ye" && get.is.jun(this)) this.identity = identity = lib
+								.character[this.name1][1];
 							this.group = identity;
 							this.node.identity.firstChild.innerHTML = get.translation(identity);
 							return this;
@@ -4737,7 +4940,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return this;
 					};
 
-					lib.element.player.addSkill = function (skill) {
+					lib.element.player.addSkill = function(skill) {
 						var skill = playerAddSkillFunction.apply(this, arguments);
 						if (!Array.isArray(skill)) {
 							const skills = ["name", "name1", "name2"].reduce((list, name) => {
@@ -4748,13 +4951,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							}, []);
 							if (!skills.includes(skill)) {
 								var info = get.info(skill);
-								if (!(!info || info.nopop || !get.translation(skill + "_info") || !lib.translate[skill + "_info"])) this.node.gainSkill.gain(skill);
+								if (!(!info || info.nopop || !get.translation(skill + "_info") || !lib
+										.translate[skill + "_info"])) this.node.gainSkill.gain(skill);
 							}
 						}
 						return skill;
 					};
 
-					lib.element.player.removeSkill = function (skill) {
+					lib.element.player.removeSkill = function(skill) {
 						var skill = playerRemoveSkillFunction.apply(this, arguments);
 						if (!Array.isArray(skill)) {
 							if (this.node.gainSkill.skills && this.node.gainSkill.skills.includes(skill)) {
@@ -4764,7 +4968,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return skill;
 					};
 
-					lib.element.player.getState = function () {
+					lib.element.player.getState = function() {
 						var state = base.lib.element.player.getState.apply(this, arguments);
 						state.seat = this.seat;
 						return state;
@@ -4773,42 +4977,52 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					Object.defineProperties(lib.element.player, {
 						group: {
 							configurable: true,
-							get: function () {
+							get() {
 								return this._group;
 							},
-							set: function (group) {
+							set(group) {
 								if (!group) return;
 								this._group = group;
-								this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
+								this.node.campWrap.dataset.camp = get.character(this.name)
+									?.groupBorder || group;
 								if (!decadeUI.config.campIdentityImageMode) {
-									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+									if (!this._finalGroup) this.node.campWrap.node.campName
+										.innerHTML = "";
 									else {
 										const name = get.translation(this._finalGroup),
 											str = get.plainText(name);
-										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+										if (str.length <= 2) this.node.campWrap.node.campName
+											.innerHTML = name;
+										else this.node.campWrap.node.campName.innerHTML = name
+											.replaceAll(str, str[0]);
 									}
 									return;
 								}
 								var image = new Image();
-								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
+								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ?
+										"image/decorations/name2_" : "image/decoration/name_") +
+									group + ".png";
 								this._finalGroup = group;
 								image.onerror = () => {
-									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+									if (!this._finalGroup) this.node.campWrap.node.campName
+										.innerHTML = "";
 									else {
 										const name = get.translation(this._finalGroup),
 											str = get.plainText(name);
-										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+										if (str.length <= 2) this.node.campWrap.node.campName
+											.innerHTML = name;
+										else this.node.campWrap.node.campName.innerHTML = name
+											.replaceAll(str, str[0]);
 									}
 								};
-								this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
+								this.node.campWrap.node.campName.style.backgroundImage =
+									`url("${url}")`;
 								image.src = url;
 							},
 						},
 					});
 
-					lib.element.player.setModeState = function (info) {
+					lib.element.player.setModeState = function(info) {
 						if (info && info.seat) {
 							if (!this.node.seat) this.node.seat = decadeUI.element.create("seat", this);
 							this.node.seat.innerHTML = get.cnNumber(info.seat, true);
@@ -4821,12 +5035,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					};
 
-					lib.element.player.$damagepop = function (num, nature, font, nobroadcast) {
+					lib.element.player.$damagepop = function(num, nature, font, nobroadcast) {
 						if (typeof num == "number" || typeof num == "string") {
 							game.addVideo("damagepop", this, [num, nature, font]);
 							if (nobroadcast !== false) {
 								game.broadcast(
-									function (player, num, nature, font) {
+									function(player, num, nature, font) {
 										player.$damagepop(num, nature, font);
 									},
 									this,
@@ -4880,25 +5094,61 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									switch (node.nature) {
 										case "thunder":
 											if (popupNum <= -2) {
-												decadeUI.animation.playSpine({ name: "effect_shoujidonghua", action: "play6" }, { scale: 0.8, parent: player });
+												decadeUI.animation.playSpine({
+													name: "effect_shoujidonghua",
+													action: "play6"
+												}, {
+													scale: 0.8,
+													parent: player
+												});
 											} else {
-												decadeUI.animation.playSpine({ name: "effect_shoujidonghua", action: "play5" }, { scale: 0.8, parent: player });
+												decadeUI.animation.playSpine({
+													name: "effect_shoujidonghua",
+													action: "play5"
+												}, {
+													scale: 0.8,
+													parent: player
+												});
 											}
 											break;
 										case "fire":
 											if (popupNum <= -2) {
-												decadeUI.animation.playSpine({ name: "effect_shoujidonghua", action: "play4" }, { scale: 0.8, parent: player });
+												decadeUI.animation.playSpine({
+													name: "effect_shoujidonghua",
+													action: "play4"
+												}, {
+													scale: 0.8,
+													parent: player
+												});
 											} else {
-												decadeUI.animation.playSpine({ name: "effect_shoujidonghua", action: "play3" }, { scale: 0.8, parent: player });
+												decadeUI.animation.playSpine({
+													name: "effect_shoujidonghua",
+													action: "play3"
+												}, {
+													scale: 0.8,
+													parent: player
+												});
 											}
 											break;
 										case "water":
 											break;
 										default:
 											if (popupNum <= -2) {
-												decadeUI.animation.playSpine({ name: "effect_shoujidonghua", action: "play2" }, { scale: 0.8, parent: player });
+												decadeUI.animation.playSpine({
+													name: "effect_shoujidonghua",
+													action: "play2"
+												}, {
+													scale: 0.8,
+													parent: player
+												});
 											} else {
-												decadeUI.animation.playSpine({ name: "effect_shoujidonghua", action: "play1" }, { scale: 0.8, parent: player });
+												decadeUI.animation.playSpine({
+													name: "effect_shoujidonghua",
+													action: "play1"
+												}, {
+													scale: 0.8,
+													parent: player
+												});
 											}
 											break;
 									}
@@ -4914,7 +5164,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 							node.style.animation = "open-fade-in-out 1.2s";
 							setTimeout(
-								function (player, node) {
+								function(player, node) {
 									if (!player.popupNodeCache) player.popupNodeCache = [];
 									node.style.animation = "";
 									player.popupNodeCache.push(node);
@@ -4925,7 +5175,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							);
 
 							setTimeout(
-								function (player) {
+								function(player) {
 									player.damagepopLocked = false;
 									player.$damagepop();
 								},
@@ -4935,13 +5185,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					};
 
-					lib.element.player.$dieflip = function () {
-						if (!decadeUI.config.playerDieEffect && playerDieFlipFunction) playerDieFlipFunction.apply(this, arguments);
+					lib.element.player.$dieflip = function() {
+						if (!decadeUI.config.playerDieEffect && playerDieFlipFunction) playerDieFlipFunction
+							.apply(this, arguments);
 					};
 
-					lib.element.player.$compare = function (card1, target, card2) {
+					lib.element.player.$compare = function(card1, target, card2) {
 						game.broadcast(
-							function (player, target, card1, card2) {
+							function(player, target, card1, card2) {
 								player.$compare(card1, target, card2);
 							},
 							this,
@@ -4949,15 +5200,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							card1,
 							card2
 						);
-						game.addVideo("compare", this, [get.cardInfo(card1), target.dataset.position, get.cardInfo(card2)]);
+						game.addVideo("compare", this, [get.cardInfo(card1), target.dataset.position, get
+							.cardInfo(card2)
+						]);
 						var player = this;
 						target.$throwordered2(card2.copy(false));
 						player.$throwordered2(card1.copy(false));
 					};
 
-					lib.element.player.$compareMultiple = function (card1, targets, cards) {
+					lib.element.player.$compareMultiple = function(card1, targets, cards) {
 						game.broadcast(
-							function (player, card1, targets, cards) {
+							function(player, card1, targets, cards) {
 								player.$compareMultiple(card1, targets, cards);
 							},
 							this,
@@ -4965,7 +5218,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							targets,
 							cards
 						);
-						game.addVideo("compareMultiple", this, [get.cardInfo(card1), get.targetsInfo(targets), get.cardsInfo(cards)]);
+						game.addVideo("compareMultiple", this, [get.cardInfo(card1), get.targetsInfo(
+							targets), get.cardsInfo(cards)]);
 						var player = this;
 						for (var i = targets.length - 1; i >= 0; i--) {
 							targets[i].$throwordered2(cards[i].copy(false));
@@ -4973,7 +5227,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player.$throwordered2(card1.copy(false));
 					};
 
-					lib.element.card.copy = function () {
+					lib.element.card.copy = function() {
 						var clone = cardCopyFunction.apply(this, arguments);
 						clone.nature = this.nature;
 
@@ -4984,7 +5238,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						if (asset && !asset.loaded && clone.classList.contains("decade-card")) {
 							if (asset.loaded == undefined) {
 								var image = asset.image;
-								image.addEventListener("error", function () {
+								image.addEventListener("error", function() {
 									clone.style.background = asset.rawUrl;
 									clone.classList.remove("decade-card");
 								});
@@ -4998,8 +5252,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					};
 				},
 				dialog: {
-					create: function (className, parentNode, tagName) {
-						var element = !tagName ? document.createElement("div") : document.createElement(tagName);
+					create(className, parentNode, tagName) {
+						var element = !tagName ? document.createElement("div") : document.createElement(
+						tagName);
 						for (var i in decadeUI.dialog) {
 							if (decadeUI.dialog[i]) element[i] = decadeUI.dialog[i];
 						}
@@ -5017,22 +5272,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						return element;
 					},
-					open: function () {
+					open() {
 						if (this == decadeUI.dialog) return console.error("undefined");
 					},
-					show: function () {
+					show() {
 						if (this == decadeUI.dialog) return console.error("undefined");
 
 						this.classList.remove("hidden");
 					},
-					hide: function () {
+					hide() {
 						if (this == decadeUI.dialog) return console.error("undefined");
 
 						this.classList.add("hidden");
 					},
-					animate: function (property, duration, toArray, fromArrayOptional) {
+					animate(property, duration, toArray, fromArrayOptional) {
 						if (this == decadeUI.dialog) return console.error("undefined");
-						if (property == null || duration == null || toArray == null) return console.error("arguments");
+						if (property == null || duration == null || toArray == null) return console.error(
+							"arguments");
 
 						var propArray = property.replace(/\s*/g, "").split(",");
 						if (!propArray || propArray.length == 0) return console.error("property");
@@ -5073,12 +5329,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 
 						var restore = this;
-						setTimeout(function () {
+						setTimeout(function() {
 							restore.style.transitionDuration = duraBefore;
 							restore.style.transitionProperty = propBefore;
 						}, realDuration);
 					},
-					close: function (delayTime, fadeOut) {
+					close(delayTime, fadeOut) {
 						if (this == decadeUI.dialog) return console.error("undefined");
 						this.listens.clear();
 
@@ -5091,7 +5347,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						if (delayTime) {
 							var remove = this;
 							delayTime = typeof delayTime == "number" ? delayTime : parseInt(delayTime);
-							setTimeout(function () {
+							setTimeout(function() {
 								if (remove.parentNode) remove.parentNode.removeChild(remove);
 							}, delayTime);
 							return;
@@ -5101,19 +5357,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return;
 					},
 					listens: {
-						add: function (listenElement, event, func, useCapture) {
+						add(listenElement, event, func, useCapture) {
 							if (!this._dialog || !this._list) return console.error("undefined");
-							if (!(listenElement instanceof HTMLElement) || !event || typeof func !== "function") return console.error("arguments");
+							if (!(listenElement instanceof HTMLElement) || !event || typeof func !== "function")
+								return console.error("arguments");
 
 							this._list.push(new Array(listenElement, event, func));
 							listenElement.addEventListener(event, func);
 						},
-						remove: function (listenElementOptional, eventOptional, funcOptional) {
+						remove(listenElementOptional, eventOptional, funcOptional) {
 							if (!this._dialog || !this._list) return console.error("undefined");
 
 							var list = this._list;
 							if (listenElementOptional && eventOptional && funcOptional) {
-								var index = list.indexOf(new Array(listenElementOptional, eventOptional, funcOptional));
+								var index = list.indexOf(new Array(listenElementOptional, eventOptional,
+									funcOptional));
 								if (index != -1) {
 									list[index][0].removeEventListener(list[index][1], list[index][2]);
 									list.splice(index, 1);
@@ -5163,7 +5421,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								}
 							}
 						},
-						clear: function () {
+						clear() {
 							if (!this._dialog || !this._list) return console.error("undefined");
 
 							var list = this._list;
@@ -5176,7 +5434,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					},
 				},
 				animate: {
-					check: function () {
+					check() {
 						if (!ui.arena) return false;
 						if (this.updates == undefined) this.updates = [];
 						if (this.canvas == undefined) {
@@ -5186,7 +5444,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						return true;
 					},
-					add: function (frameFunc) {
+					add(frameFunc) {
 						if (typeof frameFunc != "function") return;
 						if (!this.check()) return;
 
@@ -5204,9 +5462,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 
 						this.updates.push(obj);
-						if (this.frameId == undefined) this.frameId = requestAnimationFrame(this.update.bind(this));
+						if (this.frameId == undefined) this.frameId = requestAnimationFrame(this.update.bind(
+							this));
 					},
-					update: function () {
+					update() {
 						var frameTime = performance.now();
 						var delta = frameTime - (this.frameTime == undefined ? frameTime : this.frameTime);
 
@@ -5215,15 +5474,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							canvas: this.canvas,
 							context: this.canvas.getContext("2d"),
 							deltaTime: delta,
-							save: function () {
+							save() {
 								this.context.save();
 								return this.context;
 							},
-							restore: function () {
+							restore() {
 								this.context.restore();
 								return this.context;
 							},
-							drawLine: function (x1, y1, x2, y2, color, lineWidth) {
+							drawLine(x1, y1, x2, y2, color, lineWidth) {
 								if (x1 == null || y1 == null) throw "arguments";
 
 								var context = this.context;
@@ -5241,8 +5500,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 								context.stroke();
 							},
-							drawRect: function (x, y, width, height, color, lineWidth) {
-								if (x == null || y == null || width == null || height == null) throw "arguments";
+							drawRect(x, y, width, height, color, lineWidth) {
+								if (x == null || y == null || width == null || height == null)
+								throw "arguments";
 
 								var ctx = this.context;
 								ctx.beginPath();
@@ -5252,7 +5512,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								ctx.rect(x, y, width, height);
 								ctx.stroke();
 							},
-							drawText: function (text, font, color, x, y, textAlign, textBaseline, stroke) {
+							drawText(text, font, color, x, y, textAlign, textBaseline, stroke) {
 								if (!text) return;
 								if (x == null || y == null) throw "x or y";
 								var context = this.context;
@@ -5268,10 +5528,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								if (!stroke) context.fillText(text, x, y);
 								else context.strokeText(text, x, y);
 							},
-							drawStrokeText: function (text, font, color, x, y, textAlign, textBaseline) {
+							drawStrokeText(text, font, color, x, y, textAlign, textBaseline) {
 								this.drawText(text, font, color, x, y, textAlign, textBaseline, true);
 							},
-							fillRect: function (x, y, width, height, color) {
+							fillRect(x, y, width, height, color) {
 								if (color) this.context.fillStyle = color;
 								this.context.fillRect(x, y, width, height);
 							},
@@ -5307,7 +5567,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						this.frameId = requestAnimationFrame(this.update.bind(this));
 					},
 				},
-				ResizeSensor: (function () {
+				ResizeSensor: (function() {
 					function ResizeSensor(element) {
 						this.element = element;
 						this.width = element.clientWidth || 1;
@@ -5317,11 +5577,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						this.events = [];
 
 						var expand = document.createElement("div");
-						expand.style.cssText = "position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;transition:all 0s;";
+						expand.style.cssText =
+							"position:absolute;top:0;bottom:0;left:0;right:0;z-index=-10000;overflow:hidden;visibility:hidden;transition:all 0s;";
 						var shrink = expand.cloneNode(false);
 
 						var expandChild = document.createElement("div");
-						expandChild.style.cssText = "transition: all 0s !important; animation: none !important;";
+						expandChild.style.cssText =
+							"transition: all 0s !important; animation: none !important;";
 						var shrinkChild = expandChild.cloneNode(false);
 
 						expandChild.style.width = this.maximumWidth + "px";
@@ -5341,7 +5603,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						expand.scrollLeft = shrink.scrollLeft = this.maximumWidth;
 
 						var sensor = this;
-						sensor.onscroll = function (e) {
+						sensor.onscroll = function(e) {
 							sensor.w = sensor.element.clientWidth || 1;
 							sensor.h = sensor.element.clientHeight || 1;
 
@@ -5361,7 +5623,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						sensor.shrink = shrink;
 					}
 
-					ResizeSensor.prototype.addListener = function (callback, capture) {
+					ResizeSensor.prototype.addListener = function(callback, capture) {
 						if (this.events == undefined) this.events = [];
 						this.events.push({
 							callback: callback,
@@ -5369,7 +5631,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						});
 					};
 
-					ResizeSensor.prototype.dispatchEvent = function () {
+					ResizeSensor.prototype.dispatchEvent = function() {
 						var capture = true;
 						var evt;
 
@@ -5387,7 +5649,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					};
 
-					ResizeSensor.prototype.dispatchFrameEvent = function () {
+					ResizeSensor.prototype.dispatchFrameEvent = function() {
 						var evt;
 						for (var i = 0; i < this.events.length; i++) {
 							evt = this.events[i];
@@ -5395,7 +5657,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					};
 
-					ResizeSensor.prototype.close = function () {
+					ResizeSensor.prototype.close = function() {
 						this.expand.removeEventListener("scroll", this.onscroll);
 						this.shrink.removeEventListener("scroll", this.onscroll);
 
@@ -5410,18 +5672,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					return ResizeSensor;
 				})(),
 				sheet: {
-					init: function () {
+					init() {
 						if (!this.sheetList) {
 							this.sheetList = [];
 							for (var i = 0; i < document.styleSheets.length; i++) {
-								if (document.styleSheets[i].href && document.styleSheets[i].href.indexOf("extension/" + encodeURI(decadeUIName)) != -1) {
+								if (document.styleSheets[i].href && document.styleSheets[i].href.indexOf(
+										"extension/" + encodeURI(decadeUIName)) != -1) {
 									this.sheetList.push(document.styleSheets[i]);
 								}
 							}
 						}
 						if (this.sheetList) delete this.init;
 					},
-					getStyle: function (selector, cssName) {
+					getStyle(selector, cssName) {
 						if (!this.sheetList) this.init();
 						if (!this.sheetList) throw "sheet not loaded";
 						if (typeof selector != "string" || !selector) throw 'parameter "selector" error';
@@ -5474,7 +5737,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						return null;
 					},
-					insertRule: function (rule, index, cssName) {
+					insertRule(rule, index, cssName) {
 						if (!this.sheetList) this.init();
 						if (!this.sheetList) throw "sheet not loaded";
 						if (typeof rule != "string" || !rule) throw 'parameter "rule" error';
@@ -5503,11 +5766,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					},
 				},
 				layout: {
-					update: function () {
+					update() {
 						this.updateHand();
 						this.updateDiscard();
 					},
-					updateHand: function () {
+					updateHand() {
 						if (!game.me) return;
 
 						var handNode = ui.handcards1;
@@ -5554,7 +5817,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								if (foldCardMinWidth == "cardWidth") {
 									min *= cw;
 								} else {
-									min *= foldCardMinWidth && foldCardMinWidth.length ? parseInt(foldCardMinWidth) : 81;
+									min *= foldCardMinWidth && foldCardMinWidth.length ? parseInt(
+										foldCardMinWidth) : 81;
 								}
 								if (xMargin < min) {
 									expand = true;
@@ -5596,11 +5860,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							handNode.style.width = "100%";
 						}
 					},
-					updateDiscard: function () {
+					updateDiscard() {
 						if (!ui.thrown) ui.thrown = [];
 
 						for (var i = ui.thrown.length - 1; i >= 0; i--) {
-							if (ui.thrown[i].classList.contains("drawingcard") || ui.thrown[i].classList.contains("removing") || ui.thrown[i].parentNode != ui.arena || ui.thrown[i].fixed) {
+							if (ui.thrown[i].classList.contains("drawingcard") || ui.thrown[i].classList
+								.contains("removing") || ui.thrown[i].parentNode != ui.arena || ui.thrown[i]
+								.fixed) {
 								ui.thrown.splice(i, 1);
 							} else {
 								ui.thrown[i].classList.remove("removing");
@@ -5644,7 +5910,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							card.style.transform = "translate(" + x + "px," + y + "px) scale(" + cs + ")";
 						}
 					},
-					clearout: function (card) {
+					clearout(card) {
 						if (!card) return;
 
 						if (card.fixed || card.classList.contains("removing")) return;
@@ -5656,7 +5922,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						card.classList.add("invalided");
 						setTimeout(
-							function (card) {
+							function(card) {
 								card.remove();
 								dui.queueNextFrameTick(dui.layoutDiscard, dui);
 							},
@@ -5664,7 +5930,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							card
 						);
 					},
-					delayClear: function () {
+					delayClear() {
 						var timestamp = 500;
 						var nowTime = new Date().getTime();
 						if (this._delayClearTimeout) {
@@ -5680,17 +5946,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							this._delayClearTimeoutTime = nowTime;
 						}
 
-						this._delayClearTimeout = setTimeout(function () {
+						this._delayClearTimeout = setTimeout(function() {
 							decadeUI.layout._delayClearTimeout = null;
 							decadeUI.layout._delayClearTimeoutTime = null;
 							ui.clear();
 						}, timestamp);
 					},
-					invalidate: function () {
+					invalidate() {
 						this.invalidateHand();
 						this.invalidateDiscard();
 					},
-					invalidateHand: function (debugName) {
+					invalidateHand(debugName) {
 						//和上下面的有点重复，有空合并
 						var timestamp = 40;
 						var nowTime = new Date().getTime();
@@ -5707,13 +5973,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							this._handcardTimeoutTime = nowTime;
 						}
 
-						this._handcardTimeout = setTimeout(function () {
+						this._handcardTimeout = setTimeout(function() {
 							decadeUI.layout._handcardTimeout = null;
 							decadeUI.layout._handcardTimeoutTime = null;
 							decadeUI.layout.updateHand();
 						}, timestamp);
 					},
-					invalidateDiscard: function () {
+					invalidateDiscard() {
 						var timestamp = ui.thrown && ui.thrown.length > 15 ? 80 : 40;
 						var nowTime = new Date().getTime();
 						if (this._discardTimeout) {
@@ -5729,13 +5995,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							this._discardTimeoutTime = nowTime;
 						}
 
-						this._discardTimeout = setTimeout(function () {
+						this._discardTimeout = setTimeout(function() {
 							decadeUI.layout._discardTimeout = null;
 							decadeUI.layout._discardTimeoutTime = null;
 							decadeUI.layout.updateDiscard();
 						}, timestamp);
 					},
-					resize: function () {
+					resize() {
 						if (decadeUI.isMobile()) ui.arena.classList.add("dui-mobile");
 						else ui.arena.classList.remove("dui-mobile");
 
@@ -5746,19 +6012,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var caches = decadeUI.boundsCaches;
 						for (var key in caches) caches[key].updated = false;
 
-						var buttonsWindow = decadeUI.sheet.getStyle("#window > .dialog.popped .buttons:not(.smallzoom)");
+						var buttonsWindow = decadeUI.sheet.getStyle(
+							"#window > .dialog.popped .buttons:not(.smallzoom)");
 						if (!buttonsWindow) {
-							buttonsWindow = decadeUI.sheet.insertRule("#window > .dialog.popped .buttons:not(.smallzoom) { zoom: 1; }");
+							buttonsWindow = decadeUI.sheet.insertRule(
+								"#window > .dialog.popped .buttons:not(.smallzoom) { zoom: 1; }");
 						}
 
-						var buttonsArena = decadeUI.sheet.getStyle("#arena:not(.choose-character) .buttons:not(.smallzoom)");
+						var buttonsArena = decadeUI.sheet.getStyle(
+							"#arena:not(.choose-character) .buttons:not(.smallzoom)");
 						if (!buttonsArena) {
-							buttonsArena = decadeUI.sheet.insertRule("#arena:not(.choose-character) .buttons:not(.smallzoom) { zoom: 1; }");
+							buttonsArena = decadeUI.sheet.insertRule(
+								"#arena:not(.choose-character) .buttons:not(.smallzoom) { zoom: 1; }");
 						}
 
 						decadeUI.zooms.card = decadeUI.getCardBestScale();
 						if (ui.me) {
-							var height = Math.round(decadeUI.getHandCardSize().height * decadeUI.zooms.card + 30.4) + "px";
+							var height = Math.round(decadeUI.getHandCardSize().height * decadeUI.zooms.card +
+								30.4) + "px";
 							ui.me.style.height = height;
 						}
 
@@ -5774,7 +6045,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					},
 				},
 				handler: {
-					handMousewheel: function (e) {
+					handMousewheel(e) {
 						if (!ui.handcards1Container) return console.error("ui.handcards1Container");
 
 						var hand = ui.handcards1Container;
@@ -5820,17 +6091,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					body: 1,
 					card: 1,
 				},
-				isMobile: function () {
-					return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent);
+				isMobile() {
+					return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator
+						.userAgent);
 				},
-				delay: function (milliseconds) {
+				delay(milliseconds) {
 					if (typeof milliseconds != "number") throw "milliseconds is not number";
 					if (_status.paused) return;
 					game.pause();
 					_status.timeout = setTimeout(game.resume, milliseconds);
 				},
 
-				queueNextTick: function (callback, ctx) {
+				queueNextTick(callback, ctx) {
 					if (!dui._tickEntries) dui._tickEntries = [];
 
 					dui._tickEntries.push({
@@ -5840,14 +6112,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 					if (dui._queueTick) return;
 
-					dui._queueTick = Promise.resolve().then(function () {
+					dui._queueTick = Promise.resolve().then(function() {
 						dui._queueTick = null;
 						var entries = dui._tickEntries;
 						dui._tickEntries = [];
-						for (var i = 0; i < entries.length; i++) entries[i].callback.call(entries[i].ctx);
+						for (var i = 0; i < entries.length; i++) entries[i].callback.call(entries[i]
+							.ctx);
 					});
 				},
-				queueNextFrameTick: function (callback, ctx) {
+				queueNextFrameTick(callback, ctx) {
 					if (!dui._frameTickEntries) dui._frameTickEntries = [];
 
 					dui._frameTickEntries.push({
@@ -5857,11 +6130,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 					if (dui._queueFrameTick) return;
 
-					dui._queueFrameTick = requestAnimationFrame(function () {
+					dui._queueFrameTick = requestAnimationFrame(function() {
 						dui._queueFrameTick = null;
 						setTimeout(
-							function (entries) {
-								for (var i = 0; i < entries.length; i++) entries[i].callback.call(entries[i].ctx);
+							function(entries) {
+								for (var i = 0; i < entries.length; i++) entries[i].callback.call(
+									entries[i].ctx);
 							},
 							0,
 							dui._frameTickEntries
@@ -5870,11 +6144,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					});
 				},
 
-				layoutHand: function () {
+				layoutHand() {
 					dui.layout.updateHand();
 				},
 
-				layoutHandDraws: function (cards) {
+				layoutHandDraws(cards) {
 					var bounds = dui.boundsCaches.hand;
 					bounds.check();
 
@@ -5945,7 +6219,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 				},
 
-				layoutDrawCards: function (cards, player, center) {
+				layoutDrawCards(cards, player, center) {
 					var bounds = dui.boundsCaches.arena;
 					if (!bounds.updated) bounds.update();
 
@@ -5989,16 +6263,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 				},
 
-				layoutDiscard: function () {
+				layoutDiscard() {
 					dui.layout.updateDiscard();
 				},
 
-				delayRemoveCards: function (cards, delay, delay2) {
+				delayRemoveCards(cards, delay, delay2) {
 					if (!Array.isArray(cards)) cards = [cards];
 
 					setTimeout(
-						function (cards, delay2) {
-							var remove = function (cards) {
+						function(cards, delay2) {
+							var remove = function(cards) {
 								for (var i = 0; i < cards.length; i++) cards[i].remove();
 							};
 
@@ -6020,17 +6294,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 
 				//虚拟卡牌花色点数显示
-				cardTempSuitNum: function (card, cardsuit, cardnumber) {
+				cardTempSuitNum(card, cardsuit, cardnumber) {
 					var remain = false;
 					if (card._tempSuitNum) remain = true;
 					let snnode = card._tempSuitNum || ui.create.div(".tempsuitnum", card);
 					card._tempSuitNum = snnode;
 					if (!remain) {
 						snnode.$num = decadeUI.element.create("num", snnode, "span");
-						snnode.$num.style.fontFamily = '"STHeiti","SimHei","Microsoft JhengHei","Microsoft YaHei","WenQuanYi Micro Hei",Helvetica,Arial,sans-serif';
+						snnode.$num.style.fontFamily =
+							'"STHeiti","SimHei","Microsoft JhengHei","Microsoft YaHei","WenQuanYi Micro Hei",Helvetica,Arial,sans-serif';
 						snnode.$br = decadeUI.element.create(null, snnode, "br");
 						snnode.$suit = decadeUI.element.create("suit", snnode, "span");
-						snnode.$suit.style.fontFamily = '"STHeiti","SimHei","Microsoft JhengHei","Microsoft YaHei","WenQuanYi Micro Hei",Helvetica,Arial,sans-serif';
+						snnode.$suit.style.fontFamily =
+							'"STHeiti","SimHei","Microsoft JhengHei","Microsoft YaHei","WenQuanYi Micro Hei",Helvetica,Arial,sans-serif';
 					}
 					if (cardnumber) snnode.$num.innerHTML = get.strNumber(cardnumber);
 					else snnode.$num.innerHTML = "▣";
@@ -6039,44 +6315,25 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					card.dataset.tempsn = cardsuit;
 				},
 
-				tryAddPlayerCardUseTag: function (card, player, event) {
+				tryAddPlayerCardUseTag(card, player, event) {
 					if (!card || !player || !event) return;
-
-					var noname;
-					var tagText = "";
 					var tagNode = card.querySelector(".used-info");
 					if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
-
 					card.$usedtag = tagNode;
 					if (event.blameEvent) event = event.blameEvent;
-
-					switch (event.name.toLowerCase()) {
-						case "choosetocomparemultiple":
-							tagText = "拼点置入";
-							break;
-						case "choosetocompare":
-							tagText = "拼点置入";
-							break;
-						case "usecard":
-							tagText = "使用";
-							if (
-								!event.player.hasSkillTag("ignoreLogAI", null, {
-									card: event.card,
-								}) &&
-								!event.hideTargets &&
-								event.targets.length == 1
-							) {
-								if (event.targets[0] == event.player) tagText = "对自己";
-								else tagText = "对" + get.translation(event.targets[0]);
-							} else {
-								tagText = "使用";
-							}
+					let tagText;
+					const playername = get.slimName(player?.name);
+					let border = get.groupnature(get.bordergroup(player?.name), "raw");
+					let eventInfo =
+						`<span style="font-weight:700"><span data-nature=${border}>${playername}</span><br/><span style="color:#FFD700">`;
+					switch (event.name) {
+						case "useCard":
 						case "respond":
-							if (tagText == "") tagText = "打出";
-
+							tagText = eventInfo + (event.name === "useCard" ? "使用" : "打出") + "</span>";
 							const cardname = event.card.name,
 								cardnature = get.nature(event.card);
-							if (lib.config.cardtempname != "off" && (card.name != cardname || !get.is.sameNature(cardnature, card.nature, true))) {
+							if (lib.config.cardtempname != "off" && (card.name != cardname || !get.is
+									.sameNature(cardnature, card.nature, true))) {
 								if (lib.config.extension_十周年UI_showTemp) {
 									if (!card._tempName) card._tempName = ui.create.div(".temp-name", card);
 									var tempname = "";
@@ -6088,7 +6345,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										}
 									}
 									tempname += tempname2;
-
 									card._tempName.innerHTML = tempname;
 									card._tempName.tempname = tempname;
 								} else {
@@ -6099,11 +6355,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							}
 							const cardnumber = get.number(event.card),
 								cardsuit = get.suit(event.card);
-							if (card.dataset.views != 1 && event.card.cards && event.card.cards.length == 1 && (card.number != cardnumber || card.suit != cardsuit)) {
+							if (card.dataset.views != 1 && event.card.cards && event.card.cards.length == 1 && (
+									card.number != cardnumber || card.suit != cardsuit)) {
 								dui.cardTempSuitNum(card, cardsuit, cardnumber);
 							}
-
-							if (duicfg.cardUseEffect && event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
+							if (duicfg.cardUseEffect && event.card && (!event.card.cards || !event.card.cards
+									.length || event.card.cards.length == 1)) {
 								var name = event.card.name,
 									nature = event.card.nature;
 
@@ -6137,7 +6394,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										});
 										break;
 									case "tiesuo":
-										decadeUI.animation.cap.playSpineTo(card, "effect_tiesuolianhuan", { scale: 0.9 });
+										decadeUI.animation.cap.playSpineTo(card, "effect_tiesuolianhuan", {
+											scale: 0.9
+										});
 										break;
 									case "jiu":
 										decadeUI.animation.cap.playSpineTo(card, "effect_jiu", {
@@ -6151,22 +6410,36 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										decadeUI.animation.cap.playSpineTo(card, "effect_wuzhongshengyou");
 										break;
 									case "wuxie":
-										decadeUI.animation.cap.playSpineTo(card, "effect_wuxiekeji", { y: [10, 0.5], scale: 0.9 });
+										decadeUI.animation.cap.playSpineTo(card, "effect_wuxiekeji", {
+											y: [10, 0.5],
+											scale: 0.9
+										});
 										break;
 									case "juedou":
-										decadeUI.animation.cap.playSpineTo(card, "SF_eff_jiangling_juedou", { x: [10, 0.4], scale: 1 });
+										decadeUI.animation.cap.playSpineTo(card, "SF_eff_jiangling_juedou", {
+											x: [10, 0.4],
+											scale: 1
+										});
 										break;
 									case "nanman":
-										decadeUI.animation.cap.playSpineTo(card, "effect_nanmanruqin", { scale: 0.45 });
+										decadeUI.animation.cap.playSpineTo(card, "effect_nanmanruqin", {
+											scale: 0.45
+										});
 										break;
 									case "wanjian":
-										decadeUI.animation.cap.playSpineTo(card, "effect_wanjianqifa", { scale: 0.78 });
+										decadeUI.animation.cap.playSpineTo(card, "effect_wanjianqifa", {
+											scale: 0.78
+										});
 										break;
 									case "wugu":
-										decadeUI.animation.cap.playSpineTo(card, "effect_wugufengdeng", { y: [10, 0.5] });
+										decadeUI.animation.cap.playSpineTo(card, "effect_wugufengdeng", {
+											y: [10, 0.5]
+										});
 										break;
 									case "taoyuan":
-										decadeUI.animation.cap.playSpineTo(card, "SF_kapai_eff_taoyuanjieyi", { y: [10, 0.5] });
+										decadeUI.animation.cap.playSpineTo(card, "SF_kapai_eff_taoyuanjieyi", {
+											y: [10, 0.5]
+										});
 										break;
 									case "shunshou":
 										decadeUI.animation.cap.playSpineTo(card, "effect_shunshouqianyang");
@@ -6178,7 +6451,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										});
 										break;
 									case "guohe":
-										decadeUI.animation.cap.playSpineTo(card, "effect_guohechaiqiao", { y: [10, 0.5] });
+										decadeUI.animation.cap.playSpineTo(card, "effect_guohechaiqiao", {
+											y: [10, 0.5]
+										});
 										break;
 									case "yuanjiao":
 										decadeUI.animation.cap.playSpineTo(card, "effect_yuanjiaojingong");
@@ -6192,92 +6467,34 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								}
 							}
 							break;
-						case "useskill":
-							tagText = "发动" + get.skillTranslation(event.skill, event.player);
-							break;
-						case "die":
-							tagText = "弃置";
-							card.classList.add("invalided");
-							dui.layout.delayClear();
-							break;
-						case "discardmultiple":
-							var skillEvent = event.parent.parent.parent;
-							if (skillEvent) {
-								tagText = lib.translate[skillEvent.name != "useSkill" ? skillEvent.name : skillEvent.skill];
-								if (!tagText) tagText = "";
-								tagText += "弃置";
-							} else tagText = "弃置";
-						case "choosetoduiben":
-							var skillEvent = event.parent;
-							if (skillEvent) {
-								tagText = lib.translate[skillEvent.name];
-								if (!tagText) tagText = "";
-							}
-							tagText += (event.title || "对策") + "策略";
-							break;
-						case "loseasync":
-							noname = true;
-							var skillEvent = event.parent.parent.parent;
-							tagText += get.translation(player);
-							if (skillEvent && lib.translate[skillEvent.name != "useSkill" ? skillEvent.name : skillEvent.skill]) {
-								tagText += lib.translate[skillEvent.name != "useSkill" ? skillEvent.name : skillEvent.skill];
-							}
-							tagText += "弃置";
-							break;
-						case "lose":
-							if (event.parent && event.parent.name == "discard") {
-								var skillEvent = event.parent.parent.parent;
-								if (skillEvent) {
-									tagText = lib.translate[skillEvent.name != "useSkill" ? skillEvent.name : skillEvent.skill];
-									if (!tagText) tagText = "";
-									tagText += "弃置";
-								} else tagText = "弃置";
-							} else {
-								var skillEvent = event.parent.parent.parent;
-								if (skillEvent) {
-									tagText = lib.translate[skillEvent.name != "useSkill" ? skillEvent.name : skillEvent.skill];
-									if (!tagText || tagText == "重铸") tagText = "";
-									if (event.parent.parent.name != "recast") tagText += "置入弃牌堆";
-									else tagText += "重铸";
-								} else tagText = "置入弃牌堆";
-							}
-							break;
-						case "lose_muniu":
-							tagText = "木牛流马流失";
-							break;
-						case "phasejudge":
-							tagText = "即将生效";
-							break;
 						case "judge":
-							noname = true;
-							tagText = event.judgestr + "的判定牌";
-							event.addMessageHook("judgeResult", function () {
+							tagText = eventInfo + event.judgestr + "判定" + "</span>";
+							event.addMessageHook("judgeResult", function() {
 								var event = this;
 								var card = event.result.card.clone;
 								var apcard = event.apcard;
-
 								var tagText = "";
 								var tagNode = card.querySelector(".used-info");
-								if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
-								if (event.result.suit != get.suit(card) || event.result.number != get.number(card)) {
+								if (tagNode == null) tagNode = card.appendChild(dui.element.create(
+									"used-info"));
+								if (event.result.suit != get.suit(card) || event.result.number != get
+									.number(card)) {
 									dui.cardTempSuitNum(card, event.result.suit, event.result.number);
 								}
-
 								var action;
 								var judgeValue;
 								var getEffect = event.judge2;
 								if (getEffect) {
 									judgeValue = getEffect(event.result);
 								} else {
-									judgeValue = decadeUI.get.judgeEffect(event.judgestr, event.result.judge);
+									judgeValue = decadeUI.get.judgeEffect(event.judgestr, event.result
+										.judge);
 								}
-
 								if (typeof judgeValue == "boolean") {
 									judgeValue = judgeValue ? 1 : -1;
 								} else {
 									judgeValue = event.result.judge;
 								}
-
 								if (judgeValue >= 0) {
 									action = "play4";
 									tagText = "判定生效";
@@ -6285,7 +6502,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									action = "play5";
 									tagText = "判定失效";
 								}
-
 								if (apcard && apcard._ap) apcard._ap.stopSpineAll();
 								if (apcard && apcard._ap && apcard == card) {
 									apcard._ap.playSpine({
@@ -6298,32 +6514,27 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										action: action,
 									});
 								}
-
 								event.apcard = undefined;
-								tagNode.textContent = get.translation(event.judgestr) + tagText;
+								tagNode.innerHTML = '<span style="color:#FFD700">' + tagText +
+								"</span>";
 							});
-
 							if (duicfg.cardUseEffect) {
 								decadeUI.animation.cap.playSpineTo(card, {
 									name: "effect_panding",
 									action: "play",
 									loop: true,
 								});
-
 								event.apcard = card;
 							}
 							break;
 						default:
-							tagText = get.translation(event.name);
-							if (tagText == event.name) tagText = "";
-							else tagText += "效果";
+							tagText = get.cardsetion(player);
 							break;
 					}
-
-					tagNode.textContent = (noname ? "" : get.translation(event.player)) + tagText;
+					tagNode.innerHTML = tagText;
 				},
 
-				getRandom: function (min, max) {
+				getRandom(min, max) {
 					if (min == null) {
 						min = -2147483648;
 					}
@@ -6347,24 +6558,31 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 					return Math.floor(Math.random() * (max + 1 - min)) + min + diff;
 				},
-				getCardBestScale: function (size) {
+				getCardBestScale(size) {
 					if (!(size && size.height)) size = decadeUI.getHandCardSize();
 
 					var bodySize = decadeUI.get.bodySize();
 					return Math.min((bodySize.height * (decadeUI.isMobile() ? 0.23 : 0.18)) / size.height, 1);
 				},
-				getHandCardSize: function (canUseDefault) {
+				getHandCardSize(canUseDefault) {
 					var style = decadeUI.sheet.getStyle(".media_defined > .card");
 					if (style == null) style = decadeUI.sheet.getStyle(".hand-cards > .handcards > .card");
-					if (style == null) return canUseDefault ? { width: 108, height: 150 } : { width: 0, height: 0 };
+					if (style == null) return canUseDefault ? {
+						width: 108,
+						height: 150
+					} : {
+						width: 0,
+						height: 0
+					};
 					var size = {
 						width: parseFloat(style.width),
 						height: parseFloat(style.height),
 					};
 					return size;
 				},
-				getMapElementPos: function (elementFrom, elementTo) {
-					if (!(elementFrom instanceof HTMLElement) || !(elementTo instanceof HTMLElement)) return console.error("arguments");
+				getMapElementPos(elementFrom, elementTo) {
+					if (!(elementFrom instanceof HTMLElement) || !(elementTo instanceof HTMLElement))
+					return console.error("arguments");
 					var rectFrom = elementFrom.getBoundingClientRect();
 					var rectTo = elementTo.getBoundingClientRect();
 					var pos = {
@@ -6375,7 +6593,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					pos.top = pos.y;
 					return pos;
 				},
-				getPlayerIdentity: function (player, identity, chinese, isMark) {
+				getPlayerIdentity(player, identity, chinese, isMark) {
 					if (!(player instanceof HTMLElement && get.itemtype(player) == "player")) throw "player";
 					if (!identity) identity = player.identity;
 
@@ -6385,7 +6603,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						switch (mode) {
 							case "identity":
 								if (!player.isAlive() || player.identityShown || player == game.me) {
-									identity = (player.special_identity ? player.special_identity : identity).replace(/identity_/, "");
+									identity = (player.special_identity ? player.special_identity : identity)
+										.replace(/identity_/, "");
 								}
 
 								break;
@@ -6416,7 +6635,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									case "three":
 									case "four":
 									case "guandu":
-										if (get.translation(player.side + "Color") == "wei") identity += "_blue";
+										if (get.translation(player.side + "Color") == "wei") identity +=
+										"_blue";
 										break;
 
 									case "two":
@@ -6450,20 +6670,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									if (isMark) {
 										if (player.special_identity) identity = player.special_identity + "_bg";
 									} else {
-										identity = player.special_identity ? player.special_identity : identity + "2";
+										identity = player.special_identity ? player.special_identity :
+											identity + "2";
 									}
 								}
 								break;
 
 							case "guozhan":
 								if (identity == "unknown") {
-									identity = player.wontYe() ? player.trueIdentity || lib.character[player.name1][1] : "ye";
+									identity = player.wontYe() ? player.trueIdentity || lib.character[player
+										.name1][1] : "ye";
 								}
 
 								if (get.is.jun(player)) {
 									identity = isMark ? "君" : get.translation(identity) + "君";
 								} else {
-									identity = identity == "ye" ? "野心家" : identity == "qun" ? "群雄" : get.translation(identity) + "将";
+									identity = identity == "ye" ? "野心家" : identity == "qun" ? "群雄" : get
+										.translation(identity) + "将";
 								}
 								translated = true;
 								break;
@@ -6538,7 +6761,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 
 				create: {
-					skillDialog: function () {
+					skillDialog() {
 						var dialog = document.createElement("div");
 						dialog.className = "skill-dialog";
 
@@ -6546,7 +6769,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							caption: undefined,
 							tip: undefined,
 
-							open: function (customParent) {
+							open(customParent) {
 								if (!customParent) {
 									var size = decadeUI.get.bodySize();
 									this.style.minHeight = parseInt(size.height * 0.42) + "px";
@@ -6556,14 +6779,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								this.style.animation = "open-dialog 0.4s";
 								return this;
 							},
-							show: function () {
+							show() {
 								this.style.animation = "open-dialog 0.4s";
 							},
-							hide: function () {
+							hide() {
 								this.style.animation = "close-dialog 0.1s forwards";
 							},
-							close: function () {
-								var func = function (e) {
+							close() {
+								var func = function(e) {
 									if (e.animationName != "close-dialog") return;
 									this.remove();
 									this.removeEventListener("animationend", func);
@@ -6572,7 +6795,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								var animation = "close-dialog";
 								if (this.style.animationName == animation) {
 									setTimeout(
-										function (dialog) {
+										function(dialog) {
 											dialog.remove();
 										},
 										100,
@@ -6584,7 +6807,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								}
 							},
 
-							appendControl: function (text, clickFunc) {
+							appendControl(text, clickFunc) {
 								var control = document.createElement("div");
 								control.className = "control-button";
 								control.textContent = text;
@@ -6605,20 +6828,20 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						Object.defineProperties(dialog, {
 							caption: {
 								configurable: true,
-								get: function () {
+								get() {
 									return this.$caption.innerHTML;
 								},
-								set: function (value) {
+								set(value) {
 									if (this.$caption.innerHTML == value) return;
 									this.$caption.innerHTML = value;
 								},
 							},
 							tip: {
 								configurable: true,
-								get: function () {
+								get() {
 									return this.$tip.innerHTML;
 								},
-								set: function (value) {
+								set(value) {
 									if (this.$tip.innerHTML == value) return;
 									this.$tip.innerHTML = value;
 								},
@@ -6628,7 +6851,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return dialog;
 					},
 
-					compareDialog: function (player, target) {
+					compareDialog(player, target) {
 						var dialog = decadeUI.create.skillDialog();
 						dialog.classList.add("compare");
 						dialog.$content.classList.add("buttons");
@@ -6652,45 +6875,51 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							Object.defineProperties(dialog, {
 								player: {
 									configurable: true,
-									get: function () {
+									get() {
 										return this._player;
 									},
-									set: function (value) {
+									set(value) {
 										if (this._player == value) return;
 										this._player = value;
 
 										if (value == null || value.isUnseen()) {
 											this.$player.firstChild.style.backgroundImage = "";
 										} else {
-											this.$player.firstChild.style.backgroundImage = (value.isUnseen(0) ? value.node.avatar2 : value.node.avatar).style.backgroundImage;
+											this.$player.firstChild.style.backgroundImage = (value
+												.isUnseen(0) ? value.node.avatar2 : value.node
+												.avatar).style.backgroundImage;
 										}
 
-										if (value) this.$playerCard.dataset.text = get.translation(value) + "发起";
+										if (value) this.$playerCard.dataset.text = get.translation(
+											value) + "发起";
 									},
 								},
 								target: {
 									configurable: true,
-									get: function () {
+									get() {
 										return this._target;
 									},
-									set: function (value) {
+									set(value) {
 										if (this._target == value) return;
 										this._target = value;
 										if (value == null || value.isUnseen()) {
 											this.$target.firstChild.style.backgroundImage = "";
 										} else {
-											this.$target.firstChild.style.backgroundImage = (value.isUnseen(0) ? value.node.avatar2 : value.node.avatar).style.backgroundImage;
+											this.$target.firstChild.style.backgroundImage = (value
+												.isUnseen(0) ? value.node.avatar2 : value.node
+												.avatar).style.backgroundImage;
 										}
 
-										if (value) this.$targetCard.dataset.text = get.translation(value);
+										if (value) this.$targetCard.dataset.text = get.translation(
+											value);
 									},
 								},
 								playerCard: {
 									configurable: true,
-									get: function () {
+									get() {
 										return this._playerCard;
 									},
-									set: function (value) {
+									set(value) {
 										if (this._playerCard == value) return;
 										if (this._playerCard) this._playerCard.remove();
 										this._playerCard = value;
@@ -6699,10 +6928,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								},
 								targetCard: {
 									configurable: true,
-									get: function () {
+									get() {
 										return this._targetCard;
 									},
-									set: function (value) {
+									set(value) {
 										if (this._targetCard == value) return;
 										if (this._targetCard) this._targetCard.remove();
 										this._targetCard = value;
@@ -6719,7 +6948,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 
 				get: {
-					judgeEffect: function (name, value) {
+					judgeEffect(name, value) {
 						switch (name) {
 							case "caomu":
 							case "草木皆兵":
@@ -6737,20 +6966,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return value;
 					},
 
-					isWebKit: function () {
+					isWebKit() {
 						return document.body.style.WebkitBoxShadow !== undefined;
 					},
 
-					lerp: function (min, max, fraction) {
+					lerp(min, max, fraction) {
 						return (max - min) * fraction + min;
 					},
 
-					ease: function (fraction) {
-						if (!decadeUI.get._bezier3) decadeUI.get._bezier3 = new duilib.CubicBezierEase(0.25, 0.1, 0.25, 1);
+					ease(fraction) {
+						if (!decadeUI.get._bezier3) decadeUI.get._bezier3 = new duilib.CubicBezierEase(0.25,
+							0.1, 0.25, 1);
 						return decadeUI.get._bezier3.ease(fraction);
 					},
 
-					extend: function (target, source) {
+					extend(target, source) {
 						if (source === null || typeof source !== "object") return target;
 
 						var keys = Object.keys(source);
@@ -6762,7 +6992,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return target;
 					},
 
-					bodySize: function () {
+					bodySize() {
 						var size = decadeUI.dataset.bodySize;
 						if (!size.updated) {
 							var body = document.body;
@@ -6774,14 +7004,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return size;
 					},
 
-					bestValueCards: function (cards, player) {
+					bestValueCards(cards, player) {
 						if (!player) player = _status.event.player;
 
 						var matchs = [];
 						var basics = [];
 						var equips = [];
 						var hasEquipSkill = player.hasSkill("xiaoji");
-						cards.sort(function (a, b) {
+						cards.sort(function(a, b) {
 							return get.value(b, player) - get.value(a, player);
 						});
 
@@ -6818,21 +7048,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							}
 						}
 
-						cards.sort(function (a, b) {
+						cards.sort(function(a, b) {
 							return get.value(b, player) - get.value(a, player);
 						});
 
 						cards = matchs.concat(cards);
 						return cards;
 					},
-					cheatJudgeCards: function (cards, judges, friendly) {
+					cheatJudgeCards(cards, judges, friendly) {
 						if (!cards || !judges) throw arguments;
 
 						var cheats = [];
 						var judgeCost;
 						for (var i = 0; i < judges.length; i++) {
 							var judge = get.judge(judges[i]);
-							cards.sort(function (a, b) {
+							cards.sort(function(a, b) {
 								return friendly ? judge(b) - judge(a) : judge(a) - judge(b);
 							});
 
@@ -6846,7 +7076,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						return cheats;
 					},
-					elementLeftFromWindow: function (element) {
+					elementLeftFromWindow(element) {
 						var left = element.offsetLeft;
 						var current = element.offsetParent;
 
@@ -6857,7 +7087,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						return left;
 					},
-					elementTopFromWindow: function (element) {
+					elementTopFromWindow(element) {
 						var top = element.offsetTop;
 						var current = element.offsetParent;
 
@@ -6868,7 +7098,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						return top;
 					},
-					handcardInitPos: function () {
+					handcardInitPos() {
 						var hand = dui.boundsCaches.hand;
 						if (!hand.updated) hand.update();
 
@@ -6887,23 +7117,25 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					},
 				},
 
-				set: (function (set) {
-					set.activeElement = function (element) {
+				set: (function(set) {
+					set.activeElement = function(element) {
 						var deactive = dui.$activeElement;
 						dui.$activeElement = element;
-						if (deactive && deactive != element && typeof deactive.ondeactive == "function") {
+						if (deactive && deactive != element && typeof deactive.ondeactive ==
+							"function") {
 							deactive.ondeactive();
 						}
 
-						if (element && element != deactive && typeof element.onactive == "function") {
+						if (element && element != deactive && typeof element.onactive ==
+							"function") {
 							element.onactive();
 						}
 					};
 					return set;
 				})({}),
 				statics: {
-					cards: (function (cards) {
-						var readFiles = function (files, entry) {
+					cards: (function(cards) {
+						var readFiles = function(files, entry) {
 							var index, cardname, filename;
 							var cards = dui.statics.cards;
 							var format = duicfg.cardPrettify;
@@ -6928,15 +7160,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						};
 
 						if (window.fs) {
-							fs.readdir(__dirname + "/" + decadeUIPath + "image/card/", function (err, files) {
+							fs.readdir(__dirname + "/" + decadeUIPath + "image/card/", function(err,
+								files) {
 								if (err) return;
 
 								readFiles(files);
 							});
 						} else if (window.resolveLocalFileSystemURL) {
-							resolveLocalFileSystemURL(decadeUIResolvePath + "image/card/", function (entry) {
+							resolveLocalFileSystemURL(decadeUIResolvePath + "image/card/", function(
+								entry) {
 								var reader = entry.createReader();
-								reader.readEntries(function (entries) {
+								reader.readEntries(function(entries) {
 									readFiles(entries, true);
 								});
 							});
@@ -6957,7 +7191,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 			};
 
-			dui.showHandTip = function (text) {
+			dui.showHandTip = function(text) {
 				var tip;
 				var tips = this.statics.handTips;
 				for (var i = 0; i < tips.length; i++) {
@@ -6972,22 +7206,22 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				if (tip == undefined) {
 					tip = dui.element.create("hand-tip", ui.arena);
 					tips.unshift(tip);
-					tip.clear = function () {
+					tip.clear = function() {
 						var nodes = this.childNodes;
 						for (var i = 0; i < nodes.length; i++) nodes[i].textContent = "";
 
 						this.dataset.text = "";
 					};
-					tip.setText = function (text, type) {
+					tip.setText = function(text, type) {
 						this.clear();
 						this.appendText(text, type);
 					};
-					tip.setInfomation = function (text) {
+					tip.setInfomation = function(text) {
 						if (this.$info == null) this.$info = dui.element.create("hand-tip-info", ui.arena);
 
 						this.$info.innerHTML = text;
 					};
-					tip.appendText = function (text, type) {
+					tip.appendText = function(text, type) {
 						if (text == undefined || text === "") return;
 						if (type == undefined) type = "";
 
@@ -7005,18 +7239,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						span.dataset.type = type;
 						return this.appendChild(span);
 					};
-					tip.strokeText = function () {
+					tip.strokeText = function() {
 						this.dataset.text = this.innerText;
 					};
-					tip.show = function () {
+					tip.show = function() {
 						this.classList.remove("hidden");
 						if (this.$info && this.$info.innerHTML) this.$info.show();
 					};
-					tip.hide = function () {
+					tip.hide = function() {
 						this.classList.add("hidden");
 						if (this.$info) this.$info.hide();
 					};
-					tip.close = function () {
+					tip.close = function() {
 						this.closed = true;
 						this.hide();
 						if (tip.$info) tip.$info.innerHTML = "";
@@ -7028,7 +7262,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							return;
 						}
 					};
-					tip.isEmpty = function () {
+					tip.isEmpty = function() {
 						var nodes = this.childNodes;
 						for (var i = 0; i < nodes.length; i++) {
 							if (nodes[i].textContent != "") return false;
@@ -7042,7 +7276,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				return tip;
 			};
 
-			decadeUI.BoundsCache = (function () {
+			decadeUI.BoundsCache = (function() {
 				function BoundsCache(element, updateBefore) {
 					this.element = element;
 					this.updateBefore = updateBefore;
@@ -7050,51 +7284,51 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					Object.defineProperties(this, {
 						x: {
 							configurable: true,
-							get: function () {
+							get() {
 								if (!this.updated) this.update();
 								return this._x;
 							},
-							set: function (value) {
+							set(value) {
 								this._x == value;
 							},
 						},
 						y: {
 							configurable: true,
-							get: function () {
+							get() {
 								if (!this.updated) this.update();
 								return this._y;
 							},
-							set: function (value) {
+							set(value) {
 								this._y == value;
 							},
 						},
 						width: {
 							configurable: true,
-							get: function () {
+							get() {
 								if (!this.updated) this.update();
 								return this._width;
 							},
-							set: function (value) {
+							set(value) {
 								this._width == value;
 							},
 						},
 						height: {
 							configurable: true,
-							get: function () {
+							get() {
 								if (!this.updated) this.update();
 								return this._height;
 							},
-							set: function (value) {
+							set(value) {
 								this._height == value;
 							},
 						},
 					});
 				}
 
-				BoundsCache.prototype.check = function () {
+				BoundsCache.prototype.check = function() {
 					if (!this.updated) this.update();
 				};
-				BoundsCache.prototype.update = function () {
+				BoundsCache.prototype.update = function() {
 					if (this.updateBefore) this.updateBefore();
 
 					var element = this.element;
@@ -7109,11 +7343,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				return BoundsCache;
 			})();
 
-			decadeUI.boundsCaches = (function (boundsCaches) {
-				boundsCaches.window = new decadeUI.BoundsCache(null, function () {
+			decadeUI.boundsCaches = (function(boundsCaches) {
+				boundsCaches.window = new decadeUI.BoundsCache(null, function() {
 					this.element = ui.window;
 				});
-				boundsCaches.arena = new decadeUI.BoundsCache(null, function () {
+				boundsCaches.arena = new decadeUI.BoundsCache(null, function() {
 					this.element = ui.arena;
 					if (ui.arena == null) return;
 
@@ -7136,7 +7370,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					this.cardHeight = card.offsetHeight;
 					card.remove();
 				});
-				boundsCaches.hand = new decadeUI.BoundsCache(null, function () {
+				boundsCaches.hand = new decadeUI.BoundsCache(null, function() {
 					this.element = ui.me;
 					if (ui.handcards1 == null) return;
 
@@ -7165,11 +7399,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 			decadeUI.element = {
 				base: {
-					removeSelf: function (milliseconds) {
+					removeSelf(milliseconds) {
 						var remove = this;
 						if (milliseconds) {
-							milliseconds = typeof milliseconds == "number" ? milliseconds : parseInt(milliseconds);
-							setTimeout(function () {
+							milliseconds = typeof milliseconds == "number" ? milliseconds : parseInt(
+								milliseconds);
+							setTimeout(function() {
 								if (remove.parentNode) remove.parentNode.removeChild(remove);
 							}, milliseconds);
 							return;
@@ -7179,7 +7414,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return;
 					},
 				},
-				create: function (className, parentNode, tagName) {
+				create(className, parentNode, tagName) {
 					var tag = tagName == void 0 ? "div" : tagName;
 					var element = document.createElement(tag);
 					element.view = {};
@@ -7194,18 +7429,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 					return element;
 				},
-				clone: function (element) {},
+				clone(element) {},
 			};
 
 			decadeUI.game = {
-				wait: function () {
+				wait() {
 					game.pause();
 				},
-				resume: function () {
+				resume() {
 					if (!game.loopLocked) {
 						var ok = false;
 						try {
-							if (decadeUI.eventDialog && !decadeUI.eventDialog.finished && !decadeUI.eventDialog.finishing) {
+							if (decadeUI.eventDialog && !decadeUI.eventDialog.finished && !decadeUI.eventDialog
+								.finishing) {
 								decadeUI.eventDialog.finish();
 								decadeUI.eventDialog = undefined;
 								ok = true;
@@ -7220,7 +7456,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			};
 
 			decadeUI.config = config;
-			duicfg.update = function () {
+			duicfg.update = function() {
 				var menu = lib.extensionMenu["extension_" + decadeUIName];
 				for (var key in menu) {
 					if (menu[key] && typeof menu[key] == "object") {
@@ -7236,7 +7472,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			//手杀UI
 			//发动技能函数
 			var shoushaUI = lib.element.player.trySkillAnimate;
-			lib.element.player.trySkillAnimate = function (name, popname, checkShow) {
+			lib.element.player.trySkillAnimate = function(name, popname, checkShow) {
 				shoushaUI.apply(this, arguments);
 				var that = this;
 				//------技能进度条------------//
@@ -7259,27 +7495,27 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 						var tipbanlist = ["_recasting", "jiu"]; //过滤部分触发技能，可以自己添加
 
-						// taffy: 注释extension.js原版代码喵
-						// if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_newDecadeStyle != "on") {
-						/* taffy分界线 */
-						// taffy: 保留布局与边框的分开选项喵
-						if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_decadeLayout == "off") {
-						/* taffy分界线 */
-							var tipskillbox = document.createElement('div');//盒子
-							var tipshow = document.createElement("img");//图片思考中
-							var tipskilltext = document.createElement('div');//技能文本
+						if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_newDecadeStyle !=
+							"othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "on") {
+							var tipskillbox = document.createElement("div"); //盒子
+							var tipshow = document.createElement("img"); //图片思考中
+							var tipskilltext = document.createElement("div"); //技能文本
 
 							//------盒子样式--------//
 							tipskillbox.classList.add("tipskill"); //盒子设置技能类名
-							tipskillbox.style.cssText = "display:block;position:absolute;pointer-events:none;z-index:90;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:0px;";
+							tipskillbox.style.cssText =
+								"display:block;position:absolute;pointer-events:none;z-index:90;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:0px;";
 
 							//--------技能文本-----//
 							tipskilltext.innerHTML = get.skillTranslation(name, that).slice(0, 2);
-							tipskilltext.style.cssText = "color:#ADC63A;text-shadow:#707852 0 0;font-size:11px;font-family:shousha;display:block;position:absolute;z-index:91;bottom:-22px;letter-spacing:1.5px;line-height:15px;left:15px;";
+							tipskilltext.style.cssText =
+								"color:#ADC63A;text-shadow:#707852 0 0;font-size:11px;font-family:shousha;display:block;position:absolute;z-index:91;bottom:-22px;letter-spacing:1.5px;line-height:15px;left:15px;";
 
 							//-----思考中底图------//
-							tipshow.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/skilltip.png";
-							tipshow.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
+							tipshow.src = lib.assetURL +
+								"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/skilltip.png";
+							tipshow.style.cssText =
+								"display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 
 							tipskillbox.appendChild(tipshow);
 							tipskillbox.appendChild(tipskilltext);
@@ -7290,7 +7526,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			};
 			//武将搜索代码摘抄至扩展ol
 			var kzol_create_characterDialog = ui.create.characterDialog;
-			ui.create.characterDialog = function () {
+			ui.create.characterDialog = function() {
 				var dialog = kzol_create_characterDialog.apply(this, arguments);
 				const control = lib.config.extension_十周年UI_mx_decade_characterDialog || "default";
 				if (control != "default") {
@@ -7311,10 +7547,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						div.style["line-height"] = "26px";
 						div.style["font-size"] = "24px";
 						div.style["font-family"] = "xinwei";
-						div.innerHTML = "搜索：" + '<select size="1" style="width:75px;height:21px;">' + '<option value="name">名称翻译</option>' + '<option value="name1">名称ID</option>' + '<option value="name2">名称ID(精确匹配)</option>' + '<option value="skill">技能翻译</option>' + '<option value="skill1">技能ID</option>' + '<option value="skill2">技能ID(精确匹配)</option>' + '<option value="skill3">技能描述/翻译</option>' + "→" + '<input type="text" style="width:150px;"></input>' + "</select>";
+						div.innerHTML = "搜索：" + '<select size="1" style="width:75px;height:21px;">' +
+							'<option value="name">名称翻译</option>' + '<option value="name1">名称ID</option>' +
+							'<option value="name2">名称ID(精确匹配)</option>' +
+							'<option value="skill">技能翻译</option>' + '<option value="skill1">技能ID</option>' +
+							'<option value="skill2">技能ID(精确匹配)</option>' +
+							'<option value="skill3">技能描述/翻译</option>' + "→" +
+							'<input type="text" style="width:150px;"></input>' + "</select>";
 						var input = div.querySelector("input");
 						input.placeholder = "非精确匹配支持正则搜索";
-						input.onkeydown = function (e) {
+						input.onkeydown = function(e) {
 							e.stopPropagation();
 							if (e.keyCode == 13) {
 								var value = this.value;
@@ -7323,22 +7565,29 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									input.focus();
 									return;
 								}
-								var choice = div.querySelector("select").options[div.querySelector("select").selectedIndex].value;
+								var choice = div.querySelector("select").options[div.querySelector("select")
+									.selectedIndex].value;
 								if (value) {
 									for (var i = 0; i < buttons.childNodes.length; i++) {
 										buttons.childNodes[i].classList.add("nodisplay");
 										var name = buttons.childNodes[i].link;
 										var skills = get.character(name).skills || [];
 										if (
-											(function (choice, value, name, skills) {
-												if (choice.endsWith("2")) return choice === "name2" ? value === name : skills.includes(value);
+											(function(choice, value, name, skills) {
+												if (choice.endsWith("2")) return choice === "name2" ?
+													value === name : skills.includes(value);
 												value = new RegExp(value, "g");
 												const goon = (value, text) => text && value.test(text);
 												if (choice == "name1") return goon(value, name);
-												else if (choice == "name") return goon(value, get.translation(name)) || goon(value, get.translation(name + "_ab"));
-												else if (choice == "skill1") return skills.some(skill => goon(value, skill));
-												else if (choice == "skill") return skills.some(skill => goon(value, get.translation(skill)));
-												else return skills.some(skill => goon(value, get.translation(skill + "_info")));
+												else if (choice == "name") return goon(value, get
+													.translation(name)) || goon(value, get
+													.translation(name + "_ab"));
+												else if (choice == "skill1") return skills.some(skill =>
+													goon(value, skill));
+												else if (choice == "skill") return skills.some(skill =>
+													goon(value, get.translation(skill)));
+												else return skills.some(skill => goon(value, get
+													.translation(skill + "_info")));
 											})(choice, value, name, skills)
 										) {
 											buttons.childNodes[i].classList.remove("nodisplay");
@@ -7349,14 +7598,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									const buttons = dialog.content.querySelector(".buttons");
 									const p = dialog.paginationMap.get(buttons);
 									if (p) {
-										const array = dialog.buttons.filter(item => !item.classList.contains("nodisplay"));
+										const array = dialog.buttons.filter(item => !item.classList
+											.contains("nodisplay"));
 										p.state.data = array;
-										p.setTotalPageCount(Math.ceil(array.length / dialog.paginationMaxCount.get("character")));
+										p.setTotalPageCount(Math.ceil(array.length / dialog
+											.paginationMaxCount.get("character")));
 									}
 								}
 							}
 						};
-						input.onmousedown = function (e) {
+						input.onmousedown = function(e) {
 							e.stopPropagation();
 						};
 						switch_con.insertBefore(div, switch_con.firstChild);
@@ -7367,12 +7618,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			/*-------转换技，阴阳标记等----*/
 			//修改changezhuanhuanji函数
 			var originchangeZhuanhuanji = lib.element.player.$changeZhuanhuanji;
-			lib.element.player.$changeZhuanhuanji = function (skill) {
+			lib.element.player.$changeZhuanhuanji = function(skill) {
 				originchangeZhuanhuanji.apply(this, arguments);
 				if (!get.is.zhuanhuanji(skill, this)) return;
 				var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
 				var num = this.countMark(skill);
 				var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/images/" + skill + "_yang.png";
+
 				function ImageIsExist(url) {
 					let xmlHttp = new XMLHttpRequest();
 					xmlHttp.open("Get", url, false);
@@ -7382,76 +7634,40 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				}
 				try {
 					var a = ImageIsExist(url);
-					mark.dk = true;
+					if (a) mark.dk = true;
 				} catch (err) {
 					if (mark) mark.dk = false;
-				};
-				// taffy: 注释extension.js原版代码喵
-				// if (mark) {
-				// 	if (lib.config.extension_十周年UI_newDecadeStyle == "on") {
-				// 		if (mark.classList.contains('yin')) {
-				// 			mark.classList.remove('yin');
-				// 			mark.classList.toggle('yang');
-				// 		}
-				// 		else {
-				// 			if (mark.classList.contains('yang')) mark.classList.remove('yang');
-				// 			mark.classList.toggle('yin');
-				// 		}
-				// 	}
-				// 	else {
-				// 		if (mark.dd == true) {
-				// 			this.yingSkill(skill);
-				// 			mark.dd = false;
-				// 			if (mark.dk) {
-				// 				mark.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/' + skill + '_yang.png');
-				// 			}
-				// 			else {
-				// 				mark.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/ditu_yang.png');
-				// 			}
-				// 		}
-				// 		else {
-				// 			this.yangSkill(skill);
-				// 			mark.dd = true;
-				// 			if (mark.dk) {
-				// 				mark.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/' + skill + '_ying.png');
-				// 			}
-				// 			else {
-				// 				mark.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/ditu_ying.png');
-				// 			}
-				// 		}
-				/* taffy分界线 */
-				// taffy: 保留布局与边框的分开选项喵
-				if (mark && lib.config.extension_十周年UI_decadeLayout == "off") {
-					if (mark.dd == true) {
-						this.yingSkill(skill);
-						mark.dd = false;
-						if (mark.dk) {
-							mark.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/' + skill + '_yang.png');
-						}
-						else {
-							mark.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/ditu_yang.png');
-						}
-					}
-					else {
-						this.yangSkill(skill);
-						mark.dd = true;
-						if (mark.dk) {
-							mark.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/' + skill + '_ying.png');
-						}
-						else {
-							mark.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/ditu_ying.png');
-						}
-					}
 				}
-				if (mark && lib.config.extension_十周年UI_decadeLayout == "on") {
-					if (mark.classList.contains('yin')) {
-						mark.classList.remove('yin');
-						mark.classList.toggle('yang');
-					}
-					else {
-						if (mark.classList.contains('yang')) mark.classList.remove('yang');
-						mark.classList.toggle('yin');
-				/* taffy分界线 */
+				if (mark) {
+					if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config
+						.extension_十周年UI_newDecadeStyle == "othersOff") {
+						if (mark.classList.contains("yin")) {
+							mark.classList.remove("yin");
+							mark.classList.toggle("yang");
+						} else {
+							if (mark.classList.contains("yang")) mark.classList.remove("yang");
+							mark.classList.toggle("yin");
+						}
+					} else {
+						if (mark.dd == true) {
+							this.yingSkill(skill);
+							mark.dd = false;
+							if (mark.dk) {
+								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/" + skill +
+									"_yang.png");
+							} else {
+								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/ditu_yang.png");
+							}
+						} else {
+							this.yangSkill(skill);
+							mark.dd = true;
+							if (mark.dk) {
+								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/" + skill +
+									"_ying.png");
+							} else {
+								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/ditu_ying.png");
+							}
+						}
 					}
 				}
 			};
@@ -7460,48 +7676,48 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			lib.element.player.yangedSkills = [];
 			lib.element.player.yingedSkills = [];
 			//定义阴函数，将技能加入阴集合，并删除阳集合里的该技能。
-			lib.element.player.yangSkill = function (skill) {
+			lib.element.player.yangSkill = function(skill) {
 				var player = this;
 				game.broadcastAll(
-					function (player, skill) {
+					function(player, skill) {
 						player.$yangSkill(skill);
 					},
 					player,
 					skill
 				);
 			};
-			lib.element.player.$yangSkill = function (skill) {
+			lib.element.player.$yangSkill = function(skill) {
 				this.yangedSkills.add(skill);
 				this.yingedSkills.remove(skill);
 			};
 			//阳函数同理
-			lib.element.player.yingSkill = function (skill) {
+			lib.element.player.yingSkill = function(skill) {
 				var player = this;
 				game.broadcastAll(
-					function (player, skill) {
+					function(player, skill) {
 						player.$yingSkill(skill);
 					},
 					player,
 					skill
 				);
 			};
-			lib.element.player.$yingSkill = function (skill) {
+			lib.element.player.$yingSkill = function(skill) {
 				this.yingedSkills.add(skill);
 				this.yangedSkills.remove(skill);
 			};
 			//添加failskill函数
 			//这是失败函数，添加到使命技的失败分支里，作用是为使命技的class样式添加一个后缀fail，这样在使命技失败的时候创建的标记就会是白底和一个x（类似限定技使用后），而使命技成功的标记就会是红底。
-			lib.element.player.failSkill = function (skill) {
+			lib.element.player.failSkill = function(skill) {
 				var player = this;
 				game.broadcastAll(
-					function (player, skill) {
+					function(player, skill) {
 						player.$failSkill(skill);
 					},
 					player,
 					skill
 				);
 			};
-			lib.element.player.$failSkill = function (skill) {
+			lib.element.player.$failSkill = function(skill) {
 				var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
 				if (mark) mark.classList.add("fail");
 			};
@@ -7509,38 +7725,38 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			//构建一个失效技能的空集合
 			//失效函数是为了给技能按钮上锁的，在技能失效时，补上shixiao函数，技能就会被加入失效集合里，十周年UI那里就会检测到技能失效，从而添加上锁图片。
 			lib.element.player.shixiaoedSkills = [];
-			(lib.element.player.shixiaoSkill = function (skill) {
+			(lib.element.player.shixiaoSkill = function(skill) {
 				var player = this;
 				game.broadcastAll(
-					function (player, skill) {
+					function(player, skill) {
 						player.$shixiaoSkill(skill);
 					},
 					player,
 					skill
 				);
 			}),
-				(lib.element.player.$shixiaoSkill = function (skill) {
-					if (!this.shixiaoedSkills) this.shixiaoedSkills = [];
-					this.shixiaoedSkills.add(skill);
-				}),
-				//添加解除失效函数
-				//看名字就知道是干啥的
-				(lib.element.player.unshixiaoSkill = function (skill) {
-					var player = this;
-					game.broadcastAll(
-						function (player, skill) {
-							player.$unshixiaoSkill(skill);
-						},
-						player,
-						skill
-					);
-				}),
-				(lib.element.player.$unshixiaoSkill = function (skill) {
-					this.shixiaoedSkills.remove(skill);
-				});
+			(lib.element.player.$shixiaoSkill = function(skill) {
+				if (!this.shixiaoedSkills) this.shixiaoedSkills = [];
+				this.shixiaoedSkills.add(skill);
+			}),
+			//添加解除失效函数
+			//看名字就知道是干啥的
+			(lib.element.player.unshixiaoSkill = function(skill) {
+				var player = this;
+				game.broadcastAll(
+					function(player, skill) {
+						player.$unshixiaoSkill(skill);
+					},
+					player,
+					skill
+				);
+			}),
+			(lib.element.player.$unshixiaoSkill = function(skill) {
+				this.shixiaoedSkills.remove(skill);
+			});
 			/*选项条分离*/
 			/*分离选项条 修改选项函数*/
-			lib.element.content.chooseControl = function () {
+			lib.element.content.chooseControl = function() {
 				"step 0";
 				if (event.controls.length == 0) {
 					if (event.sortcard) {
@@ -7581,7 +7797,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								}
 							}
 						}
-					} else if (event.hsskill && _status.prehidden_skills.includes(event.hsskill) && event.controls.includes("cancel2")) {
+					} else if (event.hsskill && _status.prehidden_skills.includes(event.hsskill) && event
+						.controls.includes("cancel2")) {
 						event.result = {
 							bool: true,
 							control: "cancel2",
@@ -7609,7 +7826,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							var item = ui.create.div(".button.card.pointerdiv.mebg");
 							item.style.width = "50px";
 							buttons.insertBefore(item, event.dialog.buttons[i]);
-							item.innerHTML = '<div style="font-family: xinwei;font-size: 25px;height: 75px;line-height: 25px;top: 8px;left: 10px;width: 30px;">第' + get.cnNumber(i + 1, true) + "张</div>";
+							item.innerHTML =
+								'<div style="font-family: xinwei;font-size: 25px;height: 75px;line-height: 25px;top: 8px;left: 10px;width: 30px;">第' +
+								get.cnNumber(i + 1, true) + "张</div>";
 							if (i == event.dialog.buttons.length + 1) {
 								item.firstChild.innerHTML = "牌堆底";
 							}
@@ -7623,7 +7842,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					} else if (event.dialogcontrol) {
 						event.dialog = ui.create.dialog(event.prompt || "选择一项", "hidden");
 						for (var i = 0; i < event.controls.length; i++) {
-							var item = event.dialog.add('<div class="popup text pointerdiv" style="width:calc(100% - 10px);display:inline-block">' + event.controls[i] + "</div>");
+							var item = event.dialog.add(
+								'<div class="popup text pointerdiv" style="width:calc(100% - 10px);display:inline-block">' +
+								event.controls[i] + "</div>");
 							item.firstChild.listen(ui.click.dialogcontrol);
 							item.firstChild.link = event.controls[i];
 						}
@@ -7682,14 +7903,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							for (var i = 0; i < list.length; i++) {
 								list[i].childNodes[0].classList.add("choice"); /*添加类名*/
 								//--------背水-----//
-								// taffy: 注释extension.js原版代码喵
-								// if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_newDecadeStyle != "on") {
-								/* taffy分界线 */
-								// taffy: 保留布局与边框的分开选项喵
-								if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_decadeLayout == "off") {
-								/* taffy分界线 */
+								if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config
+									.extension_十周年UI_newDecadeStyle != "on" && lib.config
+									.extension_十周年UI_newDecadeStyle != "othersOff") {
 									/*list[i].childNodes[0].setBackgroundImage('extension/无名补丁/image/beishui.png');*/
-									list[i].childNodes[0].setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/beishui.png");
+									list[i].childNodes[0].setBackgroundImage(
+										"extension/十周年UI/shoushaUI/lbtn/images/uibutton/beishui.png");
 									list[i].childNodes[0].innerText = "背水";
 								}
 								//--------------//
@@ -7697,12 +7916,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 							event.dialog.open();
 							for (var i = 0; i < event.choiceList.length; i++) {
-								event.dialog.add('<div class="popup text" style="width:calc(100% - 10px);display:inline-block">' + (event.displayIndex !== false ? "选项" + get.cnNumber(i + 1, true) + "：" : "") + event.choiceList[i] + "</div>");
+								event.dialog.add(
+									'<div class="popup text" style="width:calc(100% - 10px);display:inline-block">' +
+									(event.displayIndex !== false ? "选项" + get.cnNumber(i + 1, true) + "：" :
+										"") + event.choiceList[i] + "</div>");
 							}
 						} else if (event.prompt) {
 							event.dialog = ui.create.dialog(event.prompt);
 							if (event.prompt2) {
-								event.dialog.addText(event.prompt2, event.prompt2.length <= 20 || event.centerprompt2);
+								event.dialog.addText(event.prompt2, event.prompt2.length <= 20 || event
+									.centerprompt2);
 							}
 						}
 					}
@@ -7737,7 +7960,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			};
 			//-------------AI进度条-----------//
 			if (get.mode() != "connect") {
-				lib.onover.push(function (bool) {
+				lib.onover.push(function(bool) {
 					if (document.getElementById("jindutiaoAI")) {
 						document.getElementById("jindutiaoAI").remove();
 					}
@@ -7745,16 +7968,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				//--------AI回合内进度条-------类名timePhase------//
 				lib.skill._jindutiaoO = {
 					trigger: {
-						player: ["phaseZhunbeiBegin", "phaseBegin", "phaseJudgeBegin", "phaseDrawBegin", "useCardAfter", "phaseDiscardBegin", "useSkillBefore", "loseAfter"],
+						player: ["phaseZhunbeiBegin", "phaseBegin", "phaseJudgeBegin", "phaseDrawBegin",
+							"useCardAfter", "phaseDiscardBegin", "useSkillBefore", "loseAfter"
+						],
 					},
-					filter: function (event, player) {
-						if (document.querySelector("#jindutiaoAI") && lib.config.extension_十周年UI_jindutiaoaiUpdata == false) return false;
+					filter(event, player) {
+						if (document.querySelector("#jindutiaoAI") && lib.config
+							.extension_十周年UI_jindutiaoaiUpdata == false) return false;
 						return player != game.me && _status.currentPhase == player;
 					},
 					forced: true,
 					silent: true,
 					charlotte: true,
-					content: function () {
+					content() {
 						var ab = player.getElementsByClassName("timePhase");
 						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
 						game.JindutiaoAIplayer();
@@ -7768,12 +7994,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							trigger: {
 								player: ["phaseEnd", "dieBegin", "phaseJieshuBegin"],
 							},
-							filter: function (event, player) {
+							filter(event, player) {
 								return player != game.me && _status.currentPhase == player;
 							},
 							forced: true,
 							charlotte: true,
-							content: function () {
+							content() {
 								if (window.timerai) {
 									clearInterval(window.timerai);
 									delete window.timerai;
@@ -7790,16 +8016,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				//------------AI回合外进度条-----类名timeai 以下都是-----//
 				lib.skill._jindutiaoA = {
 					trigger: {
-						player: ["useCardBegin", "respondBegin", "chooseToRespondBegin", "damageEnd", "judgeEnd"],
+						player: ["useCardBegin", "respondBegin", "chooseToRespondBegin", "damageEnd",
+							"judgeEnd"],
 					},
 					silent: true,
 					forced: true,
 					charlotte: true,
-					filter: function (event, player) {
-						if (document.querySelector("#jindutiaoAI") && lib.config.extension_十周年UI_jindutiaoaiUpdata == false) return false;
+					filter(event, player) {
+						if (document.querySelector("#jindutiaoAI") && lib.config
+							.extension_十周年UI_jindutiaoaiUpdata == false) return false;
 						return _status.currentPhase != player && player != game.me;
 					},
-					content: function () {
+					content() {
 						var ab = player.getElementsByClassName("timeai");
 						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
 						game.JindutiaoAIplayer();
@@ -7814,10 +8042,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							},
 							forced: true,
 							charlotte: true,
-							filter: function (event, player) {
+							filter(event, player) {
 								return player != game.me && _status.currentPhase != player;
 							},
-							content: function () {
+							content() {
 								if (window.timerai) {
 									clearInterval(window.timerai);
 									delete window.timerai;
@@ -7837,34 +8065,38 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					silent: true,
 					priority: -10,
 					charlotte: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return event.card && event.targets && event.targets.length;
 					},
-					content: function () {
+					content() {
 						var boxContent = document.createElement("div");
 						var boxTime = document.createElement("div");
 						var imgBg = document.createElement("img");
 						boxContent.classList.add("timeai");
-						// taffy: 注释extension.js原版代码喵
-						// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
-						/* taffy分界线 */
-						// taffy: 保留布局与边框的分开选项喵
-						if (lib.config.extension_十周年UI_decadeLayout == "off") {
-              /* taffy分界线 */
+						if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+							.extension_十周年UI_newDecadeStyle != "othersOff") {
 							//--------手杀样式-------------//
-							boxContent.style.cssText = "display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;";
+							boxContent.style.cssText =
+								"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;";
 							boxTime.data = 125;
-							boxTime.style.cssText = "z-index:92;--w: 33px;--h: calc(var(--w) * 4/120);width: var(--w);height: var(--h);margin:1px;background-color: #dd9900;position: absolute;top: 0px;";
-							imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png";
-							imgBg.style.cssText = "position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;";
+							boxTime.style.cssText =
+								"z-index:92;--w: 33px;--h: calc(var(--w) * 4/120);width: var(--w);height: var(--h);margin:1px;background-color: #dd9900;position: absolute;top: 0px;";
+							imgBg.src = lib.assetURL +
+							"extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png";
+							imgBg.style.cssText =
+								"position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;";
 							//-------------------------//
 						} else {
 							//----------十周年样式--------//
-							boxContent.style.cssText = "display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;";
+							boxContent.style.cssText =
+								"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;";
 							boxTime.data = 120;
-							boxTime.style.cssText = "z-index:91;width: 115px;height: 3.3px;margin:1px;background-color: #f2c84b;position: absolute;top: 0px;border-radius: 3px;";
-							imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png";
-							imgBg.style.cssText = "position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;";
+							boxTime.style.cssText =
+								"z-index:91;width: 115px;height: 3.3px;margin:1px;background-color: #f2c84b;position: absolute;top: 0px;border-radius: 3px;";
+							imgBg.src = lib.assetURL +
+								"extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png";
+							imgBg.style.cssText =
+								"position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;";
 							//--------------------//
 						}
 						boxContent.appendChild(boxTime);
@@ -7890,7 +8122,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							trigger: {
 								global: ["phaseEnd", "useCardAfter", "dieBegin"],
 							},
-							filter: function (event, player) {
+							filter(event, player) {
 								event.respondix = 0;
 								for (var i = 0; i < game.players.length; i++) {
 									var ab = game.players[i].getElementsByClassName("timeai");
@@ -7901,7 +8133,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							forced: true,
 							priority: -1,
 							charlotte: true,
-							content: function () {
+							content() {
 								for (var i = 0; i < game.players.length; i++) {
 									var ab = game.players[i].getElementsByClassName("timeai");
 									if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
@@ -7919,34 +8151,38 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					forced: true,
 					priority: -1,
 					charlotte: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return true;
 					},
-					content: function () {
+					content() {
 						var boxContent = document.createElement("div");
 						var boxTime = document.createElement("div");
 						var imgBg = document.createElement("img");
 						boxContent.classList.add("timeai");
-						// taffy: 注释extension.js原版代码喵
-						// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
-						/* taffy分界线 */
-						// taffy: 保留布局与边框的分开选项喵
-						if (lib.config.extension_十周年UI_decadeLayout == "off") {
-              /* taffy分界线 */
+						if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+							.extension_十周年UI_newDecadeStyle != "othersOff") {
 							//--------手杀样式-------------//
-							boxContent.style.cssText = "display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;";
+							boxContent.style.cssText =
+								"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;";
 							boxTime.data = 125;
-							boxTime.style.cssText = "z-index:92;--w: 33px;--h: calc(var(--w) * 4/120);width: var(--w);height: var(--h);margin:1px;background-color: #dd9900;position: absolute;top: 0px;";
-							imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png";
-							imgBg.style.cssText = "position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;";
+							boxTime.style.cssText =
+								"z-index:92;--w: 33px;--h: calc(var(--w) * 4/120);width: var(--w);height: var(--h);margin:1px;background-color: #dd9900;position: absolute;top: 0px;";
+							imgBg.src = lib.assetURL +
+							"extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png";
+							imgBg.style.cssText =
+								"position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;";
 							//-------------------------//
 						} else {
 							//----------十周年样式--------//
-							boxContent.style.cssText = "display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;";
+							boxContent.style.cssText =
+								"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;";
 							boxTime.data = 120;
-							boxTime.style.cssText = "z-index:91;width: 115px;height: 3.3px;margin:1px;background-color: #f2c84b;position: absolute;top: 0px;border-radius: 3px;";
-							imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png";
-							imgBg.style.cssText = "position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;";
+							boxTime.style.cssText =
+								"z-index:91;width: 115px;height: 3.3px;margin:1px;background-color: #f2c84b;position: absolute;top: 0px;border-radius: 3px;";
+							imgBg.src = lib.assetURL +
+								"extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png";
+							imgBg.style.cssText =
+								"position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;";
 							//--------------------//
 						}
 						boxContent.appendChild(boxTime);
@@ -7969,7 +8205,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							trigger: {
 								global: "phaseBefore",
 							},
-							filter: function (event, player) {
+							filter(event, player) {
 								event.respondx = 0;
 								for (var i = 0; i < game.players.length; i++) {
 									var ab = game.players[i].getElementsByClassName("timeai");
@@ -7981,7 +8217,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							forced: true,
 							priority: -1,
 							charlotte: true,
-							content: function () {
+							content() {
 								for (var i = 0; i < game.players.length; i++) {
 									var ab = game.players[i].getElementsByClassName("timeai");
 									if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
@@ -7997,13 +8233,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						trigger: {
 							player: ["phaseEnd", "useCardAfter", "gainEnd", "loseEnd", "damageAfter"],
 						},
-						filter: function (event, player) {
+						filter(event, player) {
 							return player != game.me && _status.currentPhase != player;
 						},
 						forced: true,
 						priority: -1,
 						charlotte: true,
-						content: function () {
+						content() {
 							var ab = player.getElementsByClassName("timeai");
 							if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
 						},
@@ -8018,11 +8254,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				silent: true,
 				forced: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					var a = player.getElementsByClassName("playertip");
-					return player != game.me && _status.currentPhase == player && player.isPhaseUsing() && a.length <= 0;
+					return player != game.me && _status.currentPhase == player && player.isPhaseUsing() && a
+						.length <= 0;
 				},
-				content: function () {
+				content() {
 					var tipss = player.getElementsByClassName("tipskill");
 					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
 
@@ -8030,19 +8267,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					if (a.length <= 0) {
 						var tipAB = document.createElement("img");
 						tipAB.classList.add("tipshow"); //设置统一类名
-						// taffy: 注释extension.js原版代码喵
-						// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
-						/* taffy分界线 */
-						// taffy: 保留布局与边框的分开选项喵
-						if (lib.config.extension_十周年UI_decadeLayout == "off") {
-              /* taffy分界线 */
-							tipAB.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tip.png";
+						if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+							.extension_十周年UI_newDecadeStyle != "othersOff") {
+							tipAB.src = lib.assetURL +
+								"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tip.png";
 							tipAB.classList.add("playertip");
-							tipAB.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
+							tipAB.style.cssText =
+								"display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 						} else {
-							tipAB.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/phasetip.png";
+							tipAB.src = lib.assetURL +
+								"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/phasetip.png";
 							tipAB.classList.add("playertip");
-							tipAB.style.cssText = "display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
+							tipAB.style.cssText =
+								"display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
 						}
 						player.appendChild(tipAB);
 					}
@@ -8056,7 +8293,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				priority: -1,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					event.respondix = 0;
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertip");
@@ -8064,7 +8301,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					return event.respondix > 0;
 				},
-				content: function () {
+				content() {
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertip");
 						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
@@ -8079,29 +8316,29 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				silent: true,
 				forced: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					return player != game.me;
 				},
-				content: function () {
+				content() {
 					var tipss = player.getElementsByClassName("tipskill");
 					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
 					var a = player.getElementsByClassName("playertipQP");
 					if (a.length <= 0) {
 						var tipCD = document.createElement("img");
 						tipCD.classList.add("tipshow"); //设置统一类名
-						// taffy: 注释extension.js原版代码喵
-						// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
-						/* taffy分界线 */
-						// taffy: 保留布局与边框的分开选项喵
-						if (lib.config.extension_十周年UI_decadeLayout == "off") {
-              /* taffy分界线 */
-							tipCD.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipQP.png";
+						if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+							.extension_十周年UI_newDecadeStyle != "othersOff") {
+							tipCD.src = lib.assetURL +
+								"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipQP.png";
 							tipCD.classList.add("playertipQP");
-							tipCD.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
+							tipCD.style.cssText =
+								"display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 						} else {
-							tipCD.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/discardtip.png";
+							tipCD.src = lib.assetURL +
+								"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/discardtip.png";
 							tipCD.classList.add("playertipQP");
-							tipCD.style.cssText = "display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
+							tipCD.style.cssText =
+								"display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
 						}
 						player.appendChild(tipCD);
 					}
@@ -8114,7 +8351,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				silent: true,
 				forced: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					event.respondix = 0;
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertipQP");
@@ -8122,7 +8359,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					return event.respondix > 0;
 				},
-				content: function () {
+				content() {
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertipQP");
 						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
@@ -8137,25 +8374,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				silent: true,
 				forced: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					// if(!player.countCards('h','shan')) return false;
-					// taffy: 注释extension.js原版代码喵
-					// return event.card.name == "shan" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on";
-					/* taffy分界线 */
-					// taffy: 保留布局与边框的分开选项喵
-					return event.card.name == "shan" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
-					/* taffy分界线 */
+					return event.card.name == "shan" && _status.currentPhase != player && player != game.me &&
+						lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+						.extension_十周年UI_newDecadeStyle != "othersOff";
 				},
-				content: function () {
+				content() {
 					var tipss = player.getElementsByClassName("tipskill");
 					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
 					var d = player.getElementsByClassName("playertipshan");
 					if (d.length <= 0) {
 						var tipEF = document.createElement("img");
 						tipEF.classList.add("tipshow"); //设置统一类名
-						tipEF.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipshan.png";
+						tipEF.src = lib.assetURL +
+							"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipshan.png";
 						tipEF.classList.add("playertipshan");
-						tipEF.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
+						tipEF.style.cssText =
+							"display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 						player.appendChild(tipEF);
 					}
 				},
@@ -8167,7 +8403,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				silent: true,
 				forced: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					event.respondix = 0;
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertipshan");
@@ -8175,7 +8411,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					return event.respondix > 0;
 				},
-				content: function () {
+				content() {
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertipshan");
 						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
@@ -8190,25 +8426,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				silent: true,
 				forced: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					// if(!player.countCards('h','sha')) return false;
-					// taffy: 注释extension.js原版代码喵
-					// return event.card.name == "sha" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on";
-					/* taffy分界线 */
-					// taffy: 保留布局与边框的分开选项喵
-					return event.card.name == "sha" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
-					/* taffy分界线 */
+					return event.card.name == "sha" && _status.currentPhase != player && player != game.me &&
+						lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+						.extension_十周年UI_newDecadeStyle != "othersOff";
 				},
-				content: function () {
+				content() {
 					var tipss = player.getElementsByClassName("tipskill");
 					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
 					var e = player.getElementsByClassName("playertipsha");
 					if (e.length <= 0) {
 						var tipGH = document.createElement("img");
 						tipGH.classList.add("tipshow"); //设置统一类名
-						tipGH.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipsha.png";
+						tipGH.src = lib.assetURL +
+						"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipsha.png";
 						tipGH.classList.add("playertipsha");
-						tipGH.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
+						tipGH.style.cssText =
+							"display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 
 						player.appendChild(tipGH);
 					}
@@ -8221,7 +8456,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				silent: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					event.respondix = 0;
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertipsha");
@@ -8229,7 +8464,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					return event.respondix > 0;
 				},
-				content: function () {
+				content() {
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertipsha");
 						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
@@ -8244,25 +8479,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				silent: true,
 				forced: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					// if(!player.countCards('h','sha')) return false;
-					// taffy: 注释extension.js原版代码喵
-					// return event.card.name == "tao" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on";
-					/* taffy分界线 */
-					// taffy: 保留布局与边框的分开选项喵
-					return event.card.name == "tao" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
-					/* taffy分界线 */
+					return event.card.name == "tao" && _status.currentPhase != player && player != game.me &&
+						lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+						.extension_十周年UI_newDecadeStyle != "othersOff";
 				},
-				content: function () {
+				content() {
 					var tipss = player.getElementsByClassName("tipskill");
 					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
 					var k = player.getElementsByClassName("playertiptao");
 					if (k.length <= 0) {
 						var tipMN = document.createElement("img");
 						tipMN.classList.add("tipshow"); //设置统一类名
-						tipMN.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tiptao.png";
+						tipMN.src = lib.assetURL +
+						"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tiptao.png";
 						tipMN.classList.add("playertiptao");
-						tipMN.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
+						tipMN.style.cssText =
+							"display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 
 						player.appendChild(tipMN);
 					}
@@ -8275,7 +8509,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				silent: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					event.respondix = 0;
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertiptao");
@@ -8283,7 +8517,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					return event.respondix > 0;
 				},
-				content: function () {
+				content() {
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertiptao");
 						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
@@ -8298,25 +8532,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				charlotte: true,
 				silent: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					// if(!player.countCards('h','sha')) return false;
-					// taffy: 注释extension.js原版代码喵
-					// return event.card.name == "jiu" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on";
-					/* taffy分界线 */
-					// taffy: 保留布局与边框的分开选项喵
-					return event.card.name == "jiu" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
-					/* taffy分界线 */
+					return event.card.name == "jiu" && _status.currentPhase != player && player != game.me &&
+						lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+						.extension_十周年UI_newDecadeStyle != "othersOff";
 				},
-				content: function () {
+				content() {
 					var tipss = player.getElementsByClassName("tipskill");
 					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
 					var n = player.getElementsByClassName("playertipjiu");
 					if (n.length <= 0) {
 						var tipOP = document.createElement("img");
 						tipOP.classList.add("tipshow"); //设置统一类名
-						tipOP.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipjiu.png";
+						tipOP.src = lib.assetURL +
+						"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipjiu.png";
 						tipOP.classList.add("playertipjiu");
-						tipOP.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
+						tipOP.style.cssText =
+							"display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 
 						player.appendChild(tipOP);
 					}
@@ -8329,7 +8562,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				charlotte: true,
 				silent: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					event.respondix = 0;
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertipjiu");
@@ -8337,7 +8570,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					return event.respondix > 0;
 				},
-				content: function () {
+				content() {
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("playertipjiu");
 						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
@@ -8352,7 +8585,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				charlotte: true,
 				silent: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					if (event.card.storage && event.card.storage.nowuxie) return false;
 					var card = event.card;
 					if (event.name == "phaseJudge" && card.viewAs)
@@ -8362,23 +8595,22 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					var info = get.info(card);
 					if (info.wuxieable === false) return false;
 
-					// taffy: 注释extension.js原版代码喵
-					// return event.card.name == "wuxie" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on";
-					/* taffy分界线 */
-					// taffy: 保留布局与边框的分开选项喵
-					return event.card.name == "wuxie" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
-					/* taffy分界线 */
+					return event.card.name == "wuxie" && _status.currentPhase != player && player != game.me &&
+						lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+						.extension_十周年UI_newDecadeStyle != "othersOff";
 				},
-				content: function () {
+				content() {
 					var tipss = player.getElementsByClassName("tipskill");
 					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
 					var g = player.getElementsByClassName("playertipwuxie");
 					if (g.length <= 0) {
 						var tipIJ = document.createElement("img");
 						tipIJ.classList.add("tipshow"); //设置统一类名
-						tipIJ.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipwuxie.png";
+						tipIJ.src = lib.assetURL +
+							"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipwuxie.png";
 						tipIJ.classList.add("playertipwuxie");
-						tipIJ.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
+						tipIJ.style.cssText =
+							"display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 
 						player.appendChild(tipIJ);
 					}
@@ -8391,11 +8623,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				silent: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					var h = event.player.getElementsByClassName("playertipwuxie");
 					return h.length > 0 && player != game.me && _status.currentPhase != player;
 				},
-				content: function () {
+				content() {
 					var h = trigger.player.getElementsByClassName("playertipwuxie");
 					h[0].parentNode.removeChild(h[0]);
 				},
@@ -8407,29 +8639,29 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				silent: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					return player != game.me;
 				},
-				content: function () {
+				content() {
 					var tipss = player.getElementsByClassName("tipskill");
 					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
 					var l = player.getElementsByClassName("playertipplay");
 					if (l.length <= 0) {
 						var tipKL = document.createElement("img");
 						tipKL.classList.add("tipshow"); //设置统一类名
-						// taffy: 注释extension.js原版代码喵
-						// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
-						/* taffy分界线 */
-						// taffy: 保留布局与边框的分开选项喵
-						if (lib.config.extension_十周年UI_decadeLayout == "off") {
-              /* taffy分界线 */
-							tipKL.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipplay.png";
+						if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+							.extension_十周年UI_newDecadeStyle != "othersOff") {
+							tipKL.src = lib.assetURL +
+								"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipplay.png";
 							tipKL.classList.add("playertipplay");
-							tipKL.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
+							tipKL.style.cssText =
+								"display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 						} else {
-							tipKL.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/thinktip.png";
+							tipKL.src = lib.assetURL +
+								"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/thinktip.png";
 							tipKL.classList.add("playertipplay");
-							tipKL.style.cssText = "display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
+							tipKL.style.cssText =
+								"display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
 						}
 						player.appendChild(tipKL);
 					}
@@ -8442,11 +8674,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				charlotte: true,
 				silent: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					var m = event.player.getElementsByClassName("playertipplay");
 					return m.length > 0 && player != game.me;
 				},
-				content: function () {
+				content() {
 					var m = trigger.player.getElementsByClassName("playertipplay");
 					m[0].parentNode.removeChild(m[0]);
 				},
@@ -8459,24 +8691,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				silent: true,
 				charlotte: true,
-				filter: function (event, player) {
-					// taffy: 注释extension.js原版代码喵
-					// return _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle == "on";
-					/* taffy分界线 */
-					// taffy: 保留布局与边框的分开选项喵
-					return _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "on";
-					/* taffy分界线 */
+				filter(event, player) {
+					return _status.currentPhase != player && player != game.me && (lib.config
+						.extension_十周年UI_newDecadeStyle == "on" || lib.config
+						.extension_十周年UI_newDecadeStyle == "othersOff");
 				},
-				content: function () {
+				content() {
 					var tipss = player.getElementsByClassName("tipskill");
 					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
 					var d = player.getElementsByClassName("playertipthink");
 					if (d.length <= 0) {
 						var tipMNX = document.createElement("img");
 						tipMNX.classList.add("tipshow"); //设置统一类名
-						tipMNX.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/thinktip.png";
+						tipMNX.src = lib.assetURL +
+							"extension/十周年UI/shoushaUI/lbtn/images/shoushatip/thinktip.png";
 						tipMNX.classList.add("playertipthink");
-						tipMNX.style.cssText = "display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
+						tipMNX.style.cssText =
+							"display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
 
 						player.appendChild(tipMNX);
 					}
@@ -8489,11 +8720,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				silent: true,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					var e = event.player.getElementsByClassName("playertipthink");
 					return e.length > 0 && player != game.me && _status.currentPhase != player;
 				},
-				content: function () {
+				content() {
 					var e = trigger.player.getElementsByClassName("playertipthink");
 					e[0].parentNode.removeChild(e[0]);
 				},
@@ -8501,13 +8732,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			//-------技能提示条（容错清除）-------//
 			lib.skill._skilltip_closeB = {
 				trigger: {
-					global: ["phaseUseEnd", "dieBegin", "dying", "phaseBegin", "useCardAfter", "loseAfter", "phaseEnd"],
+					global: ["phaseUseEnd", "dieBegin", "dying", "phaseBegin", "useCardAfter", "loseAfter",
+						"phaseEnd"
+					],
 				},
 				silent: true,
 				forced: true,
 				priority: -2,
 				charlotte: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					event.respondix = 0;
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("tipskill");
@@ -8515,7 +8748,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					return event.respondix > 0;
 				},
-				content: function () {
+				content() {
 					for (var i = 0; i < game.players.length; i++) {
 						var ab = game.players[i].getElementsByClassName("tipskill");
 						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
@@ -8525,7 +8758,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			//狗托播报
 			if (config.GTBB) {
 				var txcsanm = {};
-				var gddf = function () {
+				var gddf = function() {
 					var player = "玩家";
 					var my = lib.config.connect_nickname;
 					var suiji = [
@@ -8644,11 +8877,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					].randomGet();
 					var name = [suiji, my].randomGet();
 					var v = ["通过", "使用", "开启"].randomGet();
-					var story = ["周年", "五一", "踏青", "牛年", "开黑", "冬至", "春分", "鼠年", "盛典", "魏魂", "群魂", "蜀魂", "吴魂", "猪年", "圣诞", "国庆", "狗年", "金秋", "奇珍", "元旦", "小雪", "冬日", "招募", "梦之回廊", "虎年", "新春", "七夕", "大雪", "端午", "武将", "中秋", "庆典"].randomGet();
+					var story = ["周年", "五一", "踏青", "牛年", "开黑", "冬至", "春分", "鼠年", "盛典", "魏魂", "群魂", "蜀魂", "吴魂",
+						"猪年", "圣诞", "国庆", "狗年", "金秋", "奇珍", "元旦", "小雪", "冬日", "招募", "梦之回廊", "虎年", "新春",
+						"七夕", "大雪", "端午", "武将", "中秋", "庆典"
+					].randomGet();
 					var box = ["盒子", "宝盒", "礼包", "福袋", "礼盒", "庆典", "盛典"].randomGet();
 					var a = "获得了";
 					//皮肤
-					var pifu = ["界钟会×1", "王朗×1", "马钧×1", "司马昭×1", "司马师×1", "王平×1", "诸葛瞻×1", "张星彩×1", "董允×1", "关索×1", "骆统×1", "周处*1", "界步练师*1", "界朱然*1", "贺齐*1", "苏飞*1", "公孙康×1", "杨彪×1", "刘璋×1", "张仲景×1", "司马徽×1", "曹婴×1", "徐荣×1", "史诗宝珠*66", "史诗宝珠*33", "麒麟生角·魏延*1", "史诗宝珠*10", "刘焉×1", "孙寒华×1", "戏志才×1", "界曹真×1", "曹婴×1", "王粲×1", "界于禁×1", "郝昭×1", "界黄忠×1", "鲍三娘×1", "周群×1", "赵襄×1", "马云禄×1", "孙皓×1", "留赞×1", "吴景×1", "界徐盛×1", "许攸×1", "杜预×1", "界李儒×1", "张让×1", "麹义×1", "司马徽×1", "界左慈×1", "鲍三娘×1", "界徐盛×1", "南华老仙×1", "韩旭の大饼*100", "神郭嘉×1", "吴景×1", "周处×1", "杜预×1", "司马师×1", "羊微瑜×1", "神曹操×1"].randomGet();
+					var pifu = ["界钟会×1", "王朗×1", "马钧×1", "司马昭×1", "司马师×1", "王平×1", "诸葛瞻×1", "张星彩×1", "董允×1",
+						"关索×1", "骆统×1", "周处*1", "界步练师*1", "界朱然*1", "贺齐*1", "苏飞*1", "公孙康×1", "杨彪×1", "刘璋×1",
+						"张仲景×1", "司马徽×1", "曹婴×1", "徐荣×1", "史诗宝珠*66", "史诗宝珠*33", "麒麟生角·魏延*1", "史诗宝珠*10",
+						"刘焉×1", "孙寒华×1", "戏志才×1", "界曹真×1", "曹婴×1", "王粲×1", "界于禁×1", "郝昭×1", "界黄忠×1",
+						"鲍三娘×1", "周群×1", "赵襄×1", "马云禄×1", "孙皓×1", "留赞×1", "吴景×1", "界徐盛×1", "许攸×1", "杜预×1",
+						"界李儒×1", "张让×1", "麹义×1", "司马徽×1", "界左慈×1", "鲍三娘×1", "界徐盛×1", "南华老仙×1", "韩旭の大饼*100",
+						"神郭嘉×1", "吴景×1", "周处×1", "杜预×1", "司马师×1", "羊微瑜×1", "神曹操×1"
+					].randomGet();
 					//武将
 					var wujiang = [
 						"谋定天下·陆逊*1（动+静）",
@@ -8709,7 +8952,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						"长衫の天牢令*100",
 					].randomGet();
 					//更改对应播报颜色
-					var gold = ['<font color="#56e4fa">' + pifu + "</font>", '<font color="#f3c20f">' + wujiang + "</font>"].randomGet();
+					var gold = ['<font color="#56e4fa">' + pifu + "</font>", '<font color="#f3c20f">' +
+						wujiang + "</font>"
+					].randomGet();
 					var d = [",大家快恭喜TA吧！", ",大家快恭喜TA吧。无名杀是一款非盈利游戏(づ ●─● )づ", ",祝你新的一年天天开心，万事如意"].randomGet();
 					/*定义部分属性--默认手杀*/
 					var fontset = "FZLBJW"; /*字体*/
@@ -8721,28 +8966,37 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						colorB = "#B3E1EC";
 					}
 					txcsanm.div.show();
-					setTimeout(function () {
+					setTimeout(function() {
 						txcsanm.div.hide();
 					}, 15500);
-					txcsanm.div2.innerHTML = '<marquee direction="left" behavior="scroll" scrollamount=9.8" loop="1" width="100%" height="50" align="absmiddle" >' + "<font  face=" + fontset + ">" + player + "<font color=" + colorA + ">" + "<b>" + name + "</b>" + "</font>" + v + "<font color=" + colorB + ">" + "<b>" + story + box + "</b>" + "</font>" + a + "<b>" + gold + "</b>" + d + "</font>" + "</marquee>";
+					txcsanm.div2.innerHTML =
+						'<marquee direction="left" behavior="scroll" scrollamount=9.8" loop="1" width="100%" height="50" align="absmiddle" >' +
+						"<font  face=" + fontset + ">" + player + "<font color=" + colorA + ">" + "<b>" + name +
+						"</b>" + "</font>" + v + "<font color=" + colorB + ">" + "<b>" + story + box + "</b>" +
+						"</font>" + a + "<b>" + gold + "</b>" + d + "</font>" + "</marquee>";
 				};
 
 				txcsanm.div = ui.create.div("");
 				txcsanm.div2 = ui.create.div("", txcsanm.div);
 				/*----------手杀样式-------*/
 				if (config.GTBBYangshi == "on") {
-					txcsanm.div.style.cssText = "pointer-events:none;width:100%;height:25px;font-size:23px;z-index:6;";
-					txcsanm.div2.style.cssText = "pointer-events:none;background:rgba(0,0,0,0.5);width:100%;height:27px;";
+					txcsanm.div.style.cssText =
+						"pointer-events:none;width:100%;height:25px;font-size:23px;z-index:6;";
+					txcsanm.div2.style.cssText =
+						"pointer-events:none;background:rgba(0,0,0,0.5);width:100%;height:27px;";
 					/*------------------------*/
 				} else {
 					/*-------十周年样式-------*/
-					txcsanm.div.style.cssText = "pointer-events:none;width:56%;height:35px;font-size:18px;z-index:20;background-size:100% 100%;background-repeat:no-repeat;left:50%;top:15%;transform:translateX(-50%);";
-					txcsanm.div.style["background-image"] = "url(" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/goutuo.png";
-					txcsanm.div2.style.cssText = "pointer-events:none;width:85.5%;height:35px;left:8%;line-height:35px;";
+					txcsanm.div.style.cssText =
+						"pointer-events:none;width:56%;height:35px;font-size:18px;z-index:20;background-size:100% 100%;background-repeat:no-repeat;left:50%;top:15%;transform:translateX(-50%);";
+					txcsanm.div.style["background-image"] = "url(" + lib.assetURL +
+						"extension/十周年UI/shoushaUI/lbtn/images/uibutton/goutuo.png";
+					txcsanm.div2.style.cssText =
+						"pointer-events:none;width:85.5%;height:35px;left:8%;line-height:35px;";
 					/*------------------------*/
 				}
 
-				var id = setInterval(function () {
+				var id = setInterval(function() {
 					if (!txcsanm.div.parentNode && ui.window) {
 						ui.window.appendChild(txcsanm.div);
 						clearInterval(id);
@@ -8754,7 +9008,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			//阶段提示
 			if (lib.config.extension_十周年UI_JDTS) {
 				//游戏结束消失
-				lib.onover.push(function (bool) {
+				lib.onover.push(function(bool) {
 					game.as_removeImage();
 				});
 				//等待响应
@@ -8764,19 +9018,25 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					},
 					silent: true,
 					direct: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.auto == false;
 					},
-					content: function () {
+					content() {
 						trigger._jd_ddxy = true;
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [10, 58, 7, 6], 10);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [10,
+									58, 7, 6
+								], 10);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [3, 58, 7, 6], 10);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [3, 58,
+									7, 6
+								], 10);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.png", [18, 65, 8, 4.4], 10);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.png", [18, 65, 8,
+								4.4
+							], 10);
 						}
 					},
 				};
@@ -8786,21 +9046,27 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						target: "shaBegin",
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return game.me == event.target;
 					},
 					charlotte: true,
 					forced: true,
-					content: function () {
+					content() {
 						trigger._jd_ddxy = true;
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 					},
 				};
@@ -8809,7 +9075,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["useCardToBegin", "phaseJudge"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						if (event.card.storage && event.card.storage.nowuxie) return false;
 						var card = event.card;
 						var info = get.info(card);
@@ -8827,16 +9093,22 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					},
 					charlotte: true,
 					forced: true,
-					content: function () {
+					content() {
 						trigger._jd_ddxy = true;
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 					},
 				};
@@ -8848,21 +9120,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["useCard", "respondAfter"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && event.card.name == "shan";
 					},
-					content: function () {
+					content() {
 						trigger._jd_ddxy = true;
 						game.as_removeImage();
 						if (_status.as_showImage_phase) {
 							if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 								if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".jpg", [10, 58, 7, 6], true);
+									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status
+										.as_showImage_phase + ".jpg", [10, 58, 7, 6], true);
 								} else {
-									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".jpg", [3, 58, 7, 6], true);
+									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status
+										.as_showImage_phase + ".jpg", [3, 58, 7, 6], true);
 								}
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".png", [18, 65, 8, 4.4], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status
+									.as_showImage_phase + ".png", [18, 65, 8, 4.4], true);
 							}
 						}
 					},
@@ -8870,25 +9145,30 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				//等待响应及游戏结束
 				lib.skill._jd_ddxyE = {
 					trigger: {
-						player: ["chooseToRespondEnd", "useCardToEnd", "phaseJudgeEnd", "respondSha", "shanBegin"],
+						player: ["chooseToRespondEnd", "useCardToEnd", "phaseJudgeEnd", "respondSha",
+							"shanBegin"
+						],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						if (!event._jd_ddxy) return false;
 						return player == game.me && _status.auto == false;
 					},
 					direct: true,
-					content: function () {
+					content() {
 						game.as_removeImage();
 						if (_status.as_showImage_phase) {
 							if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 								if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".jpg", [10, 58, 7, 6], true);
+									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status
+										.as_showImage_phase + ".jpg", [10, 58, 7, 6], true);
 								} else {
-									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".jpg", [3, 58, 7, 6], true);
+									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status
+										.as_showImage_phase + ".jpg", [3, 58, 7, 6], true);
 								}
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".png", [18, 65, 8, 4.4], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status
+									.as_showImage_phase + ".png", [18, 65, 8, 4.4], true);
 							}
 						}
 					},
@@ -8896,24 +9176,32 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				//对方正在思考
 				lib.skill._jd_dfsk = {
 					trigger: {
-						global: ["phaseBegin", "phaseEnd", "phaseJudgeBegin", "phaseDrawBegin", "phaseUseBegin", "phaseDiscardBegin"],
+						global: ["phaseBegin", "phaseEnd", "phaseJudgeBegin", "phaseDrawBegin", "phaseUseBegin",
+							"phaseDiscardBegin"
+						],
 					},
 					silent: true,
 					charlotte: true,
 					forced: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						//剩余人数两人时
 						if (game.players.length == 2 && _status.currentPhase != game.me) return true;
 					},
-					content: function () {
+					content() {
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/dfsk.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/dfsk.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/dfsk.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/dfsk.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/dfsk.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/dfsk.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 					},
 				};
@@ -8923,12 +9211,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						global: ["phaseEnd", "useCardAfter"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return _status.currentPhase != game.me && player != game.me;
 					},
 					forced: true,
 					charlotte: true,
-					content: function () {
+					content() {
 						game.as_removeImage();
 					},
 				};
@@ -8939,10 +9227,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					silent: true,
 					forced: true,
 					charlotte: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.auto == false;
 					},
-					content: function () {
+					content() {
 						game.as_removeImage();
 					},
 				};
@@ -8952,7 +9240,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseBegin"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -8960,15 +9248,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: Infinity,
 					firstDo: true,
-					content: function () {
+					content() {
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhks.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhks.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhks.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhks.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhks.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhks.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 						_status.as_showImage_phase = "hhks";
 					},
@@ -8979,7 +9273,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseZhunbeiBefore"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -8987,15 +9281,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: Infinity,
 					firstDo: true,
-					content: function () {
+					content() {
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/zbjd.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/zbjd.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 						_status.as_showImage_phase = "zbjd";
 					},
@@ -9005,7 +9305,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseZhunbeiAfter"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9013,7 +9313,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: -Infinity,
 					lastDo: true,
-					content: function () {
+					content() {
 						if (_status.as_showImage_phase && _status.as_showImage_phase == "zbjd") {
 							game.as_removeImage();
 							delete _status.as_showImage_phase;
@@ -9026,7 +9326,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseJudgeBefore"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9034,15 +9334,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: Infinity,
 					firstDo: true,
-					content: function () {
+					content() {
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 						_status.as_showImage_phase = "pdjd";
 					},
@@ -9052,7 +9358,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseJudgeAfter"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9060,7 +9366,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: -Infinity,
 					lastDo: true,
-					content: function () {
+					content() {
 						if (_status.as_showImage_phase && _status.as_showImage_phase == "pdjd") {
 							game.as_removeImage();
 							delete _status.as_showImage_phase;
@@ -9073,7 +9379,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseDrawBefore"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9081,15 +9387,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: Infinity,
 					firstDo: true,
-					content: function () {
+					content() {
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/mpjd.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/mpjd.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/mpjd.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/mpjd.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/mpjd.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/mpjd.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 						_status.as_showImage_phase = "mpjd";
 					},
@@ -9099,7 +9411,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseDrawAfter"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9107,7 +9419,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: -Infinity,
 					lastDo: true,
-					content: function () {
+					content() {
 						if (_status.as_showImage_phase && _status.as_showImage_phase == "mpjd") {
 							game.as_removeImage();
 							delete _status.as_showImage_phase;
@@ -9120,7 +9432,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseUseBefore"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9128,15 +9440,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: Infinity,
 					firstDo: true,
-					content: function () {
+					content() {
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/cpjd.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/cpjd.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/cpjd.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/cpjd.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/cpjd.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/cpjd.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 						_status.as_showImage_phase = "cpjd";
 					},
@@ -9146,7 +9464,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseUseAfter"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9154,7 +9472,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: -Infinity,
 					lastDo: true,
-					content: function () {
+					content() {
 						if (_status.as_showImage_phase && _status.as_showImage_phase == "cpjd") {
 							game.as_removeImage();
 							delete _status.as_showImage_phase;
@@ -9167,7 +9485,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseDiscardBefore"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9175,15 +9493,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: Infinity,
 					firstDo: true,
-					content: function () {
+					content() {
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/qpjd.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/qpjd.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/qpjd.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/qpjd.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/qpjd.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/qpjd.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 						_status.as_showImage_phase = "qpjd";
 					},
@@ -9193,7 +9517,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseDiscardAfter"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9201,7 +9525,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: -Infinity,
 					lastDo: true,
-					content: function () {
+					content() {
 						if (_status.as_showImage_phase && _status.as_showImage_phase == "qpjd") {
 							game.as_removeImage();
 							delete _status.as_showImage_phase;
@@ -9214,7 +9538,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseJieshuBefore"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9222,15 +9546,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: Infinity,
 					firstDo: true,
-					content: function () {
+					content() {
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/jsjd.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/jsjd.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 						_status.as_showImage_phase = "jsjd";
 					},
@@ -9240,7 +9570,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseJieshuAfter"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9248,7 +9578,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: -Infinity,
 					lastDo: true,
-					content: function () {
+					content() {
 						if (_status.as_showImage_phase && _status.as_showImage_phase == "jsjd") {
 							game.as_removeImage();
 							delete _status.as_showImage_phase;
@@ -9261,7 +9591,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseEnd"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9269,15 +9599,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: Infinity,
 					firstDo: true,
-					content: function () {
+					content() {
 						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
 							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhjs.jpg", [10, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhjs.jpg", [10,
+									58, 7, 6
+								], true);
 							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhjs.jpg", [3, 58, 7, 6], true);
+								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhjs.jpg", [3, 58,
+									7, 6
+								], true);
 							}
 						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhjs.png", [18, 65, 8, 4.4], true);
+							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhjs.png", [18, 65, 8,
+								4.4
+							], true);
 						}
 						_status.as_showImage_phase = "hhjs";
 					},
@@ -9287,7 +9623,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						player: ["phaseAfter"],
 					},
 					silent: true,
-					filter: function (event, player) {
+					filter(event, player) {
 						return player == game.me && _status.currentPhase == player;
 					},
 					charlotte: true,
@@ -9295,7 +9631,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					direct: true,
 					priority: -Infinity,
 					lastDo: true,
-					content: function () {
+					content() {
 						if (_status.as_showImage_phase && _status.as_showImage_phase == "hhjs") {
 							game.as_removeImage();
 							delete _status.as_showImage_phase;
@@ -9305,7 +9641,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			}
 			//玩家进度条
 			if (get.mode() != "connect" && config.jindutiao == true) {
-				lib.onover.push(function (bool) {
+				lib.onover.push(function(bool) {
 					if (document.getElementById("jindutiaopl")) {
 						document.getElementById("jindutiaopl").remove();
 					}
@@ -9313,15 +9649,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				//玩家回合内进度条
 				lib.skill._jindutiao = {
 					trigger: {
-						player: ["phaseZhunbeiBegin", "phaseBegin", "phaseJudgeBegin", "phaseDrawBegin", "useCardAfter", "phaseDiscardBegin", "useSkillBefore", "loseAfter"],
+						player: ["phaseZhunbeiBegin", "phaseBegin", "phaseJudgeBegin", "phaseDrawBegin",
+							"useCardAfter", "phaseDiscardBegin", "useSkillBefore", "loseAfter"
+						],
 					},
 					silent: true,
-					filter: function (event, player) {
-						if (document.querySelector("#jindutiaopl") && lib.config.extension_十周年UI_jindutiaoUpdata == false) return false;
+					filter(event, player) {
+						if (document.querySelector("#jindutiaopl") && lib.config
+							.extension_十周年UI_jindutiaoUpdata == false) return false;
 						return player == game.me && _status.currentPhase == player;
 					},
 					forced: true,
-					content: function () {
+					content() {
 						game.Jindutiaoplayer();
 					},
 					group: ["_jindutiao_jieshu"],
@@ -9331,10 +9670,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								player: ["phaseEnd", "phaseJieshuBegin"],
 							},
 							forced: true,
-							filter: function (event, player) {
+							filter(event, player) {
 								return player == game.me;
 							},
-							content: function () {
+							content() {
 								if (window.timer) {
 									clearInterval(window.timer);
 									delete window.timer;
@@ -9356,33 +9695,41 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				lib.skill._jindutiaopl = {
 					trigger: {
 						global: ["gameStart"],
-						player: ["useCardToBegin", "respondBegin", "chooseToRespondBegin", "damageEnd", "damageAfter", "judgeEnd"],
+						player: ["useCardToBegin", "respondBegin", "chooseToRespondBegin", "damageEnd",
+							"damageAfter", "judgeEnd"
+						],
 						target: "useCardToTargeted",
 					},
 					silent: true,
 					forced: true,
 					charlotte: true,
-					filter: function (event, player) {
-						if (document.querySelector("#jindutiaopl") && lib.config.extension_十周年UI_jindutiaoUpdata == false) return false;
+					filter(event, player) {
+						if (document.querySelector("#jindutiaopl") && lib.config
+							.extension_十周年UI_jindutiaoUpdata == false) return false;
 						if (event.name == "gameStart" && lib.config["extension_无名补丁_enable"]) return false;
 						return _status.currentPhase != player && player == game.me;
 					},
-					content: function () {
+					content() {
 						game.Jindutiaoplayer();
 					},
 					group: ["_jindutiaopl_jieshu"],
 					subSkill: {
 						jieshu: {
 							trigger: {
-								global: ["useCardAfter", "useCardBefore", "phaseBefore", "loseEnd", "phaseBegin", "phaseDradBegin", "phaseUseBegin", "phaseUseEnd", "phaseEnd", "phaseDiscardAfter", "phaseDiscardBegin", "useSkillBefore", "judgeAfter"],
+								global: ["useCardAfter", "useCardBefore", "phaseBefore", "loseEnd",
+									"phaseBegin", "phaseDradBegin", "phaseUseBegin", "phaseUseEnd",
+									"phaseEnd", "phaseDiscardAfter", "phaseDiscardBegin", "useSkillBefore",
+									"judgeAfter"
+								],
 							},
 							forced: true,
 							charlotte: true,
-							filter: function (event, player) {
-								if (document.querySelector("#jindutiaopl")) return _status.currentPhase != game.me;
+							filter(event, player) {
+								if (document.querySelector("#jindutiaopl")) return _status.currentPhase != game
+									.me;
 								return false;
 							},
-							content: function () {
+							content() {
 								if (window.timer) {
 									clearInterval(window.timer);
 									delete window.timer;
@@ -9401,19 +9748,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			}
 			//手杀UI
 		},
-		precontent: function () {
-			if (get.mode() == "chess" || get.mode() == "tafang") return;
+		precontent() {
+			if (get.mode() === "chess" || get.mode() === "tafang" || get.mode === "hs_hearthstone") return;
 			if (lib.config["extension_" + decadeUIName + "_eruda"]) {
 				var script = document.createElement("script");
 				script.src = decadeUIPath + "eruda.js";
 				document.body.appendChild(script);
-				script.onload = function () {
+				script.onload = function() {
 					eruda.init();
 				};
 			}
-
-			const extension = lib.extensionMenu[`extension_${decadeUIName}`];
-			if (!(extension && extension.enable && extension.enable.init)) return;
 
 			if (window.require && !window.fs) window.fs = require("fs");
 
@@ -9426,34 +9770,46 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 				const list = ["re_caocao", "re_liubei", "sp_zhangjiao", "sunquan"];
 				while (list.length) {
-					ui.create.div(".avatar", ui.create.div(".seat-player.fakeplayer", node)).setBackground(list.randomRemove(), "character");
+					ui.create.div(".avatar", ui.create.div(".seat-player.fakeplayer", node)).setBackground(list
+						.randomRemove(), "character");
 				}
 			};
 
-			window.decadeModule = (function (decadeModule) {
+			window.decadeModule = (function(decadeModule) {
 				var version = lib.extensionPack.十周年UI.version;
 				if (ui.css.layout) {
-					if (!ui.css.layout.href || ui.css.layout.href.indexOf("long2") < 0) ui.css.layout.href = lib.assetURL + "layout/long2/layout.css";
+					if (!ui.css.layout.href || ui.css.layout.href.indexOf("long2") < 0) ui.css.layout.href =
+						lib.assetURL + "layout/long2/layout.css";
 				}
 
-				decadeModule.init = function () {
+				decadeModule.init = function() {
 					//原十周年UI内容加载
 					this.css(decadeUIPath + "extension.css");
-					this.css(decadeUIPath + "layout.css");
 					this.css(decadeUIPath + "decadeLayout.css");
 					this.css(decadeUIPath + "card.css");
 					// 当且仅当初次载入时，newDecadeStyle == void 0
 					// 所以加载了不存在的css: player0.css
 					if (lib.config.extension_十周年UI_newDecadeStyle != void 0) {
-						this.css(decadeUIPath + "player" + parseFloat(["on", "off", "othersOn"].indexOf(lib.config.extension_十周年UI_newDecadeStyle) + 1) + ".css");
+						this.css(decadeUIPath + "player" + parseFloat(["on", "off", "othersOn",
+							"othersOff"
+						].indexOf(lib.config.extension_十周年UI_newDecadeStyle) + 1) + ".css");
 					} else {
 						this.css(decadeUIPath + "player2.css");
 					}
-					this.css(decadeUIPath + (lib.config.extension_十周年UI_newDecadeStyle == "on" ? "equip.css" : "equip_new.css"));
+					if (lib.config.extension_十周年UI_newDecadeStyle == "othersOff") {
+						this.css(decadeUIPath + "equip_new_new.css");
+						this.css(decadeUIPath + "layout_new.css");
+					} else {
+						this.css(decadeUIPath + (lib.config.extension_十周年UI_newDecadeStyle == "on" ?
+							"equip.css" : "equip_new.css"));
+						this.css(decadeUIPath + "layout.css");
+					}
 					if (lib.config.extension_十周年UI_meanPrettify) {
 						this.css(decadeUIPath + "menu.css");
 					}
-
+					if (lib.config["extension_十周年UI_choosecharboder"]) {
+						this.css(decadeUIPath + "style.css");
+					}
 					this.js(decadeUIPath + "spine.js");
 					this.js(decadeUIPath + "component.js");
 					this.js(decadeUIPath + "skill.js");
@@ -9466,46 +9822,50 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					//避免提示是否下载图片和字体素材
 					if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
 					var layoutPath = decadeUIPath + "shoushaUI/";
-					if (lib.config.extension_十周年UI_KGMH == "1") this.css(layoutPath + "KGMH/" + "kaiguan.css");
-					if (lib.config.extension_十周年UI_KGMH == "2") this.css(layoutPath + "KGMH/" + "kaiguan_new.css");
-					// taffy: 注释extension.js原版代码喵
-					// var bool = (lib.config.extension_十周年UI_newDecadeStyle != "on");
-					/* taffy分界线 */
-					// taffy: 保留布局与边框的分开选项喵
-					var bool = (lib.config.extension_十周年UI_decadeLayout == "off");
-					/* taffy分界线 */
-					if (!(get.mode() == "chess" || get.mode() == "tafang")) {
+					if (lib.config.extension_十周年UI_KGMH == "1") this.css(layoutPath + "KGMH/" +
+						"kaiguan.css");
+					if (lib.config.extension_十周年UI_KGMH == "2") this.css(layoutPath + "KGMH/" +
+						"kaiguan_new.css");
+					var listmap = {
+						on: 2,
+						off: 1,
+						othersOn: 1,
+						othersOff: 3,
+					} [lib.config.extension_十周年UI_newDecadeStyle] || 2;
+					if (!(get.mode() == "chess" || get.mode() == "tafang" || get.mode ==
+							"hs_hearthstone")) {
 						var list = ["character", "lbtn", "skill"];
 						list.forEach(pack => {
 							//css加载
 							switch (pack) {
 								case "character":
-									this.css(layoutPath + pack + "/" + (bool ? "main1" : "main2") + ".css");
+									this.css(layoutPath + pack + "/main" + listmap + ".css");
 									break;
+
 								default:
-									this.css(layoutPath + pack + "/" + (bool ? "main1" : "main2") + (lib.config.touchscreen ? "" : "_window") + ".css");
+									this.css(layoutPath + pack + "/main" + listmap + (lib.config
+										.touchscreen ? "" : "_window") + ".css");
 									break;
 							}
 							//js加载
 							this.js(
-								layoutPath + pack + "/" + (bool ? "main1.js" : "main2.js"),
+								layoutPath + pack + "/" + pack + "/main" + listmap + ".js",
 								null,
-								function () {},
-								function () {}
+								function() {},
+								function() {}
 							);
 						});
 					}
-
 					return this;
 				};
-				decadeModule.js = function (path) {
+				decadeModule.js = function(path) {
 					if (!path) return console.error("path");
 
 					const script = document.createElement("script");
-					script.onload = function () {
+					script.onload = function() {
 						this.remove();
 					};
-					script.onerror = function () {
+					script.onerror = function() {
 						this.remove();
 						console.error(`${this.src}not found`);
 					};
@@ -9513,7 +9873,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					document.head.appendChild(script);
 					return script;
 				};
-				decadeModule.css = function (path) {
+				decadeModule.css = function(path) {
 					if (!path) return console.error("path");
 					const link = document.createElement("link");
 					link.rel = "stylesheet";
@@ -9521,7 +9881,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					document.head.appendChild(link);
 					return link;
 				};
-				decadeModule.import = function (module) {
+				decadeModule.import = function(module) {
 					if (!this.modules) this.modules = [];
 					if (typeof module != "function") return console.error("import failed");
 					this.modules.push(module);
@@ -9532,17 +9892,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			Object.defineProperties(_status, {
 				connectMode: {
 					configurable: true,
-					get: function () {
+					get() {
 						return this._connectMode;
 					},
-					set: function (value) {
+					set(value) {
 						this._connectMode = value;
 						if (!value || !lib.extensions) return;
 						const decadeExtension = lib.extensions.find(value => value[0] == decadeUIName);
 						if (!decadeExtension) return;
 
 						const startBeforeFunction = lib.init.startBefore;
-						lib.init.startBefore = function () {
+						lib.init.startBefore = function() {
 							try {
 								_status.extension = decadeExtension[0];
 								_status.evaluatingExtension = decadeExtension[3];
@@ -9565,7 +9925,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			});
 			//手杀UI
 			window.app = {
-				each: function (obj, fn, node) {
+				each(obj, fn, node) {
 					if (!obj) return node;
 					if (typeof obj.length === "number") {
 						for (var i = 0; i < obj.length; i++) {
@@ -9582,12 +9942,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					return node;
 				},
-				isFunction: function (fn) {
+				isFunction(fn) {
 					return typeof fn === "function";
 				},
 				event: {
 					listens: {},
-					on: function (name, listen, remove) {
+					on(name, listen, remove) {
 						if (!this.listens[name]) {
 							this.listens[name] = [];
 						}
@@ -9597,10 +9957,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						});
 						return this;
 					},
-					off: function (name, listen) {
+					off(name, listen) {
 						return app.each(
 							this.listens[name],
-							function (item, index) {
+							function(item, index) {
 								if (listen === item || listen === item.listen) {
 									this.listens[name].splice(index, 1);
 								}
@@ -9608,18 +9968,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							this
 						);
 					},
-					emit: function (name) {
+					emit(name) {
 						var args = Array.from(arguments).slice(1);
 						return app.each(
 							this.listens[name],
-							function (item) {
+							function(item) {
 								item.listen.apply(null, args);
 								item.remove && this.off(name, item);
 							},
 							this
 						);
 					},
-					once: function (name, listen) {
+					once(name, listen) {
 						return this.on(name, listen, true);
 					},
 				},
@@ -9628,18 +9988,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				plugins: [],
 				pluginsMap: {},
 				path: {
-					ext: function (path, ext) {
+					ext(path, ext) {
 						ext = ext || app.name;
 						return lib.assetURL + "extension/" + ext + "/" + path;
 					},
 				},
-				on: function (event, listen) {
+				on(event, listen) {
 					if (!app.listens[event]) {
 						app.listens[event] = [];
 					}
 					app.listens[event].add(listen);
 				},
-				once: function (event, listen) {
+				once(event, listen) {
 					if (!app.listens[event]) {
 						app.listens[event] = [];
 					}
@@ -9648,21 +10008,21 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						remove: true,
 					});
 				},
-				off: function (event, listen) {
+				off(event, listen) {
 					var listens = app.listens[event] || [];
-					var filters = listen
-						? listens.filter(function (item) {
-								return item === listen || item.listen === listen;
-						  })
-						: listens.slice(0);
-					filters.forEach(function (item) {
+					var filters = listen ?
+						listens.filter(function(item) {
+							return item === listen || item.listen === listen;
+						}) :
+						listens.slice(0);
+					filters.forEach(function(item) {
 						listens.remove(item);
 					});
 				},
-				emit: function (event) {
+				emit(event) {
 					var args = Array.from(arguments).slice(1);
 					var listens = app.listens[event] || [];
-					listens.forEach(function (item) {
+					listens.forEach(function(item) {
 						if (typeof item === "function") {
 							item.apply(null, args);
 						} else if (typeof item.listen === "function") {
@@ -9671,7 +10031,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					});
 				},
-				import: function (fn) {
+				import(fn) {
 					var obj = fn(lib, game, ui, get, ai, _status, app);
 					if (obj) {
 						if (obj.name) app.pluginsMap[obj.name] = obj;
@@ -9680,15 +10040,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					app.plugins.push(obj);
 				},
 
-				importPlugin: function (data, setText) {
+				importPlugin(data, setText) {
 					if (!window.JSZip) {
 						var args = arguments;
-						lib.init.js(lib.assetURL + "game", "jszip", function () {
+						lib.init.js(lib.assetURL + "game", "jszip", function() {
 							app.importPlugin.apply(app, args);
 						});
 						return;
 					}
-					setText = typeof setText === "function" ? setText : function () {};
+					setText = typeof setText === "function" ? setText() : function() {};
 					var zip = new JSZip(data);
 					var dirList = [],
 						fileList = [];
@@ -9698,7 +10058,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						} else if (!/^extension\.(js|css)$/.test(i)) {
 							fileList.push({
 								id: i,
-								path: "extension/" + app.name + "/" + i.split("/").reverse().slice(1).reverse().join("/"),
+								path: "extension/" + app.name + "/" + i.split("/").reverse().slice(1)
+									.reverse().join("/"),
 								name: i.split("/").pop(),
 								target: zip.files[i],
 							});
@@ -9709,17 +10070,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					var finish = 0;
 					var isNode = lib.node && lib.node.fs;
 
-					var writeFile = function () {
+					var writeFile = function() {
 						var file = fileList.shift();
 						if (file) {
 							setText("正在导入(" + ++finish + "/" + total + ")...");
-							game.writeFile(isNode ? file.target.asNodeBuffer() : file.target.asArrayBuffer(), file.path, file.name, writeFile);
+							game.writeFile(isNode ? file.target.asNodeBuffer() : file.target
+							.asArrayBuffer(), file.path, file.name, writeFile);
 						} else {
 							alert("导入完成");
 							setText("导入插件");
 						}
 					};
-					var ensureDir = function () {
+					var ensureDir = function() {
 						if (dirList.length) {
 							setText("正在导入(" + ++finish + "/" + total + ")...");
 							game.ensureDirectory(dirList.shift(), ensureDir);
@@ -9729,70 +10091,87 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					};
 					ensureDir();
 				},
-				loadPlugins: function (callback) {
-					game.getFileList("extension/" + app.name, function (floders) {
+				loadPlugins(callback) {
+					game.getFileList("extension/" + app.name, function(floders) {
 						var total = floders.length;
 						var current = 0;
 						if (total === current) {
 							callback();
 							return;
 						}
-						var loaded = function () {
+						var loaded = function() {
 							if (++current === total) {
 								callback();
 							}
 						};
-						floders.forEach(function (dir) {
-							// taffy: 注释extension.js原版代码喵
-							// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
-							/* taffy分界线 */
-							// taffy: 保留布局与边框的分开选项喵
-							if (lib.config.extension_十周年UI_decadeLayout == "off") {
-                /* taffy分界线 */
-								game.readFile(
-									"extension/" + app.name + "/" + dir + "/main1.js",
-									function (data) {
-										var binarry = new Uint8Array(data);
-										var blob = new Blob([binarry]);
-										var reader = new FileReader();
-										reader.readAsText(blob);
-										reader.onload = function () {
-											eval(reader.result);
+						floders.forEach(function(dir) {
+							switch (lib.config.extension_十周年UI_newDecadeStyle) {
+								case "on":
+									game.readFile(
+										"extension/" + app.name + "/" + dir + "/main1.js",
+										function(data) {
+											var binarry = new Uint8Array(data);
+											var blob = new Blob([binarry]);
+											var reader = new FileReader();
+											reader.readAsText(blob);
+											reader.onload = function() {
+												eval(reader.result);
+												loaded();
+											};
+										},
+										function(e) {
+											console.info(e);
 											loaded();
-										};
-									},
-									function (e) {
-										console.info(e);
-										loaded();
-									}
-								);
-							} else {
-								game.readFile(
-									"extension/" + app.name + "/" + dir + "/main2.js",
-									function (data) {
-										var binarry = new Uint8Array(data);
-										var blob = new Blob([binarry]);
-										var reader = new FileReader();
-										reader.readAsText(blob);
-										reader.onload = function () {
-											eval(reader.result);
+										}
+									);
+									break;
+								case "othersOff":
+									game.readFile(
+										"extension/" + app.name + "/" + dir + "/main3.js",
+										function(data) {
+											var binarry = new Uint8Array(data);
+											var blob = new Blob([binarry]);
+											var reader = new FileReader();
+											reader.readAsText(blob);
+											reader.onload = function() {
+												eval(reader.result);
+												loaded();
+											};
+										},
+										function(e) {
+											console.info(e);
 											loaded();
-										};
-									},
-									function (e) {
-										console.info(e);
-										loaded();
-									}
-								);
+										}
+									);
+									break;
+								default:
+									game.readFile(
+										"extension/" + app.name + "/" + dir + "/main2.js",
+										function(data) {
+											var binarry = new Uint8Array(data);
+											var blob = new Blob([binarry]);
+											var reader = new FileReader();
+											reader.readAsText(blob);
+											reader.onload = function() {
+												eval(reader.result);
+												loaded();
+											};
+										},
+										function(e) {
+											console.info(e);
+											loaded();
+										}
+									);
+									break;
 							}
 						});
 					});
 				},
-				reWriteFunction: function (target, name, replace, str) {
+				reWriteFunction(target, name, replace, str) {
 					if (name && typeof name === "object") {
 						return app.each(
 							name,
-							function (item, index) {
+							function(item, index) {
 								app.reWriteFunction(target, index, item[0], item[1]);
 							},
 							target
@@ -9800,16 +10179,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 
 					var plugins = app.pluginsMap;
-					if ((typeof replace === "string" || replace instanceof RegExp) && (typeof str === "string" || str instanceof RegExp)) {
+					if ((typeof replace === "string" || replace instanceof RegExp) && (typeof str ===
+							"string" || str instanceof RegExp)) {
 						var funcStr = target[name].toString().replace(replace, str);
 						eval("target." + name + " = " + funcStr);
 					} else {
 						var func = target[name];
-						target[name] = function () {
+						target[name] = function() {
 							var result, cancel;
 							var args = Array.from(arguments);
 							var args2 = Array.from(arguments);
-							if (typeof replace === "function") cancel = replace.apply(this, [args].concat(args));
+							if (typeof replace === "function") cancel = replace.apply(this, [args].concat(
+								args));
 							if (typeof func === "function" && !cancel) result = func.apply(this, args);
 							if (typeof str === "function") str.apply(this, [result].concat(args2));
 							return cancel || result;
@@ -9817,11 +10198,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					return target[name];
 				},
-				reWriteFunctionX: function (target, name, replace, str) {
+				reWriteFunctionX(target, name, replace, str) {
 					if (name && typeof name === "object") {
 						return app.each(
 							name,
-							function (item, index) {
+							function(item, index) {
 								app.reWriteFunction(target, index, item);
 							},
 							target
@@ -9845,7 +10226,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							eval("target." + name + " = " + funcStr);
 						} else {
 							var func = target[name];
-							target[name] = function () {
+							target[name] = function() {
 								var arg1 = Array.from(arguments);
 								var arg2 = Array.from(arguments);
 								var result;
@@ -9860,9 +10241,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					return target[name];
 				},
-				waitAllFunction: function (fnList, callback) {
+				waitAllFunction(fnList, callback) {
 					var list = fnList.slice(0);
-					var runNext = function () {
+					var runNext = function() {
 						var item = list.shift();
 						if (typeof item === "function") {
 							item(runNext);
@@ -9876,23 +10257,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				element: {
 					runNext: {
-						setTip: function (tip) {
+						setTip(tip) {
 							console.info(tip);
 						},
 					},
 				},
 				get: {
-					playerSkills: function (node, arg1, arg2) {
+					playerSkills(node, arg1, arg2) {
 						var skills = node.getSkills(arg1, arg2).slice(0);
 						skills.addArray(Object.keys(node.forbiddenSkills));
 						skills.addArray(
-							Object.keys(node.disabledSkills).filter(function (k) {
-								return !node.hiddenSkills.includes(k) && node.disabledSkills[k].length && node.disabledSkills[k][0] === k + "_awake";
+							Object.keys(node.disabledSkills).filter(function(k) {
+								return !node.hiddenSkills.includes(k) && node.disabledSkills[k]
+									.length && node.disabledSkills[k][0] === k + "_awake";
 							})
 						);
 						return skills;
 					},
-					skillInfo: function (skill, node) {
+					skillInfo(skill, node) {
 						var obj = {};
 						obj.id = skill;
 						if (lib.translate[skill + "_ab"]) {
@@ -9908,7 +10290,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							if (node.disabledSkills[skill]) obj.disabled = true;
 							if (obj.info.temp || !node.skills.includes(skill)) obj.temp = true;
 							if (obj.info.frequent || obj.info.subfrequent) obj.frequent = true;
-							if (obj.info.clickable && node.isIn() && node.isUnderControl(true)) obj.clickable = true;
+							if (obj.info.clickable && node.isIn() && node.isUnderControl(true)) obj.clickable =
+								true;
 							if (obj.info.nobracket) obj.nobracket = true;
 						}
 						obj.translation = get.skillInfoTranslation(skill);
@@ -9922,25 +10305,25 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						return obj;
 					},
 				},
-				listen: function (node, func) {
+				listen(node, func) {
 					node.addEventListener(lib.config.touchscreen ? "touchend" : "click", func);
-					return function () {
+					return function() {
 						node.removeEventLisnter(lib.config.touchscreen ? "touchend" : "click", func);
 					};
 				},
-				mockTouch: function (node) {
+				mockTouch(node) {
 					var event = new Event(lib.config.touchscreen ? "touchend" : "click");
 					node.dispatchEvent(event);
 					return node;
 				},
-				nextTick: function (func, time) {
+				nextTick(func, time) {
 					var funcs;
 					if (Array.isArray(func)) funcs = func;
 					else funcs = [func];
-					var next = function () {
+					var next = function() {
 						var item = funcs.shift();
 						if (item) {
-							setTimeout(function () {
+							setTimeout(function() {
 								item();
 								next();
 							}, time || 0);
@@ -9955,38 +10338,35 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			var layoutPath = lib.assetURL + "extension/十周年UI/shoushaUI/";
 			if (lib.config.extension_十周年UI_KGMH == "1") lib.init.css(layoutPath, "KGMH/kaiguan");
 			if (lib.config.extension_十周年UI_KGMH == "2") lib.init.css(layoutPath, "KGMH/kaiguan_new");
-			if (!(get.mode() == "chess" || get.mode() == "tafang")) {
-				for (var pack of [/*'card',*/ "character", "lbtn", "skill"]) {
-					// taffy: 注释extension.js原版代码喵
-					// var bool = (lib.config.extension_十周年UI_newDecadeStyle != "on");
-					/* taffy分界线 */
-					// taffy: 保留布局与边框的分开选项喵
-					var bool = (lib.config.extension_十周年UI_decadeLayout == "off");
-					/* taffy分界线 */
+			if (!(get.mode() == "chess" || get.mode() == "tafang" || get.mode == "hs_hearthstone")) {
+				for (var pack of [ /*'card',*/ "character", "lbtn", "skill"]) {
+					var listmap = {
+						on: 2,
+						off: 1,
+						othersOn: 1,
+						othersOff: 3,
+					} [lib.config.extension_十周年UI_newDecadeStyle] || 2;
 					lib.init.js(
-						layoutPath + pack + "/" + (bool ? "main1.js" : "main2.js"),
+						layoutPath + pack + "/main" + listmap + ".js",
 						null,
-						function () {},
-						function () {}
+						function() {},
+						function() {}
 					);
 					switch (pack) {
-						case "card":
-							if (bool) {
-								lib.init.css(layoutPath + pack, "main1" + (get.is.phoneLayout() ? "" : "_window"));
-							} else lib.init.css(layoutPath + pack, "main2");
-							break;
 						case "character":
-							lib.init.css(layoutPath + pack, bool ? "main1" : "main2");
+							lib.init.css(layoutPath + pack + "/main" + listmap + ".css");
+
 							break;
 						default:
-							lib.init.css(layoutPath + pack, (bool ? "main1" : "main2") + (get.is.phoneLayout() ? "" : "_window"));
+							lib.init.css(layoutPath + pack + "/main" + listmap + (get.is.phoneLayout() ? "" :
+								"_window") + ".css");
 							break;
 					}
 				}
 			}
 			//函数框架
 			/*进度条框架*/
-			game.Jindutiaoplayer = function () {
+			game.Jindutiaoplayer = function() {
 				//----------------进度条主体---------------------//
 				if (window.timer) {
 					clearInterval(window.timer);
@@ -10020,7 +10400,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 					var boxTime = document.createElement("div");
 					boxTime.data = 620;
-					boxTime.style.cssText = "background-image: linear-gradient(#fccc54 15%, #d01424 30%, #cc6953 90%);height:12.8px;";
+					boxTime.style.cssText =
+						"background-image: linear-gradient(#fccc54 15%, #d01424 30%, #cc6953 90%);height:12.8px;";
 					boxContent.appendChild(boxTime);
 				}
 				//-------样式2-----//
@@ -10038,12 +10419,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 					var boxTime = document.createElement("div");
 					boxTime.data = 300;
-					boxTime.style.cssText = "width:280px;height:4.3px;margin:14px 0 0 85px;background-color: #E2E20A;border-right:5px solid #FFF;position: absolute;top: -3.5px;";
+					boxTime.style.cssText =
+						"width:280px;height:4.3px;margin:14px 0 0 85px;background-color: #E2E20A;border-right:5px solid #FFF;position: absolute;top: -3.5px;";
 					boxContent.appendChild(boxTime);
 
 					var imgBg = document.createElement("img");
 					imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao.png";
-					imgBg.style.cssText = "--w:400px;--h:calc(var(--w)*44/759);width: var(--w);height:var(--h);position: absolute;top: 0;";
+					imgBg.style.cssText =
+						"--w:400px;--h:calc(var(--w)*44/759);width: var(--w);height:var(--h);position: absolute;top: 0;";
 					boxContent.appendChild(imgBg);
 				}
 				//-------样式3-----//
@@ -10064,17 +10447,20 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					var boxTime = document.createElement("div");
 					boxTime.data = 395; /*黄色条长度*/
 					/*boxTime.style.cssText =
-            "width:399px;height:10px;margin:0 0 0 0;background-color: #F4C336;border-radius:2px; border-top:0px solid #000000;border-bottom:0px solid #000000;position: absolute;top: 1px;border-radius: 0.5px;"*/
-					boxTime.style.cssText = "z-index:1;width:399px;height:8px;margin:0 0 0 1px;background-color: #F4C336;border-top:3px solid #EBE1A7;border-bottom:2px solid #73640D;border-left:1px solid #73640D;position: absolute;top: 0px;border-radius:3px;";
+			"width:399px;height:10px;margin:0 0 0 0;background-color: #F4C336;border-radius:2px; border-top:0px solid #000000;border-bottom:0px solid #000000;position: absolute;top: 1px;border-radius: 0.5px;"*/
+					boxTime.style.cssText =
+						"z-index:1;width:399px;height:8px;margin:0 0 0 1px;background-color: #F4C336;border-top:3px solid #EBE1A7;border-bottom:2px solid #73640D;border-left:1px solid #73640D;position: absolute;top: 0px;border-radius:3px;";
 					boxContent.appendChild(boxTime);
 
 					var boxTime2 = document.createElement("div");
 					boxTime2.data = 395; /*白色条长度*/
-					boxTime2.style.cssText = "width:399px;height:0.1px;margin:0 0 0 0.5px;background-color: #fff; opacity:0.8 ;border-top:1px solid #FFF;border-bottom:1px solid #FFF;border-left:1px solid #FFF;position: absolute;top: 17px;border-radius: 2px;";
+					boxTime2.style.cssText =
+						"width:399px;height:0.1px;margin:0 0 0 0.5px;background-color: #fff; opacity:0.8 ;border-top:1px solid #FFF;border-bottom:1px solid #FFF;border-left:1px solid #FFF;position: absolute;top: 17px;border-radius: 2px;";
 					boxContent.appendChild(boxTime2);
 					//白条底图
 					var imgBg3 = document.createElement("img");
-					imgBg3.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao2.1.png";
+					imgBg3.src = lib.assetURL +
+						"extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao2.1.png";
 					imgBg3.style.cssText = "width: 400px;height:4px;position: absolute;top: 16px;z-index: -1;";
 					boxContent.appendChild(imgBg3);
 
@@ -10084,19 +10470,46 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					boxContent.appendChild(imgBg);
 					/*底图*/
 					var imgBg2 = document.createElement("img");
-					imgBg2.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao2.1.png";
+					imgBg2.src = lib.assetURL +
+						"extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao2.1.png";
 					imgBg2.style.cssText = "width: 400px;height:14px;position: absolute;top: 0;z-index: -1;";
 					boxContent.appendChild(imgBg2);
 				}
+				if (lib.config.extension_十周年UI_jindutiaoYangshi == "4") {
+					if (window.jindutiaoTeshu) {
+						delete window.jindutiaoTeshu;
+					}
+					boxContent.style.width = "400px";
+					boxContent.style.height = "13px";
+					boxContent.style.display = "block";
+					boxContent.style["boxShadow"] = "0 0 4px #000000";
+					boxContent.style.margin = "0 0 !important";
+					boxContent.style.position = "fixed";
+					boxContent.style.left = "calc(50% - 197px)";
+					boxContent.style.bottom = parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%";
+
+					var boxTime = document.createElement("div");
+					boxTime.data = 395; /*黄色条长度*/
+					boxTime.style.cssText =
+						"z-index:1;width:399px;height:10px;margin:0 0 0 0px;background-color: #A56C41;position: absolute;top: 1px;";
+					boxContent.appendChild(boxTime);
+					/*底图*/
+					var imgBg2 = document.createElement("img");
+					imgBg2.src = lib.assetURL +
+						"extension/十周年UI/shoushaUI/lbtn/images/uibutton/newTimeBarBg.png";
+					imgBg2.style.cssText = "width: 400px;height:12px;position: absolute;top: -3;z-index: -1;";
+					boxContent.appendChild(imgBg2);
+				}
 				document.body.appendChild(boxContent);
-				window.timer = setInterval(function () {
+				window.timer = setInterval(function() {
 					boxTime.style.width = boxTime.data + "px";
 					boxTime.data--;
 					if (boxTime.data == 0) {
 						clearInterval(window.timer);
 						delete window.timer;
 						boxContent.remove();
-						if (lib.config.extension_十周年UI_jindutiaotuoguan == true && _status.auto == false) {
+						if (lib.config.extension_十周年UI_jindutiaotuoguan == true && _status.auto ==
+							false) {
 							ui.click.auto();
 						}
 					}
@@ -10119,7 +10532,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				}
 			};
 			//-----AI进度条框架----//
-			game.JindutiaoAIplayer = function () {
+			game.JindutiaoAIplayer = function() {
 				if (window.timerai) {
 					clearInterval(window.timerai);
 					delete window.timerai;
@@ -10127,39 +10540,39 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				if (document.getElementById("jindutiaoAI")) {
 					document.getElementById("jindutiaoAI").remove();
 				}
-				window.boxContentAI = document.createElement('div');
-				window.boxTimeAI = document.createElement('div');
-				window.boxContentAI.setAttribute('id', 'jindutiaoAI');
-				// taffy: 注释extension.js原版代码喵
-				// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
-				/* taffy分界线 */
-				// taffy: 保留布局与边框的分开选项喵
-				if (lib.config.extension_十周年UI_decadeLayout == "off") {
-          /* taffy分界线 */
-					//--------手杀样式-------------//  
+				window.boxContentAI = document.createElement("div");
+				window.boxTimeAI = document.createElement("div");
+				window.boxContentAI.setAttribute("id", "jindutiaoAI");
+				if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config
+					.extension_十周年UI_newDecadeStyle != "othersOff") {
+					//--------手杀样式-------------//
 					window.boxContentAI.style.cssText =
-						"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;"
-					window.boxTimeAI.data = 125
+						"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;";
+					window.boxTimeAI.data = 125;
 					window.boxTimeAI.style.cssText =
-						"z-index:92;--w: 33px;--h: calc(var(--w) * 4/120);width: var(--w);height: var(--h);margin:1px;background-color: #dd9900;position: absolute;top: 0px;"
-					window.boxContentAI.appendChild(boxTimeAI)
+						"z-index:92;--w: 33px;--h: calc(var(--w) * 4/120);width: var(--w);height: var(--h);margin:1px;background-color: #dd9900;position: absolute;top: 0px;";
+					window.boxContentAI.appendChild(boxTimeAI);
 
 					var imgBg = document.createElement("img");
 					imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png";
-					imgBg.style.cssText = "position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;";
+					imgBg.style.cssText =
+						"position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;";
 					boxContentAI.appendChild(imgBg);
 
 					//-------------------------//
 				} else {
 					//----------十周年样式--------//
-					window.boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;";
+					window.boxContentAI.style.cssText =
+						"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;";
 					window.boxTimeAI.data = 120;
-					window.boxTimeAI.style.cssText = "z-index:91;width: 115px;height: 3.3px;margin:1px;background-color: #f2c84b;position: absolute;top: 0px;border-radius: 3px;";
+					window.boxTimeAI.style.cssText =
+						"z-index:91;width: 115px;height: 3.3px;margin:1px;background-color: #f2c84b;position: absolute;top: 0px;border-radius: 3px;";
 					window.boxContentAI.appendChild(boxTimeAI);
 
 					var imgBg = document.createElement("img");
 					imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png";
-					imgBg.style.cssText = "position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;";
+					imgBg.style.cssText =
+						"position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;";
 					window.boxContentAI.appendChild(imgBg);
 					//--------------------//
 				}
@@ -10174,7 +10587,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				}, 150); //进度条时间
 			};
 			if (!window.chatRecord) window.chatRecord = [];
-			game.addChatWord = function (strx) {
+			game.addChatWord = function(strx) {
 				if (window.chatRecord.length > 30) {
 					//设置一下上限30条，不设也行，把这个if删除即可
 					window.chatRecord.remove(window.chatRecord[0]);
@@ -10191,7 +10604,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				if (window.chatBackground2 != undefined) game.updateChatWord(str);
 			};
 			//这里
-			game.showChatWordBackgroundX = function () {
+			game.showChatWordBackgroundX = function() {
 				if (window.chatBg != undefined && window.chatBg.show) {
 					//控制面板打开，首次调用此函数时打开面板，再次调用时关闭
 					window.chatBg.hide();
@@ -10204,22 +10617,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					if (window.qicai.thrownn) window.qicai.thrownn = false;
 					window.chatBg.show = false;
 					if (window.dialog_lifesay) {
-						if (window.dialog_lifesay.show) window.dialog_lifesay.style.left = "-" + window.dialog_lifesay.style.width;
-						setTimeout(function () {
+						if (window.dialog_lifesay.show) window.dialog_lifesay.style.left = "-" + window
+							.dialog_lifesay.style.width;
+						setTimeout(function() {
 							window.dialog_lifesay.hide();
 							window.dialog_lifesay.show = false;
 						}, 100);
 					}
 					if (window.dialog_emoji) {
 						if (window.dialog_emoji.show) window.dialog_emoji.style.top = "100%";
-						setTimeout(function () {
+						setTimeout(function() {
 							window.dialog_emoji.hide();
 							window.dialog_emoji.show = false;
 						}, 1000);
 					}
 					if (window.chatBackground) {
 						if (window.chatBackground.show) window.chatBackground.style.left = "100%";
-						setTimeout(function () {
+						setTimeout(function() {
 							window.chatBackground.hide();
 							window.chatBackground.show = false;
 						}, 1000);
@@ -10232,44 +10646,45 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				window.chatBg.classList.add("popped");
 				window.chatBg.classList.add("static");
 				window.chatBg.show = true;
-				window.chatBg.style.cssText = "display: block;--w: 420px;--h: calc(var(--w) * 430/911);width: var(--w);height: var(--h);position: fixed;left:30%;bottom:5%;opacity: 1;background-size: 100% 100%;background-color: transparent;z-index:99;";
+				window.chatBg.style.cssText =
+					"display: block;--w: 420px;--h: calc(var(--w) * 430/911);width: var(--w);height: var(--h);position: fixed;left:30%;bottom:5%;opacity: 1;background-size: 100% 100%;background-color: transparent;z-index:99;";
 				window.chatBg.style.transition = "all 1.5s";
 				/*window.chatBg.style.height='170px';//调整对话框背景大小，位置
-        window.chatBg.style.width='550px';
-          window.chatBg.style.left='calc(50%-130px)';
-        window.chatBg.style.top='calc(100% - 470px)';
-        window.chatBg.style.opacity=1;*/
+		window.chatBg.style.width='550px';
+		  window.chatBg.style.left='calc(50%-130px)';
+		window.chatBg.style.top='calc(100% - 470px)';
+		window.chatBg.style.opacity=1;*/
 				window.chatBg.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/chat.png");
 				/*window.chatBg.style.backgroundSize="100% 100%";
-        window.chatBg.style.transition='all 0.5s';
-        window.chatBg.style['box-shadow']='none';*/
+		window.chatBg.style.transition='all 0.5s';
+		window.chatBg.style['box-shadow']='none';*/
 				ui.window.appendChild(window.chatBg);
 
-				var clickFK = function (div) {
+				var clickFK = function(div) {
 					div.style.transition = "opacity 0.5s";
-					div.addEventListener(lib.config.touchscreen ? "touchstart" : "mousedown", function () {
+					div.addEventListener(lib.config.touchscreen ? "touchstart" : "mousedown", function() {
 						this.style.transform = "scale(0.95)";
 					});
-					div.addEventListener(lib.config.touchscreen ? "touchend" : "mouseup", function () {
+					div.addEventListener(lib.config.touchscreen ? "touchend" : "mouseup", function() {
 						this.style.transform = "";
 					});
-					div.onmouseout = function () {
+					div.onmouseout = function() {
 						this.style.transform = "";
 					};
 				};
 				//--------------------------------//
-				game.open_lifesay = function () {
+				game.open_lifesay = function() {
 					//打开常用语函数
 					if (window.dialog_emoji) {
 						if (window.dialog_emoji.show) window.dialog_emoji.style.top = "100%";
-						setTimeout(function () {
+						setTimeout(function() {
 							window.dialog_emoji.hide();
 							window.dialog_emoji.show = false;
 						}, 1000);
 					}
 					if (window.chatBackground) {
 						if (window.chatBackground.show) window.chatBackground.style.left = "100%";
-						setTimeout(function () {
+						setTimeout(function() {
 							window.chatBackground.hide();
 							window.chatBackground.show = false;
 						}, 1000);
@@ -10287,9 +10702,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					window.dialog_lifesay.classList.add("static");
 					window.dialog_lifesay.show = true;
 					window.dialog_lifesay.style.height = "300px"; //整个常用语对话框的宽高
-					window.dialog_lifesay.style.width = "600px"; //对话框的宽度，由每一条的内容字数决定，可自行调整，使用固定大小避免手机和电脑像素不同导致冲突
+					window.dialog_lifesay.style.width =
+					"600px"; //对话框的宽度，由每一条的内容字数决定，可自行调整，使用固定大小避免手机和电脑像素不同导致冲突
 					window.dialog_lifesay.style.left = "-" + window.dialog_lifesay.style.width; //这里弄一个右移的动画
-					setTimeout(function () {
+					setTimeout(function() {
 						window.dialog_lifesay.style.left = "calc( 50% - 300px)"; //整个对话框的位置
 					}, 100);
 					window.dialog_lifesay.style.top = "calc( 20% - 100px)"; //整个对话框的位置
@@ -10297,7 +10713,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					window.dialog_lifesay.style.opacity = 1;
 					window.dialog_lifesay.style.borderRadius = "8px";
 					window.dialog_lifesay.style.backgroundSize = "100% 100%";
-					window.dialog_lifesay.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景dialog设置为透明
+					window.dialog_lifesay.setBackgroundImage(
+					"extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景dialog设置为透明
 					window.dialog_lifesay.style["box-shadow"] = "none";
 					ui.window.appendChild(window.dialog_lifesay);
 					dialogLife.background = window.dialog_lifesay;
@@ -10308,7 +10725,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					window.dialog_lifesayBgPict.style.top = "0%";
 					window.dialog_lifesayBgPict.style.borderRadius = "8px";
 					window.dialog_lifesayBgPict.style.backgroundSize = "100% 100%";
-					window.dialog_lifesayBgPict.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/saydiv.png");
+					window.dialog_lifesayBgPict.setBackgroundImage(
+						"extension/十周年UI/shoushaUI/sayplay/saydiv.png");
 					window.dialog_lifesayBgPict.style["box-shadow"] = "none";
 					window.dialog_lifesay.appendChild(window.dialog_lifesayBgPict);
 					window.dialog_lifesayBgColor = ui.create.div("hidden"); //这是原来的背景颜色的div，内层div
@@ -10317,59 +10735,51 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					window.dialog_lifesayBgColor.style.left = "10%";
 					window.dialog_lifesayBgColor.style.top = "10%";
 					window.dialog_lifesayBgColor.style.borderRadius = "8px";
-					window.dialog_lifesayBgColor.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景设置为透明
+					window.dialog_lifesayBgColor.setBackgroundImage(
+						"extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景设置为透明
 					//window.dialog_lifesayBgColor.style.backgroundColor='black';
 					window.dialog_lifesayBgColor.style["overflow-y"] = "scroll";
 					lib.setScroll(window.dialog_lifesayBgColor);
 					window.dialog_lifesay.appendChild(window.dialog_lifesayBgColor);
-					window.lifesayWord = [
-						//添加常用语
-						"能不能快点呀，兵贵神速啊",
-						"主公，别开枪，自己人",
-						"小内再不跳，后面还怎么玩啊",
-						"你们怎么忍心就这么让我酱油了",
-						"我，我惹你们了吗",
-						"姑娘，你真是条汉子",
-						"三十六计，走为上，容我去去便回",
-						"人心散了，队伍不好带啊",
-						"昏君，昏君啊",
-						"风吹鸡蛋壳，牌去人安乐",
-						"小内啊，您老悠着点儿",
-						"不好意思，刚才卡了",
-						"你可以打得再烂一点吗",
-						"哥们儿，给力点行吗",
-						"哥，交个朋友吧",
-						"妹子，交个朋友吧",
+					window.lifesayWord = ["能不能快点呀，兵贵神速啊", "主公，别开枪，自己人", "小内再不跳，后面还怎么玩啊", "你们怎么忍心就这么让我酱油了",
+						"我，我惹你们了吗", "姑娘，你真是条汉子", "三十六计，走为上，容我去去便回", "人心散了，队伍不好带啊", "昏君，昏君啊",
+						"风吹鸡蛋壳，牌去人安乐", "小内啊，您老悠着点儿", "不好意思，刚才卡了", "你可以打得再烂一点吗", "哥们儿，给力点行吗", "哥，交个朋友吧",
+						"妹子，交个朋友吧"
 					];
 					for (var i = 0; i < window.lifesayWord.length; i++) {
-						window["dialog_lifesayContent_" + i] = ui.create.div("hidden", "", function () {
+						window["dialog_lifesayContent_" + i] = ui.create.div("hidden", "", function() {
 							game.me.say(this.content);
 							window.dialog_lifesay.delete();
 							delete window.dialog_lifesay;
 							window.dialog_lifesay = undefined;
-							game.playAudio("..", "extension", "十周年UI/shoushaUI/sayplay/audio", this.pos + "_" + game.me.sex);
+							game.playAudio("..", "extension", "十周年UI/shoushaUI/sayplay/audio", this
+								.pos + "_" + game.me.sex);
 						});
-						window["dialog_lifesayContent_" + i].style.height = "10%"; //每一条内容的高度，可以用px也可以用百分比，由你喜欢
-						window["dialog_lifesayContent_" + i].style.width = "100%"; //每一条内容的宽度，默认与整个对话框宽度挂钩以美观，具体百分比可自己调整
+						window["dialog_lifesayContent_" + i].style.height =
+						"10%"; //每一条内容的高度，可以用px也可以用百分比，由你喜欢
+						window["dialog_lifesayContent_" + i].style.width =
+						"100%"; //每一条内容的宽度，默认与整个对话框宽度挂钩以美观，具体百分比可自己调整
 						window["dialog_lifesayContent_" + i].style.left = "0%";
 						window["dialog_lifesayContent_" + i].style.top = "0%";
 						window["dialog_lifesayContent_" + i].style.position = "relative";
 						window["dialog_lifesayContent_" + i].pos = i;
 						window["dialog_lifesayContent_" + i].content = window.lifesayWord[i];
-						window["dialog_lifesayContent_" + i].innerHTML = "<font color=white>" + window.lifesayWord[i] + "</font>"; //显示的字体可以自己改
+						window["dialog_lifesayContent_" + i].innerHTML = "<font color=white>" + window
+							.lifesayWord[i] + "</font>"; //显示的字体可以自己改
 						window.dialog_lifesayBgColor.appendChild(window["dialog_lifesayContent_" + i]);
 						clickFK(window["dialog_lifesayContent_" + i]);
 					}
 				};
 				//常用语按钮
 				window.chatButton1 = ui.create.div("hidden", "", game.open_lifesay);
-				window.chatButton1.style.cssText = "display: block;--w: 80px;--h: calc(var(--w) * 82/98);width: var(--w);height: var(--h);left:40px;bottom:25px;transition:none;background-size:100% 100%";
+				window.chatButton1.style.cssText =
+					"display: block;--w: 80px;--h: calc(var(--w) * 82/98);width: var(--w);height: var(--h);left:40px;bottom:25px;transition:none;background-size:100% 100%";
 				/*window.chatButton1.style.height='70px';
-        window.chatButton1.style.width='80px';
-        window.chatButton1.style.left='40px';
-        window.chatButton1.style.bottom='10px';
-        window.chatButton1.style.transition='none';
-        window.chatButton1.style.backgroundSize="100% 100%";*/
+				window.chatButton1.style.width='80px';
+				window.chatButton1.style.left='40px';
+				window.chatButton1.style.bottom='10px';
+				window.chatButton1.style.transition='none';
+				window.chatButton1.style.backgroundSize="100% 100%";*/
 				window.chatButton1.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/lifesay.png");
 
 				lib.setScroll(window.chatButton1);
@@ -10377,7 +10787,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				clickFK(window.chatButton1);
 				//-----------------------------------//
 				//-----------互动框---------//
-				game.open_hudong = function () {
+				game.open_hudong = function() {
 					//打开互动框函数
 					if (window.dialog_hudong != undefined && dialog_hudong.show) {
 						//控制面板打开，首次调用此函数时打开面板，再次调用时关闭
@@ -10388,23 +10798,25 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				};
 				//------菜篮子框------//
 				window.hudongkuang = ui.create.div("hidden", "", game.open_hudong);
-				window.hudongkuang.style.cssText = "display: block;--w: 315px;--h: calc(var(--w) * 135/142);width: var(--w);height: var(--h);left:-280px;bottom:-30px;transition:none;background-size:100% 100%;pointer-events:none;";
+				window.hudongkuang.style.cssText =
+					"display: block;--w: 315px;--h: calc(var(--w) * 135/142);width: var(--w);height: var(--h);left:-280px;bottom:-30px;transition:none;background-size:100% 100%;pointer-events:none;";
 				window.hudongkuang.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/hudong.png");
 				window.chatBg.appendChild(window.hudongkuang);
 				//------1--美酒-------//
-				game.open_meijiu = function () {
+				game.open_meijiu = function() {
 					//打开美酒函数
 					//这里
 					var list = game.players;
 					for (let i = 0; i < game.players.length; i++) {
-						list[i].onclick = function () {
+						list[i].onclick = function() {
 							var target = this;
 							if (window.meijiu.thrownn == true) {
 								for (let i = 0; i < 10; i++) {
 									setTimeout(() => {
 										if (i <= 8) game.me.throwEmotion(this, "flower");
 										else game.me.throwEmotion(this, "wine");
-										window.shuliang.innerText = window.shuliang.innerText - 1;
+										window.shuliang.innerText = window.shuliang.innerText -
+											1;
 									}, 100 * i);
 									setTimeout(() => {
 										if (i <= 8) target.throwEmotion(game.me, "flower");
@@ -10416,57 +10828,61 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 				};
 				window.meijiu = ui.create.div("hidden", "", game.open_meijiu);
-				window.meijiu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-155px;bottom:173px;transition:none;background-size:100% 100%";
+				window.meijiu.style.cssText =
+					"display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-155px;bottom:173px;transition:none;background-size:100% 100%";
 
 				window.meijiu.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/meijiu.png");
 				//这里
-				window.meijiu.onclick = function () {
+				window.meijiu.onclick = function() {
 					window.meijiu.thrownn = true;
 				};
 				window.chatBg.appendChild(window.meijiu);
 				lib.setScroll(window.meijiu);
 				clickFK(window.meijiu);
 				//---2-----鲜花-------//
-				game.open_xianhua = function () {
+				game.open_xianhua = function() {
 					//打开鲜花函数
 					//这里
 					var list = game.players;
 					for (let i = 0; i < game.players.length; i++) {
-						list[i].onclick = function () {
+						list[i].onclick = function() {
 							if (window.xianhua.thrownn == true) game.me.throwEmotion(this, "flower");
 							window.shuliang.innerText = window.shuliang.innerText - 1;
 						};
 					}
 				};
 				window.xianhua = ui.create.div("hidden", "", game.open_xianhua);
-				window.xianhua.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:173px;transition:none;background-size:100% 100%";
+				window.xianhua.style.cssText =
+					"display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:173px;transition:none;background-size:100% 100%";
 
 				window.xianhua.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/xianhua.png");
 				//这里
-				window.xianhua.onclick = function () {
+				window.xianhua.onclick = function() {
 					window.xianhua.thrownn = true;
 				};
 				window.chatBg.appendChild(window.xianhua);
 				lib.setScroll(window.xianhua);
 				clickFK(window.xianhua);
 				//-----3---拖鞋-------//
-				game.open_tuoxie = function () {
+				game.open_tuoxie = function() {
 					//打开拖鞋函数
 					//这里
 					var list = game.players;
 					var num = 10;
 					for (let i = 0; i < game.players.length; i++) {
-						list[i].onclick = function () {
+						list[i].onclick = function() {
 							var target = this;
 							if (window.tuoxie.thrownn == true) {
 								for (let i = 0; i < num; i++) {
 									setTimeout(() => {
 										if (i <= 8) {
 											game.me.throwEmotion(this, "egg");
-											window.shuliang.innerText = window.shuliang.innerText - 1;
+											window.shuliang.innerText = window.shuliang
+												.innerText - 1;
 										} else {
 											game.me.throwEmotion(this, "shoe");
-											window.shuliang.innerText = window.shuliang.innerText - 1;
+											window.shuliang.innerText = window.shuliang
+												.innerText - 1;
 										}
 									}, 100 * i);
 									setTimeout(() => {
@@ -10479,11 +10895,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 				};
 				window.tuoxie = ui.create.div("hidden", "", game.open_tuoxie);
-				window.tuoxie.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-155px;bottom:105px;transition:none;background-size:100% 100%";
+				window.tuoxie.style.cssText =
+					"display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-155px;bottom:105px;transition:none;background-size:100% 100%";
 
 				window.tuoxie.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/tuoxie.png");
 				//这里
-				window.tuoxie.onclick = function () {
+				window.tuoxie.onclick = function() {
 					window.tuoxie.thrownn = true;
 				};
 
@@ -10491,12 +10908,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				lib.setScroll(window.tuoxie);
 				clickFK(window.tuoxie);
 
-				game.open_jidan = function () {
+				game.open_jidan = function() {
 					//打开鸡蛋函数
 					//这里
 					var list = game.players;
 					for (let i = 0; i < game.players.length; i++) {
-						list[i].onclick = function () {
+						list[i].onclick = function() {
 							if (window.jidan.thrownn == true) {
 								game.me.throwEmotion(this, "egg");
 								window.shuliang.innerText = window.shuliang.innerText - 1;
@@ -10506,8 +10923,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				};
 
 				window.jidan = ui.create.div("hidden", "", game.open_jidan);
-				window.jidan.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:105px;transition:none;background-size:100% 100%";
-				window.jidan.onclick = function () {
+				window.jidan.style.cssText =
+					"display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:105px;transition:none;background-size:100% 100%";
+				window.jidan.onclick = function() {
 					window.jidan.thrownn = true;
 				};
 
@@ -10518,18 +10936,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				clickFK(window.jidan);
 
 				//-----5--菜篮-------//
-				game.open_cailan = function () {
+				game.open_cailan = function() {
 					//打开菜篮函数
 					var list = game.players;
 					for (let i = 0; i < game.players.length; i++) {
-						list[i].onclick = function () {
+						list[i].onclick = function() {
 							var target = this;
 							if (window.cailan.thrownn == true) {
 								for (let i = 0; i < 101; i++) {
 									setTimeout(() => {
 										if (i <= 99) game.me.throwEmotion(this, "flower");
 										else game.me.throwEmotion(this, "wine");
-										window.shuliang.innerText = window.shuliang.innerText - 1;
+										window.shuliang.innerText = window.shuliang.innerText -
+											1;
 									}, 100 * i);
 									setTimeout(() => {
 										if (i <= 99) target.throwEmotion(game.me, "flower");
@@ -10542,28 +10961,30 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				};
 
 				window.cailan = ui.create.div("hidden", "", game.open_cailan);
-				window.cailan.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-80px;bottom:173px;transition:none;background-size:100% 100%";
+				window.cailan.style.cssText =
+					"display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-80px;bottom:173px;transition:none;background-size:100% 100%";
 
 				window.cailan.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/cailan.png");
-				window.cailan.onclick = function () {
+				window.cailan.onclick = function() {
 					window.cailan.thrownn = true;
 				};
 				window.chatBg.appendChild(window.cailan);
 				lib.setScroll(window.cailan);
 				clickFK(window.cailan);
 				//------6--七彩-------//
-				game.open_qicai = function () {
+				game.open_qicai = function() {
 					//打开七彩函数
 					var list = game.players;
 					for (let i = 0; i < game.players.length; i++) {
-						list[i].onclick = function () {
+						list[i].onclick = function() {
 							var target = this;
 							if (window.qicai.thrownn == true) {
 								for (let i = 0; i < 101; i++) {
 									setTimeout(() => {
 										if (i <= 99) game.me.throwEmotion(this, "egg");
 										else game.me.throwEmotion(this, "shoe");
-										window.shuliang.innerText = window.shuliang.innerText - 1;
+										window.shuliang.innerText = window.shuliang.innerText -
+											1;
 									}, 100 * i);
 									setTimeout(() => {
 										if (i <= 99) target.throwEmotion(game.me, "egg");
@@ -10576,20 +10997,22 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				};
 
 				window.qicai = ui.create.div("hidden", "", game.open_qicai);
-				window.qicai.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-80px;bottom:105px;transition:none;background-size:100% 100%";
+				window.qicai.style.cssText =
+					"display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-80px;bottom:105px;transition:none;background-size:100% 100%";
 
 				window.qicai.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/qicai.png");
 
-				window.qicai.onclick = function () {
+				window.qicai.onclick = function() {
 					window.qicai.thrownn = true;
 				};
 				window.chatBg.appendChild(window.qicai);
 				lib.setScroll(window.qicai);
 				clickFK(window.qicai);
 				//-----7---小酒-------//
-				game.open_xiaojiu = function () {};
+				game.open_xiaojiu = function() {};
 				window.xiaojiu = ui.create.div("hidden", "", game.open_xiaojiu);
-				window.xiaojiu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:36px;transition:none;background-size:100% 100%";
+				window.xiaojiu.style.cssText =
+					"display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-230px;bottom:36px;transition:none;background-size:100% 100%";
 
 				window.xiaojiu.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/xiaojiu.png");
 				window.chatBg.appendChild(window.xiaojiu);
@@ -10597,11 +11020,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				clickFK(window.xiaojiu);
 				//-----8---雪球------//
 
-				game.open_xueqiu = function () {
+				game.open_xueqiu = function() {
 					//打开雪球函数
 				};
 				window.xueqiu = ui.create.div("hidden", "", game.open_xueqiu);
-				window.xueqiu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-155px;bottom:36px;transition:none;background-size:100% 100%";
+				window.xueqiu.style.cssText =
+					"display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-155px;bottom:36px;transition:none;background-size:100% 100%";
 
 				window.xueqiu.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/xueqiu.png");
 
@@ -10613,12 +11037,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 				//------9-虚无-------//
 
-				game.open_xuwu = function () {
+				game.open_xuwu = function() {
 					//打开虚无函数
 				};
 
 				window.xuwu = ui.create.div("hidden", "", game.open_xuwu);
-				window.xuwu.style.cssText = "display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-80px;bottom:36px;transition:none;background-size:100% 100%";
+				window.xuwu.style.cssText =
+					"display: block;--w: 63px;--h: calc(var(--w) * 50/50);width: var(--w);height: var(--h);left:-80px;bottom:36px;transition:none;background-size:100% 100%";
 
 				window.xuwu.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/xuwu.png");
 
@@ -10631,7 +11056,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				//--------菜篮子-------//
 
 				window.cailanzi = ui.create.div("hidden", "");
-				window.cailanzi.style.cssText = "display: block;--w: 100px;--h: calc(var(--w) * 59/150);width: var(--w);height: var(--h);left:-230px;bottom:250px;transition:none;background-size:100% 100%";
+				window.cailanzi.style.cssText =
+					"display: block;--w: 100px;--h: calc(var(--w) * 59/150);width: var(--w);height: var(--h);left:-230px;bottom:250px;transition:none;background-size:100% 100%";
 
 				window.cailanzi.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/cailanzi.png");
 
@@ -10639,22 +11065,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 				window.shuliang = ui.create.node("div");
 				window.shuliang.innerText = Math.floor(Math.random() * (999 - 100 + 1) + 100);
-				window.shuliang.style.cssText = "display: block;left:-180px;bottom:260px;font-family:'shousha';color:#97856a;font-weight: 900; text-shadow:none;transition:none;background-size:100% 100%";
+				window.shuliang.style.cssText =
+					"display: block;left:-180px;bottom:260px;font-family:'shousha';color:#97856a;font-weight: 900; text-shadow:none;transition:none;background-size:100% 100%";
 
 				window.chatBg.appendChild(window.shuliang);
 
-				game.open_emoji = function () {
+				game.open_emoji = function() {
 					//打开emoji函数
 					if (window.dialog_lifesay) {
-						if (window.dialog_lifesay.show) window.dialog_lifesay.style.left = "-" + window.dialog_lifesay.style.width;
-						setTimeout(function () {
+						if (window.dialog_lifesay.show) window.dialog_lifesay.style.left = "-" + window
+							.dialog_lifesay.style.width;
+						setTimeout(function() {
 							window.dialog_lifesay.hide();
 							window.dialog_lifesay.show = false;
 						}, 1000);
 					}
 					if (window.chatBackground) {
 						if (window.chatBackground.show) window.chatBackground.style.left = "100%";
-						setTimeout(function () {
+						setTimeout(function() {
 							window.chatBackground.hide();
 							window.chatBackground.show = false;
 						}, 1000);
@@ -10676,13 +11104,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					window.dialog_emoji.style.left = "calc( 50% - 180px)";
 					window.dialog_emoji.style.top = "100%"; //这里弄一个上移的动画
 					window.dialog_emoji.style.transition = "all 1s";
-					setTimeout(function () {
+					setTimeout(function() {
 						window.dialog_emoji.style.top = "calc( 25% - 50px )"; //上移后的位置
 					}, 100);
 					window.dialog_emoji.style.opacity = 1;
 					window.dialog_emoji.style.borderRadius = "8px";
 					window.dialog_emoji.style.backgroundSize = "100% 100%";
-					window.dialog_emoji.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景dialog设置为透明
+					window.dialog_emoji.setBackgroundImage(
+					"extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景dialog设置为透明
 					window.dialog_emoji.style["box-shadow"] = "none";
 					ui.window.appendChild(window.dialog_emoji);
 					dialogEmoji.background = window.dialog_emoji;
@@ -10693,7 +11122,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					window.dialog_emojiBgPict.style.top = "0%";
 					window.dialog_emojiBgPict.style.borderRadius = "8px";
 					window.dialog_emojiBgPict.style.backgroundSize = "100% 100%";
-					window.dialog_emojiBgPict.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/saydiv.png");
+					window.dialog_emojiBgPict.setBackgroundImage(
+						"extension/十周年UI/shoushaUI/sayplay/saydiv.png");
 					window.dialog_emojiBgPict.style["box-shadow"] = "none";
 					window.dialog_emoji.appendChild(window.dialog_emojiBgPict);
 					window.dialog_emojiBgColor = ui.create.div("hidden"); //这是内层div
@@ -10703,13 +11133,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					window.dialog_emojiBgColor.style.top = "10%";
 					window.dialog_emojiBgColor.style.borderRadius = "8px";
 					window.dialog_emojiBgColor.style.backgroundSize = "100% 100%";
-					window.dialog_emojiBgColor.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景设置为透明
+					window.dialog_emojiBgColor.setBackgroundImage(
+						"extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景设置为透明
 					window.dialog_emojiBgColor.style["overflow-y"] = "scroll";
 					lib.setScroll(window.dialog_emojiBgColor);
 					window.dialog_emoji.appendChild(window.dialog_emojiBgColor);
 					for (var i = 0; i < 50; i++) {
-						window["dialog_emojiContent_" + i] = ui.create.div("hidden", "", function () {
-							game.me.say('<img style=width:34px height:34px src="' + lib.assetURL + "extension/十周年UI/shoushaUI/sayplay/emoji/" + this.pos + '.png">');
+						window["dialog_emojiContent_" + i] = ui.create.div("hidden", "", function() {
+							game.me.say('<img style=width:34px height:34px src="' + lib.assetURL +
+								"extension/十周年UI/shoushaUI/sayplay/emoji/" + this.pos + '.png">'
+								);
 							window.dialog_emoji.delete();
 							delete window.dialog_emoji;
 							window.dialog_emoji = undefined;
@@ -10720,83 +11153,90 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						window["dialog_emojiContent_" + i].style.top = "0px";
 						window["dialog_emojiContent_" + i].style.position = "relative";
 						window["dialog_emojiContent_" + i].pos = i;
-						window["dialog_emojiContent_" + i].setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/emoji/" + i + ".png");
+						window["dialog_emojiContent_" + i].setBackgroundImage(
+							"extension/十周年UI/shoushaUI/sayplay/emoji/" + i + ".png");
 						window["dialog_emojiContent_" + i].style.backgroundSize = "100% 100%";
 						window.dialog_emojiBgColor.appendChild(window["dialog_emojiContent_" + i]);
 						clickFK(window["dialog_emojiContent_" + i]);
 					}
 				};
 				window.chatButton2 = ui.create.div("hidden", "", game.open_emoji);
-				window.chatButton2.style.cssText = "display: block;--w: 80px;--h: calc(var(--w) * 82/98);width: var(--w);height: var(--h);left:150px;bottom:25px;transition:none;background-size:100% 100%";
+				window.chatButton2.style.cssText =
+					"display: block;--w: 80px;--h: calc(var(--w) * 82/98);width: var(--w);height: var(--h);left:150px;bottom:25px;transition:none;background-size:100% 100%";
 				/*window.chatButton2.style.height='70px';
-        window.chatButton2.style.width='80px';
-        window.chatButton2.style.left='150px';
-        window.chatButton2.style.bottom='10px';
-        window.chatButton2.style.transition='none';
-        window.chatButton2.style.backgroundSize="100% 100%";*/
+				window.chatButton2.style.width='80px';
+				window.chatButton2.style.left='150px';
+				window.chatButton2.style.bottom='10px';
+				window.chatButton2.style.transition='none';
+				window.chatButton2.style.backgroundSize="100% 100%";*/
 				window.chatButton2.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/emoji.png");
 
 				lib.setScroll(window.chatButton2);
 				window.chatBg.appendChild(window.chatButton2);
 				clickFK(window.chatButton2);
 
-				game.open_jilu = function () {
+				game.open_jilu = function() {
 					//打开记录函数
 					game.showChatWord();
 				};
 				window.chatButton3 = ui.create.div("hidden", "", game.open_jilu);
-				window.chatButton3.style.cssText = "display: block;--w: 80px;--h: calc(var(--w) * 82/98);width: var(--w);height: var(--h);left:260px;bottom:25px;transition:none;background-size:100% 100%";
+				window.chatButton3.style.cssText =
+					"display: block;--w: 80px;--h: calc(var(--w) * 82/98);width: var(--w);height: var(--h);left:260px;bottom:25px;transition:none;background-size:100% 100%";
 				/*window.chatButton3.style.height='70px';
-        window.chatButton3.style.width='80px';
-        window.chatButton3.style.left='260px';
-        window.chatButton3.style.bottom='10px';
-        window.chatButton3.style.transition='none';
-        window.chatButton3.style.backgroundSize="100% 100%";*/
+				window.chatButton3.style.width='80px';
+				window.chatButton3.style.left='260px';
+				window.chatButton3.style.bottom='10px';
+				window.chatButton3.style.transition='none';
+				window.chatButton3.style.backgroundSize="100% 100%";*/
 				window.chatButton3.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/jilu.png");
 
 				lib.setScroll(window.chatButton3);
 				window.chatBg.appendChild(window.chatButton3);
 				clickFK(window.chatButton3);
 
-				window.chatSendBottom = ui.create.div("", "", function () {
+				window.chatSendBottom = ui.create.div("", "", function() {
 					//发送按钮
 					if (!window.input) return;
 					if (window.input.value == undefined) return;
 					window.sendInfo(window.input.value);
 				});
-				window.chatSendBottom.style.cssText = "display: block;--w: 91px;--h: calc(var(--w) * 62/160);width: var(--w);height: var(--h);left:70%;top:33px;transition:none;background-size:100% 100%;text-align:center;border-randius:8px;";
+				window.chatSendBottom.style.cssText =
+					"display: block;--w: 91px;--h: calc(var(--w) * 62/160);width: var(--w);height: var(--h);left:70%;top:33px;transition:none;background-size:100% 100%;text-align:center;border-randius:8px;";
 				/*window.chatSendBottom.style.height='50px';
-        window.chatSendBottom.style.width='25%';
-        window.chatSendBottom.style.left='calc( 60% + 62px )';
-        window.chatSendBottom.style.top='23px';
-        window.chatSendBottom.style.transition='none';
-        window.chatSendBottom.style['text-align']='center';
-        window.chatSendBottom.style.borderRadius='8px';
-        window.chatSendBottom.style.backgroundSize="100% 100%";*/
+				window.chatSendBottom.style.width='25%';
+				window.chatSendBottom.style.left='calc( 60% + 62px )';
+				window.chatSendBottom.style.top='23px';
+				window.chatSendBottom.style.transition='none';
+				window.chatSendBottom.style['text-align']='center';
+				window.chatSendBottom.style.borderRadius='8px';
+				window.chatSendBottom.style.backgroundSize="100% 100%";*/
 
 				window.chatSendBottom.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/buttonsend.png");
-				window.chatSendBottom.innerHTML = '<span style="color:white;font-size:22px;line-height:32px;font-weight:400;font-family:shousha">发送</span>';
+				window.chatSendBottom.innerHTML =
+					'<span style="color:white;font-size:22px;line-height:32px;font-weight:400;font-family:shousha">发送</span>';
 				window.chatBg.appendChild(window.chatSendBottom);
 				clickFK(window.chatSendBottom);
-				game.updateChatWord = function (str) {
+				game.updateChatWord = function(str) {
 					window.chatBackground2.innerHTML = str;
 				};
 				game.addChatWord();
 
-				window.sendInfo = function (content) {
+				window.sendInfo = function(content) {
 					game.me.say(content);
 					window.input.value = "";
 				};
 				//房间
 				window.chatInputOut = ui.create.div("hidden");
-				window.chatInputOut.style.cssText = "display: block;--w: 265px;--h: calc(var(--w) * 50/280);width: var(--w);height: var(--h);left:30px;top:30px;transition:none;background-size:100% 100%;pointer-events:none;z-index:6;";
+				window.chatInputOut.style.cssText =
+					"display: block;--w: 265px;--h: calc(var(--w) * 50/280);width: var(--w);height: var(--h);left:30px;top:30px;transition:none;background-size:100% 100%;pointer-events:none;z-index:6;";
 				/*window.chatInputOut.style.height='22px';
-        window.chatInputOut.style.width='60%';
-        window.chatInputOut.style.left='40px';
-        window.chatInputOut.style.top='40px';
-        window.chatInputOut.style.transition='none';
-        window.chatInputOut.style.backgroundSize="100% 100%";*/
-				window.chatInputOut.style.backgroundImage = "url('" + lib.assetURL + "extension/十周年UI/shoushaUI/sayplay/sayX.png')";
+				window.chatInputOut.style.width='60%';
+				window.chatInputOut.style.left='40px';
+				window.chatInputOut.style.top='40px';
+				window.chatInputOut.style.transition='none';
+				window.chatInputOut.style.backgroundSize="100% 100%";*/
+				window.chatInputOut.style.backgroundImage = "url('" + lib.assetURL +
+					"extension/十周年UI/shoushaUI/sayplay/sayX.png')";
 
 				window.chatBg.appendChild(window.chatInputOut);
 				//输入框
@@ -10817,18 +11257,20 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				window.ipt.style["background-image"] = "linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.4))";
 				//window.ipt.style['box-shadow']='rgba(0, 0, 0, 0.4) 0 0 0 1px, rgba(0, 0, 0, 0.2) 0 3px 10px';
 				if (window.input && window.input.value) window.input_value = window.input.value;
-				window.ipt.innerHTML = '<input type="text" value=' + (window.input_value || "请输入文字") + ' style="color:white;font-family:shousha;width:calc(100% - 10px);text-align:left;"></input>';
+				window.ipt.innerHTML = '<input type="text" value=' + (window.input_value || "请输入文字") +
+					' style="color:white;font-family:shousha;width:calc(100% - 10px);text-align:left;"></input>';
 				window.input = window.ipt.querySelector("input");
-				window.input.style.backgroundImage = "url('" + lib.assetURL + "extension/十周年UI/shoushaUI/sayplay/say.png')";
+				window.input.style.backgroundImage = "url('" + lib.assetURL +
+					"extension/十周年UI/shoushaUI/sayplay/say.png')";
 				window.input.style.backgroundSize = "120% 120%";
 				window.input.style["box-shadow"] = "none";
-				window.input.onclick = function (e) {
+				window.input.onclick = function(e) {
 					e.stopPropagation();
 				};
-				window.input.onfocus = function () {
+				window.input.onfocus = function() {
 					if (this.value == "请输入文字") this.value = "";
 				};
-				window.input.onkeydown = function (e) {
+				window.input.onkeydown = function(e) {
 					e.stopPropagation();
 					if (e.keyCode == 13) {
 						var value = this.value;
@@ -10841,17 +11283,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			};
 
 			//聊天记录栏
-			game.showChatWord = function () {
+			game.showChatWord = function() {
 				if (window.dialog_lifesay) {
-					if (window.dialog_lifesay.show) window.dialog_lifesay.style.left = "-" + window.dialog_lifesay.style.width;
-					setTimeout(function () {
+					if (window.dialog_lifesay.show) window.dialog_lifesay.style.left = "-" + window
+						.dialog_lifesay.style.width;
+					setTimeout(function() {
 						window.dialog_lifesay.hide();
 						window.dialog_lifesay.show = false;
 					}, 1000);
 				}
 				if (window.dialog_emoji) {
 					if (window.dialog_emoji.show) window.dialog_emoji.style.top = "100%";
-					setTimeout(function () {
+					setTimeout(function() {
 						window.dialog_emoji.hide();
 						window.dialog_emoji.show = false;
 					}, 1000);
@@ -10872,23 +11315,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				window.chatBackground.style.width = "600px";
 				window.chatBackground.style.top = "calc( 20% - 100px )"; //这里弄一个左移的动画
 				window.chatBackground.style.left = "100%"; //这里弄一个左移的动画
-				setTimeout(function () {
+				setTimeout(function() {
 					window.chatBackground.style.left = "calc( 50% - 300px)"; //左移后的位置
 				}, 100);
 				window.chatBackground.style.bottom = "calc( " + window.chatBg.style.height + " + " + "5px )";
 				window.chatBackground.style.opacity = 1;
 				window.chatBackground.style.borderRadius = "10px";
-				game.mouseChatDiv = function (div) {
+				game.mouseChatDiv = function(div) {
 					//查看时显示，不查看时，对话框虚化
 					if (lib.device == undefined) {
-						div.onmouseover = function () {
+						div.onmouseover = function() {
 							this.style.opacity = 1.0;
 						};
-						div.onmouseout = function () {
+						div.onmouseout = function() {
 							this.style.opacity = 0.25;
 						};
 					} else {
-						div.onclick = function () {
+						div.onclick = function() {
 							if (div.style.opacity == 0.25) this.style.opacity = 0.75;
 							else this.style.opacity = 0.25;
 						};
@@ -10896,7 +11339,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				};
 				game.mouseChatDiv(window.chatBackground);
 				window.chatBackground.style.backgroundSize = "100% 100%";
-				window.chatBackground.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景dialog设置为透明
+				window.chatBackground.setBackgroundImage(
+				"extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景dialog设置为透明
 				window.chatBackground.style["box-shadow"] = "none";
 				ui.window.appendChild(window.chatBackground);
 
@@ -10921,7 +11365,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				window.chatBackgroundColor.style.transition = "none";
 				window.chatBackgroundColor.style.borderRadius = "8px";
 				window.chatBackgroundColor.style.backgroundSize = "100% 100%";
-				window.chatBackgroundColor.setBackgroundImage("extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景设置为透明
+				window.chatBackgroundColor.setBackgroundImage(
+				"extension/十周年UI/shoushaUI/sayplay/nobg.png"); //把背景设置为透明
 				window.chatBackground.appendChild(window.chatBackgroundColor);
 
 				window.chatBackground2 = ui.create.div("hidden");
@@ -10944,22 +11389,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				forced: true,
 				silent: true,
-				filter: function (event, player) {
+				filter(event, player) {
 					return player.change_sayFunction != true;
 				},
-				content: function () {
+				content() {
 					player.change_sayFunction = true;
 					player.sayTextWord = player.say;
-					player.say = function (str) {
+					player.say = function(str) {
 						//对应上面函数，把其他player的发言记录到框里
-						game.addChatWord("<font color=yellow>" + get.translation("" + player.name) + "</font><font color=white>：" + str + "</font>");
+						game.addChatWord("<font color=yellow>" + get.translation("" + player.name) +
+							"</font><font color=white>：" + str + "</font>");
 						player.sayTextWord(str);
 					};
 				},
 			};
 			//阶段提示框架（俺杀）
 			//自定义播放图片
-			game.as_removeText = function () {
+			game.as_removeText = function() {
 				if (_status.as_showText) {
 					_status.as_showText.remove();
 					delete _status.as_showText;
@@ -10968,7 +11414,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					_status.as_showImage.show();
 				}
 			};
-			game.as_showText = function (str, pos, time, font, size, color) {
+			game.as_showText = function(str, pos, time, font, size, color) {
 				if (!str) return false;
 				if (!pos || !Array.isArray(pos)) {
 					pos = [0, 0, 100, 100];
@@ -10983,20 +11429,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				}
 
 				var div = ui.create.div("", str, ui.window);
-				div.style.cssText = "z-index:-3; pointer-events:none; font-family:" + font + "; font-size:" + size + "px; color:" + color + "; line-height:" + size * 1.2 + "px; text-align:center; left:" + (pos[0] + pos[2] / 2) + "%; top:" + pos[1] + "%; width:0%; height:" + pos[3] + "%; position:absolute; transition-property:all; transition-duration:1s";
+				div.style.cssText = "z-index:-3; pointer-events:none; font-family:" + font + "; font-size:" +
+					size + "px; color:" + color + "; line-height:" + size * 1.2 +
+					"px; text-align:center; left:" + (pos[0] + pos[2] / 2) + "%; top:" + pos[1] +
+					"%; width:0%; height:" + pos[3] +
+					"%; position:absolute; transition-property:all; transition-duration:1s";
 				_status.as_showText = div;
 
 				if (_status.as_showImage) {
 					_status.as_showImage.hide();
 				}
 
-				setTimeout(function () {
+				setTimeout(function() {
 					div.style.left = pos[0] + "%";
 					div.style.width = pos[2] + "%";
 				}, 1);
 
 				if (time === true) return true;
-				setTimeout(function () {
+				setTimeout(function() {
 					if (_status.as_showText) {
 						_status.as_showText.remove();
 						delete _status.as_showText;
@@ -11008,17 +11458,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 				return true;
 			};
-			game.as_removeImage = function () {
+			game.as_removeImage = function() {
 				if (_status.as_showImage) {
 					var outdiv = _status.as_showImage;
 					_status.as_showImage.style.animation = "left-to-right-out 1s";
 					delete _status.as_showImage;
-					setTimeout(function () {
+					setTimeout(function() {
 						outdiv.remove();
 					}, 1000);
 				}
 			};
-			game.as_showImage = function (url, pos, time) {
+			game.as_showImage = function(url, pos, time) {
 				if (!url) return false;
 				if (!pos || !Array.isArray(pos)) {
 					pos = [0, 0, 100, 100];
@@ -11028,26 +11478,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					var outdiv = _status.as_showImage;
 					_status.as_showImage.style.animation = "left-to-right-out 1s";
 					delete _status.as_showImage;
-					setTimeout(function () {
+					setTimeout(function() {
 						outdiv.remove();
 					}, 1000);
 				}
 
 				var div = ui.create.div("", "", ui.window);
-				div.style.cssText = "z-index:-1; pointer-events:none; left:" + pos[0] + "%; top:" + pos[1] + "%; width:8%; height:" + pos[3] + "%; position:absolute; background-size:100% 100%; background-position:center center; background-image:url(" + lib.assetURL + url + "); transition-property:all; transition-duration:1s";
+				div.style.cssText = "z-index:-1; pointer-events:none; left:" + pos[0] + "%; top:" + pos[1] +
+					"%; width:8%; height:" + pos[3] +
+					"%; position:absolute; background-size:100% 100%; background-position:center center; background-image:url(" +
+					lib.assetURL + url + "); transition-property:all; transition-duration:1s";
 				_status.as_showImage = div;
 
 				if (_status.as_showText) {
 					_status.as_showImage.hide();
 				}
-
-				/*setTimeout(function () {
-          div.style.left = pos[0] + '%';
-          div.style.width = pos[2] + '%';
-        }, 1);*/
-
 				if (time === true) return true;
-				setTimeout(function () {
+				setTimeout(function() {
 					if (_status.as_showImage) {
 						_status.as_showImage.remove();
 						delete _status.as_showImage;
@@ -11075,10 +11522,23 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				init: false,
 			},
 			rightLayout: {
-				name: "右手布局",
-				init: true,
-				update: function () {
-					if (window.decadeUI) ui.arena.dataset.rightLayout = lib.config["extension_十周年UI_rightLayout"] ? "on" : "off";
+				name: '<b><font color="#E600FD">左右布局',
+				init: "on",
+				intro: "切换完以后自动重启游戏",
+				item: {
+					off: "左手",
+					on: "右手",
+				},
+				update() {
+					if (lib.config["extension_十周年UI_rightLayout"] == "on" || lib.config[
+							"extension_十周年UI_rightLayout"] == "off") {
+						ui.arena.dataset.rightLayout = lib.config["extension_十周年UI_rightLayout"];
+					}
+				},
+				onclick(item) {
+					lib.config["extension_十周年UI_rightLayout"] = item || "off";
+					game.saveConfig("extension_十周年UI_rightLayout", item);
+					game.reload();
 				},
 			},
 			cardPrettify: {
@@ -11095,7 +11555,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				name: "菜单美化",
 				intro: "开启全屏的菜单样式",
 				init: false,
-				onclick: function (bool) {
+				onclick(bool) {
 					game.saveConfig("extension_十周年UI_meanPrettify", bool);
 					if (bool) lib.init.css(lib.assetURL + "extension/十周年UI", "menu");
 					else {
@@ -11176,7 +11636,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					skin_zhouyi_剑舞浏漓: "周　夷-剑舞浏漓",
 					skin_zhangxingcai_凯旋星花: "张星彩-凯旋星花",
 				},
-				update: function () {
+				update() {
 					if (!window.decadeUI) return;
 
 					var item = lib.config["extension_十周年UI_dynamicBackground"];
@@ -11197,7 +11657,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			dynamicSkinOutcrop: {
 				name: "动皮露头",
 				init: true,
-				update: function () {
+				update() {
 					if (window.decadeUI) {
 						var enable = lib.config["extension_十周年UI_dynamicSkinOutcrop"];
 						ui.arena.dataset.dynamicSkinOutcrop = enable ? "on" : "off";
@@ -11220,8 +11680,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			cardAlternateNameVisible: {
 				name: "牌名辅助显示",
 				init: false,
-				update: function () {
-					if (window.decadeUI) ui.window.dataset.cardAlternateNameVisible = lib.config["extension_十周年UI_cardAlternateNameVisible"] ? "on" : "off";
+				update() {
+					if (window.decadeUI) ui.window.dataset.cardAlternateNameVisible = lib.config[
+						"extension_十周年UI_cardAlternateNameVisible"] ? "on" : "off";
 				},
 			},
 			campIdentityImageMode: {
@@ -11231,7 +11692,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			playerKillEffect: {
 				name: "玩家击杀特效",
 				init: true,
-				onclick: function (value) {
+				onclick(value) {
 					game.saveConfig("extension_十周年UI_playerKillEffect", value);
 					if (window.decadeUI) decadeUI.config.playerKillEffect = value;
 				},
@@ -11243,7 +11704,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			playerDieEffect: {
 				name: "玩家阵亡特效",
 				init: true,
-				onclick: function (value) {
+				onclick(value) {
 					game.saveConfig("extension_十周年UI_playerDieEffect", value);
 					if (window.decadeUI) decadeUI.config.playerDieEffect = value;
 				},
@@ -11251,36 +11712,42 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			cardUseEffect: {
 				name: "卡牌使用特效",
 				init: true,
-				onclick: function (value) {
+				onclick(value) {
 					game.saveConfig("extension_十周年UI_cardUseEffect", value);
 					if (window.decadeUI) decadeUI.config.cardUseEffect = value;
 				},
 			},
-			playerLineEffect: {
-				name: "玩家指示线特效",
-				init: true,
-				onclick: function (value) {
-					game.saveConfig("extension_十周年UI_playerLineEffect", value);
-					if (window.decadeUI) decadeUI.config.playerLineEffect = value;
-				},
-			},
+			// playerLineEffect: {
+			// 	name: "玩家指示线特效",
+			// 	init: true,
+			// 	onclick(value) {
+			// 		game.saveConfig("extension_十周年UI_playerLineEffect", value);
+			// 		if (window.decadeUI) decadeUI.config.playerLineEffect = value;
+			// 	},
+			// },
 			outcropSkin: {
 				name: "露头皮肤(需对应素材)",
-				init: false,
-				update: function () {
-					if (window.decadeUI) ui.arena.dataset.outcropSkin = lib.config["extension_十周年UI_outcropSkin"] ? "on" : "off";
+				init: "off",
+				item: {
+					shizhounian: "十周年露头",
+					shousha: "手杀露头",
+					off: "关闭",
+				},
+				update() {
+					if (window.decadeUI) ui.arena.dataset.outcropSkin = lib.config["extension_十周年UI_outcropSkin"];
 				},
 			},
 			showTemp: {
 				name: "视为卡牌显示",
 				init: false,
 				intro: "开启此选项后，视为卡牌显示将会替换为十周年UI内置替换显示",
-				onclick: function (bool) {
+				onclick(bool) {
 					game.saveConfig("extension_十周年UI_showTemp", bool);
 					if (game.me && lib.config.cardtempname != "off") {
 						let cards = game.me.getCards("h", card => card._tempName);
 						const skill = _status.event.skill,
-							goon = skill && get.info(skill) && get.info(skill).viewAs && !get.info(skill).ignoreMod && cards.some(card => (ui.selected.cards || []).includes(card));
+							goon = skill && get.info(skill) && get.info(skill).viewAs && !get.info(skill)
+							.ignoreMod && cards.some(card => (ui.selected.cards || []).includes(card));
 						if (cards.length) {
 							for (let j = 0; j < cards.length; j++) {
 								const card = cards[j];
@@ -11291,7 +11758,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									cardname = get.name(card);
 									cardnature = get.nature(card);
 								} else {
-									cardskb = typeof get.info(skill).viewAs == "function" ? get.info(skill).viewAs([card], game.me) : get.info(skill).viewAs;
+									cardskb = typeof get.info(skill).viewAs == "function" ? get.info(skill).viewAs([
+										card
+									], game.me) : get.info(skill).viewAs;
 									cardname = get.name(cardskb);
 									cardnature = get.nature(cardskb);
 								}
@@ -11310,8 +11779,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										card._tempName.innerHTML = tempname;
 										card._tempName.tempname = tempname;
 									} else {
-										const node = goon ? ui.create.cardTempName(cardskb, card) : ui.create.cardTempName(card);
-										if (lib.config.cardtempname !== "default") node.classList.remove("vertical");
+										const node = goon ? ui.create.cardTempName(cardskb, card) : ui.create
+											.cardTempName(card);
+										if (lib.config.cardtempname !== "default") node.classList.remove(
+										"vertical");
 									}
 								}
 							}
@@ -11331,7 +11802,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					four: "四阶",
 					five: "五阶",
 				},
-				update: function () {
+				update() {
 					if (window.decadeUI) ui.arena.dataset.borderLevel = lib.config["extension_十周年UI_borderLevel"];
 				},
 			},
@@ -11343,8 +11814,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					off: "不显示",
 					othersOn: "显示他人",
 				},
-				update: function () {
-					if (window.decadeUI) ui.arena.dataset.gainSkillsVisible = lib.config["extension_十周年UI_gainSkillsVisible"];
+				update() {
+					if (window.decadeUI) ui.arena.dataset.gainSkillsVisible = lib.config[
+						"extension_十周年UI_gainSkillsVisible"];
 				},
 			},
 			foldCardMinWidth: {
@@ -11376,45 +11848,35 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					yellow: "黄灯笼",
 					decade: "十周年",
 				},
-				update: function () {
-					if (window.decadeUI) ui.arena.dataset.playerMarkStyle = lib.config["extension_十周年UI_playerMarkStyle"];
+				update() {
+					if (window.decadeUI) ui.arena.dataset.playerMarkStyle = lib.config[
+						"extension_十周年UI_playerMarkStyle"];
 				},
 			},
 			newDecadeStyle: {
-				// taffy: 注释extension.js原版代码喵
-				// name: '<b><font color=\"#FF0000\">边框样式/界面布局',
-				// intro: '<b><font color=\"#FF0000\">切换武将边框样式和界面布局，初始为十周年样式，根据个人喜好自行切换，选择不同的设置后游戏会自动重启以生效新的设置',
-				/* taffy分界线 */
-				// taffy: 保留布局与边框的分开选项喵
-				name: '<b><font color=\"#FF0000\">边框样式(需重启)',
-				intro: '<b><font color=\"#FF0000\">此选项可以切换武将边框样式为，初始为十周年样式,根据个人喜好自行切换，重启生效',
-				/* taffy分界线 */
+				name: '<b><font color="#FF0000">边框样式/界面布局',
+				intro: '<b><font color="#FF0000">切换武将边框样式和界面布局，初始为十周年样式，根据个人喜好自行切换，选择不同的设置后游戏会自动重启以生效新的设置',
 				init: "off",
 				item: {
 					on: "十周年",
 					off: "新手杀",
 					othersOn: "旧手杀",
+					othersOff: "一将成名",
 				},
-				// taffy: 注释extension.js原版代码喵
-				// onclick: function (control) {
-				// 	const origin = lib.config["extension_十周年UI_newDecadeStyle"];
-				// 	game.saveConfig("extension_十周年UI_newDecadeStyle", control);
-				// 	if (origin != control) {
-				// 		setTimeout(() => game.reload(), 100);
-				// 	}
-				// },
-				/* taffy分界线 */
-				update: function () {
-					// taffy: 注释extension.js原版代码喵
-					// if (window.decadeUI) {
-					// 	ui.arena.dataset.newDecadeStyle = lib.config["extension_十周年UI_newDecadeStyle"];
-					// 	ui.arena.dataset.decadeLayout = lib.config["extension_十周年UI_newDecadeStyle"] == "on" ? "on" : "off";
-					// }
-          /* taffy分界线 */
-				  // taffy: 保留布局与边框的分开选项喵
-					if (window.decadeUI) ui.arena.dataset.newDecadeStyle = lib.config["extension_十周年UI_newDecadeStyle"];
-					/* taffy分界线 */
-				}
+				onclick(control) {
+					const origin = lib.config.extension_十周年UI_newDecadeStyle;
+					game.saveConfig("extension_十周年UI_newDecadeStyle", control);
+					if (origin != control) {
+						setTimeout(() => game.reload(), 100);
+					}
+				},
+				update() {
+					if (window.decadeUI) {
+						ui.arena.dataset.newDecadeStyle = lib.config.extension_十周年UI_newDecadeStyle;
+						ui.arena.dataset.decadeLayout = lib.config.extension_十周年UI_newDecadeStyle == "on" || lib
+							.config.extension_十周年UI_newDecadeStyle == "othersOff" ? "on" : "off";
+					}
+				},
 			},
 			shadowStyle: {
 				name: '<b><font color="#FF9000">特效切换(新手杀有效)',
@@ -11424,7 +11886,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					on: "原样式",
 					off: "新样式",
 				},
-				update: function () {
+				update() {
 					if (window.decadeUI) ui.arena.dataset.shadowStyle = lib.config["extension_十周年UI_shadowStyle"];
 				},
 			},
@@ -11441,29 +11903,15 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					seven: "评级",
 					eight: "关闭",
 				},
-				update: function () {
+				update() {
 					if (window.decadeUI) ui.arena.dataset.longLevel = lib.config["extension_十周年UI_longLevel"];
 				},
 			},
-			// taffy: 保留布局与边框的分开选项喵
-			decadeLayout: {
-				name: '<b><font color=\"#0040FF\">界面布局',
-				intro: '<b><font color=\"#0040FF\">切换界面布局样式，初始为十周年布局，根据个人喜好自行切换，重启生效',
-				init: "on",
-				item: {
-					on: "十周年样式",
-					off: "手杀样式",
-				},
-				update: function () {
-					if (window.decadeUI) ui.arena.dataset.decadeLayout = lib.config["extension_十周年UI_decadeLayout"];
-				}
-			},
-      /* taffy分界线 */
 			aloneEquip: {
 				name: '<b><font color="#99FF75">单独装备栏',
 				intro: '<b><font color="#99FF75">切换玩家装备栏为单独装备栏或非单独装备栏，初始为单独装备栏，根据个人喜好调整',
 				init: true,
-				update: function () {
+				update() {
 					const config = lib.config["extension_十周年UI_aloneEquip"];
 					if (window.decadeUI) ui.arena.dataset.aloneEquip = config ? "on" : "off";
 					_status.nopopequip = config;
@@ -11490,11 +11938,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				init: "on",
 				item: {
 					off: "关闭",
-					on: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog2.png);background-size: 100% 100%;"></div>',
-					On: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog1.png);background-size: 100% 100%;"></div>',
-					othersOn: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog3.png);background-size: 100% 100%;"></div>',
+					on: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib
+						.assetURL + 'extension/十周年UI/assets/image/dialog2.png);background-size: 100% 100%;"></div>',
+					On: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib
+						.assetURL + 'extension/十周年UI/assets/image/dialog1.png);background-size: 100% 100%;"></div>',
+					othersOn: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib
+						.assetURL + 'extension/十周年UI/assets/image/dialog3.png);background-size: 100% 100%;"></div>',
+					othersOff: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib
+						.assetURL + 'extension/十周年UI/assets/image/dialog4.png);background-size: 100% 100%;"></div>',
 				},
-				update: function () {
+				update() {
 					if (window.decadeUI) ui.arena.dataset.loadingStyle = lib.config["extension_十周年UI_loadingStyle"];
 				},
 			},
@@ -11509,9 +11962,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			JDTSM: {
 				name: '<div class="shousha_menu">进度条·查看</div>',
 				clear: true,
-				onclick: function () {
+				onclick() {
 					if (this.JDTSM == undefined) {
-						var more = ui.create.div(".JDTSM", '<div class="shousha_text"><li><b>进度条</b>:完善时机包括玩家回合内、人机回合内、玩家回合外、人机回合外。<li><b>进度条时间间隔</b>:设置玩家进度条的时间间隔，默认100毫秒/次<li><b>时间间隔</b>：通俗点说，就是进度条刷新的自定义时间单位/次。时间间隔越小，进度条总时间越少，反之亦然。<li><b>切换不生效？</b>:在游戏里切换时间间隔后不会马上生效，会在下一次进度条出现时生效。<li><b>进度条高度百分比</b>:现在可以在游戏里动态调节进度条高度了，变化发生在每次刷新时，建议开启<b>进度条刷新</b>功能搭配使用。可调节的范围在10%-40%左右。<li><b>进度条刷新</b>:在游戏里开启后，进度条会在每个节点进行刷新（也就是大伙说的旧版进度条）。</div>');
+						var more = ui.create.div(".JDTSM",
+							'<div class="shousha_text"><li><b>进度条</b>:完善时机包括玩家回合内、人机回合内、玩家回合外、人机回合外。<li><b>进度条时间间隔</b>:设置玩家进度条的时间间隔，默认100毫秒/次<li><b>时间间隔</b>：通俗点说，就是进度条刷新的自定义时间单位/次。时间间隔越小，进度条总时间越少，反之亦然。<li><b>切换不生效？</b>:在游戏里切换时间间隔后不会马上生效，会在下一次进度条出现时生效。<li><b>进度条高度百分比</b>:现在可以在游戏里动态调节进度条高度了，变化发生在每次刷新时，建议开启<b>进度条刷新</b>功能搭配使用。可调节的范围在10%-40%左右。<li><b>进度条刷新</b>:在游戏里开启后，进度条会在每个节点进行刷新（也就是大伙说的旧版进度条）。</div>'
+							);
 						this.parentNode.insertBefore(more, this.nextSibling);
 						this.JDTSM = more;
 						this.innerHTML = '<div class="shousha_menu">进度条·关闭</div>';
@@ -11536,6 +11991,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					1: "手杀进度条",
 					2: "十周年PC端进度条",
 					3: "十周年客户端进度条",
+					4: "一将成名进度条",
 				},
 			},
 			jindutiaotuoguan: {
@@ -11576,9 +12032,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					10: "10%",
 					15: "15%",
 					20: "20%",
-					10: "10%",
-					15: "15%",
-					20: "20%",
 					21: "21%",
 					22: "22%",
 					23: "23%",
@@ -11610,9 +12063,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			JDTSSM: {
 				name: '<div class="shousha_menu">阶段提示·查看</div>',
 				clear: true,
-				onclick: function () {
+				onclick() {
 					if (this.JDTSSM == undefined) {
-						var more = ui.create.div(".JDTSSM", '<div class="shousha_text"><li><b>阶段提示</b>:回合开始、判定阶段、摸牌阶段、出牌阶段、弃牌阶段、等待响应、对方思考中，其中[对方思考中]，在游戏人数不大于两人时才会出现。<li><b>位置微调</b>：在游玩太虚幻境模式或者使用Eng侍灵扩展时，为避免遮挡，会自动判断并调整阶段提示位置<li><b>人机也有？</b>:人机做了进度条美化和阶段提示美化，样式跟随UI切换。</div>');
+						var more = ui.create.div(".JDTSSM",
+							'<div class="shousha_text"><li><b>阶段提示</b>:回合开始、判定阶段、摸牌阶段、出牌阶段、弃牌阶段、等待响应、对方思考中，其中[对方思考中]，在游戏人数不大于两人时才会出现。<li><b>位置微调</b>：在游玩太虚幻境模式或者使用Eng侍灵扩展时，为避免遮挡，会自动判断并调整阶段提示位置<li><b>人机也有？</b>:人机做了进度条美化和阶段提示美化，样式跟随UI切换。</div>'
+							);
 						this.parentNode.insertBefore(more, this.nextSibling);
 						this.JDTSSM = more;
 						this.innerHTML = '<div class="shousha_menu">阶段提示·关闭</div>';
@@ -11648,9 +12103,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			GTBBSM: {
 				name: '<div class="shousha_menu">狗托播报·查看</div>',
 				clear: true,
-				onclick: function () {
+				onclick() {
 					if (this.GTBBSM == undefined) {
-						var more = ui.create.div(".GTBBSM", '<div class="shousha_text"><li><b>狗托播报</b>:开启后，顶部会出现滚动播报栏。PS:狗托误我啊!<li><b>播报样式</b>：新增一种样式，可选择切换，需重启。【手杀/十周年】<li><b>播报时间间隔</b>:需重启，调整每条播报的出现频率。</div>');
+						var more = ui.create.div(".GTBBSM",
+							'<div class="shousha_text"><li><b>狗托播报</b>:开启后，顶部会出现滚动播报栏。PS:狗托误我啊!<li><b>播报样式</b>：新增一种样式，可选择切换，需重启。【手杀/十周年】<li><b>播报时间间隔</b>:需重启，调整每条播报的出现频率。</div>'
+							);
 						this.parentNode.insertBefore(more, this.nextSibling);
 						this.GTBBSM = more;
 						this.innerHTML = '<div class="shousha_menu">狗托播报·关闭</div>';
@@ -11746,7 +12203,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			},
 		},
 		package: (() => {
-			const pack = {
+			const pkg = {
 				character: {
 					character: {},
 					translate: {},
@@ -11760,24 +12217,20 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					skill: {},
 					translate: {},
 				},
-				author: "萌新（转型中）<br>十周年UI原作者：短歌<br>手杀UI原名：界面美化<br>手杀UI原作者：橙续缘",
-				diskURL: "",
-				forumURL: "",
-				version: "0.3.6",
+			};
+			const pack = {
+				...pkg,
+				...otherInfo,
 			};
 			pack.intro = (pack => {
 				let log = [
-					"魔改十周年 萌修 " + pack.version,
-					"最低适配：v1.10.16",
-					"新版适配",
-					"统一扩展内js的格式",
-					"为十周年UI搬运的《扩展OL》的自由选将筛选框添加名称ID和技能ID的精确匹配选项，并为其他选项的筛选支持正则化",
-					"如果玩家主将存在groupBorder属性则使用groupBorder势力作为势力边框颜色",
-					"修复电脑端无法使用dialog美化的bug",
-					"修复手杀样式主动整理手牌按钮不会被noSortCard的tag无效化的bug",
-					"修复设置了visible属性为false的lose事件仍显示$throw卡牌特效的bug",
+					`魔改十周年${pack.version}`,
+					"最低适配：v1.10.18",
+					"修复技能靠左排列问题",
+					"修复手杀UI换牌时按钮重叠",
+					"注释指示线美化，需要自行解除",
 				];
-				return '<a href="https://github.com/mengxinzxz/decadeUI--mx">点击前往萌修十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">' + log.join("<br>•") + "</p>";
+				return `<a href=${pack.diskURL}>点击前往Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);
 			return pack;
 		})(),
@@ -11785,7 +12238,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			character: [],
 			card: [],
 			skill: [],
+			audio: [],
 		},
-		editable: false,
 	};
-});
+}
