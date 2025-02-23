@@ -20,6 +20,13 @@ export const characterPackFunc = function () {
 			characterSort: {
 				taffy_character: characterSort,
 			},
+			characterSubstitute: {
+				taffyold_huan_caoang: [["huan_caoang_shadow", []]],
+				taffyold_ol_sb_dongzhuo: [
+					["ol_sb_dongzhuo_shadow1", ["tempname:ol_sb_dongzhuo", "die:ol_sb_dongzhuo"]],
+					["ol_sb_dongzhuo_shadow2", ["tempname:ol_sb_dongzhuo", "die:ol_sb_dongzhuo"]],
+				],
+			},
 			characterFilter: { ...characterFilters },
 			characterTitle: {
 				taffyboss_xushao: "#gViridian",

@@ -54,16 +54,22 @@ const characterSort = {
 		"taffyold_new_yj_dongzhuo",
 		"taffyold_wu_huangfusong",
 		"taffyold_xurong",
+		"taffyold_shen_pangtong",
+		"taffyold_v_sunquan",
+		"taffyold_huan_caoang",
+		"taffyold_ol_nanhualaoxian",
+		"taffyold_ol_sb_dongzhuo",
 	],
 	taffy_ol: ["taffyboss_lvbu1"],
 	taffy_shou: ["taffymb_shen_caocao"],
 	taffy_shi: ["taffydc_guanning", "taffydc_xushao", "taffydc_jiangfei"],
 	taffy_baby: ["taffybaby_shen_simayi"],
-	taffy_diy: ["taffyboss_xushao", "taffyhuiwan_xushao", "taffyshen_yuji", "taffyshen_duyu", "taffyshen_chengui", "taffyshendc_guanning", "taffyre_xushao", "taffyshen_xushao", "taffyre_xuyou", "taffyred_xin_jushou"],
+	taffy_diy: ["taffyboss_xushao", "taffyhuiwan_xushao", "taffyshen_yuji", "taffyshen_duyu", "taffyshen_chengui", "taffyshendc_guanning", "taffyre_xushao", "taffyshen_xushao", "taffyre_xuyou"],
 	taffy_tang: ["acetaffy", "minitaffy"],
 	taffy_gzz: ["junko"],
 	taffy_wu: ["taffyhuiwan_sunquan", "taffyhuiwanplus_sunquan"],
 	taffy_ba: ["swimsuit_hoshino", "himari"],
+	taffy_red: ["taffyred_xin_jushou"],
 	taffy_mobile_changshi: ["taffyold_scs_zhangrang", "taffyold_scs_zhangrang", "taffyold_scs_zhangrang", "taffyold_scs_zhangrangscs_bilan", "taffyold_scs_zhangrangscs_xiayun", "taffyold_scs_hankui", "taffyold_scs_lisong", "taffyold_scs_duangui", "taffyold_scs_guosheng", "taffyold_scs_gaowang"],
 };
 
@@ -78,6 +84,7 @@ const characterSortTranslate = {
 	taffy_gzz: "东方·绀珠传",
 	taffy_wu: "东吴·超玩会",
 	taffy_ba: "蔚蓝·档案",
+	taffy_red: "牧濑·红莉栖",
 };
 
 export { characterSort, characterSortTranslate };

@@ -81,12 +81,17 @@ const characters = {
 	taffyold_tw_shen_lvmeng: ["male", "shen", 3, ["taffyold_twshelie", "taffyold_twgongxin"], ["wu", "character:tw_shen_lvmeng", "die:tw_shen_lvmeng"]],
 	taffyold_huan_zhugeguo: ["female", "shu", 3, ["taffyold_rexianyuan", "twlingyin"], ["character:huan_zhugeguo", "die:huan_zhugeguo"]],
 	taffyold_mb_wangjing: ["male", "wei", 3, ["mbzujin", "taffyold_mbjiejian"], ["character:mb_wangjing", "die:mb_wangjing"]],
-	taffyold_yj_majun: ["male", "wei", 3, ["yjgongqiao", "taffyold_yjjingyi"], ["character:yj_majun", "die:yj_majun"]],
+	taffyold_yj_majun: ["male", "wei", 3, ["gongqiao", "taffyold_yjjingyi"], ["character:yj_majun", "die:yj_majun"]],
 	taffyold_new_yj_dongzhuo: ["male", "qun", "4/5", ["taffyold_xiongjin", "taffyold_xiawei", "taffyold_baoxi"], ["character:new_yj_dongzhuo", "die:new_yj_dongzhuo"]],
 	taffyold_wu_huangfusong: ["male", "qun", 4, ["dcchaozhen", "taffyold_dclianjie", "taffyold_dcjiangxian"], ["name:皇甫|嵩", "character:wu_huangfusong", "die:wu_huangfusong"]],
 	taffydc_jiangfei: ["male", "shu", 3, ["reshengxi", "dcshoucheng"], ["name:蒋|琬-费|祎", "character:jiangfei", "die:jiangfei"]],
 	taffyold_xurong: ["male", "qun", 4, ["taffyold_xinfu_xionghuo", "taffyold_xinfu_shajue"], ["character:xurong", "die:xurong"]],
 	taffyred_xin_jushou: ["male", "qun", "2/3/3", ["taffyred_xinjianying", "taffyred_shibei"]],
+	taffyold_shen_pangtong: ["male", "shen", "1/1", ["luansuo", "fengliao", "taffyold_kunyu"], ["character:shen_pangtong", "die:shen_pangtong"]],
+	taffyold_v_sunquan: ["male", "wu", 4, ["taffyold_dcwoheng", "taffyold_dcjizheng"], ["zhu", "character:v_sunquan", "die:v_sunquan"]],
+	taffyold_huan_caoang: ["male", "wei", "3/4", ["taffyold_twchihui", "taffyold_twfuxi"], ["character:huan_caoang", "die:huan_caoang"]],
+	taffyold_ol_nanhualaoxian: ["male", "qun", 4, ["taffyold_olqingshu", "taffyold_olshoushu", "taffyold_olhedao"], ["character:ol_nanhualaoxian", "die:ol_nanhualaoxian"]],
+	taffyold_ol_sb_dongzhuo: ["male", "qun", 5, ["taffyold_olguanbian", "taffyold_olxiongni", "taffyold_olfengshang", "olzhibin"], ["zhu", "character:ol_sb_dongzhuo", "die:ol_sb_dongzhuo"]],
 	aruijier: ["female", "shen", "", [], ["unseen", "qun"]],
 };
 

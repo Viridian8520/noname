@@ -42,7 +42,7 @@ const characterReplaces = {
 	liuli: ["dc_liuli", "taffyold_dc_liuli"],
 	miheng: ["yue_miheng", "re_miheng", "miheng", "scl_miheng", "taffyold_yue_miheng"],
 	fuqian: ["fuqian", "taffyold_fuqian"],
-	guozhao: ["guozhao", "xin_guozhao", "jsrg_guozhao", "taffyold_xin_guozhao"],
+	guozhao: ["guozhao", "xin_guozhao", "jsrg_guozhao", "ol_guozhao", "taffyold_xin_guozhao"],
 	wenyang: ["wenyang", "db_wenyang", "diy_wenyang", "std_db_wenyang", "taffyold_db_wenyang"],
 	shen_caopi: ["shen_caopi", "taffyold_shen_caopi"],
 	clan_xuncai: ["clan_xuncai", "taffyold_clan_xuncai"],
@@ -51,12 +51,16 @@ const characterReplaces = {
 	shen_lvmeng: ["shen_lvmeng", "tw_shen_lvmeng", "mini_lvmeng", "taffyold_tw_shen_lvmeng"],
 	zhugeguo: ["zhugeguo", "tw_zhugeguo", "yue_zhugeguo", "huan_zhugeguo", "taffyold_huan_zhugeguo"],
 	mb_wangjing: ["mb_wangjing", "taffyold_mb_wangjing"],
-	majun: ["majun", "yj_majun", "old_majun", "taffyold_yj_majun"],
-	dongzhuo: ["dongzhuo", "ol_dongzhuo", "re_dongzhuo", "star_dongzhuo", "jsrg_dongzhuo", "sp_dongzhuo", "yj_dongzhuo", "new_yj_dongzhuo", "taffyold_new_yj_dongzhuo"],
+	majun: ["majun", "yj_majun", "cx_majun", "qq_majun", "old_majun", "taffyold_yj_majun"],
+	dongzhuo: ["dongzhuo", "ol_dongzhuo", "re_dongzhuo", "star_dongzhuo", "jsrg_dongzhuo", "ol_sb_dongzhuo", "sp_dongzhuo", "yj_dongzhuo", "new_yj_dongzhuo", "taffyold_new_yj_dongzhuo", "taffyold_ol_sb_dongzhuo"],
 	wu_huangfusong: ["wu_huangfusong", "taffyold_wu_huangfusong"],
 	xurong: ["xurong", "taffyold_xurong"],
 	yj_jushou: ["yj_jushou", "re_jushou", "xin_jushou", "dc_sb_jushou", "taffyred_xin_jushou"],
 	jiangfei: ["jiangfei", "taffydc_jiangfei"],
+	shen_pangtong: ["shen_pangtong", "taffyold_shen_pangtong"],
+	sunquan: ["sunquan", "re_sunquan", "sb_sunquan", "dc_sunquan", "xin_sunquan", "jd_sb_sunquan", "ty_sunquan", "v_sunquan", "taffyold_v_sunquan"],
+	caoang: ["caoang", "dc_sb_caoang", "huan_caoang", "taffyold_huan_caoang"],
+	nanhualaoxian: ["re_nanhualaoxian", "ol_nanhualaoxian", "nanhualaoxian", "jsrg_nanhualaoxian", "taffyold_ol_nanhualaoxian"],
 };
 
 export default characterReplaces;

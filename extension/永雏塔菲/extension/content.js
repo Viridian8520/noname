@@ -69,6 +69,8 @@ export const CONTENT = function (config, pack) {
 	setAudioname2("rerende", { taffyold_shen_caopi: "rerende_shen_caopi" });
 	setAudioname2("olluanji", { taffyold_shen_caopi: "olluanji_shen_caopi" });
 	setAudioname2("olfangquan", { taffyold_shen_caopi: "olfangquan_shen_caopi" });
+	setAudioname2("dcfencheng", { taffyold_ol_sb_dongzhuo: "dcfencheng_ol_sb_dongzhuo" });
+	setAudioname2("benghuai", { taffyold_ol_sb_dongzhuo: "benghuai_re_dongzhuo" });
 	// 一些全局技能
 	lib.skill._taffy_dieKillEffect = {
 		trigger: {

@@ -5112,7 +5112,7 @@ const skills = {
 				const player = get.player(),
 					target = get.event().getParent().result.targets[0];
 				const link = button.link;
-				const att = get.sign(get.attitude(player, target));
+				const att = get.sgn(get.attitude(player, target));
 				const drawWugu = target.countCards("h") + 2 >= game.countPlayer();
 				if (link === "draw") return (drawWugu ? -1 : 2) * att;
 				return 1;
