@@ -1,0 +1,426 @@
+
+daiji2.png
+size: 1851,1851
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+daiji2/shenpangtong_daiji2_pc_00
+  rotate: false
+  xy: 196, 1588
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_01
+  rotate: false
+  xy: 0, 1058
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_02
+  rotate: false
+  xy: 195, 1323
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_03
+  rotate: false
+  xy: 781, 1325
+  size: 193, 262
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_04
+  rotate: false
+  xy: 1556, 1327
+  size: 190, 261
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_05
+  rotate: false
+  xy: 780, 1061
+  size: 190, 261
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_06
+  rotate: false
+  xy: 194, 266
+  size: 190, 260
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_07
+  rotate: false
+  xy: 584, 797
+  size: 190, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_08
+  rotate: false
+  xy: 584, 536
+  size: 191, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_09
+  rotate: false
+  xy: 1354, 802
+  size: 191, 258
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_10
+  rotate: false
+  xy: 1161, 542
+  size: 191, 258
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_11
+  rotate: false
+  xy: 1160, 802
+  size: 192, 258
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_12
+  rotate: false
+  xy: 776, 798
+  size: 190, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_13
+  rotate: false
+  xy: 777, 537
+  size: 190, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_14
+  rotate: false
+  xy: 195, 4
+  size: 190, 260
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_15
+  rotate: false
+  xy: 1359, 1062
+  size: 190, 261
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_16
+  rotate: false
+  xy: 1551, 1064
+  size: 190, 261
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_17
+  rotate: false
+  xy: 1170, 1325
+  size: 190, 262
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_18
+  rotate: false
+  xy: 391, 1588
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_19
+  rotate: false
+  xy: 0, 793
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_20
+  rotate: false
+  xy: 195, 1058
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_21
+  rotate: false
+  xy: 390, 1323
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_22
+  rotate: false
+  xy: 586, 1588
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_23
+  rotate: false
+  xy: 390, 794
+  size: 192, 262
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_24
+  rotate: false
+  xy: 390, 531
+  size: 192, 261
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_25
+  rotate: false
+  xy: 1367, 1590
+  size: 192, 261
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_26
+  rotate: false
+  xy: 386, 267
+  size: 190, 260
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_27
+  rotate: false
+  xy: 770, 275
+  size: 190, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_28
+  rotate: false
+  xy: 772, 14
+  size: 190, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_29
+  rotate: false
+  xy: 1354, 542
+  size: 190, 258
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_30
+  rotate: false
+  xy: 1346, 282
+  size: 190, 258
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_31
+  rotate: false
+  xy: 1158, 18
+  size: 190, 258
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_32
+  rotate: false
+  xy: 962, 276
+  size: 190, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_33
+  rotate: false
+  xy: 972, 1063
+  size: 192, 260
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_34
+  rotate: false
+  xy: 1561, 1591
+  size: 193, 260
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_35
+  rotate: false
+  xy: 0, 0
+  size: 193, 261
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_36
+  rotate: false
+  xy: 585, 1324
+  size: 194, 262
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_37
+  rotate: false
+  xy: 781, 1589
+  size: 194, 262
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_38
+  rotate: false
+  xy: 0, 1588
+  size: 194, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_39
+  rotate: false
+  xy: 0, 263
+  size: 192, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_40
+  rotate: false
+  xy: 0, 528
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_41
+  rotate: false
+  xy: 195, 793
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_42
+  rotate: false
+  xy: 390, 1058
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_43
+  rotate: false
+  xy: 976, 1325
+  size: 192, 262
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_44
+  rotate: false
+  xy: 1362, 1327
+  size: 192, 261
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_45
+  rotate: false
+  xy: 1166, 1062
+  size: 191, 261
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_46
+  rotate: false
+  xy: 387, 5
+  size: 191, 260
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_47
+  rotate: false
+  xy: 964, 15
+  size: 192, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_48
+  rotate: false
+  xy: 968, 800
+  size: 190, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_49
+  rotate: false
+  xy: 1350, 22
+  size: 190, 258
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_50
+  rotate: false
+  xy: 1538, 282
+  size: 190, 258
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_51
+  rotate: false
+  xy: 969, 539
+  size: 190, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_52
+  rotate: false
+  xy: 1154, 278
+  size: 190, 259
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_53
+  rotate: false
+  xy: 578, 269
+  size: 190, 260
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_54
+  rotate: false
+  xy: 580, 7
+  size: 190, 260
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_55
+  rotate: false
+  xy: 1172, 1590
+  size: 193, 261
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_56
+  rotate: false
+  xy: 977, 1589
+  size: 193, 262
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_57
+  rotate: false
+  xy: 195, 529
+  size: 193, 262
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_58
+  rotate: false
+  xy: 585, 1059
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1
+daiji2/shenpangtong_daiji2_pc_59
+  rotate: false
+  xy: 0, 1323
+  size: 193, 263
+  orig: 250, 300
+  offset: 29, 16
+  index: -1

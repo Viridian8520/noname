@@ -1,0 +1,132 @@
+
+shouji.png
+size: 1122,1122
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+eff/gongji/guangdian/1_00000
+  rotate: true
+  xy: 1030, 1064
+  size: 56, 58
+  orig: 64, 64
+  offset: 4, 3
+  index: -1
+eff/gongji/shouji/1_00000
+  rotate: true
+  xy: 954, 433
+  size: 245, 143
+  orig: 512, 200
+  offset: 34, 29
+  index: -1
+eff/gongji/shouji/1_00001
+  rotate: false
+  xy: 2, 920
+  size: 512, 200
+  orig: 512, 200
+  offset: 0, 0
+  index: -1
+eff/gongji/shouji/1_00002
+  rotate: true
+  xy: 2, 406
+  size: 512, 198
+  orig: 512, 200
+  offset: 0, 0
+  index: -1
+eff/gongji/shouji/1_00003
+  rotate: false
+  xy: 516, 920
+  size: 512, 200
+  orig: 512, 200
+  offset: 0, 0
+  index: -1
+eff/gongji/shouji/1_00004
+  rotate: false
+  xy: 2, 204
+  size: 498, 200
+  orig: 512, 200
+  offset: 7, 0
+  index: -1
+eff/gongji/shouji/1_00005
+  rotate: false
+  xy: 2, 2
+  size: 477, 200
+  orig: 512, 200
+  offset: 21, 0
+  index: -1
+eff/gongji/shouji/1_00006
+  rotate: false
+  xy: 481, 3
+  size: 471, 199
+  orig: 512, 200
+  offset: 34, 0
+  index: -1
+eff/gongji/shouji/1_00007
+  rotate: false
+  xy: 502, 725
+  size: 445, 193
+  orig: 512, 200
+  offset: 67, 0
+  index: -1
+eff/gongji/shouji/1_00008
+  rotate: true
+  xy: 202, 478
+  size: 440, 192
+  orig: 512, 200
+  offset: 72, 0
+  index: -1
+eff/gongji/shouji/1_00009
+  rotate: true
+  xy: 396, 438
+  size: 285, 192
+  orig: 512, 200
+  offset: 183, 0
+  index: -1
+eff/gongji/shouji/1_00010
+  rotate: false
+  xy: 502, 244
+  size: 283, 192
+  orig: 512, 200
+  offset: 186, 0
+  index: -1
+eff/gongji/shouji/1_00011
+  rotate: true
+  xy: 590, 446
+  size: 277, 193
+  orig: 512, 200
+  offset: 189, 0
+  index: -1
+eff/gongji/shouji/1_00012
+  rotate: true
+  xy: 954, 680
+  size: 238, 164
+  orig: 512, 200
+  offset: 219, 28
+  index: -1
+eff/gongji/shouji/1_00013
+  rotate: true
+  xy: 954, 40
+  size: 195, 162
+  orig: 512, 200
+  offset: 221, 29
+  index: -1
+eff/gongji/shouji/1_00014
+  rotate: true
+  xy: 954, 237
+  size: 194, 163
+  orig: 512, 200
+  offset: 221, 29
+  index: -1
+eff/gongji/shouji/1_00015
+  rotate: true
+  xy: 785, 537
+  size: 186, 161
+  orig: 512, 200
+  offset: 222, 30
+  index: -1
+eff/gongji/shouji/1_00016
+  rotate: true
+  xy: 787, 363
+  size: 172, 154
+  orig: 512, 200
+  offset: 228, 39
+  index: -1

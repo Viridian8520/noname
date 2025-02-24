@@ -1,0 +1,641 @@
+
+BeiJing.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bj11
+  rotate: false
+  xy: 503, 31
+  size: 111, 494
+  orig: 119, 495
+  offset: 7, 0
+  index: -1
+bj12
+  rotate: false
+  xy: 318, 21
+  size: 183, 504
+  orig: 189, 514
+  offset: 6, 0
+  index: -1
+bj13
+  rotate: true
+  xy: 1132, 215
+  size: 153, 407
+  orig: 163, 417
+  offset: 2, 3
+  index: -1
+bj14
+  rotate: false
+  xy: 2, 12
+  size: 187, 353
+  orig: 187, 353
+  offset: 0, 0
+  index: -1
+bj15
+  rotate: false
+  xy: 210, 13
+  size: 53, 188
+  orig: 53, 190
+  offset: 0, 1
+  index: -1
+bj16
+  rotate: false
+  xy: 2, 1281
+  size: 1562, 764
+  orig: 1562, 764
+  offset: 0, 0
+  index: -1
+bj4
+  rotate: true
+  xy: 1426, 12
+  size: 201, 130
+  orig: 207, 132
+  offset: 5, 0
+  index: -1
+bj5
+  rotate: false
+  xy: 2, 527
+  size: 1562, 752
+  orig: 1564, 757
+  offset: 2, 0
+  index: -1
+bj6
+  rotate: true
+  xy: 1206, 379
+  size: 146, 186
+  orig: 148, 191
+  offset: 1, 2
+  index: -1
+bj8
+  rotate: false
+  xy: 1132, 12
+  size: 292, 201
+  orig: 293, 201
+  offset: 0, 0
+  index: -1
+bj9
+  rotate: false
+  xy: 948, 370
+  size: 256, 155
+  orig: 260, 157
+  offset: 1, 1
+  index: -1
+effect/daiji/glow/h_00
+  rotate: false
+  xy: 2, 369
+  size: 156, 156
+  orig: 180, 180
+  offset: 12, 12
+  index: -1
+effect/daiji/glow/hh_00
+  rotate: false
+  xy: 160, 369
+  size: 156, 156
+  orig: 180, 180
+  offset: 12, 12
+  index: -1
+effect/daiji/shexian_22
+  rotate: false
+  xy: 1566, 1807
+  size: 464, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_23
+  rotate: false
+  xy: 1566, 1567
+  size: 464, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_24
+  rotate: false
+  xy: 1566, 847
+  size: 463, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_38
+  rotate: false
+  xy: 1566, 607
+  size: 463, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_39
+  rotate: false
+  xy: 1566, 1327
+  size: 464, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_40
+  rotate: false
+  xy: 1566, 1087
+  size: 464, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_41
+  rotate: false
+  xy: 1566, 367
+  size: 463, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+niao7
+  rotate: true
+  xy: 2032, 2017
+  size: 28, 13
+  orig: 29, 13
+  offset: 0, 0
+  index: -1
+niao8
+  rotate: false
+  xy: 191, 2
+  size: 17, 17
+  orig: 18, 17
+  offset: 1, 0
+  index: -1
+niao9
+  rotate: true
+  xy: 265, 144
+  size: 57, 38
+  orig: 58, 39
+  offset: 1, 0
+  index: -1
+shitou
+  rotate: false
+  xy: 616, 32
+  size: 330, 493
+  orig: 332, 493
+  offset: 0, 0
+  index: -1
+shuye1
+  rotate: true
+  xy: 191, 203
+  size: 164, 120
+  orig: 164, 121
+  offset: 0, 0
+  index: -1
+shuye2
+  rotate: true
+  xy: 1541, 227
+  size: 138, 393
+  orig: 140, 393
+  offset: 0, 0
+  index: -1
+shuye4
+  rotate: false
+  xy: 1558, 4
+  size: 387, 221
+  orig: 393, 222
+  offset: 1, 1
+  index: -1
+shuye6
+  rotate: false
+  xy: 948, 32
+  size: 182, 333
+  orig: 184, 333
+  offset: 2, 0
+  index: -1
+
+BeiJing2.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bj10
+  rotate: false
+  xy: 2, 637
+  size: 168, 529
+  orig: 174, 530
+  offset: 4, 0
+  index: -1
+bj2
+  rotate: false
+  xy: 814, 1177
+  size: 413, 394
+  orig: 418, 402
+  offset: 2, 4
+  index: -1
+bj3
+  rotate: false
+  xy: 2, 6
+  size: 164, 165
+  orig: 165, 166
+  offset: 1, 1
+  index: -1
+bj7
+  rotate: false
+  xy: 1229, 1199
+  size: 228, 373
+  orig: 233, 382
+  offset: 4, 3
+  index: -1
+effect/daiji/glow/guangyun_00
+  rotate: false
+  xy: 168, 87
+  size: 453, 84
+  orig: 471, 112
+  offset: 10, 0
+  index: -1
+effect/daiji/shexian_17
+  rotate: false
+  xy: 1547, 42
+  size: 455, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_18
+  rotate: true
+  xy: 1202, 255
+  size: 458, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_19
+  rotate: false
+  xy: 1580, 1556
+  size: 459, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_20
+  rotate: true
+  xy: 652, 709
+  size: 460, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_21
+  rotate: true
+  xy: 2, 173
+  size: 462, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_25
+  rotate: true
+  xy: 172, 704
+  size: 462, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_26
+  rotate: true
+  xy: 412, 705
+  size: 461, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_27
+  rotate: true
+  xy: 482, 242
+  size: 461, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_28
+  rotate: true
+  xy: 722, 247
+  size: 460, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_29
+  rotate: true
+  xy: 860, 1574
+  size: 460, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_30
+  rotate: true
+  xy: 1100, 1574
+  size: 460, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_31
+  rotate: true
+  xy: 892, 715
+  size: 460, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_32
+  rotate: true
+  xy: 962, 253
+  size: 460, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_33
+  rotate: true
+  xy: 1132, 715
+  size: 460, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_34
+  rotate: true
+  xy: 1340, 1574
+  size: 460, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_35
+  rotate: false
+  xy: 623, 2
+  size: 461, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_36
+  rotate: true
+  xy: 620, 1573
+  size: 461, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_37
+  rotate: true
+  xy: 242, 240
+  size: 462, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_42
+  rotate: false
+  xy: 1580, 1796
+  size: 460, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_43
+  rotate: false
+  xy: 1086, 13
+  size: 459, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_44
+  rotate: true
+  xy: 1372, 740
+  size: 457, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_45
+  rotate: true
+  xy: 1442, 282
+  size: 456, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_46
+  rotate: true
+  xy: 1612, 800
+  size: 455, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_47
+  rotate: true
+  xy: 1682, 344
+  size: 454, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+shuye3
+  rotate: false
+  xy: 620, 1171
+  size: 192, 400
+  orig: 196, 403
+  offset: 2, 2
+  index: -1
+shuye5
+  rotate: false
+  xy: 2, 1168
+  size: 616, 866
+  orig: 616, 867
+  offset: 0, 0
+  index: -1
+shuye7
+  rotate: false
+  xy: 1459, 1257
+  size: 191, 297
+  orig: 193, 298
+  offset: 2, 0
+  index: -1
+
+BeiJing3.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+effect/daiji/shexian_00
+  rotate: false
+  xy: 2, 482
+  size: 448, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_01
+  rotate: false
+  xy: 2, 242
+  size: 447, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_02
+  rotate: false
+  xy: 452, 482
+  size: 447, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_03
+  rotate: false
+  xy: 904, 722
+  size: 447, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_04
+  rotate: false
+  xy: 1357, 962
+  size: 447, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_05
+  rotate: false
+  xy: 1353, 722
+  size: 446, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_06
+  rotate: false
+  xy: 451, 2
+  size: 446, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_07
+  rotate: false
+  xy: 1350, 482
+  size: 445, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_08
+  rotate: false
+  xy: 900, 242
+  size: 446, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_09
+  rotate: false
+  xy: 2, 2
+  size: 447, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_10
+  rotate: false
+  xy: 451, 242
+  size: 447, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_11
+  rotate: false
+  xy: 901, 482
+  size: 447, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_12
+  rotate: false
+  xy: 454, 722
+  size: 448, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_13
+  rotate: false
+  xy: 1365, 1682
+  size: 450, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_14
+  rotate: false
+  xy: 2, 722
+  size: 450, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_15
+  rotate: false
+  xy: 2, 962
+  size: 451, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_16
+  rotate: false
+  xy: 2, 1442
+  size: 452, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_48
+  rotate: false
+  xy: 2, 1682
+  size: 453, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_49
+  rotate: false
+  xy: 457, 1682
+  size: 452, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_50
+  rotate: false
+  xy: 2, 1202
+  size: 452, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_51
+  rotate: false
+  xy: 456, 1442
+  size: 452, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_52
+  rotate: false
+  xy: 911, 1682
+  size: 452, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_53
+  rotate: false
+  xy: 456, 1202
+  size: 451, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_54
+  rotate: false
+  xy: 910, 1442
+  size: 451, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_55
+  rotate: false
+  xy: 455, 962
+  size: 450, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_56
+  rotate: false
+  xy: 909, 1202
+  size: 450, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_57
+  rotate: false
+  xy: 1363, 1442
+  size: 449, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_58
+  rotate: false
+  xy: 907, 962
+  size: 448, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1
+effect/daiji/shexian_59
+  rotate: false
+  xy: 1361, 1202
+  size: 448, 238
+  orig: 471, 238
+  offset: 0, 0
+  index: -1

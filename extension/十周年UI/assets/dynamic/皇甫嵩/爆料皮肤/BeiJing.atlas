@@ -1,0 +1,831 @@
+
+BeiJing.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BG_flag
+  rotate: true
+  xy: 1756, 1544
+  size: 341, 281
+  orig: 341, 281
+  offset: 0, 0
+  index: -1
+BG_mountain_02
+  rotate: false
+  xy: 743, 20
+  size: 172, 464
+  orig: 172, 464
+  offset: 0, 0
+  index: -1
+BG_mountain_04
+  rotate: true
+  xy: 1397, 175
+  size: 309, 610
+  orig: 309, 615
+  offset: 0, 0
+  index: -1
+BG_sky_01
+  rotate: false
+  xy: 2, 1141
+  size: 1752, 905
+  orig: 1772, 905
+  offset: 8, 0
+  index: -1
+BG_sky_02
+  rotate: false
+  xy: 1583, 1083
+  size: 131, 56
+  orig: 131, 56
+  offset: 0, 0
+  index: -1
+BG_sky_03
+  rotate: false
+  xy: 672, 1079
+  size: 123, 60
+  orig: 123, 60
+  offset: 0, 0
+  index: -1
+BG_weapon_02
+  rotate: true
+  xy: 1775, 96
+  size: 77, 271
+  orig: 77, 271
+  offset: 0, 0
+  index: -1
+arrow
+  rotate: false
+  xy: 409, 486
+  size: 1620, 579
+  orig: 1620, 579
+  offset: 0, 0
+  index: -1
+effect/chuchang/cc_sssdddd_18
+  rotate: false
+  xy: 1637, 7
+  size: 136, 166
+  orig: 192, 216
+  offset: 25, 12
+  index: -1
+effect/daiji/beijing/dj_yun_00
+  rotate: false
+  xy: 1756, 1385
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_02
+  rotate: false
+  xy: 1756, 1226
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_04
+  rotate: false
+  xy: 1756, 1067
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yunssss_02
+  rotate: false
+  xy: 1119, 1081
+  size: 163, 58
+  orig: 180, 72
+  offset: 8, 10
+  index: -1
+effect/daiji/beijing/dj_yunssss_04
+  rotate: false
+  xy: 171, 1078
+  size: 166, 61
+  orig: 180, 72
+  offset: 7, 9
+  index: -1
+effect/daiji/beijing/dj_yunssss_06
+  rotate: false
+  xy: 339, 1079
+  size: 166, 60
+  orig: 180, 72
+  offset: 7, 10
+  index: -1
+effect/daiji/beijing/dj_yunssss_08
+  rotate: false
+  xy: 507, 1079
+  size: 163, 60
+  orig: 180, 72
+  offset: 8, 10
+  index: -1
+effect/daiji/beijing/dj_yunssss_10
+  rotate: false
+  xy: 797, 1080
+  size: 162, 59
+  orig: 180, 72
+  offset: 9, 10
+  index: -1
+effect/daiji/beijing/dj_yunssss_12
+  rotate: false
+  xy: 961, 1080
+  size: 156, 59
+  orig: 180, 72
+  offset: 12, 10
+  index: -1
+effect/daiji/beijing/dj_yunssss_14
+  rotate: false
+  xy: 1284, 1081
+  size: 149, 58
+  orig: 180, 72
+  offset: 16, 11
+  index: -1
+effect/daiji/beijing/dj_yunssss_16
+  rotate: false
+  xy: 1435, 1082
+  size: 146, 57
+  orig: 180, 72
+  offset: 18, 11
+  index: -1
+effect/gongji/hp_00
+  rotate: false
+  xy: 2, 1067
+  size: 72, 72
+  orig: 72, 72
+  offset: 0, 0
+  index: -1
+flag_05
+  rotate: false
+  xy: 409, 2
+  size: 111, 482
+  orig: 111, 482
+  offset: 0, 0
+  index: -1
+man_back_04
+  rotate: true
+  xy: 1184, 41
+  size: 443, 211
+  orig: 445, 211
+  offset: 2, 0
+  index: -1
+man_far_01
+  rotate: true
+  xy: 1397, 3
+  size: 170, 238
+  orig: 172, 238
+  offset: 0, 0
+  index: -1
+man_far_04
+  rotate: false
+  xy: 917, 32
+  size: 265, 452
+  orig: 265, 452
+  offset: 0, 0
+  index: -1
+man_far_05
+  rotate: true
+  xy: 2, 2
+  size: 1063, 405
+  orig: 1064, 405
+  offset: 1, 0
+  index: -1
+man_front_01
+  rotate: false
+  xy: 522, 4
+  size: 219, 480
+  orig: 220, 480
+  offset: 1, 0
+  index: -1
+man_front_02
+  rotate: false
+  xy: 1756, 1887
+  size: 286, 159
+  orig: 286, 159
+  offset: 0, 0
+  index: -1
+man_front_03
+  rotate: false
+  xy: 1775, 7
+  size: 244, 87
+  orig: 244, 87
+  offset: 0, 0
+  index: -1
+man_front_08
+  rotate: true
+  xy: 76, 1071
+  size: 68, 93
+  orig: 68, 94
+  offset: 0, 0
+  index: -1
+
+BeiJing2.png
+size: 2033,1845
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BG_mountain_01
+  rotate: false
+  xy: 2, 1080
+  size: 321, 763
+  orig: 321, 763
+  offset: 0, 0
+  index: -1
+BG_mountain_03
+  rotate: true
+  xy: 557, 1215
+  size: 302, 226
+  orig: 302, 226
+  offset: 0, 0
+  index: -1
+BG_mountain_05
+  rotate: true
+  xy: 2, 400
+  size: 678, 237
+  orig: 681, 238
+  offset: 0, 0
+  index: -1
+BG_weapon_01
+  rotate: false
+  xy: 325, 1519
+  size: 380, 324
+  orig: 380, 324
+  offset: 0, 0
+  index: -1
+effect/chuchang/cc_sssdddd_00
+  rotate: true
+  xy: 1235, 208
+  size: 100, 157
+  orig: 192, 216
+  offset: 47, 46
+  index: -1
+effect/chuchang/cc_sssdddd_01
+  rotate: true
+  xy: 944, 1225
+  size: 136, 157
+  orig: 192, 216
+  offset: 22, 46
+  index: -1
+effect/chuchang/cc_sssdddd_02
+  rotate: true
+  xy: 1304, 509
+  size: 112, 184
+  orig: 192, 216
+  offset: 36, 19
+  index: -1
+effect/chuchang/cc_sssdddd_03
+  rotate: true
+  xy: 232, 2
+  size: 115, 174
+  orig: 192, 216
+  offset: 38, 29
+  index: -1
+effect/chuchang/cc_sssdddd_04
+  rotate: true
+  xy: 1830, 646
+  size: 115, 199
+  orig: 192, 216
+  offset: 37, 4
+  index: -1
+effect/chuchang/cc_sssdddd_05
+  rotate: true
+  xy: 1830, 763
+  size: 131, 201
+  orig: 192, 216
+  offset: 40, 2
+  index: -1
+effect/chuchang/cc_sssdddd_06
+  rotate: true
+  xy: 1830, 896
+  size: 146, 201
+  orig: 192, 216
+  offset: 29, 2
+  index: -1
+effect/chuchang/cc_sssdddd_07
+  rotate: true
+  xy: 1415, 1530
+  size: 173, 201
+  orig: 192, 216
+  offset: 14, 2
+  index: -1
+effect/chuchang/cc_sssdddd_08
+  rotate: true
+  xy: 1830, 1044
+  size: 163, 201
+  orig: 192, 216
+  offset: 12, 2
+  index: -1
+effect/chuchang/cc_sssdddd_09
+  rotate: false
+  xy: 831, 75
+  size: 150, 197
+  orig: 192, 216
+  offset: 11, 2
+  index: -1
+effect/chuchang/cc_sssdddd_10
+  rotate: true
+  xy: 1490, 477
+  size: 144, 181
+  orig: 192, 216
+  offset: 21, 6
+  index: -1
+effect/chuchang/cc_sssdddd_11
+  rotate: false
+  xy: 1158, 505
+  size: 144, 156
+  orig: 192, 216
+  offset: 21, 12
+  index: -1
+effect/chuchang/cc_sssdddd_12
+  rotate: false
+  xy: 1235, 310
+  size: 149, 193
+  orig: 192, 216
+  offset: 21, 2
+  index: -1
+effect/chuchang/cc_sssdddd_13
+  rotate: false
+  xy: 1673, 462
+  size: 144, 183
+  orig: 192, 216
+  offset: 21, 5
+  index: -1
+effect/chuchang/cc_sssdddd_14
+  rotate: true
+  xy: 1667, 318
+  size: 142, 165
+  orig: 192, 216
+  offset: 22, 13
+  index: -1
+effect/chuchang/cc_sssdddd_15
+  rotate: false
+  xy: 1832, 148
+  size: 142, 165
+  orig: 192, 216
+  offset: 22, 14
+  index: -1
+effect/chuchang/cc_sssdddd_16
+  rotate: false
+  xy: 1391, 63
+  size: 139, 143
+  orig: 192, 216
+  offset: 23, 14
+  index: -1
+effect/chuchang/cc_sssdddd_17
+  rotate: true
+  xy: 1894, 1227
+  size: 139, 137
+  orig: 192, 216
+  offset: 23, 16
+  index: -1
+effect/chuchang/cc_sssdddd_19
+  rotate: true
+  xy: 1664, 181
+  size: 135, 166
+  orig: 192, 216
+  offset: 26, 12
+  index: -1
+effect/chuchang/cc_sssdddd_20
+  rotate: true
+  xy: 1819, 509
+  size: 135, 193
+  orig: 192, 216
+  offset: 26, 5
+  index: -1
+effect/chuchang/cc_sssdddd_21
+  rotate: true
+  xy: 1472, 340
+  size: 135, 193
+  orig: 192, 216
+  offset: 26, 4
+  index: -1
+effect/daiji/beijing/dj_leidian_00
+  rotate: false
+  xy: 1653, 61
+  size: 157, 118
+  orig: 216, 144
+  offset: 55, 18
+  index: -1
+effect/daiji/beijing/dj_leidian_02
+  rotate: true
+  xy: 1834, 315
+  size: 192, 124
+  orig: 216, 144
+  offset: 24, 20
+  index: -1
+effect/daiji/beijing/dj_leidian_04
+  rotate: true
+  xy: 1900, 1630
+  size: 213, 131
+  orig: 216, 144
+  offset: 3, 13
+  index: -1
+effect/daiji/beijing/dj_leidian_06
+  rotate: true
+  xy: 992, 291
+  size: 212, 134
+  orig: 216, 144
+  offset: 4, 9
+  index: -1
+effect/daiji/beijing/dj_leidian_08
+  rotate: true
+  xy: 1899, 1420
+  size: 208, 132
+  orig: 216, 144
+  offset: 5, 8
+  index: -1
+effect/daiji/beijing/dj_leidian_10
+  rotate: true
+  xy: 1128, 304
+  size: 199, 105
+  orig: 216, 144
+  offset: 11, 32
+  index: -1
+effect/daiji/beijing/dj_leidian_12
+  rotate: false
+  xy: 241, 400
+  size: 190, 116
+  orig: 216, 144
+  offset: 13, 13
+  index: -1
+effect/daiji/beijing/dj_leidian_14
+  rotate: false
+  xy: 1472, 235
+  size: 190, 103
+  orig: 216, 144
+  offset: 10, 22
+  index: -1
+effect/daiji/beijing/dj_leidian_16
+  rotate: true
+  xy: 1386, 317
+  size: 190, 84
+  orig: 216, 144
+  offset: 6, 38
+  index: -1
+effect/daiji/beijing/dj_leidian_18
+  rotate: false
+  xy: 992, 210
+  size: 182, 79
+  orig: 216, 144
+  offset: 10, 41
+  index: -1
+effect/daiji/beijing/dj_yun_06
+  rotate: false
+  xy: 1619, 1686
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_08
+  rotate: true
+  xy: 241, 799
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_10
+  rotate: true
+  xy: 241, 518
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_12
+  rotate: true
+  xy: 400, 836
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_14
+  rotate: true
+  xy: 400, 555
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_16
+  rotate: true
+  xy: 785, 1253
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_18
+  rotate: false
+  xy: 1134, 1546
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_20
+  rotate: false
+  xy: 1618, 1527
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_22
+  rotate: true
+  xy: 559, 934
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_24
+  rotate: true
+  xy: 559, 653
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_26
+  rotate: true
+  xy: 718, 934
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_28
+  rotate: true
+  xy: 718, 653
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_30
+  rotate: false
+  xy: 559, 494
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_32
+  rotate: true
+  xy: 944, 1363
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_34
+  rotate: false
+  xy: 1103, 1387
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_36
+  rotate: false
+  xy: 1617, 1368
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_38
+  rotate: false
+  xy: 1103, 1228
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_40
+  rotate: false
+  xy: 1613, 1209
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_42
+  rotate: true
+  xy: 877, 944
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_44
+  rotate: true
+  xy: 877, 663
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_46
+  rotate: true
+  xy: 1036, 944
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_48
+  rotate: true
+  xy: 1036, 663
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_50
+  rotate: true
+  xy: 1195, 947
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_52
+  rotate: true
+  xy: 1195, 666
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_54
+  rotate: true
+  xy: 1513, 904
+  size: 279, 156
+  orig: 279, 157
+  offset: 0, 1
+  index: -1
+effect/daiji/beijing/dj_yun_56
+  rotate: true
+  xy: 1513, 623
+  size: 279, 156
+  orig: 279, 157
+  offset: 0, 1
+  index: -1
+effect/daiji/beijing/dj_yun_58
+  rotate: false
+  xy: 877, 505
+  size: 279, 156
+  orig: 279, 157
+  offset: 0, 1
+  index: -1
+effect/daiji/beijing/dj_yun_60
+  rotate: true
+  xy: 1354, 904
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_62
+  rotate: true
+  xy: 1354, 623
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_64
+  rotate: true
+  xy: 1671, 928
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_66
+  rotate: true
+  xy: 1671, 647
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_68
+  rotate: true
+  xy: 232, 119
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_70
+  rotate: true
+  xy: 391, 119
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_72
+  rotate: false
+  xy: 550, 335
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_74
+  rotate: false
+  xy: 550, 176
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yun_76
+  rotate: false
+  xy: 550, 17
+  size: 279, 157
+  orig: 279, 157
+  offset: 0, 0
+  index: -1
+effect/daiji/beijing/dj_yunssss_00
+  rotate: true
+  xy: 1960, 362
+  size: 145, 48
+  orig: 180, 72
+  offset: 19, 12
+  index: -1
+effect/daiji/beijing/dj_yunssss_18
+  rotate: false
+  xy: 831, 18
+  size: 141, 55
+  orig: 180, 72
+  offset: 23, 12
+  index: -1
+flag_01
+  rotate: true
+  xy: 707, 1644
+  size: 199, 425
+  orig: 203, 425
+  offset: 0, 0
+  index: -1
+flag_02
+  rotate: false
+  xy: 983, 2
+  size: 121, 177
+  orig: 121, 177
+  offset: 0, 0
+  index: -1
+flag_03
+  rotate: true
+  xy: 2, 5
+  size: 46, 154
+  orig: 54, 154
+  offset: 0, 0
+  index: -1
+flag_04
+  rotate: false
+  xy: 1134, 1705
+  size: 483, 138
+  orig: 483, 138
+  offset: 0, 0
+  index: -1
+man_back_01
+  rotate: true
+  xy: 325, 1117
+  size: 400, 230
+  orig: 400, 230
+  offset: 0, 0
+  index: -1
+man_back_02
+  rotate: false
+  xy: 1384, 1378
+  size: 231, 150
+  orig: 231, 150
+  offset: 0, 0
+  index: -1
+man_back_03
+  rotate: false
+  xy: 1106, 2
+  size: 105, 144
+  orig: 105, 145
+  offset: 0, 0
+  index: -1
+man_back_05
+  rotate: true
+  xy: 2, 53
+  size: 345, 228
+  orig: 345, 228
+  offset: 0, 0
+  index: -1
+man_far_02
+  rotate: true
+  xy: 1532, 47
+  size: 186, 119
+  orig: 186, 119
+  offset: 0, 0
+  index: -1
+man_far_03
+  rotate: true
+  xy: 433, 408
+  size: 145, 112
+  orig: 145, 112
+  offset: 0, 0
+  index: -1
+man_front_04
+  rotate: true
+  xy: 831, 274
+  size: 218, 159
+  orig: 218, 160
+  offset: 0, 1
+  index: -1
+man_front_05
+  rotate: false
+  xy: 707, 1534
+  size: 232, 108
+  orig: 232, 108
+  offset: 0, 0
+  index: -1
+man_front_06
+  rotate: false
+  xy: 1213, 71
+  size: 176, 135
+  orig: 176, 135
+  offset: 0, 0
+  index: -1
+man_front_07
+  rotate: true
+  xy: 1384, 1185
+  size: 191, 227
+  orig: 191, 230
+  offset: 0, 3
+  index: -1

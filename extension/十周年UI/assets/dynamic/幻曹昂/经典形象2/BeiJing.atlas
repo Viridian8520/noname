@@ -1,0 +1,306 @@
+
+BeiJing.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+diji
+  rotate: true
+  xy: 1548, 6
+  size: 1473, 136
+  orig: 1473, 136
+  offset: 0, 0
+  index: -1
+guang5
+  rotate: false
+  xy: 219, 6
+  size: 1303, 639
+  orig: 1372, 643
+  offset: 53, 4
+  index: -1
+gujia
+  rotate: true
+  xy: 1879, 238
+  size: 140, 155
+  orig: 140, 155
+  offset: 0, 0
+  index: -1
+gujia_b
+  rotate: true
+  xy: 1686, 3
+  size: 26, 60
+  orig: 26, 60
+  offset: 0, 0
+  index: -1
+gujia_r_b
+  rotate: true
+  xy: 1748, 3
+  size: 26, 60
+  orig: 26, 60
+  offset: 0, 0
+  index: -1
+jianzhu_l
+  rotate: false
+  xy: 1686, 1132
+  size: 354, 174
+  orig: 354, 174
+  offset: 0, 0
+  index: -1
+jianzhu_r
+  rotate: false
+  xy: 1686, 1308
+  size: 355, 171
+  orig: 355, 171
+  offset: 0, 0
+  index: -1
+kongqi
+  rotate: false
+  xy: 2, 854
+  size: 1540, 432
+  orig: 1540, 463
+  offset: 0, 0
+  index: -1
+qi1
+  rotate: false
+  xy: 1879, 502
+  size: 165, 49
+  orig: 166, 49
+  offset: 0, 0
+  index: -1
+qi4
+  rotate: true
+  xy: 1879, 380
+  size: 120, 159
+  orig: 120, 159
+  offset: 0, 0
+  index: -1
+qi5
+  rotate: false
+  xy: 1965, 101
+  size: 74, 135
+  orig: 75, 135
+  offset: 0, 0
+  index: -1
+qi7
+  rotate: true
+  xy: 1879, 7
+  size: 229, 84
+  orig: 229, 84
+  offset: 0, 0
+  index: -1
+tiankong_b
+  rotate: false
+  xy: 2, 1288
+  size: 1544, 756
+  orig: 1544, 756
+  offset: 0, 0
+  index: -1
+wu2
+  rotate: false
+  xy: 2, 647
+  size: 1532, 205
+  orig: 1536, 207
+  offset: 2, 0
+  index: -1
+yun
+  rotate: false
+  xy: 1548, 1481
+  size: 474, 231
+  orig: 476, 231
+  offset: 0, 0
+  index: -1
+yun1
+  rotate: true
+  xy: 1686, 553
+  size: 577, 346
+  orig: 577, 346
+  offset: 0, 0
+  index: -1
+yun11
+  rotate: false
+  xy: 1548, 1714
+  size: 490, 174
+  orig: 494, 174
+  offset: 2, 0
+  index: -1
+yun2
+  rotate: false
+  xy: 1548, 1890
+  size: 495, 154
+  orig: 495, 157
+  offset: 0, 3
+  index: -1
+yun3
+  rotate: true
+  xy: 1686, 31
+  size: 520, 191
+  orig: 523, 193
+  offset: 1, 2
+  index: -1
+yun9
+  rotate: true
+  xy: 2, 2
+  size: 643, 215
+  orig: 660, 215
+  offset: 6, 0
+  index: -1
+
+BeiJing2.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ge
+  rotate: false
+  xy: 1811, 1718
+  size: 46, 140
+  orig: 47, 140
+  offset: 0, 0
+  index: -1
+gu
+  rotate: false
+  xy: 1258, 844
+  size: 89, 82
+  orig: 89, 82
+  offset: 0, 0
+  index: -1
+gu_r
+  rotate: false
+  xy: 250, 73
+  size: 89, 82
+  orig: 89, 82
+  offset: 0, 0
+  index: -1
+gujia_r
+  rotate: false
+  xy: 635, 111
+  size: 140, 155
+  orig: 140, 155
+  offset: 0, 0
+  index: -1
+mao47
+  rotate: false
+  xy: 1914, 1909
+  size: 68, 122
+  orig: 68, 122
+  offset: 0, 0
+  index: -1
+qi2
+  rotate: false
+  xy: 869, 531
+  size: 180, 273
+  orig: 180, 273
+  offset: 0, 0
+  index: -1
+qi3
+  rotate: true
+  xy: 869, 259
+  size: 270, 56
+  orig: 270, 56
+  offset: 0, 0
+  index: -1
+qi6
+  rotate: true
+  xy: 2, 2
+  size: 153, 246
+  orig: 153, 246
+  offset: 0, 0
+  index: -1
+qi8
+  rotate: true
+  xy: 1402, 1005
+  size: 175, 103
+  orig: 175, 103
+  offset: 0, 0
+  index: -1
+qi_l
+  rotate: false
+  xy: 1531, 1634
+  size: 278, 224
+  orig: 279, 224
+  offset: 0, 0
+  index: -1
+qi_r
+  rotate: false
+  xy: 2, 157
+  size: 386, 738
+  orig: 386, 738
+  offset: 0, 0
+  index: -1
+quelou_l
+  rotate: true
+  xy: 913, 1366
+  size: 232, 627
+  orig: 233, 629
+  offset: 0, 1
+  index: -1
+quelou_r
+  rotate: false
+  xy: 635, 268
+  size: 232, 627
+  orig: 232, 631
+  offset: 0, 1
+  index: -1
+wuqi1
+  rotate: true
+  xy: 1051, 579
+  size: 225, 192
+  orig: 225, 192
+  offset: 0, 0
+  index: -1
+yun10
+  rotate: false
+  xy: 1531, 1860
+  size: 381, 171
+  orig: 384, 171
+  offset: 0, 0
+  index: -1
+yun12
+  rotate: false
+  xy: 913, 1182
+  size: 625, 182
+  orig: 628, 188
+  offset: 0, 2
+  index: -1
+yun4
+  rotate: false
+  xy: 837, 928
+  size: 563, 252
+  orig: 572, 254
+  offset: 9, 0
+  index: -1
+yun5
+  rotate: false
+  xy: 869, 806
+  size: 387, 120
+  orig: 389, 121
+  offset: 0, 1
+  index: -1
+yun6
+  rotate: false
+  xy: 2, 1210
+  size: 909, 388
+  orig: 909, 388
+  offset: 0, 0
+  index: -1
+yun7
+  rotate: true
+  xy: 390, 95
+  size: 800, 243
+  orig: 802, 246
+  offset: 0, 0
+  index: -1
+yun8
+  rotate: false
+  xy: 2, 897
+  size: 833, 311
+  orig: 833, 319
+  offset: 0, 4
+  index: -1
+zhujianzhu
+  rotate: false
+  xy: 2, 1600
+  size: 1527, 431
+  orig: 1527, 431
+  offset: 0, 0
+  index: -1

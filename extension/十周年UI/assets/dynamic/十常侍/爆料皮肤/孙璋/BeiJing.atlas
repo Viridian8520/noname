@@ -1,0 +1,118 @@
+
+BeiJing.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+hei
+  rotate: false
+  xy: 1544, 1300
+  size: 130, 72
+  orig: 130, 72
+  offset: 0, 0
+  index: -1
+shichangshi_1
+  rotate: false
+  xy: 706, 554
+  size: 144, 221
+  orig: 144, 221
+  offset: 0, 0
+  index: -1
+shichangshi_2
+  rotate: false
+  xy: 706, 777
+  size: 188, 212
+  orig: 188, 212
+  offset: 0, 0
+  index: -1
+shichangshi_243
+  rotate: false
+  xy: 2, 117
+  size: 261, 299
+  orig: 261, 302
+  offset: 0, 2
+  index: -1
+shichangshi_245
+  rotate: false
+  xy: 1544, 1374
+  size: 290, 654
+  orig: 293, 654
+  offset: 3, 0
+  index: -1
+shichangshi_246
+  rotate: false
+  xy: 1509, 1213
+  size: 21, 57
+  orig: 21, 58
+  offset: 0, 1
+  index: -1
+shichangshi_247
+  rotate: false
+  xy: 1967, 1962
+  size: 25, 66
+  orig: 28, 67
+  offset: 1, 1
+  index: -1
+shichangshi_248
+  rotate: false
+  xy: 980, 1028
+  size: 32, 54
+  orig: 32, 54
+  offset: 0, 0
+  index: -1
+shichangshi_249
+  rotate: true
+  xy: 2, 2
+  size: 113, 138
+  orig: 114, 138
+  offset: 0, 0
+  index: -1
+shichangshi_250
+  rotate: false
+  xy: 1836, 1350
+  size: 129, 678
+  orig: 129, 678
+  offset: 0, 0
+  index: -1
+shichangshi_251
+  rotate: false
+  xy: 551, 447
+  size: 153, 542
+  orig: 153, 542
+  offset: 0, 0
+  index: -1
+shichangshi_252
+  rotate: true
+  xy: 980, 1084
+  size: 186, 527
+  orig: 186, 527
+  offset: 0, 0
+  index: -1
+shichangshi_253
+  rotate: false
+  xy: 2, 418
+  size: 310, 571
+  orig: 310, 571
+  offset: 0, 0
+  index: -1
+shichangshi_254
+  rotate: false
+  xy: 314, 420
+  size: 235, 569
+  orig: 235, 569
+  offset: 0, 0
+  index: -1
+shichangshi_255
+  rotate: false
+  xy: 2, 1272
+  size: 1540, 756
+  orig: 1540, 756
+  offset: 0, 0
+  index: -1
+shichangshi_4
+  rotate: false
+  xy: 2, 991
+  size: 976, 279
+  orig: 979, 288
+  offset: 3, 4
+  index: -1
