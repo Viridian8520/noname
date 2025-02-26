@@ -143,7 +143,7 @@ window.config = {
 	customcardpile: {},
 	addedpile: {},
 
-	wuxie_self: "false",
+	wuxie_self: false,
 	update_link: "github",
 	theme: "simple",
 	player_height_nova: "long",
@@ -212,7 +212,7 @@ window.config = {
 	extension_十周年UI_shadowStyle: "off",
 	extension_十周年UI_longLevel: "five",
 	extension_十周年UI_loadingStyle: "othersOn",
-	extension_十周年UI_GTBB: "true",
+	extension_十周年UI_GTBB: true,
 	extension_十周年UI_XPJ: "off",
 	qhly_currentViewSkin: "shousha",
 	extension_千幻聆音_qhly_currentViewSkin: "shousha",
@@ -458,9 +458,9 @@ window.config = {
 		},
 		versus: {
 			connect_versus_mode: "2v2",
-			connect_olfeiyang_four: "false",
+			connect_olfeiyang_four: false,
 			versus_mode: "two",
-			olfeiyang_four: "false",
+			olfeiyang_four: false,
 		},
 		boss: {
 			single_control: false,
