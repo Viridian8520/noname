@@ -92,6 +92,8 @@ const characters = {
 	taffyold_huan_caoang: ["male", "wei", "3/4", ["taffyold_twchihui", "taffyold_twfuxi"], ["character:huan_caoang", "die:huan_caoang"]],
 	taffyold_ol_nanhualaoxian: ["male", "qun", 4, ["taffyold_olqingshu", "taffyold_olshoushu", "taffyold_olhedao"], ["character:ol_nanhualaoxian", "die:ol_nanhualaoxian"]],
 	taffyold_ol_sb_dongzhuo: ["male", "qun", 5, ["taffyold_olguanbian", "taffyold_olxiongni", "taffyold_olfengshang", "olzhibin"], ["zhu", "character:ol_sb_dongzhuo", "die:ol_sb_dongzhuo"]],
+	taffyold_pangfengyi: ["female", "shu", 3, ["taffyold_dcyitong", "taffyold_dcpeiniang"], ["character:pangfengyi", "die:pangfengyi"]],
+  taffyold_hanshiwuhu: ["male", "wei", 5, ["oljuejue", "olpimi"], ["name:韩|德‌-韩|瑛-韩|瑶-韩|琼-韩|琪", "character:hanshiwuhu", "die:hanshiwuhu"]],
 	aruijier: ["female", "shen", "", [], ["unseen", "qun"]],
 };
 

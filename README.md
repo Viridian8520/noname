@@ -103,9 +103,10 @@
     - 旧幻曹昂：未通渠的幻曹昂
     - 旧OL南华老仙：未通渠的OL南华老仙
     - 旧OL谋董卓：未通渠的OL谋董卓
+    - 旧庞凤衣：未通渠的庞凤衣
+    - 旧韩式五虎：未通渠的韩式五虎
   - 为乱斗模式添加了轮回七阴模式
   - 视频背景功能
-- 引入来自 [noname-server](https://github.com/nonameShijian/noname-server) 的 `index.js`，用于启动 Web 端文件读写服务
 
 ## 启动方法
 
@@ -116,7 +117,7 @@
   node index.js
   ```
 
-  之后再启动只需输入 `node index.js` 即可游玩
+  之后再启动只需输入 `node noname-server.js` 即可游玩
 
   启动联机服务：
 

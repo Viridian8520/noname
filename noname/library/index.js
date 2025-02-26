@@ -35,7 +35,7 @@ export class Library {
 	updateURLS = updateURLs;
 	updateURL = updateURLs.github;
 	mirrorURL = updateURLs.coding;
-	hallURL = "127.0.0.1";
+	hallURL = "";
 	assetURL = assetURL;
 	userAgent = userAgentLowerCase;
 	characterDefaultPicturePath = characterDefaultPicturePath;
@@ -1141,7 +1141,7 @@ export class Library {
 				},
 				update_link: {
 					name: "更新地址",
-					init: "github",
+					init: "coding",
 					unfrequent: true,
 					item: {
 						coding: "URC",
@@ -1342,7 +1342,7 @@ export class Library {
 			config: {
 				theme: {
 					name: "主题",
-					init: "simple",
+					init: "woodden",
 					item: {},
 					visualMenu: function (node, link) {
 						if (!node.menu) {
@@ -1575,7 +1575,7 @@ export class Library {
 				},
 				player_height_nova: {
 					name: "角色高度",
-					init: "long",
+					init: "short",
 					item: {
 						// auto:'自动',
 						short: "矮",
@@ -1636,7 +1636,7 @@ export class Library {
 				ui_zoom: {
 					name: "界面缩放",
 					unfrequent: true,
-					init: "ebig",
+					init: "normal",
 					item: {
 						esmall: "80%",
 						vsmall: "90%",
@@ -1882,7 +1882,7 @@ export class Library {
 				},
 				change_skin_auto: {
 					name: "自动换肤",
-					init: "60000",
+					init: "off",
 					item: {
 						off: "关闭",
 						30000: "半分钟",
@@ -1901,7 +1901,7 @@ export class Library {
 				},
 				card_style: {
 					name: "卡牌样式",
-					init: "simple",
+					init: "default",
 					intro: "设置正面朝上的卡牌的样式",
 					item: {
 						wood: "木纹",
@@ -2033,7 +2033,7 @@ export class Library {
 				cardback_style: {
 					name: "卡背样式",
 					intro: "设置背面朝上的卡牌的样式",
-					init: "official",
+					init: "default",
 					item: {
 						// wood:'木纹',
 						// music:'音乐',
@@ -2516,7 +2516,7 @@ export class Library {
 				zhishixian: {
 					name: "指示线",
 					intro: "设置卡牌、技能的指示特效",
-					init: "Jinlong",
+					init: "default",
 					unfrequent: true,
 					item: {
 						default: "默认",
@@ -3145,7 +3145,7 @@ export class Library {
 				equip_span: {
 					name: "装备牌占位",
 					intro: "打开后，没有装备的装备区将在装备栏占据空白位置。",
-					init: true,
+					init: false,
 					unfrequent: false,
 				},
 				fold_card: {
@@ -3311,7 +3311,7 @@ export class Library {
 				cardshape: {
 					name: "手牌显示",
 					intro: "将手牌设置为正方形或长方形",
-					init: "oblong",
+					init: "default",
 					unfrequent: true,
 					item: {
 						default: "默认",
@@ -3702,7 +3702,7 @@ export class Library {
 				},
 				show_log: {
 					name: "历史记录栏",
-					init: "left",
+					init: "off",
 					intro: "在屏幕中部显示出牌文字记录",
 					unfrequent: true,
 					item: {
@@ -4173,7 +4173,7 @@ export class Library {
 				},
 				show_cardpile_number: {
 					name: "显示剩余牌数",
-					init: true,
+					init: false,
 					unfrequent: true,
 					onclick(bool) {
 						game.saveConfig("show_cardpile_number", bool);
@@ -4202,7 +4202,7 @@ export class Library {
 				},
 				show_tip: {
 					name: "显示tip标记",
-					init: true,
+					init: false,
 					unfrequent: true,
 					onclick(bool) {
 						game.saveConfig("show_tip", bool);
@@ -4266,7 +4266,7 @@ export class Library {
 				},
 				show_discardpile: {
 					name: "暂停时显示弃牌堆",
-					init: true,
+					init: false,
 					unfrequent: true,
 				},
 				show_extensionmaker: {
@@ -4401,7 +4401,7 @@ export class Library {
 				},
 				equip_audio: {
 					name: "装备配音",
-					init: true,
+					init: false,
 				},
 				repeat_audio: {
 					name: "播放重复语音",
@@ -5204,7 +5204,7 @@ export class Library {
 				},
 				connect_enable_commoner: {
 					name: "启用平民",
-					init: true,
+					init: false,
 					restart: true,
 					frequent: false,
 					get intro() {
@@ -5246,7 +5246,7 @@ export class Library {
 				},
 				connect_enable_year_limit: {
 					name: "启用年机制",
-					init: true,
+					init: false,
 					restart: true,
 					frequent: false,
 					get intro() {
@@ -5262,7 +5262,7 @@ export class Library {
 				},
 				connect_enhance_zhu: {
 					name: "加强主公",
-					init: "off",
+					init: "sixiang",
 					item: {
 						sixiang: "四象标记",
 						specific: "专属技能",
@@ -5544,7 +5544,7 @@ export class Library {
 				},
 				enhance_zhu: {
 					name: "加强主公",
-					init: "off",
+					init: "sixiang",
 					item: {
 						sixiang: "四象标记",
 						specific: "专属技能",
@@ -5789,7 +5789,7 @@ export class Library {
 				},
 				enable_commoner: {
 					name: "启用平民",
-					init: true,
+					init: false,
 					restart: true,
 					frequent: false,
 					intro: "开启后游戏中将有一个平民（身份）加入游戏。<br>具体规则请查看帮助。",
@@ -5810,7 +5810,7 @@ export class Library {
 				},
 				enable_year_limit: {
 					name: "启用年机制",
-					init: true,
+					init: false,
 					restart: true,
 					frequent: false,
 					intro: "开启后将会加入年机制。<br>年机制的具体规则请查看帮助。",
@@ -9760,18 +9760,6 @@ export class Library {
 		disable_judge: "已废除",
 		disable_judge_info: "判定区已废除",
 		disable_judge_bg: "废",
-		empty_equip1: "空武器",
-		empty_equip1_info: "武器栏为空",
-		empty_equip2: "空防具",
-		empty_equip2_info: "防具栏为空",
-		empty_equip3: "空防御坐骑",
-		empty_equip3_info: "防御坐骑栏为空",
-		empty_equip4: "空攻击坐骑",
-		empty_equip4_info: "攻击坐骑栏为空",
-		empty_equip5: "空宝物",
-		empty_equip5_info: "宝物栏为空",
-		empty_equip6: '空特殊装备',
-		empty_equip6_info: '特殊装备栏为空',
 		pss: "手势",
 		pss_paper: "布",
 		pss_scissor: "剪刀",
@@ -9868,12 +9856,8 @@ export class Library {
 						if (game.sandbox) security.exitSandbox();
 					}
 				} catch (e) {
-					if (message[1] == "cardPile") {
-						console.log("Request cardPile data from server.");
-					} else {
-						console.log(e);
-						console.log("invalid message: " + messageevent.data);
-					}
+					console.log(e);
+					console.log("invalid message: " + messageevent.data);
 					return;
 				}
 				lib.message.client[message.shift()].apply(null, message);
@@ -12281,37 +12265,15 @@ export class Library {
 	message = {
 		server: {
 			cardPile() {
-				let draw_pile_array = Array.from(ui.cardPile.children);
-				let send_draw_pile_array = [];
-				let discard_pile_array =Array.from(ui.discardPile.children);
-				let send_discard_pile_array = [];
-				for (let i = 0; i < draw_pile_array.length; i++) {
-					let card = {};
-					card.name = draw_pile_array[i].name;
-					card.number = draw_pile_array[i].number;
-					card.suit = draw_pile_array[i].suit;
-					send_draw_pile_array.add(card);
-				}
-				for (let i = 0; i < discard_pile_array.length; i++) {
-					let card = {};
-					card.name = discard_pile_array[i].name;
-					card.number = discard_pile_array[i].number;
-					card.suit = discard_pile_array[i].suit;
-					send_discard_pile_array.add(card);
-				}
-				send_draw_pile_array.sort(function (a, b) {
-					return a.number - b.number;
-				});
-				send_discard_pile_array.sort(function (a, b) {
-					return a.number - b.number;
-				});
-				this.send(JSON.stringify({
-					type: "cardPile",
-					data: {
-						drawPile: send_draw_pile_array,
-						discardPile: send_discard_pile_array
-					}
-				}), "cardPile");
+				this.send(
+					JSON.stringify({
+						type: "cardPile",
+						data: {
+							drawPile: Array.from(ui.cardPile.children),
+							discardPile: Array.from(ui.discardPile.children),
+						},
+					})
+				);
 			},
 			/**
 			 * @this {import("./element/client.js").Client}
@@ -13928,15 +13890,6 @@ export class Library {
 				 * @returns {string}
 				 */
 				getSpan: () => `${get.prefixSpan("TW")}${get.prefixSpan("神")}`,
-			},
-		],
-		[
-			"SP神",
-			{
-				/**
-				 * @returns {string}
-				 */
-				getSpan: () => `${get.prefixSpan("SP")}${get.prefixSpan("神")}`,
 			},
 		],
 		[

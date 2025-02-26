@@ -340,7 +340,6 @@ game.import("card", function () {
 					},
 					result: {
 						target(player, target, card, isLink) {
-							if (player.hasSkill('oldjiefan')&&lib.skill.oldjiefan.ai.result.player(player)>0) return get.attitude(player,target);
 							let eff = -1.5,
 								odds = 1.35,
 								num = 1;
@@ -1083,13 +1082,6 @@ game.import("card", function () {
 							if (player.hasUnknown(2)) {
 								return 0;
 							}
-							if (game.players.length>2){
-								var list=target.getEnemies();
-								for (var i=0;i<list.length;i++){
-									if (list[i].hasSkill('sphuangen')&&list[i].hp>1) return 0;
-									if (list[i].getEquip('shanrangzhaoshu')) return 0;
-								}
-							}
 							return opt / 6;
 						},
 					},
@@ -1129,12 +1121,6 @@ game.import("card", function () {
 					},
 					result: {
 						target(player, target) {
-							if (game.players.length>2){
-								var list=target.getEnemies();
-								for (var i=0;i<list.length;i++){
-									if (list[i].hasSkill('sphuangen')&&list[i].hp>1) return 0;
-								}
-							}
 							return target.hp < target.maxHp ? 2 : 0;
 						},
 					},
@@ -1336,26 +1322,10 @@ game.import("card", function () {
 							return res;
 						},
 						target(player, target) {
-							if (game.players.length>2){
-								if (target.hasSkill('sphuangen')&&target.hp>0) return 0;
-								var list=target.getFriends(true);
-								for (var i=0;i<list.length;i++){
-									if (list[i].hasSkill('mansi')) return 0;
-									if (list[i].hasSkill('sphuangen')&&list[i].hp>1) return 0;
-								}
-							}
-							if (get.mode() === "identity"){
-								var list=player.getFriends();
-								if (player.isZhu&&player.countCards('he')>2){
-									for (var i=0;i<list.length;i++){
-										if (list[i].hp<=1) return 0;
-									}
-								}
-							}
 							let zhu = (get.mode() === "identity" && target.isZhu) || target.identity === "zhu";
 							if (!lib.filter.cardRespondable({ name: "sha" }, target)) {
 								if (zhu) {
-									if (target.hp < 2 && !target.hujia) return -99;
+									if (target.hp < 2) return -99;
 									if (target.hp === 2) return -3.6;
 								}
 								return -2;
@@ -1588,25 +1558,10 @@ game.import("card", function () {
 							return res;
 						},
 						target(player, target) {
-							if (game.players.length>2){
-								if (target.hasSkill('sphuangen')&&target.hp>0) return 0;
-								var list=target.getFriends(true);
-								for (var i=0;i<list.length;i++){
-									if (list[i].hasSkill('sphuangen')&&list[i].hp>1) return 0;
-								}
-							}
-							if (get.mode() === "identity"){
-								var list=player.getFriends();
-								if (player.isZhu&&player.countCards('he')>2){
-									for (var i=0;i<list.length;i++){
-										if (list[i].hp<=1) return 0;
-									}
-								}
-							}
 							let zhu = (get.mode() === "identity" && target.isZhu) || target.identity === "zhu";
 							if (!lib.filter.cardRespondable({ name: "shan" }, target)) {
 								if (zhu) {
-									if (target.hp < 2 && !target.hujia) return -99;
+									if (target.hp < 2) return -99;
 									if (target.hp === 2) return -3.6;
 								}
 								return -2;
@@ -1954,7 +1909,7 @@ game.import("card", function () {
 								if (
 									!hs.length &&
 									!es.some(card => {
-										return get.equipValue(card) > 0 && card != target.getEquip("jinhe");
+										return get.value(card, target) > 0 && card != target.getEquip("jinhe");
 									}) &&
 									!js.some(card => {
 										var cardj = card.viewAs ? { name: card.viewAs } : card;
@@ -1965,7 +1920,7 @@ game.import("card", function () {
 									return 0;
 							} else if (att > 1) {
 								return es.some(card => {
-									return get.equipValue(card) <= 0;
+									return get.value(card, target) <= 0;
 								}) ||
 									js.some(card => {
 										var cardj = card.viewAs ? { name: card.viewAs } : card;
@@ -1985,7 +1940,7 @@ game.import("card", function () {
 							if (get.attitude(player, target) <= 0) {
 								if (hs.length > 0) return -1.5;
 								return es.some(card => {
-									return get.equipValue(card) > 0 && card != target.getEquip("jinhe");
+									return get.value(card, target) > 0 && card != target.getEquip("jinhe");
 								}) ||
 									js.some(card => {
 										var cardj = card.viewAs ? { name: card.viewAs } : card;
@@ -1996,7 +1951,7 @@ game.import("card", function () {
 									: 1.5;
 							}
 							return es.some(card => {
-								return get.equipValue(card) <= 0;
+								return get.value(card, target) <= 0;
 							}) ||
 								js.some(card => {
 									var cardj = card.viewAs ? { name: card.viewAs } : card;
@@ -2028,14 +1983,9 @@ game.import("card", function () {
 							const es = position.includes("e") ? target.getGainableCards(player, "e") : [];
 							const js = position.includes("j") ? target.getGainableCards(player, "j") : [];
 							if (get.attitude(player, target) <= 0) {
-								var bad_equip_num=0;
-								for (var i=0;i<es.length;i++){
-									if (get.equipValue(es[i])<=0) bad_equip_num+=1;
-								}
-								if (bad_equip_num==es.length) return 0;
 								if (hs.length > 0) return -1.5;
 								return es.some(card => {
-									return get.equipValue(card) > 0 && card != target.getEquip("jinhe");
+									return get.value(card, target) > 0 && card != target.getEquip("jinhe");
 								}) ||
 									js.some(card => {
 										var cardj = card.viewAs ? { name: card.viewAs } : card;
@@ -2046,7 +1996,7 @@ game.import("card", function () {
 									: 1.5;
 							}
 							return es.some(card => {
-								return get.equipValue(card) <= 0;
+								return get.value(card, target) <= 0;
 							}) ||
 								js.some(card => {
 									var cardj = card.viewAs ? { name: card.viewAs } : card;
@@ -2067,7 +2017,7 @@ game.import("card", function () {
 								if (
 									!hs.length &&
 									!es.some(card => {
-										return get.equipValue(card) > 0 && card != target.getEquip("jinhe");
+										return get.value(card, target) > 0 && card != target.getEquip("jinhe");
 									}) &&
 									!js.some(card => {
 										var cardj = card.viewAs ? { name: card.viewAs } : card;
@@ -2078,7 +2028,7 @@ game.import("card", function () {
 									return 0;
 							} else if (att > 1) {
 								return es.some(card => {
-									return get.equipValue(card) <= 0;
+									return get.value(card, target) <= 0;
 								}) ||
 									js.some(card => {
 										var cardj = card.viewAs ? { name: card.viewAs } : card;
@@ -2270,7 +2220,7 @@ game.import("card", function () {
 								}
 								if (
 									es.some(card => {
-										return get.equipValue(card) < 0;
+										return get.value(card, target) < 0;
 									})
 								)
 									return 1;
@@ -2281,7 +2231,7 @@ game.import("card", function () {
 								const noe2 =
 									noe ||
 									!es.some(card => {
-										return get.equipValue(card, target) > 0;
+										return get.value(card, target) > 0;
 									});
 								const noj =
 									js.length == 0 ||
@@ -2331,7 +2281,7 @@ game.import("card", function () {
 								}
 								if (
 									es.some(card => {
-										return get.equipValue(card) < 0;
+										return get.value(card, target) < 0;
 									})
 								)
 									return 1;
@@ -2342,7 +2292,7 @@ game.import("card", function () {
 								const noe2 =
 									noe ||
 									!es.some(card => {
-										return get.equipValue(card) > 0;
+										return get.value(card, target) > 0;
 									});
 								const noj =
 									js.length == 0 ||
@@ -2459,12 +2409,6 @@ game.import("card", function () {
 					result: {
 						player: (player, target) => {
 							if (!target.hasSkillTag("noe") && get.attitude(player, target) > 0) return 0;
-							let target_weapons=target.getEquips(1);
-							for (var target_weapon of target_weapons){
-								if (get.equipValue(target_weapon)<=0){
-									return 'zeroplayertarget';
-								}
-							}
 							return (
 								(player.hasSkillTag("noe") ? 0.32 : 0.15) *
 								target.getEquips(1).reduce((num, i) => {
@@ -2473,12 +2417,6 @@ game.import("card", function () {
 							);
 						},
 						target: (player, target, card) => {
-							let target_weapons=target.getEquips(1);
-							for (var target_weapon of target_weapons){
-								if (get.equipValue(target_weapon)<=0){
-									return 'zeroplayertarget';
-								}
-							}
 							let targets = ui.selected.targets.slice();
 							if (_status.event.preTarget) targets.add(_status.event.preTarget);
 							if (targets.length) {
@@ -2707,7 +2645,6 @@ game.import("card", function () {
 								var mode = get.mode();
 								if (mode == "identity") {
 									if (target.identity == "nei") return 1;
-									if (player.hasUnknown(2)) return 0;
 									var situ = get.situation();
 									if (target.identity == "fan") {
 										if (situ > 1) return 1;
@@ -2734,7 +2671,6 @@ game.import("card", function () {
 						},
 					},
 					tag: {
-						expose: 0.2,
 						damage: 0.16,
 						natureDamage: 0.16,
 						thunderDamage: 0.16,

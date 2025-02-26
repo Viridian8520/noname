@@ -59,6 +59,8 @@ const characterSort = {
 		"taffyold_huan_caoang",
 		"taffyold_ol_nanhualaoxian",
 		"taffyold_ol_sb_dongzhuo",
+		"taffyold_pangfengyi",
+		"taffyold_hanshiwuhu",
 	],
 	taffy_ol: ["taffyboss_lvbu1"],
 	taffy_shou: ["taffymb_shen_caocao"],

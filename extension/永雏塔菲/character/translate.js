@@ -610,6 +610,14 @@ const translates = {
 	taffyold_olxiongni_info: "出牌阶段开始时，你可以弃置一张牌，然后所有其他角色选择一项：1.弃置一张与此牌花色相同的牌；2.受到你的1点伤害。",
 	taffyold_olfengshang: "封赏",
 	taffyold_olfengshang_info: "出牌阶段限一次或当一名角色进入濒死状态时，你可以将两张本回合进入弃牌堆中的花色相同的牌分配给等量角色。若你未以此法获得牌，你视为使用一张不计入次数的【酒】。",
+	taffyold_pangfengyi: "旧庞凤衣",
+	taffyold_pangfengyi_prefix: "旧",
+	taffyold_dcyitong: "异瞳",
+	taffyold_dcyitong_info: "锁定技。①游戏开始时，你记录一个花色。②每回合〖异瞳〗记录花色的牌首次进入弃牌堆后，你从牌堆或弃牌堆获得与此花色不同的牌各一张。",
+	taffyold_dcpeiniang: "醅酿",
+	taffyold_dcpeiniang_info: "①你可以将〖异瞳〗记录花色的牌当作【酒】使用（无任何次数限制）。②其他角色处于濒死状态时，你可以对其使用【酒】（回复效果）。③因你使用【酒】执行的体力回复效果至少令目标角色将体力值回复至1点。",
+	taffyold_hanshiwuhu: "旧韩氏五虎",
+	taffyold_hanshiwuhu_prefix: "旧",
 	aruijier: "瑞吉儿",
 };
 

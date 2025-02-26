@@ -2360,13 +2360,9 @@ export class Create {
 							try {
 								game.ws.send(JSON.stringify(['cardPile']));
 								game.ws.addEventListener('message', function (e) {
-									let received_data = JSON.parse(e.data)[0];
-									let received_message_data_type = JSON.parse(e.data)[1];
-									if (received_message_data_type == "cardPile") {
-										let data = JSON.parse(received_data);
-										if (data.type == "cardPile") {
-											resolve(data.data);
-										}
+									let data = JSON.parse(JSON.parse(e.data)[0]);
+									if (data.type == 'cardPile') {
+										resolve(data.data);
 									}
 								}, { once: true });
 
@@ -2518,6 +2514,9 @@ export class Create {
 			true,
 			true
 		);
+
+
+
 		lib.arenaReady?.push(function () {
 			if (lib.config.show_deckMonitor) {
 				ui.deckMonitor.style.display = "";
@@ -2529,6 +2528,8 @@ export class Create {
 			}
 			document.documentElement.style.setProperty("--tip-display", lib.config.show_tip ? "flex" : "none");
 		});
+
+
 		//---------------------------------
 		ui.playerids = ui.create.system(
 			"显示身份",
@@ -2708,6 +2709,7 @@ export class Create {
 		// @ts-ignore
 		while (lib.arenaReady.length) lib.arenaReady.shift()();
 		delete lib.arenaReady;
+		// taffy: 来自adeFuLoDgu的自定义扩展加载
 		//load custom extension start
 		var addtional_extention_names=[
 			['十周年UI', true],
@@ -2734,6 +2736,7 @@ export class Create {
 		}
 		if(need_reload) game.reload();
 		//load custom extension end
+		/* taffy分界线 */
 		if (lib.config.auto_check_update && !sessionStorage.getItem("auto_check_update")) {
 			setTimeout(() => {
 				sessionStorage.setItem("auto_check_update", "1");
@@ -2858,7 +2861,6 @@ export class Create {
 			delete node.activate;
 		};
 		_status.prebutton.push(node);
-		if (window.decadeUI&&position) position.appendChild(node);
 		return node;
 	}
 	buttonPresets = {
@@ -3197,12 +3199,10 @@ export class Create {
 				for (var i of game.connectPlayers) {
 					if (!i.nickname && !i.classList.contains("unselectable2")) num++;
 				}
-				/*
 				if (num >= lib.configOL.number - 1) {
 					alert("至少要有两名玩家才能开始游戏！");
 					return;
 				}
-				*/
 				game.resume();
 			}
 			button.delete();

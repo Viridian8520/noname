@@ -251,14 +251,6 @@ game.import("card", function () {
 					},
 					result: {
 						target(player, target, card) {
-							if (target==player){
-								var cards=target.getCards('he');
-								var du_count=0;
-								for (var i=0;i<cards.length;i++){
-									if (cards[i].name=='du') du_count+=1;
-								}
-								if (cards.length<=1+du_count) return 0;
-							}
 							var cards = ui.selected.cards.concat(card.cards || []);
 							var num = player.countCards("he", function (card) {
 								if (cards.includes(card)) return false;
@@ -308,26 +300,15 @@ game.import("card", function () {
 					},
 					result: {
 						target(player, target) {
-							if (target.countCards('e',function(card){
-								return get.equipValue(card)<=0;
-							})||target.hasSkillTag('noe')) return 1;
-							if (target.countCards('he')>target.getHandcardLimit()&&target.hasJudge('lebu')) return -1;
-							var e5s=target.getEquips(5);
-							for (var e5 of e5s){
-								if (e5&&e5.name=='muniu'&&e5.cards&&e5.cards.length>1) return -1;
-								if (e5&&e5.name=='shanrangzhaoshu') return -1;
-								if (e5&&e5.name=='shufazijinguan') return -2;
-								if (e5&&e5.name=='xuwangzhimian') return -1.5;
-							}
-							var e2s=target.getEquips(2);
-							for (var e2 of e2s){
-								if (e2&&player.countCards('h','sha')>0&&(e2.name=='bagua'||(e2.name=='lanyinjia'&&target.countCards('h')>0))&&player.inRange(target)) return -1;
-								if (e2&&e2.name=='baiyin'&&target.isDamaged()) return 2;
-							}
-							var e3s=target.getEquips(3);
-							for (var e3 of e3s){
-								if (e3&&player.countCards('h','sha')>0&&get.distance(player,target)==2&&!player.inRange(target)) return -1;
-							}
+							var e5 = target.getEquip("muniu");
+							if (e5 && e5.name == "muniu" && e5.cards && e5.cards.length > 1) return -1;
+							if (
+								target.countCards("e", function (card) {
+									return get.value(card, target) <= 0;
+								}) ||
+								target.hasSkillTag("noe")
+							)
+								return 1;
 							return 0;
 						},
 					},
@@ -353,9 +334,6 @@ game.import("card", function () {
 					});
 				},
 				ai: {
-					wuxie: function (target,card,player,current,state) {
-						return -state*get.attitude(player,current);
-					},
 					basic: {
 						useful: [6, 4],
 						value: [6, 4],
@@ -380,12 +358,11 @@ game.import("card", function () {
 				ai: {
 					order: 9,
 					value(card, player) {
-						if (get.position(card) == "e") return 0;
+						if (player.getEquips(4).includes(card)) return 0;
 						return 4;
 					},
 					equipValue(card, player) {
-						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
-						if (get.position(card) == "e") return 0;
+						if (player.getCards("e").includes(card)) return 0;
 						return -get.value(player.getCards("e"));
 					},
 					basic: {
@@ -396,15 +373,9 @@ game.import("card", function () {
 						target(player, target) {
 							var cards = target.getCards("e");
 							if (cards.length == 1 && cards[0].name == "nvzhuang") return 0;
-							var val=0;
-							for (var i=0;i<cards.length;i++){
-								val+=get.equipValue(cards[i]);
-							}
-							var tianjitu_cards=target.getEquips(5);
-							for (var tianjitu_card of tianjitu_cards){
-								if (tianjitu_card&&tianjitu_card.name=='tianjitu'&&target.getCards('h').length<=5&&cards.length<=3) return 2-target.getCards('h').length;
-							}
-							return -val;
+							var val = get.value(cards, target);
+							if (val > 0) return -val;
+							return 0;
 						},
 					},
 				},
@@ -456,12 +427,11 @@ game.import("card", function () {
 				ai: {
 					order: 9,
 					equipValue(card, player) {
-						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return -2;
 						return 2;
 					},
 					value(card, player) {
-						if (get.position(card) == "e") {
+						if (player.getEquips(1).includes(card)) {
 							if (player.hasSkillTag("noh")) return 0;
 							return -3.5;
 						}
@@ -473,13 +443,14 @@ game.import("card", function () {
 					result: {
 						keepAI: true,
 						target(player, target) {
-							var val=2.5;
-							var cards=target.getEquips(1);
-							for (var card of cards){
-								if (card&&get.equipValue(card)<=0) return 0;
-								if (card) val+=get.equipValue(card);
+							var val = 2;
+							var val2 = 0;
+							var card = target.getEquip(1);
+							if (card) {
+								val2 = get.value(card, target);
+								if (val2 < 0) return 0;
 							}
-							return -val;
+							return -val - val2;
 						},
 					},
 				},
@@ -498,12 +469,11 @@ game.import("card", function () {
 				ai: {
 					order: 9,
 					equipValue(card, player) {
-						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return -2;
 						return 2;
 					},
 					value(card, player) {
-						if (get.position(card) == "e") return -3.5;
+						if (player.getEquips(1).includes(card)) return -3.5;
 						return 3;
 					},
 					basic: {
@@ -512,13 +482,14 @@ game.import("card", function () {
 					result: {
 						keepAI: true,
 						target(player, target) {
-							var val=2.5;
-							var cards=target.getEquips(1);
-							for (var card of cards){
-								if( card&&get.equipValue(card)<=0) return 0;
-								if (card) val+=get.equipValue(card);
+							var val = 2.5;
+							var val2 = 0;
+							var card = target.getEquip(1);
+							if (card) {
+								val2 = get.value(card, target);
+								if (val2 < 0) return 0;
 							}
-							return -val;
+							return -val - val2;
 						},
 					},
 				},
@@ -537,12 +508,11 @@ game.import("card", function () {
 				ai: {
 					order: 9,
 					equipValue(card, player) {
-						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
 						if (get.position(card) == "e") return -7;
 						return 1;
 					},
 					value(card, player) {
-						if (get.position(card) == "e") return -9;
+						if (player.getEquips(2).includes(card)) return -9;
 						return 2.5;
 					},
 					basic: {
@@ -551,13 +521,14 @@ game.import("card", function () {
 					result: {
 						keepAI: true,
 						target(player, target) {
-							var val=2;
-							var cards=target.getEquips(2);
-							for (var card of cards){
-								if (card&&get.equipValue(card)<=0) return 0;
-								if (card) val+=get.equipValue(card);
+							var val = 2;
+							var val2 = 0;
+							var card = target.getEquip(2);
+							if (card) {
+								val2 = get.value(card, target);
+								if (val2 < 0) return 0;
 							}
-							return -val;
+							return -val - val2;
 						},
 					},
 				},
@@ -605,11 +576,17 @@ game.import("card", function () {
 						}
 					});
 				},
-				ai:{
+				ai: {
 					order: 9.5,
 					equipValue(card, player) {
-						if (card.constructor.name == "VCard" && card?.cards?.[0]) card = card.cards[0];
-						if (get.position(card) == "e") return 0;
+						if (player.getEquips(2).includes(card)) {
+							if (player.sex != "male") return 0;
+							var num = player.countCards("he", function (cardx) {
+								return cardx != card;
+							});
+							if (num == 0) return 0;
+							return 4 / num;
+						}
 						return 1;
 					},
 					value() {
@@ -618,25 +595,28 @@ game.import("card", function () {
 					basic: {
 						equipValue: 5,
 					},
-					result:{
+					result: {
 						keepAI: true,
 						target(player, target) {
-							if (target.countCards('e')>0&&(target.hasSkillTag('nodiscard')||target.hasSkillTag('nolose')||target.hasSkillTag('noh'))) return 0;
-							if ((target.countCards('e',function(cardx){return cardx.subtype!='equip2'&&get.equipValue(cardx)<=0;})>0)) return 0;
-							let val=0;
-							if (target.sex=='male'){
-								let h_num=target.countCards('h');
-								if (h_num>0) val+=4/h_num;
-								let e_no_equip2_num=target.countCards('e',function(cardx){
-									return cardx.subtype!='equip2';
-								});;
-								if (e_no_equip2_num>0) val+=4/e_no_equip2_num;
+							var card = target.getEquip(2);
+							if (target.sex == "male") {
+								var val = 0;
+								var val2 = 0;
+								if (card) {
+									val2 = get.value(card, target);
+									if (val2 < 0) return 0;
+								}
+								var num = target.countCards("he", function (cardx) {
+									return cardx != card;
+								});
+								if (num > 0) val += 4 / num;
+								return -val;
 							}
-							var cards=target.getEquips(2);
-							for (var card of cards){
-								if (card) val+=get.equipValue(card);
+							if (card) {
+								var val2 = get.value(card, target);
+								if (val2 > 0) return -val2 / 4;
 							}
-							return -val;
+							return 0;
 						},
 					},
 				},
@@ -722,8 +702,13 @@ game.import("card", function () {
 				ai: {
 					order: 9.5,
 					equipValue(card, player) {
-						if ((get.position(card?.cards?.[0]) == "e") && card?.cards?.[0]?.cardid) return 1+3*player.countCards('h');
-						if (_status.jinhe&&_status.jinhe[card.cardid]&&(_status.event.name=='discardPlayerCard'||_status.event.name=='chooseToDiscard'||_status.event.name=='chooseToUse')) return 1+3*player.countCards('h');
+						if (!player.getEquips(5).includes(card)) return 5;
+						if (
+							_status.jinhe &&
+							_status.jinhe[card.cardid] &&
+							_status.event.name != "gainPlayerCard"
+						)
+							return 3 * player.countCards("h");
 						return 0;
 					},
 					value() {
@@ -731,22 +716,15 @@ game.import("card", function () {
 					},
 					basic: {
 						equipValue: 5,
-						value: function(card,player,i) {
-							if (_status.jinhe&&_status.jinhe[card.cardid]&&(_status.event.name=='discardPlayerCard'||_status.event.name=='chooseToDiscard'||_status.event.name=='chooseToUse')) return 1+2*player.countCards('h');
-							return 0;
-						}
 					},
 					result: {
 						keepAI: true,
 						target(player, target, cardx) {
 							if (_status.jinhe && _status.jinhe[cardx.cardid])
 								return -0.5 - 2 * target.countCards("h");
-							var cards=target.getEquips(5);
-							for (var card of cards){
-								if (!card) return 0;
-								return -get.value(card,target);
-							}
-							return 0;
+							var card = target.getEquip(5);
+							if (!card) return 0;
+							return -get.value(card, target);
 						},
 						target_use(player, target) {
 							return -0.5 - 2 * target.countCards("h");
@@ -852,18 +830,15 @@ game.import("card", function () {
 					game.broadcastAll(ui.clear);
 				},
 				ai: {
-					basic:{
-						order: 1,
-					},
+					order: 1,
 					result: {
 						player(player) {
-							var cards=player.getCards('h')
-							var card_suits=[];
-							for (var i=0;i<cards.length;i++){
-								if (!card_suits.includes(get.suit(cards[i]))) card_suits.push(get.suit(cards[i]));
-							}
-							if (card_suits.length>=2) return 1;
-							return 0;
+							var suit = get.suit(_status.jinhe[player.getEquip("jinhe").cardid].card);
+							var hs = player.getCards("h", function (card) {
+								return get.suit(card) == suit;
+							});
+							if (!hs.length || get.value(hs) < 5) return 1;
+							return -1;
 						},
 					},
 				},
@@ -916,15 +891,6 @@ game.import("card", function () {
 				content() {
 					trigger.num++;
 				},
-				ai:{
-					effect: {
-						target: function(card,player,target,current) {
-							if (get.type(card)=='trick'&&get.tag(card,'damage')){
-								return 2;
-							}
-						}
-					}
-				}
 			},
 			wufengjian_skill: {
 				equipSkill: true,

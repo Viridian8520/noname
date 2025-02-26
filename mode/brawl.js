@@ -3613,10 +3613,10 @@ export default () => {
 					},
 				},
 			},
-			scene:{
-				name:'创建场景',
-				content:{
-					submode:'normal'
+			scene: {
+				name: "创建场景",
+				content: {
+					submode: "normal",
 				},
 				nostart: true,
 				fullshow: true,

@@ -349,12 +349,6 @@ game.import("card", function () {
 					},
 					result: {
 						target: (player, target) => {
-							if (game.players.length>2){
-								var list=player.getEnemies();
-								for (var i=0;i<list.length;i++){
-									if (list[i].hasSkill('sphuangen')&&list[i].hp>1) return 0;
-								}
-							}
 							if (target.hasSkillTag("link") || target.hasSkillTag("noLink")) return 0;
 							let curs = game.filterPlayer(current => {
 								if (current.hasSkillTag("noLink") || current.hasSkillTag("nodamage")) return false;
@@ -553,7 +547,6 @@ game.import("card", function () {
 				ai: {
 					order: 9.5,
 					equipValue(card, player) {
-						if (get.position(card)=='e'&&player.isDamaged()) return -1;
 						if (player.hp == player.maxHp) return 5;
 						if (player.countCards("h", "baiyin")) return 6;
 						return 0;

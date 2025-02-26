@@ -2226,7 +2226,7 @@ const skills = {
 			}
 		},
 		ai: {
-			neg: true,
+			halfneg: true,
 		},
 	},
 	//蒋济
@@ -5564,11 +5564,7 @@ const skills = {
 		check(event, player) {
 			const target = event.targets[0];
 			if (target.hasMark("dcjizhong")) {
-				let eff = 0;
-				game.countPlayer(current => {
-					eff += get.effect(target, { name: "shunshou_copy" }, current, player);
-				});
-				return eff > 0;
+				return get.effect(target, { name: "shunshou_copy" }, player, player) > 0;
 			} else {
 				const card = { name: event.card.name, nature: event.card.nature, isCard: true };
 				let eff = 0;
@@ -7563,9 +7559,9 @@ const skills = {
 				})
 				.set(
 					"damage",
-					get.damageEffect(target, player, player) > 0 &&
+					get.damageEffect(target, player, player) > 10 &&
 						player.countCards("he", card => {
-							return lib.filter.canBeDiscarded(card, player, player) && get.value(card) < 11;
+							return lib.filter.canBeDiscarded(card, player, player) && get.value(card) < 5;
 						}) >= 3
 				);
 			"step 1";
@@ -9315,7 +9311,6 @@ const skills = {
 		ai: {
 			order(item, player) {
 				if (player.hasUnknown()) return 0;
-				let cards = player.getCards("h");
 				let list = [];
 				for (let i of player.getCards("h")) {
 					list.add(get.suit(i, player));
@@ -15071,16 +15066,34 @@ const skills = {
 				return get.order({ name: "sha" }) - 0.3;
 			},
 			result: {
+				player(player, target) {
+					let cache = lib.skill.xinkuangfu.useShaValue(player),
+						eff = cache.eff / 10;
+					if (player === target) {
+						return 2 * cache.odds + eff;
+					}
+					return Math.min(2, player.countCards("h")) * (cache.odds - 1) + eff;
+				},
 				target(player, target) {
-					var att=get.attitude(player,target);
-					let bad_equip_num=target.countCards('e',function(card){
-						return get.equipValue(card)<0;
+					let att = get.attitude(player, target),
+						max = 0,
+						min = 1;
+					target.countCards("e", function (card) {
+						var val = get.value(card, target);
+						if (val > max) max = val;
+						if (val < min) min = val;
 					});
-					let good_equip_num=target.countCards('e',function(card){
-						return get.equipValue(card)>=0;
-					});
-					if (att>0&&bad_equip_num>0) return target.hasSkillTag('noe')?3:1;
-					if (att<=0&&good_equip_num>0&&get.effect(target,{name:'sha'},player,player)>0&&!target.hasSkillTag('noe')) return -1;
+					if (att <= 0) {
+						if (target.hasSkillTag("noe")) return 2 - max / 3;
+						if (min <= 0) return 1;
+						return -max / 3;
+					}
+					if (target.hasSkillTag("noe")) return 2 - min / 4;
+					if (min <= 0) return 1;
+					if (player === target) {
+						let cache = lib.skill.xinkuangfu.useShaValue(player);
+						return cache.eff / 10 - 1;
+					}
 					return 0;
 				},
 			},

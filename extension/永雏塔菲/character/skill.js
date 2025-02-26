@@ -18270,6 +18270,122 @@ const skills = {
 			},
 		},
 	},
+	//旧庞凤衣
+	taffyold_dcyitong: {
+		audio: "dcyitong",
+		trigger: {
+			global: ["phaseBefore", "loseAfter", "loseAsyncAfter", "cardsDiscardAfter"],
+			player: "enterGame",
+		},
+		filter(event, player, name) {
+			const suits = player.getStorage("taffyold_dcyitong");
+			if (name === "phaseBefore" || name === "enterGame") {
+				return suits.length < 4 && (event.name !== "phase" || game.phaseNumber === 0);
+			}
+			return suits.some(suit => {
+				if (!event.getd?.().some(card => get.suit(card, false) === suit)) return false;
+				return (
+					game
+						.getGlobalHistory("everything", evt => {
+							return evt.getd?.()?.some(card => get.suit(card, false) === suit);
+						})
+						.indexOf(event) === 0
+				);
+			});
+		},
+		forced: true,
+		async content(event, trigger, player) {
+			const name = event.triggername,
+				storage = player.getStorage("taffyold_dcyitong"),
+				suits = lib.suit
+					.filter(suit => {
+						if (name === "phaseBefore" || name === "enterGame") return !storage.includes(suit);
+						if (!storage.includes(suit) || !trigger.getd?.().some(card => get.suit(card, false) === suit)) return false;
+						return (
+							game
+								.getGlobalHistory("everything", evt => {
+									return evt.getd?.()?.some(card => get.suit(card, false) === suit);
+								})
+								.indexOf(trigger) === 0
+						);
+					})
+					.reverse();
+			if (name === "phaseBefore" || name === "enterGame") {
+				const result =
+					suits.length > 1
+						? await player
+								.chooseControl(suits)
+								.set("ai", () => {
+									return get.event().controls.randomGet();
+								})
+								.set("prompt", "异瞳：请记录一个花色")
+								.forResult()
+						: { control: suits[0] };
+				const suit = result.control;
+				if (suit) {
+					player.markAuto("taffyold_dcyitong", [suit]);
+					player.addTip("taffyold_dcyitong", get.translation("taffyold_dcyitong") + player.getStorage("taffyold_dcyitong").reduce((str, suit) => str + get.translation(suit), ""));
+				}
+			} else {
+				let gains = [];
+				for (const suitx of suits) {
+					for (const suit of lib.suit.slice().reverse()) {
+						if (suitx === suit) continue;
+						const card = get.cardPile(card => get.suit(card) === suit && !gains.includes(card));
+						if (card) gains.push(card);
+					}
+				}
+				if (gains.length) await player.gain(gains, "gain2");
+			}
+		},
+		onremove(player, skill) {
+			delete player.storage[skill];
+			player.removeTip(skill);
+		},
+		intro: { content: "已记录$花色" },
+	},
+	taffyold_dcpeiniang: {
+		audio: "dcpeiniang",
+		mod: {
+			cardUsable(card) {
+				if (card?.storage?.taffyold_dcpeiniang) return Infinity;
+			},
+		},
+		enable: "chooseToUse",
+		filterCard(card, player) {
+			return player.getStorage("taffyold_dcyitong").includes(get.suit(card));
+		},
+		viewAs: {
+			name: "jiu",
+			storage: { taffyold_dcpeiniang: true },
+		},
+		prompt() {
+			const player = get.player();
+			return "将" + player.getStorage("taffyold_dcyitong").reduce((str, suit) => str + get.translation(suit), "") + "牌当作【酒】使用";
+		},
+		check(card, player) {
+			return 0 + lib.skill.oljiuchi?.check?.(card, player);
+		},
+		precontent() {
+			event.getParent().addCount = false;
+		},
+		position: "hes",
+		ai: {
+			jiuOther: true,
+			combo: "taffyold_dcyitong",
+		},
+		trigger: { source: "recoverBegin" },
+		filter(event, player) {
+			if (event.name === "chooseToUse") return player.hasCard(card => lib.skill.taffyold_dcpeiniang.filterCard(card, player), "hes");
+			return event.getParent()?.name === "jiu" && event.num + event.player.hp < 1;
+		},
+		forced: true,
+		locked: false,
+		logTarget: "player",
+		content() {
+			trigger.num = 1 - trigger.player.hp;
+		},
+	},
 };
 
 export default skills;

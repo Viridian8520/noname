@@ -2340,7 +2340,7 @@ const skills = {
 		content() {
 			"step 0";
 			player
-				.chooseTarget([1, player.getHistory("skipped").length], get.prompt2("repingkou"), "对至多" + get.cnNumber(player.getHistory('skipped').length) + "名其他角色各造成1点伤害。若你选择的角色数小于最大角色数，则你可以弃置其中一名目标角色装备区内的一张牌", function (card, player, target) {
+				.chooseTarget([1, player.getHistory("skipped").length], get.prompt2("repingkou"), "对至多" + get.cnNumber(num) + "名其他角色各造成1点伤害。若你选择的角色数小于最大角色数，则你可以弃置其中一名目标角色装备区内的一张牌", function (card, player, target) {
 					return target != player;
 				})
 				.set("ai", function (target) {
@@ -2494,7 +2494,7 @@ const skills = {
 				) {
 					return true;
 				}
-				return evt.player.countCards('h')>3?true:false;
+				return Math.random() < evt.player.countCards("h") / 4;
 			};
 			"step 2";
 			if (result.bool) {
@@ -2769,7 +2769,6 @@ const skills = {
 			player.addTempSkill("rezhanjue_effect", "phaseUseEnd");
 		},
 		ai: {
-			nokeep: true,
 			order(item, player) {
 				if (player.countCards("h") > 1) return 0.8;
 				return 8;
@@ -10085,7 +10084,6 @@ const skills = {
 			order: 14,
 			result: {
 				player(player) {
-					if (get.mode()=='identity'&&player.hasUnknown(2)) return 0;
 					if (player.hp < 3) return false;
 					var mindist = player.hp;
 					if (player.countCards("hs", card => player.canSaveCard(card, player))) mindist++;
@@ -11869,9 +11867,6 @@ const skills = {
 				target(card, player, target) {
 					if (name == "lebu" || name == "bingliang") return [target.hasSkillTag("rejudge") ? 0.4 : 1, 2, target.hasSkillTag("rejudge") ? 0.4 : 1, 0];
 				},
-				target_use(card, player, target, current) {
-					if (get.type(card) == "delay") return [target.hasSkillTag("rejudge") ? 0.4 : 1, 2, target.hasSkillTag("rejudge") ? 0.4 : 1, 0];
-				}
 			},
 		},
 	},
@@ -13852,16 +13847,6 @@ const skills = {
 			player.loseMaxHp();
 			player.chooseDrawRecover(2, true);
 			player.addSkills("gongxin");
-		},
-		ai: {
-			effect: {
-				player: function(card,player,target,current) {
-					var draw_two_cards=get.tag(card,'draw')>1;
-					if (player.hasSkill('keji')&&!player.hasSkill('gongxin')&&!draw_two_cards){
-						return 'zeroplayertarget';
-					}
-				}
-			}
 		},
 	},
 	qingjian: {

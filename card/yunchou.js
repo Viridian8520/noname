@@ -2,7 +2,6 @@ import { lib, game, ui, get, ai, _status } from "../noname.js";
 game.import("card", function () {
 	return {
 		name: "yunchou",
-		connect: true,
 		card: {
 			diaobingqianjiang: {
 				fullskin: true,
@@ -45,15 +44,6 @@ game.import("card", function () {
 					dialog.videoId = lib.status.videoId++;
 					game.addVideo("cardDialog", null, ["调兵遣将", get.cardsInfo(cards), dialog.videoId]);
 					event.getParent().preResult = dialog.videoId;
-					game.broadcast(
-						function (cards, id) {
-							var dialog = ui.create.dialog("调兵遣将", cards, true);
-							_status.dieClose.push(dialog);
-							dialog.videoId = id;
-						},
-						cards,
-						dialog.videoId
-					);
 				},
 				content() {
 					"step 0";
@@ -76,10 +66,6 @@ game.import("card", function () {
 						event.dialog.setCaption("选择一张牌并用一张手牌替换之");
 					}
 					var next = target.chooseButton(function (button) {
-						var list=target.getEnemies();
-						for (var i=0;i<list.length;i++){
-							if (list[i].getEquip('shanrangzhaoshu')) return 0;
-						}
 						return get.value(button.link, _status.event.player) - minValue;
 					});
 					next.set("dialog", event.preResult);
@@ -109,26 +95,6 @@ game.import("card", function () {
 							ui.create.button(result.cards[0], "card", event.button.parentNode)
 						);
 						event.button.remove();
-						game.broadcast(
-							function (removed_card, added_card, id) {
-								let dialog = get.idDialog(id);
-								if (dialog) {
-									for (var i = 0; i < dialog.buttons.length; i++) {
-										if (dialog.buttons[i].link == removed_card) {
-											let removed_card_button = dialog.buttons[i];
-											dialog.buttons.remove(dialog.buttons[i]);
-											dialog.buttons.push(
-												ui.create.button(added_card, "card", removed_card_button.parentNode)
-											);
-											removed_card_button.remove();
-										}
-									}
-								}
-							},
-							event.button.link,
-							result.cards[0],
-							event.dialog.videoId
-						);
 					}
 					"step 3";
 					game.delay(2);
@@ -173,13 +139,6 @@ game.import("card", function () {
 					var dialog = event.dialog;
 					dialog.close();
 					_status.dieClose.remove(dialog);
-					game.broadcast(function (id) {
-						var dialog = get.idDialog(id);
-						if (dialog) {
-							dialog.close();
-							_status.dieClose.remove(dialog);
-						}
-					}, event.preResult);
 					game.addVideo("cardDialog", null, event.preResult);
 				},
 				ai: {
@@ -193,22 +152,10 @@ game.import("card", function () {
 					},
 					result: {
 						player: (player, target) => {
-							if (game.players.length>2&&player.hasFriend()){
-								var list=player.getEnemies();
-								for (var i=0;i<list.length;i++){
-									if (list[i].getEquip('shanrangzhaoshu')) return 0;
-								}
-							}
 							return 1 / game.countPlayer();
 						},
 						target(player, target) {
 							if (target.countCards("h") == 0) return 0;
-							if (game.players.length>2&&player.hasFriend()){
-								var list=player.getEnemies();
-								for (var i=0;i<list.length;i++){
-									if (list[i].getEquip('shanrangzhaoshu')) return 0;
-								}
-							}
 							return (
 								(Math.sqrt(target.countCards("h")) -
 									get.distance(player, target, "absolute") / game.countPlayer() / 3) /
@@ -259,7 +206,7 @@ game.import("card", function () {
 							} else {
 								game.log(target, "展示了", target.getCards("h"));
 							}
-							player.discardPlayerCard(target, "h", true, "visible").set('ai',(card)=>get.value(card));
+							player.discardPlayerCard(target, "h", true, "visible");
 						}
 						event.finish();
 					} else {
@@ -275,13 +222,6 @@ game.import("card", function () {
 					value: [5, 1],
 					result: {
 						target(player, target) {
-							if (target.hasSkillTag('directHit_ai',true,{
-								player:target,
-								target:player,
-								card:{name:'sha'},
-							},true)){
-								return 0;
-							}
 							if (player.hasShan()) return -1;
 							return 0;
 						},
@@ -391,8 +331,7 @@ game.import("card", function () {
 									var dutag = player.hasSkillTag("nodu");
 									for (var i = 0; i < hs.length; i++) {
 										var value = get.value(hs[i], player);
-										if (hs[i].name == "du") continue;
-										//if (hs[i].name == "du" && dutag) continue;
+										if (hs[i].name == "du" && dutag) continue;
 										if (value < 0) return true;
 										if (!_status.event.hasTarget) {
 											if (hs[i].number >= 8 && value <= 7) return true;
@@ -431,7 +370,7 @@ game.import("card", function () {
 					}
 				},
 				callback() {
-					if (event.num1 > event.num2) {
+					if (event.card1.number > event.card2.number) {
 						event.parent.parent.num++;
 					} else {
 						event.parent.parent.num--;
@@ -630,22 +569,7 @@ game.import("card", function () {
 					useful: 6,
 					value: 6,
 					result: {
-						target: function(player,target) {
-							if (target.getCards('h').length==0){
-								let bad_equip_num=0;
-								for (let i=0;i<target.getCards('e').length;i++){
-									if (get.equipValue(target.getCards('e')[i])<=0) bad_equip_num+=1;
-								}
-								if (bad_equip_num==target.getCards('e').length) return 0;
-							}
-							if (game.players.length>2){
-								var list=player.getEnemies();
-								for (var i=0;i<list.length;i++){
-									if (list[i].getEquip('shanrangzhaoshu')) return 0;
-								}
-							}
-							return -1;
-						}
+						target: -1,
 					},
 					tag: {
 						loseCard: 1,
@@ -708,36 +632,7 @@ game.import("card", function () {
 					order: 9,
 					result: {
 						target(player, target) {
-							if (game.players.length>2){
-								var list=target.getFriends(true);
-								for (var i=0;i<list.length;i++){
-									if (list[i].hasSkill('sphuangen')&&list[i].hp>1) return 0;
-								}
-							}
-							var do_not_use=false;
-							var friend_list=player.getFriends(true);
-							for (var i=0;i<friend_list.length;i++){
-								var treasures=friend_list[i].getEquips(5);
-								for (var treasure of treasures){
-									if (friend_list[i].getCards('e').length==1){
-										if (treasure.name=='muniu'&&treasure.cards&&treasure.cards.length>0){
-											do_not_use=true;
-											break;
-										}
-										if (friend_list[i].getCards('h').length>0&&_status.jinhe&&_status.jinhe[treasure.cardid]){
-											do_not_use=true;
-											break;
-										}
-									}
-								}
-							}
-							if (do_not_use) return 0;
-							var card=target.getCards('e');
-							var val=0;
-							for (var i=0;i<card.length;i++){
-								if (lib.filter.cardDiscardable(card[i], target)) val+=get.equipValue(card[i]);
-							}
-							if (val>0) return -val;
+							if (target.countCards("e")) return -1;
 							return 0;
 						},
 					},
@@ -885,7 +780,6 @@ game.import("card", function () {
 						damage: 0.15,
 						natureDamage: 0.15,
 						fireDamage: 0.15,
-						expose: 0.2,
 					},
 				},
 			},

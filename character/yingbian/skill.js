@@ -87,7 +87,7 @@ const skills = {
 		*content(event, map) {
 			var player = map.player,
 				trigger = map.trigger;
-			if (!trigger.card || !(trigger.cards&&trigger.cards.length)){
+			if (!trigger.card || !trigger.cards || !trigger.cards.length) {
 				trigger.num++;
 				event.finish();
 				return;

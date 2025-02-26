@@ -10,12 +10,7 @@ const cards = {
 		subtype: "equip1",
 		distance: { attackFrom: -8 },
 		skills: ["ly_piliche"],
-		//destroy:'polu',
-		ai: {
-			basic: {
-				equipValue: 0
-			}
-		},
+		//destroy:'polu'
 	},
 	wolong_card: {
 		type: "takaramono",
@@ -67,7 +62,6 @@ const cards = {
 		ai: {
 			order: 9.5,
 			equipValue(card, player) {
-				if (get.position(card)=='e'&&player.isDamaged()) return -3;
 				if (player.hp == player.maxHp) return 5;
 				if (player.countCards("h", "rewrite_baiyin")) return 6;
 				return 0;

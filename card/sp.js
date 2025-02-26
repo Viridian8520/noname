@@ -22,9 +22,6 @@ game.import("card", function () {
 					player.draw(2);
 				},
 				ai: {
-					wuxie: function (target,card,player,current,state) {
-						return -state*get.attitude(player,current);
-					},
 					useful() {
 						var player = _status.event.player;
 						var nj = player.countCards("h", "jinchan");
@@ -80,18 +77,7 @@ game.import("card", function () {
 						event.e2 = e2;
 						target
 							.chooseControl(choice)
-							.set("choiceList", ["弃置" + get.translation(e1), "弃置" + get.translation(e2)])
-							.set("ai", () => {
-								let e1_v = 0;
-								let e2_v = 0;
-								for (let i = 0; i < e1.length; i++) {
-									if (lib.filter.cardDiscardable(e1, target)) e1_v =+ get.equipValue(e1[i]);
-								}
-								for (let i = 0; i < e2.length; i++) {
-									if (lib.filter.cardDiscardable(e2, target)) e2_v =+ get.equipValue(e2[i]);
-								}
-								return e1_v > e2_v ? 1 : 0;
-							});
+							.set("choiceList", ["弃置" + get.translation(e1), "弃置" + get.translation(e2)]);
 					} else {
 						if (e1.length) {
 							target.discard(e1);
@@ -113,19 +99,15 @@ game.import("card", function () {
 					value: 5,
 					result: {
 						target(player, target) {
-							let target_equips = target.getCards("e");
-							if (target_equips.length == 1 && target_equips[0].name == "mengchong") return 0;
 							var num1 = 0,
 								num2 = 0;
 							for (var i = 1; i <= 4; i++) {
-								var cards = target.getEquips(i);
-								for (var card of cards) {
-									if (lib.filter.cardDiscardable(card, target)) {
-										if (i == 1 || i == 4) {
-											num1 += get.equipValue(card);
-										} else {
-											num2 += get.equipValue(card);
-										}
+								var card = target.getEquip(i);
+								if (card) {
+									if (i == 1 || i == 4) {
+										num1 += get.equipValue(card);
+									} else {
+										num2 += get.equipValue(card);
 									}
 								}
 							}
@@ -215,7 +197,6 @@ game.import("card", function () {
 						},
 					},
 					tag: {
-						expose: 0.2,
 						damage: 0.25,
 						natureDamage: 0.25,
 						thunderDamage: 0.25,
@@ -257,9 +238,7 @@ game.import("card", function () {
 				skills: ["zhungangshuo"],
 				distance: { attackFrom: -2 },
 				ai: {
-					basic:{
-						equipValue: 4,
-					}
+					equipValue: 4,
 				},
 			},
 			lanyinjia: {
@@ -268,9 +247,7 @@ game.import("card", function () {
 				subtype: "equip2",
 				skills: ["lanyinjia", "lanyinjia2"],
 				ai: {
-					basic:{
-						equipValue: 6,
-					}
+					equipValue: 6,
 				},
 			},
 			yinyueqiang: {
@@ -360,18 +337,6 @@ game.import("card", function () {
 							if (targets.length) {
 								if (target.hasSkillTag("nogain")) return 0.01;
 								return 2;
-							}
-							if (game.players.length>2){
-								var list=player.getEnemies();
-								for(var i=0;i<list.length;i++){
-									if (list[i].getEquip('shanrangzhaoshu')) return 0;
-								}
-							}
-							var target_equips=target.getCards('e');
-							if (target_equips.length>0){
-								for (var i=0;i<target_equips.length;i++){
-									if (get.equipValue(target_equips[i])<=0) return 1;
-								}
 							}
 							if (!target.countCards("he")) return 0;
 							if (player.hasFriend()) return -1;

@@ -660,9 +660,9 @@ https://github.com/nodeca/pako/blob/master/LICENSE
          zip.folder("images").file("smile.gif", base64Data, {base64: true});
          zip.file("Xmas.txt", "Ho ho ho !", {date : new Date("December 25, 2007 00:00:01")});
          zip.remove("tempfile");
-
+      
          base64zip = zip.generate();
-
+      
       **/
 
 					/**
@@ -7527,29 +7527,29 @@ https://github.com/nodeca/pako/blob/master/LICENSE
          When large enough input and output buffers are supplied to inflate(), for
          example, a 16K input buffer and a 64K output buffer, more than 95% of the
          inflate execution time is spent in this routine.
-
+      
          Entry assumptions:
-
+      
               state.mode === LEN
               strm.avail_in >= 6
               strm.avail_out >= 258
               start >= strm.avail_out
               state.bits < 8
-
+      
          On return, state.mode is one of:
-
+      
               LEN -- ran out of enough output space or enough available input
               TYPE -- reached end of block code, inflate() to interpret next block
               BAD -- error in block data
-
+      
          Notes:
-
+      
           - The maximum input bits used by a length/distance pair is 15 bits for the
             length code, 5 bits for the length extra, 15 bits for the distance code,
             and 13 bits for the distance extra.  This totals 48 bits, or six bytes.
             Therefore if strm.avail_in >= 6, then there is enough input to avoid
             checking for available input while decoding.
-
+      
           - The maximum bytes that a single length/distance pair can output is 258
             bytes, which is the maximum length that can be coded.  inflate_fast()
             requires strm.avail_out >= 258 for each loop to avoid checking for
@@ -8274,7 +8274,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
        inflate call, but the end of the deflate stream has not been reached yet.
        It is also called to create a window for dictionary data when a dictionary
        is loaded.
-
+      
        Providing output buffers larger than 32K to inflate() should provide a speed
        advantage, since only the last 32K of output is copied to the sliding window
        upon return from inflate(), and since all distances after the first 32K of
@@ -9963,18 +9963,18 @@ https://github.com/nodeca/pako/blob/master/LICENSE
          from their more natural integer increment ordering, and so when the
          decoding tables are built in the large loop below, the integer codes
          are incremented backwards.
-
+      
          This routine assumes, but does not check, that all of the entries in
          lens[] are in the range 0..MAXBITS.  The caller must assure this.
          1..MAXBITS is interpreted as that code length.  zero means that that
          symbol does not occur in this code.
-
+      
          The codes are sorted by computing a count of codes for each length,
          creating from that a table of starting indices for each length in the
          sorted table, and then entering the symbols in order in the sorted
          table.  The sorted table is work[], with that space being provided by
          the caller.
-
+      
          The length counts are used for other purposes as well, i.e. finding
          the minimum and maximum length codes, determining if there are any
          codes at all, checking for a valid set of lengths, and looking ahead
@@ -10057,24 +10057,24 @@ https://github.com/nodeca/pako/blob/master/LICENSE
          bits off of the bottom.  For codes where len is less than drop + curr,
          those top drop + curr - len bits are incremented through all values to
          fill the table with replicated entries.
-
+      
          root is the number of index bits for the root table.  When len exceeds
          root, sub-tables are created pointed to by the root entry with an index
          of the low root bits of huff.  This is saved in low to check for when a
          new sub-table should be started.  drop is zero when the root table is
          being filled, and drop is root when sub-tables are being filled.
-
+      
          When a new sub-table is needed, it is necessary to look ahead in the
          code lengths to determine what size sub-table is needed.  The length
          counts are used for this, and so count[] is decremented as codes are
          entered in the tables.
-
+      
          used keeps track of how many table entries have been allocated from the
          provided *table space.  It is checked for LENS and DIST tables against
          the constants ENOUGH_LENS and ENOUGH_DISTS to guard against changes in
          the initial root table size constants.  See the comments in inftrees.h
          for more information.
-
+      
          sym increments through all symbols, and the loop terminates when
          all codes of length max, i.e. all codes, have been processed.  This
          routine permits incomplete codes, so another loop after this one fills

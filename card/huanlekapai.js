@@ -126,8 +126,8 @@ game.import("card", function () {
 				},
 				audio: true,
 				filter(event, player) {
-					var cards = player.getEquip(5);
-					for (var card of cards) {
+					var card = player.getEquip(5);
+					if (card) {
 						var name = card.name;
 						if (
 							name &&
@@ -149,7 +149,7 @@ game.import("card", function () {
 					trigger.untrigger();
 					trigger.finish();
 					"step 1";
-					player.discard(player.getEquips(5));
+					player.discard(player.getEquip(5));
 					"step 2";
 					player.gain(trigger.cards.filterInD(), "gain2", "log");
 				},

@@ -3402,7 +3402,7 @@ const skills = {
 		selectCard: 2,
 		complexCard: true,
 		prompt: "弃置两张颜色不同的牌并改变天气",
-		check: card => 11 - get.value(card),
+		check: card => 4.5 - get.value(card),
 		async content(event, trigger, player) {
 			var list = ["烈日", "雷电", "大浪", "暴雨", "大雾"].randomGets(2);
 			const result = await player
@@ -4025,7 +4025,7 @@ const skills = {
 				},
 				usable: 1,
 				filter(event, player) {
-					return player.isTurnedOver() && _status.currentPhase && player != _status.currentPhase && event.getg(player).length > 0;
+					return player.isTurnedOver() && player != _status.currentPhase && event.getg(player).length > 0;
 				},
 				check(event, player) {
 					return get.attitude(player, _status.currentPhase) > 0;
@@ -4048,7 +4048,7 @@ const skills = {
 					if (event.name == "gain" && player == event.player) return false;
 					var evt = event.getl(player);
 					if (!evt || !evt.cards2 || !evt.cards2.length) return false;
-					return player.isTurnedOver() && _status.currentPhase && player != _status.currentPhase && _status.currentPhase.countCards("he") > 0;
+					return player.isTurnedOver() && player != _status.currentPhase && _status.currentPhase.countCards("he") > 0;
 				},
 				check(event, player) {
 					var target = _status.currentPhase;

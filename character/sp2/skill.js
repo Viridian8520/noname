@@ -3777,11 +3777,6 @@ const skills = {
 				if (arg && arg.card && arg.card.name == "sha") return true;
 				return false;
 			},
-			effect: {
-				target: function (card,player,target,current){
-					if (card.name=='sha'&&target.isDamaged()&&target.getFriends().length>0) return 'zeroplayertarget';
-				}
-			},
 		},
 	},
 	dcwuyuan: {
@@ -9457,26 +9452,6 @@ const skills = {
 				if (cards.length) player.gain(cards, "gain2", "log");
 			}
 		},
-		ai:{
-			//modified tuntian ai effect
-			effect:{
-				target:function(card,player,target,current){
-					if(!target.hasFriend()&&!player.hasUnknown()) return;
-					if(_status.currentPhase==target) return;
-					if(player.hasSkill('moying2')) return;
-					if(get.tag(card,'loseCard')&&target.countCards('e')){
-						if(target.hasSkill('ziliang')) return 0.7;
-						return [0.5,Math.max(2,target.countCards('h'))];
-					}
-				}
-			},
-			nodiscard:true,
-			nolose:true,
-			noh:true,
-			skillTagFilter:function(player){
-				return !player.hasSkill('moying2');
-			},
-		}
 	},
 	moying2: {},
 	juanhui: {
@@ -10998,7 +10973,6 @@ const skills = {
 			}
 			"step 2";
 			target.chooseControl("自动分配", "手动分配").set("prompt", "【严教】：是否让系统自动分配方案？").ai = function () {
-				if (get.attitude(player,target)<=0) return 1;
 				return 0;
 			};
 			"step 3";

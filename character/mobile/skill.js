@@ -9731,14 +9731,11 @@ const skills = {
 					var num = player.maxHp - player.hp;
 					var players = game.filterPlayer();
 					for (var i = 0; i < players.length; i++) {
-						var has_bad_equip=players[i].countCards('e',function(card){return get.equipValue(card)<=0;})>0;
 						if (get.attitude(player, players[i]) > 0) list1.push(players[i]);
-						else if (get.attitude(player, players[i]) < 0 && !has_bad_equip) list2.push(players[i]);
+						else if (get.attitude(player, players[i]) < 0) list2.push(players[i]);
 					}
 					list1.sort(function (a, b) {
-						if (a.countCards('e',function(card){return get.equipValue(card)<=0;})>0) return -1;
-						if (b.countCards('e',function(card){return get.equipValue(card)<=0;})>0) return -1;
-						return a.countCards('e',function(card){return get.equipValue(card)>0;})-b.countCards('e',function(card){return get.equipValue(card)>0;});
+						return a.countCards("e") - b.countCards("e");
 					});
 					list2.sort(function (a, b) {
 						return b.countCards("e") - a.countCards("e");
@@ -17173,11 +17170,6 @@ const skills = {
 				if (arg && arg.card && arg.card.name == "sha") return true;
 				return false;
 			},
-			effect: {
-				target: function (card,player,target,current) {
-					if (card.name=='sha'&&target.isDamaged()&&target.getFriends().length>0) return 'zeroplayertarget';
-				}
-			},
 		},
 	},
 	wuyuan: {
@@ -17585,11 +17577,6 @@ const skills = {
 		position: "he",
 		check(card) {
 			var player = _status.event.player;
-			if (!game.hasPlayer(function(current){
-				return get.attitude(player,current)<0;
-			})){
-				return 0;
-			}
 			if (player.hp < 3) return 0;
 			var type = get.type(card, "trick");
 			if (type == "trick") {
@@ -18558,7 +18545,7 @@ const skills = {
 				canvas2.height = 249;
 				canvas2.style.border = "3px solid";
 
-				var ctx = canvas.getContext("2d", { willReadFrequently: true });
+				var ctx = canvas.getContext("2d");
 				var ctx2 = canvas2.getContext("2d");
 
 				var img = new Image();
@@ -19468,7 +19455,7 @@ const skills = {
 			target
 				.chooseCard("he", "是否交给" + get.translation(player) + "一张牌？", event.cardname ? "若如此做，视为" + get.translation(player) + "使用【" + get.translation(event.cardname) + "】" : null)
 				.set("ai", function (card) {
-					if (event.cardname && _status.event.goon) return 7 - get.value(card);
+					if (_status.event.goon) return 7 - get.value(card);
 					return 0;
 				})
 				.set("goon", get.attitude(target, player) > 1);

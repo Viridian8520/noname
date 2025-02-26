@@ -13,7 +13,6 @@ const characterSort = {
 	extra_tw: ["tw_shen_guanyu", "tw_shen_lvmeng"],
 	extra_mb: ["xin_simayi", "new_simayi"],
 	extra_offline: ["shen_diaochan", "boss_zhaoyun", "shen_dianwei", "le_shen_jiaxu"],
-	extra_mini: ["mini_zhugeliang","mini_lvbu","mini_lvmeng"],
 };
 
 const characterSortTranslate = {
@@ -29,7 +28,6 @@ const characterSortTranslate = {
 	extra_mobilexin: "始计篇·信",
 	extra_mobileren: "始计篇·仁",
 	extra_offline: "神话再临·线下",
-	extra_mini: "欢乐三国杀",
 	extra_decade: "神·武",
 	extra_tw: "海外服神将",
 	extra_mb: "移动版神将",

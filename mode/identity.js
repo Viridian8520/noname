@@ -799,11 +799,7 @@ export default () => {
 								game.over(true);
 								break;
 							case "commoner":
-								if (me.classList.contains('dead')){
-									game.over(false);
-								} else {
-									game.over(true);
-								}
+								game.over(true);
 								break;
 							default:
 								game.over();
@@ -818,11 +814,7 @@ export default () => {
 								game.over(false);
 								break;
 							case "commoner":
-								if (me.classList.contains('dead')){
-									game.over(false);
-								} else {
-									game.over(true);
-								}
+								game.over(true);
 								break;
 							default:
 								game.over();
@@ -855,11 +847,7 @@ export default () => {
 						game.over(false);
 					}
 				} else if (me.identity == "commoner") {
-					if (me.classList.contains('dead')){
-						game.over(false);
-					} else {
-						game.over(true);
-					}
+					game.over(true);
 				}
 			},
 			checkOnlineResult: function (player) {
@@ -2943,7 +2931,7 @@ export default () => {
 					if (_status.mode == "purple") return;
 					if (stratagemMode) return;
 
-					var marknow=(!_status.connectMode&&this!=game.me&&get.config("auto_mark_identity")&&this.ai.identity_auto_mark!="finished");
+					var marknow = !_status.connectMode && this != game.me && get.config("auto_mark_identity") && this.ai.identity_mark != "finished";
 					// if(true){
 					if (marknow && _status.clickingidentity && _status.clickingidentity[0] == this) {
 						for (var i = 0; i < _status.clickingidentity[1].length; i++) {
@@ -2975,7 +2963,7 @@ export default () => {
 					} else if (targets.length > 0) {
 						for (var i = 0; i < targets.length; i++) {
 							shown = Math.abs(targets[i].ai.shown);
-							if (shown < 0.2 || targets[i].identity == "nei" || targets[i].identity == "commoner") c = 0;
+							if (shown < 0.2 || targets[i].identity == "nei") c = 0;
 							else if (shown < 0.4) c = 0.5;
 							else if (shown < 0.6) c = 0.8;
 							else c = 1;
@@ -2986,8 +2974,7 @@ export default () => {
 						if (effect > 0) {
 							if (this.ai.identity_mark == "fan") {
 								if (marknow) this.setIdentity();
-								this.ai.identity_mark=this.identity;
-								this.ai.identity_auto_mark="finished";
+								this.ai.identity_mark = "finished";
 							} else {
 								if (marknow) this.setIdentity("zhong");
 								this.ai.identity_mark = "zhong";
@@ -2995,20 +2982,19 @@ export default () => {
 						} else if (effect < 0 && get.population("fan") > 0) {
 							if (this.ai.identity_mark == "zhong") {
 								if (marknow) this.setIdentity();
-								this.ai.identity_mark=this.identity;
-								this.ai.identity_auto_mark="finished";
+								this.ai.identity_mark = "finished";
 							} else {
 								if (marknow) this.setIdentity("fan");
 								this.ai.identity_mark = "fan";
 							}
 						}
 					} else if (marknow) {
-						if (effect > 0 && this.identity != "fan" && this.ai.identity_mark!="nei" && this.ai.identity_mark!="commoner") {
+						if (effect > 0 && this.identity != "fan") {
 							this.setIdentity("zhong");
-							this.ai.identity_auto_mark = "finished";
+							this.ai.identity_mark = "finished";
 						} else if (effect < 0 && this.identity == "fan") {
 							this.setIdentity("fan");
-							this.ai.identity_auto_mark = "finished";
+							this.ai.identity_mark = "finished";
 						}
 					}
 					// }
@@ -3600,28 +3586,15 @@ export default () => {
 					identity2 = "zhong";
 					if (from == to) return 10;
 				}
-				if (
-					from != to &&
-					(to.identity=="nei"||to.identity=="commoner") &&
-					to.ai.shown < 1 &&
-					(to.ai.identity_mark == "fan" || to.ai.identity_mark == "zhong")
-				) {
+				if (from != to && to.identity == "nei" && to.ai.shown < 1 && (to.ai.identity_mark == "fan" || to.ai.identity_mark == "zhong")) {
 					identity2 = to.ai.identity_mark;
 				}
 				if (from.identity != "nei" && from.identity != "commoner" && from != to && get.population("fan") == 0 && identity2 == "zhong") {
 					for (var i = 0; i < game.players.length; i++) {
-						if (
-							game.players[i].identity == "nei" &&
-							game.players[i].ai.identity_mark == "zhong" &&
-							game.players[i].ai.shown < 0.95
-						) {
+						if (game.players[i].identity == "nei" && game.players[i].ai.identity_mark == "zhong" && game.players[i].ai.shown < 1) {
 							identity2 = "nei";
 							break;
-						} else if (
-							game.players[i].identity == "commoner" &&
-							game.players[i].ai.identity_mark == "zhong" &&
-							game.players[i].ai.shown < 0.95
-						) {
+						} else if (game.players[i].identity == "commoner" && game.players[i].ai.identity_mark == "zhong" && game.players[i].ai.shown < 1) {
 							identity2 = "commoner";
 							break;
 						}
@@ -3631,60 +3604,23 @@ export default () => {
 				if (!game.zhu.isZhu) {
 					zhongmode = true;
 				}
-				let max_hp_exclude_zhu_and_self=0;
-				let nei_or_commoner_fan_mark=false;
-				for (let i=0;i<game.players.length;i++){
-					if (game.players[i]!=from&&game.players[i].identity!='zhu'){
-						max_hp_exclude_zhu_and_self=Math.max(max_hp_exclude_zhu_and_self,game.players[i].hp);
-					}
-					if ((game.players[i].identity=='nei'||game.players[i].identity=='commoner')&&game.players[i].ai.identity_mark=='fan'&&game.players[i].ai.shown<1){
-						nei_or_commoner_fan_mark=true;
-					}
-				}
-				let no_fan_find_nei_target_effect=to.hp==max_hp_exclude_zhu_and_self?-(to.countCards('h')+to.countCards('e')*1.5+to.hp*2+to.hujia*2):0;
-				if (get.population('fan')==0&&get.population('nei')>0){
-					for (let i=0;i<game.players.length;i++){
-						if (game.players[i].identity!='zhu'&&game.players[i].ai.identity_mark==undefined){
-							game.players[i].ai.identity_mark='zhong';
-						}
-					}
-				}
 				switch (identity) {
 					case "zhu":
 						switch (identity2) {
 							case "zhu":
 								return 10;
-							case 'zhong':
-								if (get.population('fan')==0&&get.population('nei')>0&&!nei_or_commoner_fan_mark){
-									if (get.population('zhong')+get.population('mingzhong')==0) return -3;
-									if (to.hp>=3&&!from.hasSkill('yimie')){
-										return no_fan_find_nei_target_effect;
-									}
-									if (to.ai.identity_mark=='zhong'&&to.ai.shown<0.95) return 0;
-									return 0;
-								}
-								if (get.population('zhong')+get.population('mingzhong')==0&&get.population('fan')==1) return -0.5;
-								return 6;
-							case 'mingzhong':
+							case "zhong":
+							case "mingzhong":
 								return 6;
 							case "nei":
 								if (game.players.length == 2) return -10;
 								if (to.identity == "zhong") return 0;
-								if (to.identity=='zhong'&&get.population('fan')>0) return 0;
-								if (get.population('fan')==0&&get.population('nei')>0&&!nei_or_commoner_fan_mark){
-									if (get.population('zhong')+get.population('mingzhong')==0) return -3;
-									if (to.hp>=3&&!from.hasSkill('yimie')){
-										return no_fan_find_nei_target_effect;
-									}
-									if(to.ai.identity_mark=='zhong'&&to.ai.shown<0.95) return 0;
-									return 0;
+								if (get.population("fan") == 0) {
+									if (to.ai.identity_mark == "zhong" && to.ai.shown < 1) return 0;
+									return -0.5;
 								}
-								if (zhongmode && to.ai.sizhong && to.ai.shown < 0.95) return 6;
-								if (
-									get.population("fan") == 1 &&
-									get.population("nei") == 1 &&
-									game.players.length == 3
-								) {
+								if (zhongmode && to.ai.sizhong && to.ai.shown < 1) return 6;
+								if (get.population("fan") == 1 && get.population("nei") == 1 && game.players.length == 3) {
 									var fan;
 									for (var i = 0; i < game.players.length; i++) {
 										if (game.players[i].identity == "fan") {
@@ -3720,15 +3656,11 @@ export default () => {
 								return -4;
 							case "commoner":
 								if (to.identity == "zhong") return 0;
-								if (get.population('fan')==0&&get.population('nei')>0&&!nei_or_commoner_fan_mark){
-									if (get.population('zhong')+get.population('mingzhong')==0) return -1;
-									if (to.hp>=3&&!from.hasSkill('yimie')){
-										return no_fan_find_nei_target_effect;
-									}
-									if (to.ai.identity_mark=='zhong'&&to.ai.shown<0.95) return 0;
-									return 0;
+								if (get.population("fan") == 0) {
+									if (to.ai.identity_mark == "zhong" && to.ai.shown < 1) return 0;
+									return -0.5;
 								}
-								if (zhongmode && to.ai.sizhong && to.ai.shown < 0.95) return 6;
+								if (zhongmode && to.ai.sizhong && to.ai.shown < 1) return 6;
 								if (game.players.length == 3) {
 									var fan;
 									for (var i = 0; i < game.players.length; i++) {
@@ -3745,7 +3677,7 @@ export default () => {
 									return 3;
 								}
 								if (situation < 0 && game.zhu && game.zhu.hp <= 2) return -3.8;
-								return Math.min(0,Math.max(-3,situation));
+								return Math.max(-4, 2 - get.population("fan"));
 						}
 						break;
 					case "zhong":
@@ -3753,28 +3685,17 @@ export default () => {
 						switch (identity2) {
 							case "zhu":
 								return 10;
-							case 'zhong':
-								if (get.population('fan')==0&&get.population('nei')>0&&from!=to&&!nei_or_commoner_fan_mark){
-									return no_fan_find_nei_target_effect;
-								}
-								if (zhongmode&&to.ai.sizhong&&to.ai.shown<0.95) return 6;
-								return 4;
-							case 'mingzhong':
+							case "zhong":
+							case "mingzhong":
 								return 4;
 							case "nei":
-								if (get.population('fan')==0&&get.population('nei')>0&&!nei_or_commoner_fan_mark){
-									return no_fan_find_nei_target_effect;
-								}
-								if (zhongmode&&to.ai.sizhong&&to.ai.shown<0.95) return 6;
+								if (get.population("fan") == 0) return -2;
+								if (zhongmode && to.ai.sizhong && to.ai.shown < 1) return 6;
 								return Math.min(3, -situation);
 							case "fan":
 								return -8;
 							case "commoner":
-								if (get.population('fan')==0&&get.population('nei')>0&&!nei_or_commoner_fan_mark){
-									return no_fan_find_nei_target_effect;
-								}
-								if (zhongmode&&to.ai.sizhong&&to.ai.shown<0.95) return 6;
-								return Math.min(0,Math.max(-3,situation));
+								return Math.min(3, Math.max(-3, situation - 0.2));
 						}
 						break;
 					case "nei":
@@ -3790,10 +3711,8 @@ export default () => {
 							case "zhu":
 								if (strategy == 6) return -1;
 								if (strategy == 5) return 10;
-								if (to.hp<=0&&get.population('fan')+get.population('zhong')+get.population('mingzhong')>0) return 10;
-								if (get.population('fan')+get.population('zhong')+get.population('mingzhong')==0) return -3;
-								if (situation>0) return 0;
-								if (get.population("fan") == 1 && get.population("nei") == 1 && game.players.length == 3) {
+								if (to.hp <= 0) return 10;
+								if (get.population("fan") == 1) {
 									var fan;
 									for (var i = 0; i < game.players.length; i++) {
 										if (game.players[i].identity == "fan") {
@@ -3803,12 +3722,12 @@ export default () => {
 									}
 									if (fan) {
 										if (to.hp > 1 && to.hp > fan.hp && to.countCards("he") > fan.countCards("he")) {
-											return -3;
+											return -1.7;
 										}
 									}
 									return 0;
 								} else {
-									if (situation > 1 || (get.population("fan") + get.population("commoner") == 0)) num = 0;
+									if (situation > 1 || get.population("fan") == 0) num = 0;
 									else num = get.population("fan") + Math.max(0, 3 - game.zhu.hp);
 								}
 								if (strategy == 2) num--;
@@ -3858,11 +3777,10 @@ export default () => {
 								else num = 0;
 								if (strategy == 2) num++;
 								if (strategy == 3) num--;
-								if (game.zhu.hp>=3&&situation>1) num=6;
 								return num;
 							case "commoner":
-								if (get.population('fan')+get.population('zhong')+get.population('mingzhong')==0&&game.zhu.hp<=2&&situation<=0) return -1;
-								return -6;
+								if (game.players.length <= 4) return 5;
+								return Math.min(Math.max(-situation, -2), 2);
 						}
 						break;
 					case "fan":
@@ -3881,54 +3799,39 @@ export default () => {
 							case "mingzhong":
 								return -5;
 							case "nei":
-								if (zhongmode && to.ai.sizhong && to.ai.shown < 0.95) return -7;
-								if (get.population("fan") == 1 && get.population("nei") == 1 && game.players.length == 3) return -4;
+								if (zhongmode && to.ai.sizhong) return -7;
+								if (get.population("fan") == 1) return 0;
 								if (get.population("zhong") + get.population("mingzhong") == 0) return -7;
 								if (game.zhu && game.zhu.hp <= 2) return -1;
 								return Math.min(3, situation);
 							case "fan":
-								if (from != to && get.population("fan") == 1 && get.population("nei") == 1 && game.players.length == 3) return -4;
 								return 5;
 							case "commoner":
-								if (zhongmode&&to.ai.sizhong&&to.ai.shown<0.95) return -6;
-								return Math.min(0,Math.max(-3,-situation));
+								return 2 * get.population("fan") - 3;
 						}
 						break;
 					case "commoner":
 						switch (identity2) {
-							case 'zhu':
-								if (get.population('fan')==0&&get.population('nei')>0&&!nei_or_commoner_fan_mark){
-									if (get.population('zhong')+get.population('mingzhong')==0) return -3;
-									return 0;
+							case "zhu":
+								if (situation > 0) return 2 * Math.min(4, to.hp + to.countCards("h") / 4 - 2);
+								if (situation >= -3 && game.zhu) return to.hp - 2 + to.countCards("h") / 4; //return Math.min(-0.1,5-game.zhu.hp);
+								return to.hp + to.countCards("h") / 3 - 4;
+							case "zhong":
+								if (situation > 0) {
+									if (to.hp >= 2) return Math.min(3, Math.max(1, to.hp + to.countCards("h") / 4 - 4));
+									else return 0;
 								}
-								return situation;
-							case 'zhong':case 'mingzhong':
-								if (get.population('fan')==0&&get.population('nei')>0&&!nei_or_commoner_fan_mark){
-									if (get.population('zhong')+get.population('mingzhong')==0) return -3;
-									return no_fan_find_nei_target_effect;
-								}
-								return situation;
+								return -2;
 							case "nei":
-								if (get.population('fan')==0&&get.population('nei')>0&&!nei_or_commoner_fan_mark){
-									if (get.population('zhong')+get.population('mingzhong')==0) return -3;
-									return no_fan_find_nei_target_effect;
-								}
-								if (game.players.length == 3 && get.population("nei") == 1)
-									return (
-										Math.min(3.5, to.hp - 1.5 + to.countCards("h") / 3) -
-										(to.hp < (game.zhu ? game.zhu.hp : 0) ? 4 : 0)
-									);
-								if (game.players.length <= 4 && get.population("nei") == 1)
-									return Math.min(5, to.hp - 1.5 + to.countCards("h") / 3);
+								if (game.players.length == 3 && get.population("nei") == 1) return Math.min(3.5, to.hp - 1.5 + to.countCards("h") / 3) - (to.hp < (game.zhu ? game.zhu.hp : 0) ? 4 : 0);
+								if (game.players.length <= 4 && get.population("nei") == 1) return Math.min(5, to.hp - 1.5 + to.countCards("h") / 3);
 								if (situation > 0) return -3;
-								return -6;
+								return 0;
 							case "fan":
-								return -situation;
+								if (situation < 0) return to.hp + to.countCards("h") / 4 - 1.7 * get.population("fan") + 2;
+								else if (situation == 0) return 0;
+								return 0.55 * get.population("fan") - 2.1;
 							case "commoner":
-								if (get.population('fan')==0&&get.population('nei')>0&&from!=to&&!nei_or_commoner_fan_mark){
-									if (get.population('zhong')+get.population('mingzhong')==0) return -3;
-									return no_fan_find_nei_target_effect;
-								}
 								return from == to ? 10 : to.hp <= 2 ? -2 : 0;
 						}
 						break;
@@ -3942,19 +3845,13 @@ export default () => {
 					fan = 0;
 				for (i = 0; i < game.players.length; i++) {
 					player = game.players[i];
-					let php=player.hp;
-					let active_skills=player.getStockSkills(false);
-					let skill_score=0;
-					if (active_skills.length>0) skill_score=get.rank(player,true);
+					var php = player.hp;
 					if (player.hasSkill("benghuai") && php > 4) {
 						php = 4;
 					} else if (php > 6) {
 						php = 6;
-					} else if (player.hasSkill('tairan')){
-						php-=player.storage.tairan2;
 					}
-					j = player.countCards("h") + player.countCards("e") * 1.5 + php * 2 + player.hujia * 2;
-					if (skill_score!=0) j+=skill_score;
+					j = player.countCards("h") + player.countCards("e") * 1.5 + php * 2;
 					if (player.identity == "zhu") {
 						zhuzhong += j * 1.2 + 5;
 						total += j * 1.2 + 5;
@@ -3966,17 +3863,6 @@ export default () => {
 						zhuzhong -= j + 4;
 						total += j + 4;
 						fan += j + 4;
-					}
-					else if (player.identity=='commoner'){
-						let commoner_situation=(1+get.population('zhong')+get.population('mingzhong'))-get.population('fan');
-						if (commoner_situation>=0){
-							zhuzhong+=j*0.8+3;
-							total+=j*0.8+3;
-						} else if (commoner_situation<0){
-							zhuzhong-=j+4;
-							total+=j+4;
-							fan+=j+4;
-						}
 					}
 				}
 				if (absolute) return zhuzhong;

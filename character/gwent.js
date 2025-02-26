@@ -3184,9 +3184,9 @@ game.import("character", function () {
 							card.clone.moveDelete(target);
 							game.addVideo("gain2", target, get.cardsInfo([card]));
 						}
-						if(!target.node.jiu && lib.config.jiu_effect){
-              target.node.jiu = ui.create.div(".playerjiu", target.node.avatar);
-              target.node.jiu2 = ui.create.div(".playerjiu", target.node.avatar2);
+						if (!target.node.jiu && lib.config.jiu_effect) {
+							target.node.jiu = ui.create.div(".playerjiu", target.node.avatar);
+							target.node.jiu2 = ui.create.div(".playerjiu", target.node.avatar2);
 						}
 					}
 				},

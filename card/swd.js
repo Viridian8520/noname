@@ -177,16 +177,12 @@ game.import("card", function () {
 					if (target.countCards("h", "shan") == 0 || target.countCards("h", "sha") == 0 || target.hp <= 1) {
 						choice = "basic";
 					} else {
-						var e2s = target.getEquips(2);
-						var e3s = target.getEquips(3);
-						for(var e2 of e2s){
-							for(var e3 of e3s){
-								if ((e2 && e3) || ((e2 || e3) && target.needsToDiscard() <= 1) || Math.random() < 0.5) {
-									choice = "trick";
-								} else {
-									choice = "equip";
-								}
-							}
+						var e2 = target.getEquip(2);
+						var e3 = target.getEquip(3);
+						if ((e2 && e3) || ((e2 || e3) && target.needsToDiscard() <= 1) || Math.random() < 0.5) {
+							choice = "trick";
+						} else {
+							choice = "equip";
 						}
 					}
 					target
@@ -1637,9 +1633,9 @@ game.import("card", function () {
 							card.clone.moveDelete(target);
 							game.addVideo("gain2", target, get.cardsInfo([card]));
 						}
-						if(!target.node.jiu && lib.config.jiu_effect){
-              target.node.jiu = ui.create.div(".playerjiu", target.node.avatar);
-              target.node.jiu2 = ui.create.div(".playerjiu", target.node.avatar2);
+						if (!target.node.jiu && lib.config.jiu_effect) {
+							target.node.jiu = ui.create.div(".playerjiu", target.node.avatar);
+							target.node.jiu2 = ui.create.div(".playerjiu", target.node.avatar2);
 						}
 					}
 				},

@@ -63,14 +63,6 @@ export class Check {
 
 			if (item.classList.contains("selectable")) selectableItems = true;
 			else if (item.classList.contains("selected")) item.classList.add("selectable");
-				
-			if (window.decadeUI) {
-				if (item.classList.contains('selected')||item.classList.contains('selectable')){
-					item.classList.remove('un-selectable');
-				} else {
-					item.classList.add('un-selectable');
-				}
-			}
 
 			game.callHook(`check${uppercaseType(type)}`, [item, event]);
 		});

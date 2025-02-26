@@ -161,7 +161,7 @@
 	height: 55px;
 	background-image: url("./images/uibutton/btn-paixu.png");
 	left: 1.6%;
-	bottom: 23.2%;
+	bottom: 22%;
 	z-index: 5;
 	font-size: 18.1px;
 	/*字体大小*/
@@ -198,12 +198,8 @@
 	border-radius: 1px;
 	width: 68px;
 	height: 55px;
-	/*--w: 68px;
-	--h: calc(var(--w) * 78/91);
-	width: var(--w);
-	height: var(--h);*/
 	background-image: url("./images/uibutton/btn-jilu.png");
-	bottom: 15%;
+	bottom: 12%;
 	z-index: 5;
 }
 
@@ -406,6 +402,7 @@
 	right: 123px;
 	/*牌堆数及游戏时间，轮数整体。越大越往左*/
 	font-family: "shousha";
+	text-shadow: black 1px 1px 1px, black 1px -1px 1px, black -1px 1px 1px, black -1px -1px 1px;
 }
 
 /*牌堆图片*/
@@ -765,7 +762,7 @@
 	height: 55px;
 	background-image: url("./images/uibutton/btn-paixu.png");
 	right: 1.2%;
-	bottom: 25%;
+	bottom: 22%;
 	z-index: 5;
 	font-size: 18.1px;
 	background-size: 100% 100%;
@@ -794,12 +791,8 @@
 	border-radius: 1px;
 	width: 68px;
 	height: 55px;
-	/*--w: 68px;
-	--h: calc(var(--w) * 78/91);
-	width: var(--w);
-	height: var(--h);*/
 	background-image: url("./images/uibutton/btn-jilu.png");
-	bottom: 15%;
+	bottom: 12%;
 	z-index: 5;
 }
 

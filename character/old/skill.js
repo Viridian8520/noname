@@ -252,8 +252,7 @@ const skills = {
 		},
 		prompt: "将一张装备牌当无距离限制的【杀】使用或打出",
 		check(card) {
-			let val = get.value(card);
-			if (lib.skill.oldjiefan.ai.result.player(_status.event.player)>0) return 10-val;
+			var val = get.value(card);
 			if (_status.event.name == "chooseToRespond") return 1 / Math.max(0.1, val);
 			return 5 - val;
 		},
@@ -304,15 +303,7 @@ const skills = {
 		ai: {
 			save: true,
 			order: 3,
-			result: {
-				player: function (player,target) {
-					let evt=_status.event.getParent('_save');
-					let card={name:'tao',isCard:true};
-					let current_player=_status.currentPhase;
-					if (player!=current_player&&evt&&evt.dying&&get.attitude(player,evt.dying)>0&&lib.filter.cardUsable(card,player,evt.dying)) return 1;
-					return 0;
-				},
-			},
+			result: { player: 1 },
 		},
 		subSkill: {
 			recover: {
@@ -326,10 +317,10 @@ const skills = {
 				charlotte: true,
 				content() {
 					trigger.cancel();
-					let evt = event.getParent("_save");
-					let card = { name: "tao", isCard: true };
-					if (evt&&evt.dying&&lib.filter.cardUsable(card,player,evt.dying)){
-						player.useCard(card,evt.dying,'oldjiefan_recover');
+					var evt = event.getParent("_save");
+					var card = { name: "tao", isCard: true };
+					if (evt && evt.dying && player.canUse(card, evt.dying)) {
+						player.useCard(card, evt.dying, "oldjiefan_recover");
 					}
 				},
 			},
@@ -773,13 +764,6 @@ const skills = {
 			targetEnabled(card, player, target) {
 				if ((card.name == "juedou" || card.name == "sha" || card.name == "huogong") && player != target && player.countCards("h") >= target.countCards("h") && target.hasEmptySlot(2)) return false;
 			},
-		},
-		ai:{
-			effect:{
-				player:function(card,player,target,current){
-					if(player.isEmpty(2)&&get.type(card)=='equip'&&get.subtype(card)=='equip2') return 'zeroplayertarget';
-				}
-			}
 		},
 	},
 	old_jijun: {

@@ -42,10 +42,6 @@ const characters = {
 	shen_caopi: ["male", "shen", 5, ["chuyuan", "dengji"], ["wei"]],
 	shen_zhenji: ["female", "shen", 3, ["shenfu", "qixian"], ["wei"]],
 	boss_zhaoyun: ["male", "shen", 1, ["boss_juejing", "xinlonghun", "zhanjiang"], ["shu"]],
-	
-	mini_zhugeliang: ["male","shen",3,["qixing","minikuangfeng","minidawu"],["shu"]],
-	mini_lvbu: ["male","shen",6,["miniwuqian","minishenfen"]],
-	mini_lvmeng: ["male","shen",3,["shelie","minigongxin"],["wu"]],
 };
 
 export default characters;

@@ -61,6 +61,7 @@ const characterReplaces = {
 	sunquan: ["sunquan", "re_sunquan", "sb_sunquan", "dc_sunquan", "xin_sunquan", "jd_sb_sunquan", "ty_sunquan", "v_sunquan", "taffyold_v_sunquan"],
 	caoang: ["caoang", "dc_sb_caoang", "huan_caoang", "taffyold_huan_caoang"],
 	nanhualaoxian: ["re_nanhualaoxian", "ol_nanhualaoxian", "nanhualaoxian", "jsrg_nanhualaoxian", "taffyold_ol_nanhualaoxian"],
+	pangfengyi: ["pangfengyi", "taffyold_pangfengyi"],
 };
 
 export default characterReplaces;
