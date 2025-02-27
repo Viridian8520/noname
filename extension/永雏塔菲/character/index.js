@@ -63,7 +63,7 @@ export const characterPackFunc = function () {
 			translate: { ...translates, ...voices, ...characterSortTranslate },
 			pinyins: { ...pinyins },
 		};
-		const whiteList = [...oobj.characterSort.taffy_character.taffy_old, ...oobj.characterSort.taffy_character.taffy_mobile_changshi, "taffymb_shen_caocao", "taffyre_xuyou"];
+		const whiteList = [...oobj.characterSort.taffy_character.taffy_old_ol, ...oobj.characterSort.taffy_character.taffy_old_mb, ...oobj.characterSort.taffy_character.taffy_old_dc, ...oobj.characterSort.taffy_character.taffy_old_etc, ...oobj.characterSort.taffy_character.taffy_mobile_changshi, "taffymb_shen_caocao", "taffyre_xuyou"];
 		const specialDetails = {
 			taffydc_guanning: {
 				character: "character:ddd_guanning",
