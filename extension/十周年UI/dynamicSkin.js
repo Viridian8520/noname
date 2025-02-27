@@ -6449,6 +6449,29 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				},
 			},
 		},
+		zhouyu: {
+			// 周瑜
+			运筹帷幄: {
+				name: "周瑜/运筹帷幄/XingXiang",
+				x: [0, 0.95],
+				y: [0, 0.4],
+				scale: 0.3,
+				angle: 0,
+				// speed: 1,
+				// action: 'DaiJi',
+				gongji: {
+					x: [0, 0.5],
+					y: [0, 0.5],
+					scale: 0.4,
+				},
+				beijing: {
+					name: "周瑜/运筹帷幄/BeiJing",
+					scale: 0.3,
+					x: [0, 0.5],
+					y: [0, 0.5],
+				},
+			},
+		},
 		zhujianping: {
 			// 朱建平
 			命镜幻生: {
@@ -7291,6 +7314,15 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 
 		// 周宣
 		dc_zhouxuān: decadeUI.dynamicSkin.zhouxuān,
+
+		// 乐周瑜
+		re_zhouyu: decadeUI.dynamicSkin.zhouyu,
+		dc_sb_zhouyu: decadeUI.dynamicSkin.zhouyu,
+		yue_zhouyu: decadeUI.dynamicSkin.zhouyu,
+		sb_zhouyu: decadeUI.dynamicSkin.zhouyu,
+		ps1062_zhouyu: decadeUI.dynamicSkin.zhouyu,
+		ps2080_zhouyu: decadeUI.dynamicSkin.zhouyu,
+		jx_zhouyu: decadeUI.dynamicSkin.zhouyu,
 
 		// 诸葛亮
 		re_zhugeliang: decadeUI.dynamicSkin.zhugeliang,

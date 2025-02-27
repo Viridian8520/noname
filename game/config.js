@@ -397,6 +397,7 @@ window.config = {
 			yj_zhonghui: "潜蛟觊天2.jpg",
 			yue_caiwenji: "以身证道.jpg",
 			yue_diaochan: "舞惑群心.jpg",
+			yue_zhouyu: "运筹帷幄.jpg",
 			yy_simayi: "重张区宇.jpg",
 			zerong: "一念佛魔.jpg",
 			zhangxuan: "涟漪夏梦.jpg",
