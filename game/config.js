@@ -154,7 +154,7 @@ window.config = {
 	cardshape: "oblong",
 	show_cardpile_number: true,
 	show_discardpile: true,
-	boss_storage_playpackconfig: true,
+	plays: ["boss"],
 	forbidai_user: ["ps_shen_machao", "junko", "acetaffy", "taffyshen_duyu", "taffyshen_chengui", "taffyshendc_guanning", "taffyhuiwan_xushao", "taffyshen_yuji", "taffyhuiwan_sunquan", "taffyhuiwanplus_sunquan", "limulu", "taffyre_xuyou", "yj_zhonghui"],
 	identity_banned: [...bannedList],
 	boss_banned: [...bannedList],
