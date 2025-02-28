@@ -3019,11 +3019,11 @@ const oldOL = {
 			},
 			{
 				toIndex: 2,
-				name: "你可以摸三张牌并将武将牌翻面",
+				name: "你可以摸四张牌并将武将牌翻面",
 				effect: {
 					content() {
 						lib.skill.taffyold_olhedao.tianshuClear(event.name, player);
-						player.draw(3);
+						player.draw(4);
 						player.turnOver();
 					},
 				},
