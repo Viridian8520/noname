@@ -71,6 +71,37 @@ export const CONTENT = function (config, pack) {
 	setAudioname2("olfangquan", { taffyold_shen_caopi: "olfangquan_shen_caopi" });
 	setAudioname2("dcfencheng", { taffyold_ol_sb_dongzhuo: "dcfencheng_ol_sb_dongzhuo" });
 	setAudioname2("benghuai", { taffyold_ol_sb_dongzhuo: "benghuai_re_dongzhuo" });
+	setAudioname2("liegong", { taffy_liubianxing: "liegong_re_huangzhong" });
+	// OL虎牢关
+	const addCharacter = function (name, character, packss) {
+		if (lib.character[name]) delete lib.character[name];
+		var packs = Object.keys(lib.characterPack).filter(pack => lib.characterPack[pack][name]);
+		if (packs.length) packs.forEach(pack => delete lib.characterPack[pack][name]);
+		if (!packss) lib.character[name] = character;
+		else {
+			var packs = packss.split(":").filter(p => lib.config.all.characters.includes(p));
+			packs.forEach(pack => (lib.characterPack[pack][name] = character));
+			if (packs.some(p => lib.config.characters.includes(p))) lib.character[name] = character;
+		}
+	};
+	if (get.mode() != "boss" && (!lib.config.plays || !lib.config.plays.includes("boss"))) {
+		game.loadModeAsync("boss", mode => {
+			["skill", "translate"].forEach(i => {
+				for (var j in mode[i]) {
+					if (!lib[i][j] && !j.startsWith("_")) lib[i][j] = mode[i][j];
+					if (i == "skill") game.finishSkill(j);
+				}
+			});
+			["boss_lvbu1", "boss_lvbu2", "boss_lvbu3"].forEach(name => {
+				lib.rank.rarity.legend.add(name);
+				if (!lib.characterIntro[name] && lib.characterIntro.lvbu) lib.characterIntro[name] = lib.characterIntro.lvbu;
+			});
+			lib.characterSort.taffy_character.taffy_ol.push("boss_lvbu1", "boss_lvbu2", "boss_lvbu3");
+			addCharacter("boss_lvbu1", ["male", "shen", 8, ["wushuang", "mashu", "taffyboss_baonu", "taffyboss_jingjia", "boss_aozhan"], ["qun", "mode:boss"]], "taffy_character");
+			addCharacter("boss_lvbu2", ["male", "shen", 6, ["wushuang", "mashu", "xiuluo", "shenwei", "shenji"], ["qun", "mode:boss"]], "taffy_character");
+			addCharacter("boss_lvbu3", ["male", "shen", 6, ["wushuang", "shenqu", "jiwu"], ["qun", "mode:boss"]], "taffy_character");
+		});
+	}
 	// 一些全局技能
 	lib.skill._taffy_dieKillEffect = {
 		trigger: {

@@ -60,108 +60,219 @@ export const PRECONTENT = function (config) {
 		};
 		retryOverride(20);
 		// 一些prefix样式补充
-		lib.namePrefix.set("旧武", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("武")}`,
-		});
-		lib.namePrefix.set("旧TW", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("TW")}`,
-		});
-		lib.namePrefix.set("欢杀", {
-			showName: "欢",
-		});
-		lib.namePrefix.set("欢杀神", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("欢杀")}${get.prefixSpan("神")}`,
-		});
-		lib.namePrefix.set("旧OL", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("OL")}`,
-		});
-		lib.namePrefix.set("新杀神", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("新杀")}${get.prefixSpan("神")}`,
-		});
-		lib.namePrefix.set("旧族", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("族")}`,
-		});
-		lib.namePrefix.set("泳装", {
-			color: "#6affe2",
-			nature: "watermm",
-			showName: "水",
-		});
-		lib.namePrefix.set("旧手杀神", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("手杀")}${get.prefixSpan("神")}`,
-		});
-		lib.namePrefix.set("旧OL谋", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("OL")}${get.prefixSpan("谋")}`,
-		});
-		lib.namePrefix.set("旧乐", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("乐")}`,
-		});
-		lib.namePrefix.set("旧手杀", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("手杀")}`,
-		});
-		lib.namePrefix.set("旧TW神", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("TW")}${get.prefixSpan("神")}`,
-		});
-		lib.namePrefix.set("旧幻", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("幻")}`,
-		});
-		lib.namePrefix.set("旧☆", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("☆")}`,
-		});
-		lib.namePrefix.set("红利期", {
-			color: "#fd8359",
-			nature: "soilmm",
-			showName: "红",
-		});
-		lib.namePrefix.set("红利期手杀界", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("红利期")}${get.prefixSpan("手杀")}${get.prefixSpan("界")}`,
-		});
-		lib.namePrefix.set("旧威", {
-			/**
-			 * @returns {string}
-			 */
-			getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("威")}`,
+		const prefixList = [
+			[
+				"旧武",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("武")}`,
+				},
+			],
+			[
+				"旧TW",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("TW")}`,
+				},
+			],
+			[
+				"欢杀",
+				{
+					color: "#ff6a6a",
+					nature: "MXpink",
+					showName: "欢",
+				},
+			],
+			[
+				"欢杀神",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("欢杀")}${get.prefixSpan("神")}`,
+				},
+			],
+			[
+				"旧欢杀神",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("欢杀")}${get.prefixSpan("神")}`,
+				},
+			],
+			[
+				"旧OL",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("OL")}`,
+				},
+			],
+			[
+				"新杀神",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("新杀")}${get.prefixSpan("神")}`,
+				},
+			],
+			[
+				"旧族",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("族")}`,
+				},
+			],
+			[
+				"泳装",
+				{
+					color: "#6affe2",
+					nature: "watermm",
+					showName: "水",
+				},
+			],
+			[
+				"旧手杀神",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("手杀")}${get.prefixSpan("神")}`,
+				},
+			],
+			[
+				"旧OL谋",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("OL")}${get.prefixSpan("谋")}`,
+				},
+			],
+			[
+				"旧乐",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("乐")}`,
+				},
+			],
+			[
+				"旧手杀",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("手杀")}`,
+				},
+			],
+			[
+				"旧TW神",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("TW")}${get.prefixSpan("神")}`,
+				},
+			],
+			[
+				"旧幻",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("幻")}`,
+				},
+			],
+			[
+				"旧☆",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("☆")}`,
+				},
+			],
+			[
+				"红利期",
+				{
+					color: "#fd8359",
+					nature: "soilmm",
+					showName: "红",
+				},
+			],
+			[
+				"红利期手杀界",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("红利期")}${get.prefixSpan("手杀")}${get.prefixSpan("界")}`,
+				},
+			],
+			[
+				"旧威",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("威")}`,
+				},
+			],
+			[
+				"S系列",
+				{
+					color: "#c3f9ff",
+					nature: "thundermm",
+					showName: "Ｓ",
+				},
+			],
+			[
+				"S系列神",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("S系列")}${get.prefixSpan("神")}`,
+				},
+			],
+			[
+				"E系列",
+				{
+					color: "#c3f9ff",
+					nature: "thundermm",
+					showName: "Ｅ",
+				},
+			],
+			[
+				"极",
+				{
+					color: "#fdd559",
+					nature: "soilmm",
+				},
+			],
+			[
+				"旧极",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("极")}`,
+				},
+			],
+		];
+		prefixList.forEach(i => {
+			lib.namePrefix.set(i[0], i[1]);
 		});
 		characterPackFunc();
 		lib.config.all.characters.splice(21, 0, "taffy_character");

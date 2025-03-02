@@ -39,7 +39,6 @@ export const characterPackFunc = function () {
 				junko: "#gViridian",
 				taffyhuiwan_sunquan: "#gViridian",
 				taffyhuiwanplus_sunquan: "#gViridian",
-				taffyboss_lvbu1: "#gViridian",
 				taffyshen_duyu: "#gViridian",
 				taffyshen_chengui: "#gViridian",
 				taffyshendc_guanning: "#gViridian",
@@ -53,6 +52,9 @@ export const characterPackFunc = function () {
 				taffyre_xuyou: "#gViridian",
 				himari: "#gViridian",
 				taffyred_xin_jushou: "#gViridian",
+				taffy_liubianxing: "#gViridian",
+				mutsumi: "#gViridian",
+				mortis: "#gViridian",
 				limulu: "#gLazysun Viridian",
 			},
 			dynamicTranslate: { ...dynamicTranslates },
@@ -63,7 +65,10 @@ export const characterPackFunc = function () {
 			translate: { ...translates, ...voices, ...characterSortTranslate },
 			pinyins: { ...pinyins },
 		};
-		const whiteList = [...oobj.characterSort.taffy_character.taffy_old_ol, ...oobj.characterSort.taffy_character.taffy_old_mb, ...oobj.characterSort.taffy_character.taffy_old_dc, ...oobj.characterSort.taffy_character.taffy_old_etc, ...oobj.characterSort.taffy_character.taffy_mobile_changshi, "taffymb_shen_caocao", "taffyre_xuyou"];
+		const whiteList = new Set([...oobj.characterSort.taffy_character.taffy_old_ol, ...oobj.characterSort.taffy_character.taffy_old_mb, ...oobj.characterSort.taffy_character.taffy_old_dc, ...oobj.characterSort.taffy_character.taffy_old_etc, ...oobj.characterSort.taffy_character.taffy_mobile_changshi, "taffymb_shen_caocao", "taffyre_xuyou", "taffy_liubianxing"]);
+		["taffyold_baby_shen_simayi", "taffyold_wechat_ji_guanyu"].forEach(i => {
+			whiteList.delete(i);
+		});
 		const specialDetails = {
 			taffydc_guanning: {
 				character: "character:ddd_guanning",
@@ -85,12 +90,8 @@ export const characterPackFunc = function () {
 				character: "ext:永雏塔菲/image/character/taffyhuiwan_sunquan.jpg",
 				die: "die:re_sunquan",
 			},
-			taffyboss_lvbu1: {
-				character: "ext:永雏塔菲/image/character/taffyboss_lvbu1.jpg",
-				die: "die:boss_lvbu1",
-			},
-			taffybaby_shen_simayi: {
-				character: "ext:永雏塔菲/image/character/taffybaby_shen_simayi.jpg",
+			taffyold_baby_shen_simayi: {
+				character: "ext:永雏塔菲/image/character/taffyold_baby_shen_simayi.jpg",
 				die: "die:shen_simayi",
 			},
 			taffyshen_duyu: {
@@ -120,7 +121,7 @@ export const characterPackFunc = function () {
 		};
 		const specialList = Object.keys(specialDetails);
 		for (let i in oobj.character) {
-			if (whiteList.includes(i)) continue;
+			if (whiteList.has(i)) continue;
 			if (specialList.includes(i)) {
 				if (oobj.character[i][4]) {
 					oobj.character[i][4].push(specialDetails[i].character, specialDetails[i].die);

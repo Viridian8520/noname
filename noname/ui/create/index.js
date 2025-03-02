@@ -2724,6 +2724,7 @@ export class Create {
 			['指示线', true],
 			['拖拽指示线', true],
 			['补应变卡', true],
+			['活动武将', true],
 		];
 		var need_reload=false;
 		for(var i=0;i<addtional_extention_names.length;i++){

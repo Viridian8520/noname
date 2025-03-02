@@ -967,6 +967,354 @@ const oldEtc = {
 			await player.changeSkills(["taffyold_twchihui", "taffyold_twfuxi"], ["taffyold_twhuangzhu", "taffyold_twliyuan", "taffyold_twjifa"].remove(control));
 		},
 	},
+	// 旧欢杀神司马懿
+	taffyold_baby_renjie: {
+		audio: "renjie2",
+		trigger: {
+			player: ["damageEnd", "loseAfter"],
+			global: "loseAsyncAfter",
+		},
+		forced: true,
+		group: "taffyold_baby_renjie_begin",
+		filter: function (event, player) {
+			if (event.name == "damage") return event.num > 0;
+			if (event.type != "discard" || event.getlx === false) return false;
+			var evt = event.getParent("phaseDiscard"),
+				evt2 = event.getl(player);
+			return evt && evt2 && evt.name == "phaseDiscard" && evt.player == player && evt2.cards2 && evt2.cards2.length > 0;
+		},
+		content: function () {
+			player.addMark("taffyold_baby_renjie", trigger.name == "damage" ? trigger.num : trigger.getl(player).cards2.length);
+		},
+		intro: {
+			name2: "忍",
+			content: "mark",
+		},
+		ai: {
+			maixie: true,
+			maixie_hp: true,
+			combo: "taffyold_baby_jilue",
+		},
+		subSkill: {
+			begin: {
+				trigger: {
+					global: "phaseBefore",
+					player: "enterGame",
+				},
+				forced: true,
+				filter: function (event, player) {
+					return event.name != "phase" || game.phaseNumber == 0;
+				},
+				audio: "taffyold_baby_jilue",
+				forced: true,
+				unique: true,
+				content: function () {
+					player.addMark("taffyold_baby_renjie", 1);
+				},
+			},
+		},
+	},
+	taffyold_baby_jilue: {
+		audio: "sbaiyin",
+		group: ["taffyold_baby_jilue_guicai", "taffyold_baby_jilue_fangzhu", "taffyold_baby_jilue_wansha", "taffyold_baby_jilue_jizhi", "taffyold_baby_jilue_qixi", "taffyold_baby_jilue_draw"],
+		derivation: ["taffyold_baby_jilue_guicai", "taffyold_baby_jilue_fangzhu", "taffyold_baby_jilue_jizhi", "taffyold_baby_jilue_qixi", "taffyold_baby_jilue_wansha"],
+		subfrequent: ["draw"],
+		subSkill: {
+			guicai: {
+				audio: "jilue_guicai",
+				trigger: {
+					global: "judge",
+				},
+				direct: true,
+				filter: function (event, player) {
+					return player.countCards("hes") > 0 && player.hasMark("taffyold_baby_renjie");
+				},
+				content: function () {
+					"step 0";
+					player.chooseCard("是否弃置一枚“忍”，并发动〖鬼才〗？", get.skillInfoTranslation("taffyold_baby_jilue_guicai"), "he", function (card) {
+						var player = _status.event.player;
+						var mod2 = game.checkMod(card, player, "unchanged", "cardEnabled2", player);
+						if (mod2 != "unchanged") return mod2;
+						var mod = game.checkMod(card, player, "unchanged", "cardRespondable", player);
+						if (mod != "unchanged") return mod;
+						return true;
+					}).ai = function (card) {
+						var trigger = _status.event.parent._trigger;
+						var player = _status.event.player;
+						var result = trigger.judge(card) - trigger.judge(trigger.player.judging[0]);
+						var attitude = get.attitude(player, trigger.player);
+						if (attitude == 0 || result == 0) return 0;
+						if (attitude > 0) {
+							return result - get.value(card) / 2;
+						} else {
+							return -result - get.value(card) / 2;
+						}
+					};
+					("step 1");
+					if (result.bool) {
+						player.respond(result.cards, "highlight", "taffyold_baby_jilue_guicai", "noOrdering");
+					} else {
+						event.finish();
+					}
+					("step 2");
+					if (result.bool) {
+						player.removeMark("taffyold_baby_renjie", 1);
+						if (trigger.player.judging[0].clone) {
+							trigger.player.judging[0].clone.delete();
+							game.addVideo("deletenode", player, get.cardsInfo([trigger.player.judging[0].clone]));
+						}
+						game.cardsDiscard(trigger.player.judging[0]);
+						trigger.player.judging[0] = result.cards[0];
+						trigger.orderingCards.addArray(result.cards);
+						game.log(trigger.player, "的判定牌改为", result.cards[0]);
+						game.delay(2);
+					}
+				},
+				ai: {
+					rejudge: true,
+					tag: {
+						rejudge: 1,
+					},
+				},
+			},
+			fangzhu: {
+				audio: "jilue_fangzhu",
+				trigger: {
+					player: "damageEnd",
+				},
+				direct: true,
+				filter: function (event, player) {
+					return player.hasMark("taffyold_baby_renjie");
+				},
+				content: function () {
+					"step 0";
+					player.chooseTarget("是否弃置一枚“忍”，并发动【放逐】？", get.skillInfoTranslation("taffyold_baby_jilue_fangzhu"), function (card, player, target) {
+						return player != target;
+					}).ai = function (target) {
+						if (target.hasSkillTag("noturn")) return 0;
+						if (target.isTurnedOver()) {
+							return get.attitude(player, target) - 1;
+						}
+						return -get.attitude(player, target) - 1;
+					};
+					("step 1");
+					if (result.bool) {
+						player.removeMark("taffyold_baby_renjie", 1);
+						player.logSkill("taffyold_baby_jilue_fangzhu", result.targets);
+						player.draw();
+						result.targets[0].draw();
+						result.targets[0].turnOver();
+					}
+				},
+				ai: {
+					maixie: true,
+					maixie_hp: true,
+					effect: {
+						target: function (card, player, target) {
+							if (get.tag(card, "damage")) {
+								if (player.hasSkillTag("jueqing", false, target)) return [1, -2];
+								if (target.hp <= 1) return;
+								if (!target.hasFriend()) return;
+								var hastarget = false;
+								var turnfriend = false;
+								var players = game.filterPlayer();
+								for (var i = 0; i < players.length; i++) {
+									if (get.attitude(target, players[i]) < 0 && !players[i].isTurnedOver()) {
+										hastarget = true;
+									}
+									if (get.attitude(target, players[i]) > 0 && players[i].isTurnedOver()) {
+										hastarget = true;
+										turnfriend = true;
+									}
+								}
+								if (get.attitude(player, target) > 0 && !hastarget) return;
+								if (turnfriend) return [0.5, 1];
+								if (target.hp > 1) return [1, 1];
+							}
+						},
+					},
+				},
+			},
+			wansha: {
+				audio: "jilue_wansha",
+				global: "taffyold_baby_jilue_wansha_global",
+				trigger: {
+					global: "dyingBegin",
+				},
+				// logTarget: 'player',
+				prompt: "是否弃一枚“忍”，本回合获得【完杀】？",
+				prompt2: () => get.skillInfoTranslation("taffyold_baby_jilue_wansha"),
+				filter: function (event, player) {
+					if (!player.hasMark("taffyold_baby_renjie")) return false;
+					if (player.hasSkill("taffyold_baby_jilue_wansha_clear")) return false;
+					return player == _status.currentPhase;
+				},
+				content: function () {
+					player.removeMark("taffyold_baby_renjie", 1);
+					player.addTempSkill("taffyold_baby_jilue_wansha_clear");
+				},
+			},
+			wansha_global: {
+				mod: {
+					cardEnabled: function (card, player) {
+						var source = _status.currentPhase;
+						if (card.name == "tao" && source && source != player && source.hasSkill("taffyold_baby_jilue_wansha_clear")) return false;
+					},
+					cardSavable: function (card, player) {
+						var source = _status.currentPhase;
+						if (card.name == "tao" && source && source != player && source.hasSkill("taffyold_baby_jilue_wansha_clear")) return false;
+					},
+				},
+			},
+			wansha_clear: {
+				charlotte: true,
+			},
+			jizhi: {
+				audio: "jilue_jizhi",
+				trigger: {
+					player: "useCard",
+				},
+				prompt: "是否弃一枚“忍”，发动【集智】？",
+				prompt2: () => get.skillInfoTranslation("taffyold_baby_jilue_jizhi"),
+				filter: function (event, player) {
+					return get.type(event.card) == "trick" && event.card.isCard && player.hasMark("taffyold_baby_renjie");
+				},
+				content: function () {
+					player.removeMark("taffyold_baby_renjie", 1);
+					player.draw();
+				},
+				ai: {
+					threaten: 1.4,
+					noautowuxie: true,
+				},
+			},
+			qixi: {
+				audio: "jilue_zhiheng",
+				trigger: { player: "phaseUseBegin" },
+				filter: function (event, player) {
+					return player.hasMark("taffyold_baby_renjie");
+				},
+				direct: true,
+				content: function () {
+					"step 0";
+					player.chooseTarget("是否弃置一枚“忍”，并发动【奇袭】？", get.skillInfoTranslation("taffyold_baby_jilue_qixi"), function (card, player, target) {
+						return player != target && target.countCards("he") > 0;
+					}).ai = function (target) {
+						return -get.attitude(player, target);
+					};
+					("step 1");
+					if (result.bool && result.targets && result.targets.length) {
+						player.removeMark("taffyold_baby_renjie", 1);
+						player.logSkill("taffyold_baby_jilue_qixi", result.targets);
+						player.discardPlayerCard(result.targets[0], true);
+					}
+				},
+			},
+			draw: {
+				trigger: {
+					player: "logSkill",
+				},
+				frequent: true,
+				prompt2: "当你每回合首次发动〖极略〗后，可摸一张牌",
+				filter: function (event, player) {
+					return event.skill.indexOf("taffyold_baby_jilue_") == 0 && player.getHistory("useSkill", evt => evt.skill.indexOf("taffyold_baby_jilue_") == 0).length == 1;
+				},
+				content: function () {
+					player.draw();
+				},
+			},
+		},
+	},
+	taffyold_baby_lianpo: {
+		audio: "lianpo",
+		trigger: {
+			global: "phaseAfter",
+		},
+		frequent: true,
+		filter: function (event, player) {
+			return player.getStat("kill") > 0;
+		},
+		content: function () {
+			player.insertPhase();
+		},
+	},
+	// 极关羽
+	taffyold_wechatyihan: {
+		audio: 2,
+		shiwuSkill: true,
+		categories: () => ["奋武技"],
+		shiwuAble(player, skill) {
+			return (
+				player.getRoundHistory("useSkill", evt => evt.skill == skill).length <
+				Math.min(
+					5,
+					player
+						.getRoundHistory("damage", () => true)
+						.concat(player.getRoundHistory("sourceDamage", () => true))
+						.reduce((sum, evt) => sum + evt.num, 0) + 1
+				)
+			);
+		},
+		enable: "phaseUse",
+		filter(event, player) {
+			return game.hasPlayer(current => player != current) && get.info("taffyold_wechatyihan").shiwuAble(player, "taffyold_wechatyihan");
+		},
+		filterTarget: lib.filter.notMe,
+		async content(event, trigger, player) {
+			const { target } = event,
+				sha = get.autoViewAs({ name: "sha", isCard: true });
+			const bool = await target
+				.chooseToUse(function (card, player, event) {
+					if (get.type(card) == "equip") return false;
+					return lib.filter.filterCard.apply(this, arguments);
+				}, `翊汉：是否使用一张非装备牌，若你不使用，则${get.translation(player)}视为对你使用一张【杀】`)
+				.set("addCount", false)
+				.forResultBool();
+			if (!bool && player.canUse(sha, target, false, false)) await player.useCard(sha, target, false);
+		},
+		ai: {
+			order: 8,
+			result: {
+				target(player, target) {
+					return -1;
+				},
+			},
+		},
+	},
+	taffyold_wechatwuwei: {
+		audio: 2,
+		enable: "phaseUse",
+		usable: 1,
+		filter(event, player) {
+			return game.hasPlayer(current => get.info("taffyold_wechatyihan").filterTarget(null, player, current)) && player.countCards("he");
+		},
+		filterTarget(card, player, target) {
+			return target.countDiscardableCards(player, "hej");
+		},
+		filterCard: true,
+		selectCard: [1, Infinity],
+		position: "he",
+		check(card) {
+			if (ui.selected.cards.length > 2) return 0;
+			return 7.5 - get.value(card);
+		},
+		async content(event, trigger, player) {
+			const { cards, target } = event,
+				num1 = cards.reduce((sum, card) => sum + get.number(card), 0);
+			const links = await player.discardPlayerCard(target, "hej", cards.length, true).forResultLinks();
+			if (!links || !links.some(card => get.type(card) == "equip")) return;
+			const num2 = links.filter(card => get.type(card) == "equip").reduce((sum, card) => sum + get.number(card), 0);
+			if (num1 <= num2) await target.damage("thunder");
+		},
+		ai: {
+			order: 10,
+			result: {
+				player(player, target) {
+					return get.effect(target, { name: "guohe_copy2" }, player, player);
+				},
+			},
+		},
+	},
 };
 
 export default oldEtc;
