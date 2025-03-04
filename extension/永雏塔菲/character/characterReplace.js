@@ -30,7 +30,6 @@ const characterReplaces = {
 	xuyou: ["xuyou", "sp_xuyou", "jsrg_xuyou", "yj_xuyou", "junk_xuyou", "taffyre_xuyou"],
 	zhangzhongjing: ["zhangzhongjing", "taffyold_zhangzhongjing"],
 	huanggai: ["huanggai", "re_huanggai", "sb_huanggai", "dc_sb_huanggai", "taffyold_sb_huanggai"],
-	shen_sunce: ["shen_sunce", "taffyold_shen_sunce"],
 	huangzhong: ["re_huangzhong", "ol_huangzhong", "sb_huangzhong", "huangzhong", "jsrg_huangzhong", "yj_huangzhong", "wuhujiang", "taffyold_sb_huangzhong"],
 	shen_huangzhong: ["shen_huangzhong", "taffyold_shen_huangzhong"],
 	yuechen: ["yuechen", "taffyold_yuechen"],
@@ -64,6 +63,9 @@ const characterReplaces = {
 	pangfengyi: ["pangfengyi", "taffyold_pangfengyi"],
 	shen_jiangwei: ["shen_jiangwei", "taffyps_shen_jiangwei"],
 	wechat_zhiyin_guanyu: ["wechat_zhiyin_guanyu", "taffyold_wechat_ji_guanyu"],
+	wechat_zhiyin_caocao: ["wechat_zhiyin_caocao", "taffyold_wechat_ji_caocao"],
+	wechat_zhiyin_zhugeliang: ["wechat_zhiyin_zhugeliang", "taffyold_wechat_ji_zhugeliang"],
+	wechat_zhiyin_sunce: ["wechat_zhiyin_sunce", "taffyold_wechat_ji_sunce"],
 };
 
 export default characterReplaces;

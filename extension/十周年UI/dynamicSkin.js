@@ -7080,9 +7080,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		taffyold_xin_simayi: decadeUI.dynamicSkin.shen_simayi,
 		taffyold_new_simayi: decadeUI.dynamicSkin.shen_simayi,
 
-		// 神孙策
-		taffyold_shen_sunce: decadeUI.dynamicSkin.shen_sunce,
-
 		// 神荀彧
 		taffyold_shen_xunyu: decadeUI.dynamicSkin.shen_xunyu,
 

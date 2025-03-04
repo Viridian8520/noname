@@ -5899,13 +5899,581 @@ const diy = {
 		},
 	},
 	// 若叶睦
-	mutsumi_songyue: {},
-	mutsumi_wuyan: {},
-	mutsumi_huge: {},
+	mutsumi_songyue: {
+		audio: 2,
+		enable: "phaseUse",
+		usable: 1,
+		selectCard() {
+			if (ui.selected.targets.length) return [ui.selected.targets.length, 5];
+			return [1, 5];
+		},
+		filterCard(card) {
+			return get.type(card.name) == "basic" || get.type(card.name) == "trick";
+		},
+		position: "h",
+		complexCard: true,
+		discard: false,
+		lose: false,
+		delay: false,
+		content() {
+			"step 0";
+			player.showCards(cards, get.translation(player) + "发动了【颂乐】");
+			("step 1");
+			player.chooseToPlayBeatmap(lib.skill.mutsumi_songyue.beatmaps.randomGet());
+			("step 2");
+			var score = Math.floor(Math.min(5, result.accuracy / 17));
+			event.score = score;
+			game.log(player, "的演奏评级为", "#y" + result.rank[0], "，获得积分点数", "#y" + score, "分");
+			if (score === 0) {
+				event.finish();
+				return;
+			} else if (score > 1) {
+				player.chooseTarget(`颂乐：令至多${get.cnNumber(Math.ceil(score / 2))}名角色摸一张牌（一名角色消耗2分，当前总共${score}分，剩余分数用于视为使用展示的牌）`, [1, Math.ceil(score / 2)]).set("ai", target => {
+					if (get.attitude(player, target) > 0) {
+						return 1;
+					}
+					return false;
+				});
+			} else event.goto(4);
+			("step 3");
+			if (!result.bool || !result.targets.length) {
+				event.goto(4);
+			} else {
+				const targets = result.targets.sortBySeat();
+				event.score -= targets.length * 2;
+				player.line(targets, "green");
+				game.asyncDraw(targets);
+				targets.forEach(target => target.recover());
+				if (event.score < 1) {
+					event.finish();
+					return;
+				}
+			}
+			("step 4");
+			player.chooseButton([`颂乐：视为使用一张牌（还可使用${get.cnNumber(event.score)}张）`, cards], [1, 1], false).set("ai", function (button) {
+				return player.hasValueTarget(button.link[2]);
+			});
+			("step 5");
+			if (result.bool && result.links.length !== 0) {
+				let card = result.links.pop();
+				let vCard = new lib.element.VCard(card);
+				cards.splice(cards.indexOf(card), 1);
+				event.score--;
+				player.chooseUseTarget(vCard, false);
+			} else {
+				event.finish();
+				return;
+			}
+			("step 6");
+			if (event.score > 0 && cards.length) event.goto(4);
+			else {
+				event.finish();
+				return;
+			}
+		},
+		ai: {
+			order: 10,
+			result: {
+				player: 1,
+			},
+		},
+		beatmaps: [
+			{
+				name: "春日影",
+				filename: "../../extension/永雏塔菲/audio/effect/haru_hi_kage_crychic.mp3",
+				timeleap: [505, 1130, 1442.5, 2067.5, 2380, 3005, 3317.5, 4155, 4780, 5092.5, 5717.5, 6030, 6655, 6967.5, 7855, 8480, 8792.5, 9417.5, 9730, 10355, 10667.5, 11585, 12210, 12522.5, 13147.5, 13460, 14085, 14397.5],
+				current: -110,
+				judgebar_height: 0.16,
+				range1: [84, 110],
+				range2: [90, 104],
+				range3: [94, 100],
+				speed: 25,
+				node_color: "linear-gradient(135deg, rgb(255, 255, 130), rgb(171, 255, 171))",
+				judgebar_color: "linear-gradient(135deg, rgb(127, 214, 255), rgb(255, 158, 255))",
+			},
+			{
+				name: "春日影 (MyGO!!!!! ver.)",
+				filename: "../../extension/永雏塔菲/audio/effect/haru_hi_kage_mygo.mp3",
+				timeleap: [735, 1360, 1672.5, 2297.5, 2610, 3235, 3547.5, 4435, 5060, 5372.5, 5997.5, 6310, 6935, 7247.5, 8135, 8760, 9072.5, 9697.5, 10010, 10635, 10947.5, 11835, 12460, 12772.5, 13397.5, 13710, 14335, 14647.5],
+				current: -110,
+				judgebar_height: 0.16,
+				range1: [84, 110],
+				range2: [90, 104],
+				range3: [94, 100],
+				speed: 25,
+				node_color: "linear-gradient(135deg, rgb(245, 157, 170), rgb(247, 255, 154))",
+				judgebar_color: "linear-gradient(135deg, rgb(169, 255, 205), rgb(100, 238, 255))",
+			},
+			{
+				//歌曲名称
+				name: "鳥の詩",
+				//歌曲文件名（默认在audio/effect文件夹下 若要重定向到扩展 请写为'ext:扩展名称/文件名'的格式）
+				filename: "tori_no_uta",
+				//每个音符的开始时间点（毫秒，相对未偏移的开始播放时间）
+				timeleap: [1047, 3012, 4978, 5469, 5961, 6452, 6698, 7435, 8909, 10875, 12840],
+				//开始播放时间的偏移量（毫秒）
+				current: -110,
+				//判定栏高度（相对整个对话框高度比例）
+				judgebar_height: 0.16,
+				//Good/Great/Prefect的位置判定范围（百分比，相对于整个对话框。以滑条的底部作为判定基准）
+				range1: [84, 110],
+				range2: [90, 104],
+				range3: [94, 100],
+				//滑条每相对于整个对话框下落1%所需的时间（毫秒）
+				speed: 25,
+			},
+			{
+				name: "竹取飛翔　～ Lunatic Princess",
+				filename: "taketori_hishou",
+				timeleap: [1021, 1490, 1959, 2896, 3834, 4537, 4771, 5709, 6646, 7585, 8039, 8494, 9403, 10291, 11180, 11832, 12049, 12920, 13345, 13771, 14196],
+				current: -110,
+				judgebar_height: 0.16,
+				range1: [84, 110],
+				range2: [90, 104],
+				range3: [94, 100],
+				speed: 25,
+				node_color: "linear-gradient(rgba(250, 170, 190, 1), rgba(240, 160, 180, 1))",
+				judgebar_color: "linear-gradient(rgba(240, 120, 243, 1), rgba(245, 106, 230, 1))",
+			},
+			{
+				name: "ignotus",
+				filename: "ignotus",
+				//Number of tracks
+				//轨道数量
+				number_of_tracks: 4,
+				//Customize the track to generate for every note (0 is the first track)
+				//自定义每个音符生成的轨道（0是第一个轨道）
+				mapping: [0, 2, 3, 1, 1, 0, 3, 0, 0, 3, 0, 0, 2, 1, 2],
+				//Convert from beats (0 is the first beat) to timeleap
+				//将节拍（0是第一拍）转换为开始时间点
+				timeleap: game.generateBeatmapTimeleap(170, [0, 4, 8, 12, 14, 16, 16.5, 23.5, 24, 31, 32, 40, 45, 46, 47]),
+				current: -110,
+				judgebar_height: 0.16,
+				range1: [84, 110],
+				range2: [90, 104],
+				range3: [94, 100],
+				speed: 25,
+				node_color: "linear-gradient(rgba(240, 250, 240, 1), rgba(230, 240, 230, 1))",
+				judgebar_color: "linear-gradient(rgba(161, 59, 150, 1), rgba(58, 43, 74, 1))",
+			},
+			{
+				name: "Super Mario 3D World Theme",
+				filename: "sm3dw_overworld",
+				//Random (Randomly choose tracks to generate notes each play)
+				//随机（每次演奏时音符会随机选择轨道生成）
+				mapping: "random",
+				timeleap: [0, 1071, 1518, 2054, 4018, 4286, 5357, 6429, 7500, 8571, 9643, 10714, 11786, 12321, 12589, 12857, 13929, 15000, 16071, 17143, 18214, 18482, 18750, 19018, 19286, 20357],
+				current: -110,
+				judgebar_height: 0.16,
+				range1: [84, 110],
+				range2: [90, 104],
+				range3: [94, 100],
+				speed: 25,
+				node_color: "linear-gradient(rgba(120, 130, 240, 1), rgba(100, 100, 230, 1))",
+				judgebar_color: "linear-gradient(rgba(230, 40, 30, 1), rgba(220, 30, 10, 1))",
+			},
+			{
+				name: "只因你太美",
+				filename: "chicken_you_are_so_beautiful",
+				number_of_tracks: 7,
+				mapping: [3, 6, 4, 5, 6, 2, 3, 2, 1, 2, 0, 4, 3, 6, 5, 4, 3, 6, 3, 2, 3, 1, 0, 1, 2, 3, 4, 5, 6],
+				timeleap: game.generateBeatmapTimeleap(107, [2, 3.5, 4.5, 5.5, 6.5, 8.5, 10, 11.5, 12.5, 13.5, 14.5, 15.5, 18, 19.5, 20.5, 21.5, 22.5, 24.5, 26, 27.5, 28.5, 29.5, 30.5, 31, 31.5, 32, 32.5, 33, 33.5]),
+				//Hitsound file name (By default in the audio/effect folder. To redirect to the extension, please write in the format of 'ext:extension_name')
+				//打击音文件名（默认在audio/effect文件夹下 若要重定向到扩展 请写为'ext:扩展名称'的格式）
+				hitsound: "chickun.wav",
+				current: -110,
+				judgebar_height: 0.16,
+				range1: [84, 110],
+				range2: [90, 104],
+				range3: [94, 100],
+				speed: 25,
+				node_color: "linear-gradient(#99f, #66c)",
+				judgebar_color: "linear-gradient(#ccf, #99c)",
+			},
+			{
+				name: "Croatian Rhapsody",
+				filename: "croatian_rhapsody",
+				mapping: [4, 1, 2, 1, 0, 0, 4, 5, 1, 3, 2, 1, 0, 0],
+				timeleap: game.generateBeatmapTimeleap(96, [4, 6, 8, 9, 10, 11, 12, 13.5, 14, 15.5, 16, 17, 18, 19]),
+				current: -110,
+				judgebar_height: 0.16,
+				range1: [84, 110],
+				range2: [90, 104],
+				range3: [94, 100],
+				speed: 25,
+				node_color: "linear-gradient(#fff, #ccc)",
+				judgebar_color: "linear-gradient(#fff, #ccc)",
+			},
+			{
+				name: "罗刹海市",
+				filename: "rakshasa_sea_city",
+				number_of_tracks: 7,
+				mapping: "random",
+				timeleap: game.generateBeatmapTimeleap(150, [0, 2, 4, 6, 7, 9, 11, 13, 14, 16, 18, 20, 21, 23, 25, 27]),
+				current: -110,
+				judgebar_height: 0.16,
+				range1: [84, 110],
+				range2: [90, 104],
+				range3: [94, 100],
+				speed: 25,
+				node_color: "linear-gradient(#333, #000)",
+				judgebar_color: "linear-gradient(#c66, #933)",
+			},
+			{
+				name: "Pigstep (Stereo Mix)",
+				filename: "pigstep",
+				number_of_tracks: 16,
+				timeleap: game.generateBeatmapTimeleap(170, [3, 4, 6, 6.5, 7.5, 11, 12, 14, 14.5, 15.5, 19, 20, 22, 22.5, 23.5, 27, 28, 30, 30.5, 31.5, 35, 36, 38, 38.5, 39.5, 43, 44, 46, 46.5, 47.5, 51, 52, 54, 54.5, 55.5, 59, 60, 62, 62.5]),
+				current: -110,
+				judgebar_height: 0.16,
+				range1: [84, 110],
+				range2: [90, 104],
+				range3: [94, 100],
+				speed: 25,
+				node_color: "linear-gradient(#066, #033)",
+				judgebar_color: "linear-gradient(#633, #300)",
+			},
+		],
+		derivation: "mutsumi_songyue_faq",
+	},
+	mutsumi_wuyan: {
+		audio: 2,
+		trigger: {
+			global: "phaseBeginStart",
+		},
+		forced: true,
+		filter: () => true,
+		content() {
+			player.addTempSkill("mutsumi_wuyan_limit");
+			player.addMark("mutsumi_wuyan_limit", 2, false);
+		},
+		group: ["mutsumi_wuyan_target", "mutsumi_wuyan_discard"],
+		subSkill: {
+			limit: {
+				mark: true,
+				intro: {
+					markcount(storage) {
+						return (storage || 0).toString();
+					},
+					content(storage) {
+						return "还可使用" + (storage || 0).toString() + "张牌";
+					},
+				},
+				charlotte: true,
+				onremove: true,
+				trigger: { player: "useCard0" },
+				filter(event, player) {
+					return player.hasMark("mutsumi_wuyan_limit");
+				},
+				forced: true,
+				popup: false,
+				firstDo: true,
+				content() {
+					player.removeMark("mutsumi_wuyan_limit", 1, false);
+				},
+				mod: {
+					cardEnabled(card, player) {
+						if (player.hasMark("mutsumi_wuyan_limit")) return;
+						if (get.itemtype(card) == "card" && get.position(card) == "h") return false;
+						if (card.cards && (card.cards || []).some(i => get.position(i) == "h")) return false;
+					},
+					cardSavable() {
+						return lib.skill.mutsumi_wuyan.subSkill.limit.mod.cardEnabled.apply(this, arguments);
+					},
+				},
+			},
+			target: {
+				trigger: { target: "useCardToTarget" },
+				logTarget: "player",
+				forced: true,
+				filter(event, player) {
+					return player != event.player;
+				},
+				content() {
+					player.addToExpansion(trigger.cards, "gain2").gaintag.add("mutsumi_wuyan_target");
+				},
+				marktext: "言",
+				intro: {
+					content: "expansion",
+					markcount: "expansion",
+				},
+			},
+			discard: {
+				trigger: {
+					player: "phaseDiscardBefore",
+				},
+				forced: true,
+				audio: 2,
+				content() {
+					trigger.cancel();
+					game.log(player, "跳过了", "弃牌阶段");
+				},
+			},
+		},
+	},
+	mutsumi_huge: {
+		audio: 2,
+		trigger: {
+			player: "dying",
+		},
+		unique: true,
+		forced: true,
+		juexingji: true,
+		skillAnimation: true,
+		animationColor: "gray",
+		async content(event, trigger, player) {
+			player.awakenSkill(event.name);
+			await player.gainMaxHp();
+			await player.recoverTo(player.maxHp);
+			var hs = player.getCards("h");
+			player.storage.isInHuan = true;
+			if (hs.length) player.discard(hs);
+			player.changeSkin({ characterName: "mutsumi" }, "mortis");
+			player.changeSkin({ characterName: "mortis" }, "mortis");
+			player.changeSkills(get.info("mutsumi_huge").derivation, ["mutsumi_songyue", "mutsumi_wuyan", "mutsumi_huge"]);
+			game.broadcastAll(
+				(player, name, list) => {
+					if (player.name == "mutsumi" || player.name1 == "mutsumi" || player.name == "mortis" || player.name1 == "mortis") player.node.name.innerHTML = name;
+					if (player.name2 == "mutsumi" || player.name2 == "mortis") player.node.name2.innerHTML = name;
+					player.tempname.push("mortis");
+				},
+				player,
+				"Mortis"
+			);
+			if (!_status.currentPhase) return;
+			player.when({ global: "phaseAfter" }).then(() => {
+				player.insertPhase();
+			});
+		},
+		derivation: ["mortis_renou", "mortis_yanyi", "mortis_shige"],
+	},
 	// Mortis
-	mortis_renou: {},
-	mortis_yanyi: {},
-	mortis_shige: {},
+	mortis_renou: {
+		audio: 2,
+		trigger: { global: "gameDrawBegin" },
+		forced: true,
+		async content(event, trigger, player) {
+			var me = player;
+			var numx = trigger.num;
+			trigger.num =
+				typeof numx == "function"
+					? function (player) {
+							if (player == me) {
+								player.storage.isInHuan = true;
+								return 0;
+							}
+							return numx(player);
+					  }
+					: function (player) {
+							if (player == me) {
+								player.storage.isInHuan = true;
+								return 0;
+							}
+							return numx;
+					  };
+		},
+		group: ["mortis_renou_discard", "mortis_renou_target"],
+		subSkill: {
+			discard: {
+				trigger: {
+					player: "gainAfter",
+				},
+				forced: true,
+				filter(event, player) {
+					return player.countCards("h") > 0;
+				},
+				content() {
+					player.discard("h", true, player.getCards("h"));
+				},
+			},
+			target: {
+				trigger: { target: "useCardToTarget" },
+				logTarget: "player",
+				forced: true,
+				filter(event, player) {
+					return player != event.player;
+				},
+				content() {
+					player.addToExpansion(trigger.cards, "gain2").gaintag.add("mutsumi_wuyan_target");
+				},
+				marktext: "言",
+				intro: {
+					content: "expansion",
+					markcount: "expansion",
+				},
+			},
+		},
+	},
+	mortis_yanyi: {
+		audio: 2,
+		enable: ["chooseToUse", "chooseToRespond"],
+		hiddenCard(player, name) {
+			if (!player.getStorage("mortis_yanyi_used").includes(name)) return false;
+			var cards = player.getExpansions("mutsumi_wuyan_target");
+			var cardnames = new Set(cards.map(i => i.name));
+			if (!cardnames.includes(name)) return false;
+			var type = get.type(name);
+			return type == "basic" || type == "trick";
+		},
+		filter(event, player) {
+			var cards = player.getExpansions("mutsumi_wuyan_target");
+			var cardnames = new Set(cards.map(i => i.name));
+			for (let name of cardnames) {
+				if (player.getStorage("mortis_yanyi_used").includes(name)) continue;
+				var type = get.type(name);
+				if ((type == "basic" || type == "trick") && event.filterCard(get.autoViewAs({ name: name }, "unsure"), player, event)) return true;
+			}
+			return false;
+		},
+		chooseButton: {
+			dialog(event, player) {
+				var list = [];
+				var cards = player.getExpansions("mutsumi_wuyan_target");
+				var cardnames = new Set(
+					cards.map(i => {
+						let name = i.name;
+						if (i.name == "sha") {
+							switch (i.nature) {
+								case "fire":
+									name = "huosha";
+									break;
+								case "thunder":
+									name = "leisha";
+									break;
+								case "kami":
+									name = "kamisha";
+									break;
+								case "ice":
+									name = "icesha";
+									break;
+							}
+						}
+						return name;
+					})
+				);
+				for (let name of cardnames) {
+					if (player.getStorage("mortis_yanyi_used").includes(name)) continue;
+					else if (["huosha", "leisha", "kamisha", "icesha"].includes(name)) {
+						var nature;
+						switch (name) {
+							case "huosha":
+								nature = "fire";
+								break;
+							case "leisha":
+								nature = "thunder";
+								break;
+							case "kamisha":
+								nature = "kami";
+								break;
+							case "icesha":
+								nature = "ice";
+								break;
+						}
+						if (event.filterCard(get.autoViewAs({ name: "sha", nature }, "unsure"), player, event)) list.push(["基本", "", "sha", nature]);
+					} else if (get.type(name) == "basic" && event.filterCard(get.autoViewAs({ name }, "unsure"), player, event)) list.push(["基本", "", name]);
+					else if (get.type(name) == "trick" && event.filterCard(get.autoViewAs({ name }, "unsure"), player, event)) list.push(["锦囊", "", name]);
+				}
+				return ui.create.dialog("演绎", [list, "vcard"]);
+			},
+			//これ  要らない（そよりん声线）
+			//filter:function(button,player){
+			//	return _status.event.getParent().filterCard({name:button.link[2]},player,_status.event.getParent());
+			//},
+			check(button) {
+				if (_status.event.getParent().type != "phase") return 1;
+				var player = _status.event.player;
+				if (["wugu", "zhulu_card", "yiyi", "lulitongxin", "lianjunshengyan", "diaohulishan"].includes(button.link[2])) return 0;
+				return player.getUseValue({
+					name: button.link[2],
+					nature: button.link[3],
+				});
+			},
+			backup(links, player) {
+				return {
+					audio: "mortis_yanyi",
+					filterCard: () => false,
+					selectCard: -1,
+					popname: true,
+					viewAs: { name: links[0][2], nature: links[0][3] },
+					precontent() {
+						if (!player.storage.mortis_yanyi_used) {
+							player.when({ global: "phaseAfter" }).then(() => {
+								player.unmarkSkill("mortis_yanyi_used");
+								delete player.storage.mortis_yanyi_used;
+							});
+						}
+						let name = event.result.card.name;
+						if (event.result.card.name === "sha") {
+							switch (event.result.card.nature) {
+								case "fire":
+									name = "huosha";
+									break;
+								case "thunder":
+									name = "leisha";
+									break;
+								case "kami":
+									name = "kamisha";
+									break;
+								case "ice":
+									name = "icesha";
+									break;
+							}
+						}
+						player.markAuto("mortis_yanyi_used", name);
+					},
+				};
+			},
+			prompt(links, player) {
+				return "视为使用" + (get.translation(links[0][3]) || "") + get.translation(links[0][2]);
+			},
+		},
+		ai: {
+			combo: "mortis_renou",
+			fireAttack: true,
+			respondSha: true,
+			respondShan: true,
+			order: 1,
+			result: {
+				player(player) {
+					if (_status.event.dying) return get.attitude(player, _status.event.dying);
+					return 1;
+				},
+			},
+		},
+	},
+	mortis_shige: {
+		audio: 2,
+		trigger: { target: "useCardToTargeted" },
+		logTarget: "player",
+		filter(event, player) {
+			return event.card.name == "tao" && player != event.player;
+		},
+		unique: true,
+		forced: true,
+		juexingji: true,
+		skillAnimation: true,
+		animationColor: "gray",
+		async content(event, trigger, player) {
+			player.awakenSkill(event.name);
+			await player.loseMaxHp();
+			await player.recoverTo(player.maxHp);
+			delete player.storage.isInHuan;
+			player.changeSkin({ characterName: "mutsumi" }, "mutsumi");
+			player.changeSkin({ characterName: "mortis" }, "mutsumi");
+			player.changeSkills(get.info("mortis_shige").derivation, ["mortis_renou", "mortis_yanyi", "mortis_shige"]);
+			player.drawTo(4);
+			game.broadcastAll(
+				(player, name, list) => {
+					if (player.name == "mortis" || player.name1 == "mortis" || player.name == "mutsumi" || player.name1 == "mutsumi") player.node.name.innerHTML = name;
+					if (player.name2 == "mortis" || player.name2 == "mutsumi") player.node.name2.innerHTML = name;
+					player.tempname.push("mutsumi");
+				},
+				player,
+				"若叶睦"
+			);
+		},
+		derivation: ["mutsumi_songyue", "mutsumi_wuyan", "mutsumi_huge"],
+	},
 	// 神姜维
 	taffyps_jiufa: {
 		audio: "jiufa",

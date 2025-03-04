@@ -26,6 +26,8 @@ export const characterPackFunc = function () {
 					["ol_sb_dongzhuo_shadow1", ["tempname:ol_sb_dongzhuo", "die:ol_sb_dongzhuo"]],
 					["ol_sb_dongzhuo_shadow2", ["tempname:ol_sb_dongzhuo", "die:ol_sb_dongzhuo"]],
 				],
+				mutsumi: [["mortis"], []],
+				mortis: [["mutsumi"], []],
 			},
 			characterFilter: { ...characterFilters },
 			characterTitle: {
@@ -66,7 +68,7 @@ export const characterPackFunc = function () {
 			pinyins: { ...pinyins },
 		};
 		const whiteList = new Set([...oobj.characterSort.taffy_character.taffy_old_ol, ...oobj.characterSort.taffy_character.taffy_old_mb, ...oobj.characterSort.taffy_character.taffy_old_dc, ...oobj.characterSort.taffy_character.taffy_old_etc, ...oobj.characterSort.taffy_character.taffy_mobile_changshi, "taffymb_shen_caocao", "taffyre_xuyou", "taffy_liubianxing"]);
-		["taffyold_baby_shen_simayi", "taffyold_wechat_ji_guanyu"].forEach(i => {
+		["taffyold_baby_shen_simayi", "taffyold_wechat_ji_guanyu", "taffyold_wechat_ji_caocao", "taffyold_wechat_ji_zhugeliang", "taffyold_wechat_ji_sunce"].forEach(i => {
 			whiteList.delete(i);
 		});
 		const specialDetails = {
@@ -117,6 +119,14 @@ export const characterPackFunc = function () {
 			himari: {
 				character: "ext:永雏塔菲/image/character/himari.jpg",
 				die: "die:../../extension/永雏塔菲/audio/die/himari.ogg",
+			},
+			mutsumi: {
+				character: "ext:永雏塔菲/image/character/mutsumi.png",
+				die: "die:../../extension/永雏塔菲/audio/die/mutsumi.mp3",
+			},
+			mortis: {
+				character: "ext:永雏塔菲/image/character/mortis.png",
+				die: "die:../../extension/永雏塔菲/audio/die/mortis.mp3",
 			},
 		};
 		const specialList = Object.keys(specialDetails);
