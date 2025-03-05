@@ -1,0 +1,644 @@
+{
+"skeleton": {
+	"hash": "q0qfh0m7v0I",
+	"spine": "4.0.56",
+	"x": -364.16,
+	"y": -331.26,
+	"width": 805.92,
+	"height": 534.4,
+	"images": "./images/",
+	"audio": "F:/三国杀-OL/2025/34-曹宪曹华/曹宪曹华1/曹宪曹华1/../.."
+},
+"bones": [
+	{ "name": "root", "color": "9b9b9b00" },
+	{
+		"name": "allll",
+		"parent": "root",
+		"x": 24.58,
+		"y": -45.9,
+		"scaleX": 0.535,
+		"scaleY": 0.535,
+		"color": "9b9b9b00"
+	},
+	{ "name": "all", "parent": "allll", "scaleX": 0.7, "scaleY": 0.7, "color": "9b9b9b00" },
+	{ "name": "suofang", "parent": "all", "color": "ff0000ff" },
+	{ "name": "beijing", "parent": "suofang", "color": "000000ff" },
+	{ "name": "beijing6", "parent": "beijing", "x": 191.02, "y": 102.71, "color": "000000ff" },
+	{ "name": "tx", "parent": "allll", "color": "21ff0000" },
+	{ "name": "daiji", "parent": "tx", "color": "21ff0000" },
+	{ "name": "djlizi", "parent": "daiji", "color": "21ff0000" },
+	{ "name": "djlizi2", "parent": "daiji", "color": "21ff0000" },
+	{ "name": "chuchang", "parent": "suofang", "color": "21ff0000" },
+	{ "name": "djlizi3", "parent": "chuchang", "color": "21ff0000" },
+	{ "name": "djlizi4", "parent": "chuchang", "color": "21ff0000" }
+],
+"slots": [
+	{ "name": "beijing13", "bone": "beijing", "attachment": "beijing13" },
+	{ "name": "beijing12", "bone": "beijing", "attachment": "beijing12" },
+	{ "name": "beijing11", "bone": "beijing", "attachment": "beijing11" },
+	{ "name": "beijing10", "bone": "beijing", "attachment": "beijing10" },
+	{ "name": "beijing9", "bone": "beijing", "attachment": "beijing9" },
+	{ "name": "beijing8", "bone": "beijing", "attachment": "beijing8" },
+	{ "name": "beijing7", "bone": "beijing", "attachment": "beijing7" },
+	{ "name": "beijing6", "bone": "beijing", "attachment": "beijing6" },
+	{ "name": "beijing5", "bone": "beijing", "attachment": "beijing5" },
+	{ "name": "beijing4", "bone": "beijing", "attachment": "beijing4" },
+	{ "name": "beijing3", "bone": "beijing", "attachment": "beijing3" },
+	{ "name": "beijing2", "bone": "beijing", "attachment": "beijing2" },
+	{ "name": "beijing", "bone": "beijing", "attachment": "beijing" },
+	{ "name": "djlizi", "bone": "djlizi" },
+	{ "name": "djlizi3", "bone": "djlizi3" },
+	{ "name": "djlizi2", "bone": "djlizi2" },
+	{ "name": "djlizi4", "bone": "djlizi4" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"beijing": {
+				"beijing": {
+					"type": "mesh",
+					"uvs": [ 1, 0.76454, 0.90061, 0.83822, 0.28661, 1, 0.21678, 1, 0, 0.6928, 0, 0.60555, 0.24006, 0.5086, 0.22551, 0.03357, 0.67073, 0.09561, 0.91225, 0, 1, 0 ],
+					"triangles": [ 6, 7, 8, 4, 5, 6, 8, 9, 10, 0, 8, 10, 6, 8, 0, 1, 6, 0, 2, 3, 4, 6, 2, 4, 1, 2, 6 ],
+					"vertices": [ 1015, -422.85, 953.08, -491.74, 570.56, -643, 527.05, -643, 392, -355.77, 392, -274.19, 541.55, -183.55, 532.49, 260.61, 809.86, 202.6, 960.33, 292, 1015, 292 ],
+					"hull": 11,
+					"edges": [ 0, 20, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20 ],
+					"width": 623,
+					"height": 935
+				}
+			},
+			"beijing2": {
+				"beijing2": {
+					"type": "mesh",
+					"uvs": [ 0.57759, 0.09009, 0.74817, 0.22254, 0.86797, 0.10567, 1, 0.19527, 1, 0.60432, 1, 1, 0.83142, 1, 0.66897, 0.91598, 0.41514, 0.77963, 0.16944, 0.58095, 0, 0.49524, 0, 0.21086, 0.19178, 0, 0.45373, 0 ],
+					"triangles": [ 9, 10, 11, 12, 9, 11, 2, 3, 4, 1, 2, 4, 13, 9, 12, 8, 13, 0, 8, 9, 13, 1, 8, 0, 7, 1, 4, 7, 8, 1, 6, 7, 4, 6, 4, 5 ],
+					"vertices": [ 627.07, 10.02, 747.5, -38.73, 832.08, 4.28, 925.29, -28.69, 925.29, -179.22, 925.29, -324.83, 806.27, -324.83, 691.59, -293.91, 512.38, -243.73, 338.92, -170.62, 219.29, -139.08, 219.29, -34.42, 354.69, 43.17, 539.62, 43.17 ],
+					"hull": 14,
+					"edges": [ 0, 26, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26 ],
+					"width": 706,
+					"height": 368
+				}
+			},
+			"beijing3": {
+				"beijing3": {
+					"type": "mesh",
+					"uvs": [ 0.96285, 0.04233, 1, 0.08464, 1, 0.19262, 1, 0.29397, 1, 0.40343, 1, 0.50072, 1, 0.59599, 1, 0.6791, 1, 0.78653, 1, 0.89193, 1, 1, 0.93079, 1, 0.85386, 0.97618, 0.81283, 0.93643, 0.75513, 0.96207, 0.66538, 0.9313, 0.6641, 0.97618, 0.61538, 1, 0.56793, 0.96335, 0.48972, 0.93002, 0.4192, 0.88258, 0.3397, 0.89412, 0.26918, 0.84924, 0.28842, 0.786, 0.22559, 0.786, 0.14481, 0.76292, 0.11532, 0.66547, 0.18969, 0.66035, 0.20764, 0.59367, 0.11147, 0.58983, 0.10506, 0.52443, 0.023, 0.51161, 0.023, 0.42571, 0, 0.41288, 0, 0.2603, 0.09865, 0.25133, 0.20764, 0.26671, 0.25636, 0.31928, 0.32432, 0.32698, 0.42048, 0.31287, 0.45638, 0.22568, 0.52049, 0.16157, 0.57435, 0.11029, 0.68205, 0.08849, 0.75642, 0.109, 0.77308, 0.04746, 0.83335, 0, 0.91028, 0 ],
+					"triangles": [ 20, 21, 23, 21, 22, 23, 38, 39, 28, 28, 39, 23, 25, 27, 24, 24, 27, 23, 28, 23, 27, 25, 26, 27, 37, 38, 28, 37, 28, 30, 30, 28, 29, 37, 30, 32, 36, 32, 35, 32, 36, 37, 30, 31, 32, 32, 33, 35, 33, 34, 35, 41, 39, 40, 7, 41, 42, 6, 42, 44, 42, 43, 44, 45, 0, 2, 0, 1, 2, 5, 45, 4, 41, 7, 39, 11, 9, 10, 11, 12, 9, 16, 17, 15, 12, 13, 9, 15, 17, 18, 18, 19, 15, 14, 15, 13, 9, 13, 8, 8, 13, 15, 20, 8, 15, 20, 15, 19, 8, 20, 7, 7, 20, 39, 7, 42, 6, 6, 45, 5, 20, 23, 39, 4, 45, 3, 3, 45, 2, 6, 44, 45, 45, 46, 0, 46, 47, 0 ],
+					"vertices": [ 976.28, 440.28, 998.2, 415.31, 998.2, 351.61, 998.2, 291.81, 998.2, 227.23, 998.2, 169.83, 998.2, 113.62, 998.2, 64.59, 998.2, 1.2, 998.2, -60.99, 998.2, -124.75, 957.37, -124.75, 911.98, -110.69, 887.77, -87.24, 853.73, -102.37, 800.77, -84.21, 800.02, -110.69, 771.27, -124.75, 743.28, -103.13, 697.13, -83.46, 655.53, -55.47, 608.62, -62.27, 567.02, -35.8, 578.36, 1.51, 541.29, 1.51, 493.64, 15.13, 476.24, 72.62, 520.11, 75.65, 530.7, 114.99, 473.97, 117.26, 470.18, 155.84, 421.77, 163.4, 421.77, 214.09, 408.2, 221.65, 408.2, 311.68, 466.4, 316.97, 530.7, 307.89, 559.45, 276.88, 599.54, 272.34, 656.28, 280.66, 677.46, 332.1, 715.29, 369.93, 747.06, 400.18, 810.61, 413.05, 854.48, 400.94, 864.32, 437.25, 899.87, 465.25, 945.26, 465.25 ],
+					"hull": 48,
+					"edges": [ 0, 94, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28, 30, 30, 32, 32, 34, 34, 36, 36, 38, 38, 40, 40, 42, 42, 44, 44, 46, 46, 48, 48, 50, 50, 52, 52, 54, 54, 56, 56, 58, 58, 60, 60, 62, 62, 64, 64, 66, 66, 68, 68, 70, 70, 72, 72, 74, 74, 76, 76, 78, 78, 80, 80, 82, 82, 84, 84, 86, 86, 88, 88, 90, 90, 92, 92, 94 ],
+					"width": 590,
+					"height": 590
+				}
+			},
+			"beijing4": {
+				"beijing4": {
+					"type": "mesh",
+					"uvs": [ 0.34594, 0.04118, 0.46131, 0.07942, 0.55712, 0.07092, 0.67248, 0.13889, 0.74092, 0.16863, 0.77612, 0.26422, 0.86802, 0.27696, 0.95601, 0.33219, 0.96774, 0.39804, 0.92668, 0.44689, 1, 0.48937, 1, 0.55947, 0.96383, 0.61895, 0.90517, 0.65081, 0.92668, 0.70604, 1, 0.69754, 1, 0.8611, 0.95405, 0.87384, 1, 0.91208, 1, 0.95668, 0.94818, 1, 0.87584, 1, 0.77612, 1, 0.73896, 0.90995, 0.66271, 0.85897, 0.5317, 0.84623, 0.43589, 0.86747, 0.3303, 0.87809, 0.21103, 0.8526, 0.07415, 0.89933, 0, 0.80828, 0.1054, 0.73787, 0.12563, 0.66092, 0.20658, 0.60596, 0.08516, 0.551, 0.06492, 0.42276, 0.07167, 0.30917, 0, 0.20291, 0.05818, 0.09665, 0.1425, 0, 0.23717, 0 ],
+					"triangles": [ 40, 36, 38, 37, 38, 36, 9, 6, 7, 9, 7, 8, 36, 40, 35, 34, 35, 40, 39, 40, 38, 0, 34, 40, 33, 34, 0, 9, 10, 11, 1, 33, 0, 12, 9, 11, 6, 9, 5, 13, 9, 12, 33, 1, 5, 3, 1, 2, 3, 5, 1, 5, 3, 4, 25, 33, 5, 9, 25, 5, 13, 25, 9, 24, 25, 13, 24, 13, 14, 14, 15, 16, 14, 23, 24, 25, 26, 33, 16, 17, 14, 17, 23, 14, 17, 18, 19, 21, 22, 23, 17, 21, 23, 17, 20, 21, 19, 20, 17, 33, 27, 28, 32, 33, 28, 31, 32, 28, 26, 27, 33, 29, 30, 31, 29, 31, 28 ],
+					"vertices": [ -823.94, 482.64, -806.52, 477.32, -792.06, 478.5, -774.64, 469.06, -764.3, 464.92, -758.99, 451.64, -745.11, 449.86, -731.82, 442.19, -730.05, 433.03, -736.25, 426.24, -725.18, 420.34, -725.18, 410.6, -730.64, 402.33, -739.5, 397.9, -736.25, 390.22, -725.18, 391.4, -725.18, 368.67, -732.12, 366.9, -725.18, 361.58, -725.18, 355.38, -733, 349.36, -743.93, 349.36, -758.99, 349.36, -764.6, 361.88, -776.11, 368.96, -795.89, 370.74, -810.36, 367.78, -826.3, 366.31, -844.32, 369.85, -863.21, 364.83, -876.18, 378.67, -860.27, 385.8, -857.21, 396.49, -844.99, 404.13, -863.32, 411.77, -866.38, 429.6, -865.36, 445.39, -876.18, 460.16, -867.4, 474.93, -854.66, 488.36, -840.37, 488.36 ],
+					"hull": 41,
+					"edges": [ 60, 62, 62, 64, 64, 66, 66, 68, 68, 70, 70, 72, 72, 74, 74, 76, 76, 78, 78, 80, 80, 0, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28, 30, 30, 32, 32, 34, 34, 36, 36, 38, 38, 40, 40, 42, 42, 44, 44, 46, 46, 48, 48, 50, 50, 52, 52, 54, 54, 56, 56, 58, 60, 58 ],
+					"width": 151,
+					"height": 139
+				}
+			},
+			"beijing5": {
+				"beijing5": {
+					"type": "mesh",
+					"uvs": [ 0.68673, 0.14284, 0.74853, 0.26834, 0.90302, 0.32939, 1, 0.42776, 1, 0.7025, 0.34684, 1, 0.18548, 1, 0.23697, 0.9094, 0.24041, 0.75677, 0.23011, 0.64484, 0.15114, 0.64484, 0, 0.56682, 0, 0.42097, 0, 0.28869, 0.08591, 0.2412, 0.12711, 0.1191, 0.17174, 0, 0.37087, 0, 0.6112, 0, 0.72449, 0, 0.86869, 0.76016, 0.75539, 0.77712, 0.6009, 0.79069, 0.46357, 0.8687 ],
+					"triangles": [ 1, 9, 0, 4, 20, 3, 2, 21, 1, 17, 0, 14, 17, 18, 0, 20, 2, 3, 9, 10, 12, 9, 12, 14, 0, 9, 14, 17, 14, 15, 17, 15, 16, 12, 10, 11, 12, 13, 14, 0, 18, 19, 5, 20, 4, 5, 21, 20, 21, 23, 22, 21, 5, 23, 6, 7, 5, 5, 7, 23, 7, 8, 23, 22, 23, 9, 22, 1, 21, 9, 1, 22, 20, 21, 2, 8, 9, 23 ],
+					"vertices": [ -851.01, 565.41, -835.81, 534.16, -797.8, 518.96, -773.94, 494.46, -773.94, 426.05, -934.62, 351.98, -974.32, 351.98, -961.65, 374.53, -960.8, 412.54, -963.34, 440.41, -982.76, 440.41, -1019.94, 459.84, -1019.94, 496.15, -1019.94, 529.09, -998.81, 540.92, -988.67, 571.32, -977.69, 600.98, -928.71, 600.98, -869.59, 600.98, -841.72, 600.98, -806.25, 411.7, -834.12, 407.47, -872.12, 404.09, -905.91, 384.67 ],
+					"hull": 20,
+					"edges": [ 0, 38, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28, 30, 30, 32, 32, 34, 34, 36, 36, 38 ],
+					"width": 246,
+					"height": 249
+				}
+			},
+			"beijing6": {
+				"beijing6": {
+					"type": "mesh",
+					"uvs": [ 0.35165, 0.10658, 0.52595, 0.21061, 0.64215, 0.2705, 0.70933, 0.3903, 0.66938, 0.49748, 0.57134, 0.53846, 0.58768, 0.68662, 0.71114, 0.70869, 0.78921, 0.7938, 1, 0.89468, 1, 1, 0.86184, 1, 0.69662, 0.94511, 0.55863, 0.9262, 0.40793, 0.82532, 0.2409, 0.85685, 0.10654, 0.8001, 0, 0.81587, 0, 0.56683, 0, 0.21061, 0, 0, 0.13741, 0 ],
+					"triangles": [ 5, 0, 1, 5, 2, 4, 5, 1, 2, 4, 2, 3, 5, 14, 0, 14, 5, 6, 12, 6, 7, 12, 7, 8, 11, 8, 9, 13, 6, 12, 14, 15, 0, 15, 16, 0, 17, 18, 16, 13, 14, 6, 11, 9, 10, 12, 8, 11, 21, 0, 19, 0, 16, 18, 0, 18, 19, 19, 20, 21 ],
+					"vertices": [ -794.76, 383.2, -684.6, 345.34, -611.16, 323.54, -568.71, 279.93, -593.95, 240.92, -655.91, 226, -645.59, 172.07, -567.56, 164.04, -518.22, 133.06, -385, 96.34, -385, 58, -472.32, 58, -576.74, 77.98, -663.95, 84.86, -759.19, 121.58, -864.75, 110.11, -949.67, 130.76, -1017, 125.02, -1017, 215.67, -1017, 345.34, -1017, 422, -930.16, 422 ],
+					"hull": 22,
+					"edges": [ 0, 42, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28, 30, 30, 32, 32, 34, 34, 36, 36, 38, 38, 40, 40, 42 ],
+					"width": 632,
+					"height": 364
+				}
+			},
+			"beijing7": {
+				"beijing7": { "x": -821.5, "y": 425.49, "width": 433, "height": 421 }
+			},
+			"beijing8": {
+				"beijing8": {
+					"type": "mesh",
+					"uvs": [ 0.12815, 0.07011, 0.19737, 0.10613, 0.29177, 0.15244, 0.34714, 0.28366, 0.39875, 0.34798, 0.41888, 0.52036, 0.47552, 0.60269, 0.50824, 0.4972, 0.56362, 0.44832, 0.62655, 0.46118, 0.6341, 0.384, 0.65298, 0.26565, 0.69955, 0.21419, 0.77003, 0.18332, 0.85562, 0.21162, 0.92987, 0.13186, 1, 0.16273, 1, 1, 0.9261, 1, 0.80779, 0.91915, 0.69074, 0.83167, 0.55859, 0.70818, 0.40756, 0.64128, 0.27289, 0.58983, 0.13067, 0.53837, 0, 0.51007, 0, 0, 0.07403, 0 ],
+					"triangles": [ 22, 23, 5, 23, 4, 5, 23, 3, 4, 23, 2, 3, 6, 7, 21, 21, 8, 9, 21, 7, 8, 22, 5, 6, 24, 0, 1, 0, 26, 27, 0, 25, 26, 25, 0, 24, 23, 24, 2, 2, 24, 1, 12, 13, 10, 10, 13, 9, 12, 10, 11, 22, 6, 21, 21, 9, 20, 18, 16, 17, 19, 14, 18, 19, 20, 14, 16, 14, 15, 16, 18, 14, 14, 20, 13, 13, 20, 9 ],
+					"vertices": [ 1, 5, -850.37, 477.53, 1, 1, 5, -709.57, 441.69, 1, 1, 5, -517.57, 395.61, 1, 1, 5, -404.93, 265.05, 1, 1, 5, -299.97, 201.05, 1, 1, 5, -259.01, 29.53, 1, 1, 5, -143.81, -52.39, 1, 1, 5, -77.25, 52.57, 1, 1, 5, 35.39, 101.21, 1, 1, 5, 163.39, 88.41, 1, 1, 5, 178.75, 165.21, 1, 1, 5, 217.15, 282.97, 1, 1, 5, 311.87, 334.17, 1, 1, 5, 455.22, 364.89, 1, 1, 5, 629.3, 336.73, 1, 1, 5, 780.34, 416.09, 1, 1, 5, 922.98, 385.37, 1, 1, 5, 922.98, -447.71, 1, 1, 5, 772.66, -447.71, 1, 1, 5, 532.02, -367.27, 1, 1, 5, 293.95, -280.23, 1, 1, 5, 25.15, -157.35, 1, 1, 5, -282.05, -90.79, 1, 1, 5, -555.97, -39.59, 1, 1, 5, -845.25, 11.61, 1, 1, 5, -1111.02, 39.77, 1, 1, 5, -1111.02, 547.29, 1, 1, 5, -960.45, 547.29, 1 ],
+					"hull": 28,
+					"edges": [ 0, 54, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28, 30, 30, 32, 32, 34, 34, 36, 36, 38, 38, 40, 40, 42, 42, 44, 44, 46, 46, 48, 48, 50, 50, 52, 52, 54 ],
+					"width": 2034,
+					"height": 995
+				}
+			},
+			"beijing9": {
+				"beijing9": { "x": -800, "y": 82.5, "width": 272, "height": 75 }
+			},
+			"beijing10": {
+				"beijing10": {
+					"type": "mesh",
+					"uvs": [ 0.27922, 0.0319, 0.43562, 0.14606, 0.61383, 0.19009, 1, 0.41025, 1, 1, 0, 1, 0, 0, 0.02581, 0, 0.08973, 0.02538, 0.12056, 0 ],
+					"triangles": [ 5, 6, 7, 5, 7, 8, 2, 3, 4, 5, 1, 2, 8, 9, 0, 0, 1, 8, 1, 5, 8, 2, 4, 5 ],
+					"vertices": [ -452.56, 155.52, -133.03, 47.99, 231.06, 6.51, 1020, -200.88, 1020, -756.42, -1023, -756.42, -1023, 185.58, -970.27, 185.58, -839.69, 161.67, -776.7, 185.58 ],
+					"hull": 10,
+					"edges": [ 0, 18, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18 ],
+					"width": 2043,
+					"height": 942
+				}
+			},
+			"beijing11": {
+				"beijing11": {
+					"type": "mesh",
+					"uvs": [ 1, 0.10491, 1, 0.38602, 0.94736, 0.53628, 0.94969, 0.86045, 0.95046, 1, 0.71567, 0.97188, 0.67616, 0.86045, 0.58472, 0.63252, 0.56789, 0.41736, 0.41756, 0.44776, 0.3486, 0.57945, 0.15953, 0.52036, 0.04872, 0.37009, 0, 0.30762, 0, 0, 0.33543, 0, 0.38192, 0.06787, 0.41524, 0.18606, 0.52837, 0.18437, 0.52914, 0.08138, 0.63995, 0, 0.93478, 0 ],
+					"triangles": [ 12, 13, 14, 15, 12, 14, 9, 17, 18, 11, 12, 15, 17, 10, 15, 17, 15, 16, 10, 17, 9, 11, 15, 10, 21, 0, 1, 20, 18, 19, 8, 18, 20, 9, 18, 8, 2, 21, 1, 2, 7, 8, 8, 20, 2, 2, 20, 21, 6, 7, 2, 6, 2, 3, 5, 6, 3, 5, 3, 4 ],
+					"vertices": [ 438.25, 619.26, 438.25, 496.7, 388.25, 431.18, 390.45, 289.84, 391.19, 229, 168.14, 241.26, 130.6, 289.84, 43.73, 389.22, 27.75, 483.03, -115.06, 469.78, -180.58, 412.36, -360.2, 438.12, -465.46, 503.64, -511.75, 530.88, -511.75, 665, -193.09, 665, -148.93, 635.41, -117.27, 583.88, -9.8, 584.62, -9.06, 629.52, 96.21, 665, 376.29, 665 ],
+					"hull": 22,
+					"edges": [ 26, 28, 26, 24, 22, 20, 20, 18, 18, 16, 34, 36, 34, 32, 28, 30, 32, 30, 36, 38, 38, 40, 40, 42, 42, 0, 16, 14, 14, 12, 12, 10, 8, 6, 6, 4, 0, 2, 4, 2, 8, 10, 24, 22 ],
+					"width": 950,
+					"height": 436
+				}
+			},
+			"beijing12": {
+				"beijing12": {
+					"type": "mesh",
+					"uvs": [ 1, 0.28177, 0.98914, 0.38159, 1, 0.4857, 0.98583, 0.60377, 0.99245, 0.69393, 0.9672, 0.75511, 0.95768, 0.86029, 0.94278, 0.94294, 0.91147, 1, 0.83571, 0.96425, 0.77817, 0.92883, 0.69124, 0.88053, 0.61259, 0.86979, 0.5476, 0.83652, 0.49751, 0.80539, 0.46937, 0.89984, 0.4259, 0.86013, 0.42342, 0.73348, 0.39423, 0.71516, 0.38346, 0.76453, 0.34124, 0.76024, 0.32799, 0.68296, 0.25969, 0.68081, 0.17468, 0.67958, 0.10637, 0.68065, 0.03352, 0.63986, 0.01282, 0.51858, 0, 0.41876, 0, 0.22232, 0.02565, 0.18475, 0.01406, 0.0785, 0.06167, 0, 0.11755, 0, 0.1813, 0, 0.23164, 0, 0.24055, 0.09537, 0.26473, 0.18778, 0.3322, 0.13497, 0.39966, 0.15147, 0.42512, 0.25379, 0.4684, 0.26369, 0.50149, 0.35611, 0.54859, 0.45182, 0.58423, 0.37921, 0.65042, 0.27689, 0.70898, 0.26369, 0.75225, 0.3165, 0.79935, 0.25709, 0.84263, 0.12507, 0.87954, 0.07226, 0.91137, 0, 1, 0 ],
+					"triangles": [ 29, 30, 31, 27, 28, 29, 26, 27, 29, 29, 32, 26, 25, 26, 32, 33, 34, 35, 32, 33, 35, 32, 29, 31, 25, 32, 24, 32, 36, 23, 36, 32, 35, 23, 24, 32, 22, 23, 36, 21, 36, 37, 39, 21, 37, 39, 37, 38, 22, 36, 21, 18, 21, 39, 41, 18, 39, 41, 39, 40, 17, 18, 41, 17, 41, 42, 20, 21, 18, 19, 20, 18, 14, 17, 42, 16, 17, 14, 15, 16, 14, 50, 51, 0, 49, 50, 0, 1, 49, 0, 1, 48, 49, 3, 1, 2, 1, 47, 48, 3, 47, 1, 5, 47, 3, 5, 3, 4, 13, 14, 42, 44, 45, 46, 11, 12, 43, 47, 9, 10, 43, 44, 11, 42, 43, 12, 13, 42, 12, 46, 11, 44, 10, 46, 47, 47, 5, 9, 11, 46, 10, 5, 6, 9, 6, 8, 9, 7, 8, 6 ],
+					"vertices": [ 1015, 451.14, 993.63, 375.37, 1015, 296.35, 987.11, 206.74, 1000.14, 138.31, 950.45, 91.87, 931.71, 12.04, 902.39, -50.69, 840.76, -94, 691.68, -66.86, 578.44, -39.98, 407.37, -3.32, 252.58, 4.83, 124.68, 30.08, 26.11, 53.71, -29.28, -17.98, -114.83, 12.16, -119.72, 108.29, -177.16, 122.2, -198.34, 84.72, -281.44, 87.98, -307.51, 146.63, -441.92, 148.26, -609.24, 149.2, -743.66, 148.39, -887.03, 179.34, -927.77, 271.4, -953, 347.16, -953, 496.26, -902.51, 524.77, -925.32, 605.42, -831.64, 665, -721.66, 665, -596.2, 665, -497.14, 665, -479.6, 592.62, -432.01, 522.47, -299.23, 562.56, -166.47, 550.03, -116.37, 472.37, -31.2, 464.86, 33.94, 394.72, 126.62, 322.07, 196.77, 377.18, 327.03, 454.84, 442.26, 464.86, 527.44, 424.78, 620.12, 469.87, 705.29, 570.07, 777.94, 610.15, 840.57, 665, 1015, 665 ],
+					"hull": 52,
+					"edges": [ 0, 102, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28, 30, 30, 32, 32, 34, 34, 36, 36, 38, 38, 40, 40, 42, 42, 44, 44, 46, 46, 48, 48, 50, 50, 52, 52, 54, 54, 56, 56, 58, 58, 60, 60, 62, 62, 64, 64, 66, 66, 68, 68, 70, 70, 72, 72, 74, 74, 76, 76, 78, 78, 80, 80, 82, 82, 84, 84, 86, 86, 88, 88, 90, 90, 92, 92, 94, 94, 96, 96, 98, 98, 100, 100, 102 ],
+					"width": 1968,
+					"height": 759
+				}
+			},
+			"beijing13": {
+				"beijing13": { "x": -1, "y": -48.97, "width": 2032, "height": 1426 }
+			},
+			"djlizi": {
+				"eff/djlizi/djlizi_00": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_01": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_02": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_03": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_04": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_05": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_06": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_07": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_08": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_09": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_10": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_11": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_12": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_13": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_14": { "width": 800, "height": 800 }
+			},
+			"djlizi2": {
+				"eff/djlizi/djlizi_00": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_01": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_02": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_03": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_04": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_05": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_06": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_07": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_08": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_09": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_10": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_11": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_12": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_13": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_14": { "width": 800, "height": 800 }
+			},
+			"djlizi3": {
+				"eff/djlizi/djlizi_00": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_01": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_02": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_03": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_04": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_05": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_06": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_07": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_08": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_09": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_10": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_11": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_12": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_13": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_14": { "width": 800, "height": 800 }
+			},
+			"djlizi4": {
+				"eff/djlizi/djlizi_00": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_01": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_02": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_03": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_04": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_05": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_06": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_07": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_08": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_09": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_10": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_11": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_12": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_13": { "width": 800, "height": 800 },
+				"eff/djlizi/djlizi_14": { "width": 800, "height": 800 }
+			}
+		}
+	}
+],
+"animations": {
+	"ChuChang": {
+		"slots": {
+			"djlizi3": {
+				"attachment": [
+					{ "name": "eff/djlizi/djlizi_00" },
+					{ "time": 0.1333, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 0.2, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 0.3333, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 0.4333, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 0.5333, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 0.6333, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 0.7667, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 0.8333, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 0.9667, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 1.0667, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 1.1667, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 1.2667, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 1.4, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 1.4667, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 1.6, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 1.7333, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 1.8, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 1.9333, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 2.0333, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 2.1333, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 2.2333, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 2.3667, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 2.4333, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 2.5667, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 2.7, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 2.7667, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 2.9, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 3, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 3.1, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 3.2, "name": "eff/djlizi/djlizi_00" }
+				]
+			},
+			"djlizi4": {
+				"attachment": [
+					{ "name": "eff/djlizi/djlizi_11" },
+					{ "time": 0.1333, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 0.2333, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 0.3333, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 0.4333, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 0.5667, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 0.6333, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 0.7667, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 0.9, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 0.9667, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 1.1, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 1.2, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 1.3, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 1.4, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 1.5333, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 1.6, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 1.7333, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 1.8333, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 1.9333, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 2.0333, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 2.1667, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 2.2333, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 2.3667, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 2.5, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 2.5667, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 2.7, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 2.8, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 2.9, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 3, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 3.1333, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 3.2, "name": "eff/djlizi/djlizi_11" }
+				]
+			}
+		},
+		"bones": {
+			"suofang": {
+				"translate": [
+					{
+						"x": 2732.15,
+						"y": -1915.76,
+						"curve": [ 0.222, 2732.15, 0.444, 2722.4, 0.222, -1915.76, 0.444, -1724.86 ]
+					},
+					{
+						"time": 0.6667,
+						"x": 2586,
+						"y": -1601.24,
+						"curve": [ 1, 2381.4, 1.333, 2140.14, 1, -1415.82, 1.333, -1255.54 ]
+					},
+					{
+						"time": 1.6667,
+						"x": 1709.13,
+						"y": -988.66,
+						"curve": [ 2, 1278.13, 2.467, 0, 2, -721.79, 2.467, 0 ]
+					},
+					{ "time": 2.8 }
+				],
+				"scale": [
+					{
+						"x": 3.835,
+						"y": 3.835,
+						"curve": [ 0.222, 3.835, 0.444, 3.835, 0.222, 3.835, 0.444, 3.835 ]
+					},
+					{
+						"time": 0.6667,
+						"x": 3.784,
+						"y": 3.784,
+						"curve": [ 1, 3.708, 1.333, 3.557, 1, 3.708, 1.333, 3.557 ]
+					},
+					{
+						"time": 1.6667,
+						"x": 3.093,
+						"y": 3.093,
+						"curve": [ 2, 2.629, 2.467, 1, 2, 2.629, 2.467, 1 ]
+					},
+					{ "time": 2.8 }
+				]
+			},
+			"beijing6": {
+				"translate": [
+					{
+						"x": -3.82,
+						"curve": [ 0.155, -1.64, 0.317, 0, 0.155, 0, 0.317, 0 ]
+					},
+					{
+						"time": 0.4667,
+						"curve": [ 1, 0, 1.533, -19.38, 1, 0, 1.533, 0 ]
+					},
+					{
+						"time": 2.0667,
+						"x": -19.38,
+						"curve": [ 2.451, -19.38, 2.821, -9.45, 2.451, 0, 2.821, 0 ]
+					},
+					{ "time": 3.2, "x": -3.82 }
+				]
+			},
+			"djlizi": {
+				"translate": [
+					{ "x": -218.73, "y": 251.63 }
+				],
+				"scale": [
+					{ "x": 1.184, "y": 1.184 }
+				]
+			},
+			"djlizi3": {
+				"translate": [
+					{ "x": -311.1, "y": 359.11 }
+				],
+				"scale": [
+					{ "x": 1.693, "y": 1.693 }
+				]
+			},
+			"djlizi4": {
+				"translate": [
+					{ "x": 498.64, "y": 139.7 }
+				],
+				"scale": [
+					{ "x": 1.991, "y": 1.991 }
+				]
+			},
+			"djlizi2": {
+				"translate": [
+					{ "x": 348.66, "y": 98.68 }
+				],
+				"scale": [
+					{ "x": 1.393, "y": 1.393 }
+				]
+			}
+		}
+	},
+	"DaiJi": {
+		"slots": {
+			"djlizi": {
+				"attachment": [
+					{ "name": "eff/djlizi/djlizi_00" },
+					{ "time": 0.1, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 0.1667, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 0.2667, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 0.3667, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 0.4333, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 0.5333, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 0.6333, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 0.7, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 0.8, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 0.9, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 0.9667, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 1.0667, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 1.1667, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 1.2333, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 1.3333, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 1.4333, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 1.5, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 1.6, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 1.7, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 1.7667, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 1.8667, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 1.9667, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 2.0333, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 2.1333, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 2.2333, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 2.3, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 2.4, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 2.5, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 2.5667, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 2.6667, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 2.7667, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 2.8333, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 2.9333, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 3.0333, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 3.1, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 3.2, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 3.3, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 3.3667, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 3.4667, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 3.5667, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 3.6333, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 3.7333, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 3.8333, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 3.9, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 4, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 4.1, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 4.2, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 4.2667, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 4.3667, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 4.4667, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 4.5333, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 4.6333, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 4.7333, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 4.8, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 4.9, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 5, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 5.0667, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 5.1667, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 5.2667, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 5.3333, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 5.4333, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 5.5333, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 5.6, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 5.7, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 5.8, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 5.8667, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 5.9667, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 6.0667, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 6.1333, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 6.2333, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 6.3333, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 6.4, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 6.5, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 6.6, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 6.6667, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 6.7667, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 6.8667, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 6.9333, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 7.0333, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 7.1333, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 7.2, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 7.3, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 7.4, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 7.4667, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 7.5667, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 7.6667, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 7.7333, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 7.8333, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 7.9333, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 8, "name": "eff/djlizi/djlizi_00" }
+				]
+			},
+			"djlizi2": {
+				"attachment": [
+					{ "name": "eff/djlizi/djlizi_11" },
+					{ "time": 0.1, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 0.2, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 0.2667, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 0.3667, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 0.4667, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 0.5333, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 0.6333, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 0.7333, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 0.8, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 0.9, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 1, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 1.0667, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 1.1667, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 1.2667, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 1.3333, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 1.4333, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 1.5333, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 1.6, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 1.7, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 1.8, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 1.8667, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 1.9667, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 2.0667, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 2.1333, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 2.2333, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 2.3333, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 2.4, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 2.5, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 2.6, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 2.6667, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 2.7667, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 2.8667, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 2.9333, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 3.0333, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 3.1333, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 3.2333, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 3.3, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 3.4, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 3.5, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 3.5667, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 3.6667, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 3.7667, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 3.8333, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 3.9333, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 4.0333, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 4.1, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 4.2, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 4.3, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 4.3667, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 4.4667, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 4.5667, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 4.6333, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 4.7333, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 4.8333, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 4.9, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 5, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 5.1, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 5.1667, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 5.2667, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 5.3667, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 5.4333, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 5.5333, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 5.6333, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 5.7, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 5.8, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 5.9, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 5.9667, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 6.0667, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 6.1667, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 6.2333, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 6.3333, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 6.4333, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 6.5, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 6.6, "name": "eff/djlizi/djlizi_10" },
+					{ "time": 6.7, "name": "eff/djlizi/djlizi_11" },
+					{ "time": 6.7667, "name": "eff/djlizi/djlizi_12" },
+					{ "time": 6.8667, "name": "eff/djlizi/djlizi_13" },
+					{ "time": 6.9667, "name": "eff/djlizi/djlizi_14" },
+					{ "time": 7.0333, "name": "eff/djlizi/djlizi_00" },
+					{ "time": 7.2, "name": "eff/djlizi/djlizi_01" },
+					{ "time": 7.2667, "name": "eff/djlizi/djlizi_02" },
+					{ "time": 7.3667, "name": "eff/djlizi/djlizi_03" },
+					{ "time": 7.4667, "name": "eff/djlizi/djlizi_04" },
+					{ "time": 7.5333, "name": "eff/djlizi/djlizi_05" },
+					{ "time": 7.6333, "name": "eff/djlizi/djlizi_06" },
+					{ "time": 7.7333, "name": "eff/djlizi/djlizi_07" },
+					{ "time": 7.8, "name": "eff/djlizi/djlizi_08" },
+					{ "time": 7.9, "name": "eff/djlizi/djlizi_09" },
+					{ "time": 8, "name": "eff/djlizi/djlizi_10" }
+				]
+			}
+		},
+		"bones": {
+			"djlizi": {
+				"translate": [
+					{ "x": -218.73, "y": 251.63 }
+				],
+				"scale": [
+					{ "x": 1.184, "y": 1.184 }
+				]
+			},
+			"djlizi2": {
+				"translate": [
+					{ "x": 348.66, "y": 98.68 }
+				],
+				"scale": [
+					{ "x": 1.393, "y": 1.393 }
+				]
+			},
+			"djlizi4": {
+				"translate": [
+					{ "x": 348.66, "y": 98.68 }
+				]
+			}
+		}
+	}
+}
+}

@@ -1,0 +1,321 @@
+
+shouji.png
+size: 1942,1942
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+TX/shouji/add/0018
+  rotate: true
+  xy: 726, 1402
+  size: 178, 220
+  orig: 361, 382
+  offset: 110, 107
+  index: -1
+TX/shouji/add/0019
+  rotate: false
+  xy: 0, 1560
+  size: 361, 382
+  orig: 361, 382
+  offset: 0, 0
+  index: -1
+TX/shouji/add/0020
+  rotate: false
+  xy: 0, 1180
+  size: 361, 378
+  orig: 361, 382
+  offset: 0, 0
+  index: -1
+TX/shouji/add/0021
+  rotate: false
+  xy: 363, 1580
+  size: 361, 362
+  orig: 361, 382
+  offset: 0, 0
+  index: -1
+TX/shouji/add/0022
+  rotate: false
+  xy: 0, 816
+  size: 361, 362
+  orig: 361, 382
+  offset: 0, 0
+  index: -1
+TX/shouji/add/0023
+  rotate: false
+  xy: 363, 1217
+  size: 359, 361
+  orig: 361, 382
+  offset: 2, 0
+  index: -1
+TX/shouji/add/0024
+  rotate: false
+  xy: 726, 1582
+  size: 353, 360
+  orig: 361, 382
+  offset: 6, 0
+  index: -1
+TX/shouji/add/0025
+  rotate: false
+  xy: 0, 458
+  size: 345, 356
+  orig: 361, 382
+  offset: 10, 0
+  index: -1
+TX/shouji/add/0026
+  rotate: false
+  xy: 363, 879
+  size: 336, 336
+  orig: 361, 382
+  offset: 14, 10
+  index: -1
+TX/shouji/add/0027
+  rotate: false
+  xy: 1408, 1626
+  size: 325, 316
+  orig: 361, 382
+  offset: 20, 20
+  index: -1
+TX/shouji/add/0028
+  rotate: false
+  xy: 1366, 1353
+  size: 280, 268
+  orig: 361, 382
+  offset: 42, 44
+  index: -1
+TX/shouji/add/0029
+  rotate: false
+  xy: 1081, 1365
+  size: 283, 256
+  orig: 361, 382
+  offset: 41, 50
+  index: -1
+TX/shouji/add/0030
+  rotate: false
+  xy: 327, 116
+  size: 299, 229
+  orig: 361, 382
+  offset: 33, 66
+  index: -1
+TX/shouji/add/0031
+  rotate: false
+  xy: 347, 347
+  size: 304, 233
+  orig: 361, 382
+  offset: 31, 63
+  index: -1
+TX/shouji/add/0032
+  rotate: false
+  xy: 673, 356
+  size: 267, 236
+  orig: 361, 382
+  offset: 49, 60
+  index: -1
+TX/shouji/add/0033
+  rotate: true
+  xy: 935, 85
+  size: 269, 238
+  orig: 361, 382
+  offset: 50, 58
+  index: -1
+TX/shouji/add/0034
+  rotate: true
+  xy: 1648, 1349
+  size: 275, 241
+  orig: 361, 382
+  offset: 47, 56
+  index: -1
+TX/shouji/add/0035
+  rotate: false
+  xy: 952, 869
+  size: 273, 244
+  orig: 361, 382
+  offset: 46, 53
+  index: -1
+TX/shouji/add/0036
+  rotate: false
+  xy: 952, 1115
+  size: 278, 248
+  orig: 361, 382
+  offset: 43, 50
+  index: -1
+TX/shouji/add/0037
+  rotate: true
+  xy: 701, 934
+  size: 281, 249
+  orig: 361, 382
+  offset: 41, 49
+  index: -1
+TX/shouji/add/0038
+  rotate: false
+  xy: 653, 101
+  size: 280, 253
+  orig: 361, 382
+  offset: 43, 47
+  index: -1
+TX/shouji/add/0039
+  rotate: true
+  xy: 673, 594
+  size: 283, 256
+  orig: 361, 382
+  offset: 41, 45
+  index: -1
+TX/shouji/anse/0018
+  rotate: false
+  xy: 1081, 1623
+  size: 325, 319
+  orig: 339, 325
+  offset: 11, 0
+  index: -1
+TX/shouji/anse/0019
+  rotate: false
+  xy: 0, 137
+  size: 325, 319
+  orig: 339, 325
+  offset: 11, 0
+  index: -1
+TX/shouji/anse/0020
+  rotate: false
+  xy: 363, 582
+  size: 308, 295
+  orig: 339, 325
+  offset: 19, 5
+  index: -1
+TX/shouji/anse/0021
+  rotate: false
+  xy: 931, 611
+  size: 266, 256
+  orig: 339, 325
+  offset: 40, 31
+  index: -1
+TX/shouji/anse/0022
+  rotate: true
+  xy: 942, 356
+  size: 253, 256
+  orig: 339, 325
+  offset: 47, 31
+  index: -1
+TX/shouji/anse/0023
+  rotate: false
+  xy: 1232, 1112
+  size: 254, 239
+  orig: 339, 325
+  offset: 46, 45
+  index: -1
+TX/shouji/anse/0024
+  rotate: true
+  xy: 1696, 622
+  size: 241, 236
+  orig: 339, 325
+  offset: 49, 52
+  index: -1
+TX/shouji/anse/0025
+  rotate: false
+  xy: 1450, 622
+  size: 244, 241
+  orig: 339, 325
+  offset: 49, 50
+  index: -1
+TX/shouji/anse/0026
+  rotate: false
+  xy: 1200, 374
+  size: 245, 245
+  orig: 339, 325
+  offset: 50, 48
+  index: -1
+TX/shouji/anse/0027
+  rotate: true
+  xy: 1227, 865
+  size: 245, 249
+  orig: 339, 325
+  offset: 51, 46
+  index: -1
+TX/shouji/anse/0028
+  rotate: true
+  xy: 1447, 377
+  size: 242, 241
+  orig: 339, 325
+  offset: 56, 47
+  index: -1
+TX/shouji/anse/0029
+  rotate: true
+  xy: 1175, 110
+  size: 244, 241
+  orig: 339, 325
+  offset: 56, 47
+  index: -1
+TX/shouji/anse/0030
+  rotate: false
+  xy: 1478, 865
+  size: 246, 239
+  orig: 339, 325
+  offset: 56, 49
+  index: -1
+TX/shouji/anse/0031
+  rotate: false
+  xy: 1199, 621
+  size: 249, 242
+  orig: 339, 325
+  offset: 55, 46
+  index: -1
+TX/shouji/anse/0032
+  rotate: false
+  xy: 1488, 1106
+  size: 249, 241
+  orig: 339, 325
+  offset: 55, 46
+  index: -1
+TX/shouji/anse/0033
+  rotate: false
+  xy: 1418, 128
+  size: 236, 244
+  orig: 339, 325
+  offset: 54, 42
+  index: -1
+TX/shouji/anse/0034
+  rotate: false
+  xy: 1690, 382
+  size: 239, 238
+  orig: 339, 325
+  offset: 53, 37
+  index: -1
+TX/shouji/anse/0035
+  rotate: false
+  xy: 1735, 1720
+  size: 207, 222
+  orig: 339, 325
+  offset: 74, 53
+  index: -1
+TX/shouji/anse/0036
+  rotate: false
+  xy: 1739, 1124
+  size: 190, 223
+  orig: 339, 325
+  offset: 75, 52
+  index: -1
+TX/shouji/anse/0037
+  rotate: false
+  xy: 1656, 153
+  size: 186, 222
+  orig: 339, 325
+  offset: 79, 53
+  index: -1
+TX/shouji/anse/0038
+  rotate: false
+  xy: 1726, 883
+  size: 182, 221
+  orig: 339, 325
+  offset: 82, 54
+  index: -1
+TX/shouji/anse/0039
+  rotate: true
+  xy: 724, 1217
+  size: 146, 215
+  orig: 339, 325
+  offset: 104, 60
+  index: -1
+TX/shouji/anse/0040
+  rotate: true
+  xy: 0, 15
+  size: 120, 136
+  orig: 339, 325
+  offset: 129, 120
+  index: -1

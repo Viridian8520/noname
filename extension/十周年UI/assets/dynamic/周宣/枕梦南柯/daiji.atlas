@@ -1,892 +1,1910 @@
+
 daiji.png
-size:1969,1032
-filter:Linear,Linear
-scale:0.38
+size: 1474,1474
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
 a100
-bounds:427,171,110,150
-rotate:90
+  rotate: false
+  xy: 389, 297
+  size: 110, 150
+  orig: 110, 150
+  offset: 0, 0
+  index: -1
 a101
-bounds:431,626,387,231
-offsets:69,0,456,231
+  rotate: false
+  xy: 0, 1058
+  size: 456, 231
+  orig: 456, 231
+  offset: 0, 0
+  index: -1
 a102
-bounds:941,506,76,168
-rotate:90
+  rotate: false
+  xy: 1330, 660
+  size: 76, 168
+  orig: 76, 168
+  offset: 0, 0
+  index: -1
 a103
-bounds:809,184,74,114
+  rotate: true
+  xy: 937, 605
+  size: 74, 114
+  orig: 74, 114
+  offset: 0, 0
+  index: -1
 a104
-bounds:1069,2,24,14
-rotate:90
+  rotate: true
+  xy: 750, 25
+  size: 24, 14
+  orig: 24, 14
+  offset: 0, 0
+  index: -1
 a105
-bounds:1003,52,35,56
-rotate:90
+  rotate: false
+  xy: 1439, 57
+  size: 35, 56
+  orig: 35, 56
+  offset: 0, 0
+  index: -1
 a106
-bounds:571,41,120,81
-offsets:0,0,120,86
-rotate:90
+  rotate: false
+  xy: 526, 585
+  size: 120, 86
+  orig: 120, 86
+  offset: 0, 0
+  index: -1
 a107
-bounds:1004,16,34,63
-rotate:90
+  rotate: false
+  xy: 717, 383
+  size: 34, 63
+  orig: 34, 63
+  offset: 0, 0
+  index: -1
 a108
-bounds:888,84,100,84
-offsets:0,15,101,99
-rotate:90
+  rotate: false
+  xy: 758, 589
+  size: 101, 99
+  orig: 101, 99
+  offset: 0, 0
+  index: -1
 a109
-bounds:1117,808,22,49
-offsets:0,0,23,49
+  rotate: false
+  xy: 1304, 1142
+  size: 20, 49
+  orig: 23, 49
+  offset: 0, 0
+  index: -1
 a180
-bounds:289,10,187,148
-offsets:1,1,188,150
+  rotate: true
+  xy: 1304, 1193
+  size: 188, 150
+  orig: 188, 150
+  offset: 0, 0
+  index: -1
 a23
-bounds:828,9,59,62
+  rotate: false
+  xy: 1366, 381
+  size: 59, 62
+  orig: 59, 62
+  offset: 0, 0
+  index: -1
 a24
-bounds:425,413,184,93
+  rotate: false
+  xy: 574, 773
+  size: 184, 93
+  orig: 184, 93
+  offset: 0, 0
+  index: -1
 a25
-bounds:431,508,202,116
+  rotate: true
+  xy: 1326, 989
+  size: 202, 116
+  orig: 202, 116
+  offset: 0, 0
+  index: -1
 a26
-bounds:307,160,215,118
-rotate:90
+  rotate: false
+  xy: 754, 872
+  size: 215, 118
+  orig: 215, 118
+  offset: 0, 0
+  index: -1
 a27
-bounds:2,939,1308,91
+  rotate: false
+  xy: 0, 1383
+  size: 1308, 91
+  orig: 1308, 91
+  offset: 0, 0
+  index: -1
 a27_1
-bounds:2,859,1141,78
-offsets:104,11,1308,91
+  rotate: false
+  xy: 0, 1291
+  size: 1182, 90
+  orig: 1308, 91
+  offset: 83, 0
+  index: -1
 a28
-bounds:2,6,57,19
+  rotate: true
+  xy: 1456, 1261
+  size: 57, 18
+  orig: 57, 19
+  offset: 0, 0
+  index: -1
 a29
-bounds:1710,490,32,58
-offsets:1,3,33,61
-rotate:90
+  rotate: false
+  xy: 1366, 318
+  size: 33, 61
+  orig: 33, 61
+  offset: 0, 0
+  index: -1
 a30
-bounds:1064,72,36,111
+  rotate: true
+  xy: 630, 448
+  size: 36, 111
+  orig: 36, 111
+  offset: 0, 0
+  index: -1
 a31
-bounds:1919,516,46,127
-offsets:0,0,48,127
+  rotate: false
+  xy: 503, 700
+  size: 48, 124
+  orig: 48, 127
+  offset: 0, 0
+  index: -1
 a32
-bounds:1491,247,18,61
+  rotate: false
+  xy: 1456, 1320
+  size: 18, 61
+  orig: 18, 61
+  offset: 0, 0
+  index: -1
 a33
-bounds:1919,645,48,101
-offsets:0,10,48,111
+  rotate: true
+  xy: 1053, 606
+  size: 48, 111
+  orig: 48, 111
+  offset: 0, 0
+  index: -1
 a34
-bounds:611,401,82,159
-rotate:90
+  rotate: false
+  xy: 1246, 648
+  size: 82, 159
+  orig: 82, 159
+  offset: 0, 0
+  index: -1
 a35
-bounds:1900,877,16,46
-offsets:0,1,16,47
+  rotate: true
+  xy: 458, 1058
+  size: 16, 46
+  orig: 16, 47
+  offset: 0, 0
+  index: -1
 a36
-bounds:1541,744,18,46
-offsets:0,0,23,46
-rotate:90
+  rotate: false
+  xy: 1401, 333
+  size: 23, 46
+  orig: 23, 46
+  offset: 0, 0
+  index: -1
 a37
-bounds:1664,248,19,41
-offsets:0,2,19,44
-rotate:90
+  rotate: false
+  xy: 553, 780
+  size: 19, 44
+  orig: 19, 44
+  offset: 0, 0
+  index: -1
 a38
-bounds:1240,331,19,34
+  rotate: false
+  xy: 1372, 282
+  size: 19, 34
+  orig: 19, 34
+  offset: 0, 0
+  index: -1
 a39
-bounds:820,584,303,95
-offsets:0,0,362,119
+  rotate: true
+  xy: 0, 78
+  size: 362, 119
+  orig: 362, 119
+  offset: 0, 0
+  index: -1
 a40
-bounds:1541,764,145,122
-offsets:0,0,145,125
-rotate:90
+  rotate: false
+  xy: 355, 449
+  size: 145, 125
+  orig: 145, 125
+  offset: 0, 0
+  index: -1
 a41
-bounds:1665,925,251,105
-offsets:0,0,353,132
+  rotate: false
+  xy: 0, 442
+  size: 353, 132
+  orig: 353, 132
+  offset: 0, 0
+  index: -1
 a42
-bounds:1312,911,351,119
+  rotate: false
+  xy: 763, 992
+  size: 351, 119
+  orig: 351, 119
+  offset: 0, 0
+  index: -1
 a43
-bounds:1492,317,17,32
-offsets:0,0,18,32
+  rotate: false
+  xy: 1456, 1227
+  size: 18, 32
+  orig: 18, 32
+  offset: 0, 0
+  index: -1
 a44
-bounds:1521,476,45,29
-offsets:0,5,50,34
-rotate:90
+  rotate: false
+  xy: 66, 0
+  size: 50, 34
+  orig: 50, 34
+  offset: 0, 0
+  index: -1
 a45
-bounds:1884,490,17,29
+  rotate: true
+  xy: 506, 1058
+  size: 16, 29
+  orig: 17, 29
+  offset: 0, 0
+  index: -1
 a46
-bounds:61,6,17,19
+  rotate: true
+  xy: 543, 448
+  size: 17, 19
+  orig: 17, 19
+  offset: 0, 0
+  index: -1
 a47
-bounds:1061,52,18,38
-offsets:0,2,20,40
-rotate:90
+  rotate: true
+  xy: 900, 82
+  size: 20, 40
+  orig: 20, 40
+  offset: 0, 0
+  index: -1
 a48
-bounds:611,487,19,22
-rotate:90
+  rotate: false
+  xy: 1091, 814
+  size: 19, 22
+  orig: 19, 22
+  offset: 0, 0
+  index: -1
 a49
-bounds:1665,269,17,40
-offsets:0,1,17,41
-rotate:90
+  rotate: false
+  xy: 740, 340
+  size: 17, 41
+  orig: 17, 41
+  offset: 0, 0
+  index: -1
 a50
-bounds:1897,727,19,20
-rotate:90
+  rotate: true
+  xy: 1304, 1121
+  size: 19, 20
+  orig: 19, 20
+  offset: 0, 0
+  index: -1
 a51
-bounds:1491,234,11,33
-offsets:0,5,11,38
-rotate:90
+  rotate: false
+  xy: 1463, 653
+  size: 11, 38
+  orig: 11, 38
+  offset: 0, 0
+  index: -1
 a52
-bounds:1944,495,19,19
+  rotate: false
+  xy: 943, 851
+  size: 19, 19
+  orig: 19, 19
+  offset: 0, 0
+  index: -1
 a53
-bounds:1918,917,113,42
-rotate:90
+  rotate: false
+  xy: 625, 340
+  size: 113, 36
+  orig: 113, 42
+  offset: 0, 0
+  index: -1
 a54
-bounds:1037,296,74,22
-rotate:90
+  rotate: true
+  xy: 1444, 1117
+  size: 74, 15
+  orig: 74, 22
+  offset: 0, 0
+  index: -1
 a55
-bounds:1595,524,173,154
-offsets:8,26,181,182
+  rotate: false
+  xy: 760, 690
+  size: 181, 180
+  orig: 181, 182
+  offset: 0, 0
+  index: -1
 a56
-bounds:1770,521,157,147
-rotate:90
+  rotate: true
+  xy: 1326, 830
+  size: 157, 147
+  orig: 157, 147
+  offset: 0, 0
+  index: -1
 a57
-bounds:974,89,94,88
-rotate:90
+  rotate: false
+  xy: 827, 486
+  size: 94, 88
+  orig: 94, 88
+  offset: 0, 0
+  index: -1
 a58
-bounds:974,185,82,109
-offsets:1,0,90,110
+  rotate: true
+  xy: 1184, 1291
+  size: 90, 110
+  orig: 90, 110
+  offset: 0, 0
+  index: -1
 a59
-bounds:575,304,95,125
-offsets:4,1,105,126
-rotate:90
+  rotate: true
+  xy: 389, 196
+  size: 99, 123
+  orig: 105, 126
+  offset: 0, 3
+  index: -1
 a60
-bounds:579,163,80,139
-offsets:18,0,105,139
+  rotate: true
+  xy: 553, 673
+  size: 98, 139
+  orig: 105, 139
+  offset: 0, 0
+  index: -1
 a61
-bounds:820,681,295,176
-offsets:17,0,336,176
+  rotate: false
+  xy: 763, 1113
+  size: 309, 176
+  orig: 336, 176
+  offset: 0, 0
+  index: -1
 a62
-bounds:1897,748,75,70
-offsets:0,2,75,72
-rotate:90
+  rotate: false
+  xy: 289, 135
+  size: 75, 70
+  orig: 75, 72
+  offset: 0, 2
+  index: -1
 a63
-bounds:427,160,9,13
-rotate:90
+  rotate: false
+  xy: 1465, 815
+  size: 9, 13
+  orig: 9, 13
+  offset: 0, 0
+  index: -1
 a64
-bounds:736,2,90,69
-offsets:0,0,90,77
+  rotate: false
+  xy: 625, 378
+  size: 90, 68
+  orig: 90, 77
+  offset: 0, 0
+  index: -1
 a65
-bounds:885,186,87,108
-offsets:0,0,89,108
+  rotate: true
+  xy: 648, 576
+  size: 88, 108
+  orig: 89, 108
+  offset: 0, 0
+  index: -1
 a66
-bounds:758,300,83,116
-offsets:2,0,85,116
-rotate:90
+  rotate: false
+  xy: 543, 467
+  size: 85, 116
+  orig: 85, 116
+  offset: 0, 0
+  index: -1
 a67
-bounds:2,377,421,239
-offsets:4,0,425,239
+  rotate: false
+  xy: 0, 576
+  size: 425, 239
+  orig: 425, 239
+  offset: 0, 0
+  index: -1
 a68
-bounds:1125,518,205,211
-offsets:3,0,208,211
+  rotate: false
+  xy: 1116, 904
+  size: 208, 211
+  orig: 208, 211
+  offset: 0, 0
+  index: -1
 a69
-bounds:1903,40,38,24
+  rotate: true
+  xy: 1213, 658
+  size: 38, 24
+  orig: 38, 24
+  offset: 0, 0
+  index: -1
 a70
-bounds:1326,9,53,27
-rotate:90
+  rotate: false
+  xy: 1408, 664
+  size: 53, 27
+  orig: 53, 27
+  offset: 0, 0
+  index: -1
 a71
-bounds:2,618,427,239
+  rotate: false
+  xy: 0, 817
+  size: 427, 239
+  orig: 427, 239
+  offset: 0, 0
+  index: -1
 a72
-bounds:718,187,89,111
+  rotate: true
+  xy: 630, 486
+  size: 88, 111
+  orig: 89, 111
+  offset: 0, 0
+  index: -1
 a73
-bounds:789,473,109,150
-offsets:0,3,109,153
-rotate:90
+  rotate: true
+  xy: 1091, 698
+  size: 109, 153
+  orig: 109, 153
+  offset: 0, 0
+  index: -1
 a74
-bounds:927,372,125,74
+  rotate: true
+  xy: 427, 690
+  size: 125, 74
+  orig: 125, 74
+  offset: 0, 0
+  index: -1
 a75
-bounds:876,300,45,83
-offsets:6,4,52,87
+  rotate: true
+  xy: 666, 0
+  size: 49, 82
+  orig: 52, 87
+  offset: 3, 5
+  index: -1
 a76
-bounds:800,73,109,86
-offsets:3,0,112,97
-rotate:90
+  rotate: true
+  xy: 427, 576
+  size: 112, 97
+  orig: 112, 97
+  offset: 0, 0
+  index: -1
 a77
-bounds:2,27,285,133
+  rotate: false
+  xy: 121, 0
+  size: 285, 133
+  orig: 285, 133
+  offset: 0, 0
+  index: -1
 a78
-bounds:772,385,153,86
-offsets:2,0,155,86
+  rotate: true
+  xy: 408, 39
+  size: 155, 86
+  orig: 155, 86
+  offset: 0, 0
+  index: -1
 a79
-bounds:941,448,146,25
+  rotate: false
+  xy: 943, 681
+  size: 146, 25
+  orig: 146, 25
+  offset: 0, 0
+  index: -1
 a80
-bounds:571,2,135,37
+  rotate: false
+  xy: 408, 0
+  size: 135, 37
+  orig: 135, 37
+  offset: 0, 0
+  index: -1
 a81
-bounds:1332,515,220,166
-offsets:0,0,305,166
-rotate:90
+  rotate: true
+  xy: 121, 135
+  size: 305, 166
+  orig: 305, 166
+  offset: 0, 0
+  index: -1
 a82
-bounds:1500,523,212,93
-rotate:90
+  rotate: false
+  xy: 1112, 809
+  size: 212, 93
+  orig: 212, 93
+  offset: 0, 0
+  index: -1
 a83
-bounds:1665,680,230,143
+  rotate: true
+  xy: 429, 826
+  size: 230, 143
+  orig: 230, 143
+  offset: 0, 0
+  index: -1
 a84
-bounds:736,80,105,62
-rotate:90
+  rotate: true
+  xy: 694, 666
+  size: 105, 62
+  orig: 105, 62
+  offset: 0, 0
+  index: -1
 a85
-bounds:478,6,163,91
-rotate:90
+  rotate: false
+  xy: 1310, 1383
+  size: 163, 91
+  orig: 163, 91
+  offset: 0, 0
+  index: -1
 a86
-bounds:1665,825,233,98
+  rotate: true
+  xy: 289, 207
+  size: 233, 98
+  orig: 233, 98
+  offset: 0, 0
+  index: -1
 a87
-bounds:427,283,146,128
+  rotate: false
+  xy: 943, 708
+  size: 146, 128
+  orig: 146, 128
+  offset: 0, 0
+  index: -1
 a88
-bounds:941,475,150,29
+  rotate: true
+  xy: 496, 44
+  size: 150, 29
+  orig: 150, 29
+  offset: 0, 0
+  index: -1
 a89
-bounds:1897,711,14,20
-rotate:90
+  rotate: false
+  xy: 1444, 1095
+  size: 14, 20
+  orig: 14, 20
+  offset: 0, 0
+  index: -1
 a90
-bounds:789,596,28,29
-rotate:90
+  rotate: false
+  xy: 366, 181
+  size: 21, 24
+  orig: 28, 29
+  offset: 0, 1
+  index: -1
 a91
-bounds:1226,482,64,34
+  rotate: false
+  xy: 0, 0
+  size: 64, 34
+  orig: 64, 34
+  offset: 0, 0
+  index: -1
 a92
-bounds:702,308,91,54
-rotate:90
+  rotate: false
+  xy: 827, 430
+  size: 91, 54
+  orig: 91, 54
+  offset: 0, 0
+  index: -1
 a93
-bounds:635,485,139,152
-rotate:90
+  rotate: false
+  xy: 971, 838
+  size: 139, 152
+  orig: 139, 152
+  offset: 0, 0
+  index: -1
 a94
-bounds:661,167,55,135
+  rotate: false
+  xy: 1408, 693
+  size: 55, 135
+  orig: 55, 135
+  offset: 0, 0
+  index: -1
 a95
-bounds:1145,731,164,206
-offsets:14,0,178,206
+  rotate: false
+  xy: 574, 868
+  size: 178, 206
+  orig: 178, 206
+  offset: 0, 0
+  index: -1
 a96
-bounds:1054,372,28,74
+  rotate: false
+  xy: 1132, 321
+  size: 28, 74
+  orig: 28, 74
+  offset: 0, 0
+  index: -1
 a97
-bounds:1311,737,228,172
+  rotate: false
+  xy: 1074, 1117
+  size: 228, 172
+  orig: 228, 172
+  offset: 0, 0
+  index: -1
 a98
-bounds:2,162,303,213
+  rotate: false
+  xy: 458, 1076
+  size: 303, 213
+  orig: 303, 213
+  offset: 0, 0
+  index: -1
 a99
-bounds:923,296,74,112
-rotate:90
+  rotate: false
+  xy: 861, 576
+  size: 74, 112
+  orig: 74, 112
+  offset: 0, 0
+  index: -1
 vfx/daiji/renwu_jiezhi00030
-bounds:1740,111,7,7
-offsets:2,2,12,11
+  rotate: false
+  xy: 758, 576
+  size: 12, 11
+  orig: 12, 11
+  offset: 0, 0
+  index: -1
 vfx/daiji/renwu_tou00030
-bounds:1176,322,30,13
-offsets:2,4,36,20
-rotate:90
+  rotate: false
+  xy: 1053, 659
+  size: 36, 20
+  orig: 36, 20
+  offset: 0, 0
+  index: -1
 vfx/daiji/renwu_yaodai00030
-bounds:1069,28,31,22
-offsets:7,6,45,33
+  rotate: false
+  xy: 1429, 22
+  size: 45, 33
+  orig: 45, 33
+  offset: 0, 0
+  index: -1
 vfx/daiji/shangceng/shangceng00000
-bounds:889,43,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 937, 564
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00090
-bounds:889,43,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 937, 564
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00001
-bounds:1407,474,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 501, 328
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00091
-bounds:1407,474,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 501, 328
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00002
-bounds:1199,322,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 542, 327
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00092
-bounds:1199,322,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 542, 327
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00003
-bounds:1263,269,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 0, 36
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00093
-bounds:1263,269,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 0, 36
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00004
-bounds:654,48,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 920, 397
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00094
-bounds:654,48,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 920, 397
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00005
-bounds:695,52,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1041, 397
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00095
-bounds:695,52,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1041, 397
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00006
-bounds:1595,483,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 556, 206
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00096
-bounds:1595,483,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 556, 206
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00007
-bounds:889,2,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 527, 44
+  size: 118, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00097
-bounds:889,2,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 527, 44
+  size: 118, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00008
-bounds:1111,477,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1058, 564
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00098
-bounds:1111,477,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1058, 564
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00009
-bounds:1102,436,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1045, 522
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00099
-bounds:1102,436,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1045, 522
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00010
-bounds:1084,395,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1045, 480
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00100
-bounds:1084,395,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1045, 480
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00011
-bounds:1084,354,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 583, 346
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00101
-bounds:1084,354,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 583, 346
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00012
-bounds:1061,313,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 920, 438
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00102
-bounds:1061,313,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 920, 438
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00013
-bounds:1099,198,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1041, 438
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00103
-bounds:1099,198,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1041, 438
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00014
-bounds:1140,198,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 514, 206
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00104
-bounds:1140,198,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 514, 206
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00015
-bounds:1102,83,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 527, 85
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00105
-bounds:1102,83,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 527, 85
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00016
-bounds:1143,83,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 569, 85
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00106
-bounds:1143,83,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 569, 85
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00017
-bounds:1292,474,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 545, 2
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00107
-bounds:1292,474,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 545, 2
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00018
-bounds:1181,207,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 597, 298
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00108
-bounds:1181,207,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 597, 298
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00019
-bounds:1184,92,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 597, 256
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00109
-bounds:1184,92,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 597, 256
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00020
-bounds:1222,207,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 597, 214
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00110
-bounds:1222,207,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 597, 214
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00021
-bounds:1225,92,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 611, 93
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00111
-bounds:1225,92,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 611, 93
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00022
-bounds:1240,367,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 653, 93
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00112
-bounds:1240,367,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 653, 93
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00023
-bounds:1281,433,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 647, 51
+  size: 118, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00113
-bounds:1281,433,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 647, 51
+  size: 118, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00024
-bounds:1281,392,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 695, 93
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00114
-bounds:1281,392,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 695, 93
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00025
-bounds:1378,310,112,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 718, 219
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00115
-bounds:1378,310,112,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 718, 219
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00026
-bounds:1263,228,112,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 737, 98
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00116
-bounds:1263,228,112,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 737, 98
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00027
-bounds:1377,269,112,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1166, 443
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00117
-bounds:1377,269,112,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1166, 443
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00028
-bounds:1377,228,112,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1166, 606
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00118
-bounds:1377,228,112,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1166, 606
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00029
-bounds:1266,187,112,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1179, 564
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00119
-bounds:1266,187,112,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1179, 564
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00030
-bounds:1266,146,112,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1283, 323
+  size: 118, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00120
-bounds:1266,146,112,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1283, 323
+  size: 118, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00031
-bounds:1266,105,112,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 801, 388
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00121
-bounds:1266,105,112,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 801, 388
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00032
-bounds:1666,288,111,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 1169, 234
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00122
-bounds:1666,288,111,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 1169, 234
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00033
-bounds:1380,114,112,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1184, 29
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00123
-bounds:1380,114,112,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1184, 29
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00034
-bounds:1421,114,112,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 767, 15
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00124
-bounds:1421,114,112,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 767, 15
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00035
-bounds:1707,256,111,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1253, 276
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00125
-bounds:1707,256,111,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1253, 276
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00036
-bounds:1749,193,111,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1288, 234
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00126
-bounds:1749,193,111,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1288, 234
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00037
-bounds:1494,2,110,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1320, 115
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00127
-bounds:1494,2,110,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1320, 115
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00038
-bounds:1749,152,111,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1362, 115
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00128
-bounds:1749,152,111,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1362, 115
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00039
-bounds:1749,111,111,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1404, 115
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00129
-bounds:1749,111,111,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1404, 115
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00040
-bounds:1862,139,111,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1320, 73
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00130
-bounds:1862,139,111,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1320, 73
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00041
-bounds:1740,70,111,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1310, 31
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00131
-bounds:1740,70,111,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1310, 31
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00042
-bounds:1102,42,110,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1287, 606
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00132
-bounds:1102,42,110,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1287, 606
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00043
-bounds:1511,247,110,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1300, 564
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00133
-bounds:1511,247,110,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1300, 564
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00044
-bounds:1552,237,110,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1333, 445
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00134
-bounds:1552,237,110,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1333, 445
+  size: 117, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00045
-bounds:1214,23,110,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1375, 445
+  size: 117, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00135
-bounds:1214,23,110,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1375, 445
+  size: 117, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00046
-bounds:1058,185,109,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 1325, 323
+  size: 118, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00136
-bounds:1058,185,109,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 1325, 323
+  size: 118, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00047
-bounds:1903,66,109,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 1208, 443
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00137
-bounds:1903,66,109,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 1208, 443
+  size: 119, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00048
-bounds:1862,27,110,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 1292, 443
+  size: 119, 39
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00138
-bounds:1862,27,110,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 1292, 443
+  size: 119, 39
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00049
-bounds:1740,29,111,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1162, 360
+  size: 119, 39
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00139
-bounds:1740,29,111,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1162, 360
+  size: 119, 39
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00050
-bounds:1903,403,111,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 760, 239
+  size: 119, 39
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00140
-bounds:1903,403,111,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 760, 239
+  size: 119, 39
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00051
-bounds:1903,290,111,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 502, 454
+  size: 120, 39
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00141
-bounds:1903,290,111,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 502, 454
+  size: 120, 39
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00052
-bounds:1903,177,111,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1091, 656
+  size: 120, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00142
-bounds:1903,177,111,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 1091, 656
+  size: 120, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00053
-bounds:1462,114,112,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 743, 454
+  size: 120, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00143
-bounds:1462,114,112,39
-offsets:4,1,123,42
-rotate:90
+  rotate: true
+  xy: 743, 454
+  size: 120, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00054
-bounds:1552,278,111,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 785, 467
+  size: 120, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00144
-bounds:1552,278,111,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 785, 467
+  size: 120, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00055
-bounds:1266,64,112,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 923, 522
+  size: 120, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00145
-bounds:1266,64,112,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 923, 522
+  size: 120, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00056
-bounds:1380,73,112,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 923, 480
+  size: 120, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00146
-bounds:1380,73,112,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 923, 480
+  size: 120, 40
+  orig: 123, 42
+  offset: 1, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00057
-bounds:1396,433,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1250, 443
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00147
-bounds:1396,433,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 1250, 443
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00058
-bounds:1396,392,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1162, 401
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00148
-bounds:1396,392,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 1162, 401
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00059
-bounds:1281,351,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 801, 267
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00149
-bounds:1281,351,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 801, 267
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00060
-bounds:1396,351,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 843, 267
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00150
-bounds:1396,351,113,39
-offsets:4,1,123,42
+  rotate: true
+  xy: 843, 267
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00061
-bounds:1380,32,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 885, 267
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00151
-bounds:1380,32,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 885, 267
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00062
-bounds:1511,359,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 927, 355
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00152
-bounds:1511,359,113,39
-offsets:4,1,123,42
-rotate:90
+  rotate: false
+  xy: 927, 355
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00063
-bounds:1263,310,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 927, 313
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00153
-bounds:1263,310,113,39
-offsets:4,1,123,42
+  rotate: false
+  xy: 927, 313
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00064
-bounds:1552,409,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 927, 271
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00154
-bounds:1552,409,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 927, 271
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00065
-bounds:1593,442,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 1048, 276
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00155
-bounds:1593,442,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 1048, 276
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00066
-bounds:1593,401,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 1090, 276
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00156
-bounds:1593,401,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 1090, 276
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00067
-bounds:1552,360,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 801, 225
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00157
-bounds:1552,360,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 801, 225
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00068
-bounds:1552,319,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 1162, 318
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00158
-bounds:1552,319,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 1162, 318
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00069
-bounds:1707,369,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 779, 183
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00159
-bounds:1707,369,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 779, 183
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00070
-bounds:1770,480,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 779, 141
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00160
-bounds:1770,480,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 779, 141
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00071
-bounds:1748,439,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 779, 99
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00161
-bounds:1748,439,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 779, 99
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00072
-bounds:1748,398,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 900, 104
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00162
-bounds:1748,398,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 900, 104
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00073
-bounds:1748,357,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 1132, 276
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00163
-bounds:1748,357,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 1132, 276
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00074
-bounds:1748,316,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 1048, 234
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00164
-bounds:1748,316,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 1048, 234
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00075
-bounds:1748,275,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 927, 229
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00165
-bounds:1748,275,112,39
-offsets:5,1,123,42
+  rotate: false
+  xy: 927, 229
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00076
-bounds:1862,366,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 942, 108
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00166
-bounds:1862,366,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 942, 108
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00077
-bounds:1748,234,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 984, 108
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00167
-bounds:1748,234,112,39
-offsets:5,1,123,42
+  rotate: true
+  xy: 984, 108
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00078
-bounds:1862,252,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1026, 108
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00168
-bounds:1862,252,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1026, 108
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00079
-bounds:1503,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1068, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00169
-bounds:1503,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1068, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00080
-bounds:1535,6,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1110, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00170
-bounds:1535,6,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1110, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00081
-bounds:1544,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1152, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00171
-bounds:1544,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1152, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00082
-bounds:1576,6,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1194, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00172
-bounds:1576,6,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1194, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00083
-bounds:1585,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1236, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00173
-bounds:1585,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1236, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00084
-bounds:1617,6,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1278, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00174
-bounds:1617,6,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: true
+  xy: 1278, 113
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00085
-bounds:1626,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 1068, 71
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00175
-bounds:1626,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 1068, 71
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00086
-bounds:1658,6,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 1189, 71
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00176
-bounds:1658,6,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 1189, 71
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00087
-bounds:1667,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 942, 66
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00177
-bounds:1667,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 942, 66
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00088
-bounds:1699,6,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 779, 57
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00178
-bounds:1699,6,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 779, 57
+  size: 119, 40
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00089
-bounds:1708,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 1063, 30
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1
 vfx/daiji/shangceng/shangceng00179
-bounds:1708,120,112,39
-offsets:5,1,123,42
-rotate:90
+  rotate: false
+  xy: 1063, 30
+  size: 119, 39
+  orig: 123, 42
+  offset: 2, 1
+  index: -1

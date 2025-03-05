@@ -1,0 +1,76 @@
+
+shouji.png
+size: 1617,1617
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+vx/vx_gongji/vx_gj_hit/vx_gj_hit_0
+  rotate: false
+  xy: 2, 1298
+  size: 688, 317
+  orig: 806, 372
+  offset: 80, 29
+  index: -1
+vx/vx_gongji/vx_gj_hit/vx_gj_hit_1
+  rotate: false
+  xy: 692, 1298
+  size: 688, 317
+  orig: 806, 372
+  offset: 80, 29
+  index: -1
+vx/vx_gongji/vx_gj_hit/vx_gj_hit_2
+  rotate: false
+  xy: 2, 10
+  size: 699, 327
+  orig: 806, 372
+  offset: 78, 23
+  index: -1
+vx/vx_gongji/vx_gj_hit/vx_gj_hit_3
+  rotate: false
+  xy: 703, 2
+  size: 698, 335
+  orig: 806, 372
+  offset: 78, 19
+  index: -1
+vx/vx_gongji/vx_gj_hit/vx_gj_hit_4
+  rotate: false
+  xy: 692, 339
+  size: 688, 319
+  orig: 806, 372
+  offset: 80, 27
+  index: -1
+vx/vx_gongji/vx_gj_hit/vx_gj_hit_5
+  rotate: false
+  xy: 2, 979
+  size: 688, 317
+  orig: 806, 372
+  offset: 80, 29
+  index: -1
+vx/vx_gongji/vx_gj_hit/vx_gj_hit_6
+  rotate: false
+  xy: 692, 979
+  size: 688, 317
+  orig: 806, 372
+  offset: 80, 29
+  index: -1
+vx/vx_gongji/vx_gj_hit/vx_gj_hit_7
+  rotate: false
+  xy: 2, 660
+  size: 688, 317
+  orig: 806, 372
+  offset: 80, 29
+  index: -1
+vx/vx_gongji/vx_gj_hit/vx_gj_hit_8
+  rotate: false
+  xy: 692, 660
+  size: 688, 317
+  orig: 806, 372
+  offset: 80, 29
+  index: -1
+vx/vx_gongji/vx_gj_hit/vx_gj_hit_9
+  rotate: false
+  xy: 2, 341
+  size: 688, 317
+  orig: 806, 372
+  offset: 80, 29
+  index: -1
