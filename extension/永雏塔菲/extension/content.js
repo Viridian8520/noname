@@ -299,7 +299,10 @@ export const CONTENT = function (config, pack) {
 				div.style.height = "100%";
 				div.style.left = "0px";
 				div.style.top = "0px";
-				div.innerHTML = "<video width='320' height='240' autoplay loop muted style='width:100%;height:100%;object-fit:fill;'><source src='" + lib.assetURL + "extension/永雏塔菲/video/bg.mp4' type='video/mp4'></video>";
+				div.innerHTML = "<video width='320' height='240' autoplay loop muted style='width:100%;height:100%;object-fit:fill;transition:all 0.5s;opacity:0;'><source src='" + lib.assetURL + "extension/永雏塔菲/video/bg.mp4' type='video/mp4'></video>";
+				div.firstChild.oncanplay = e => {
+					e.srcElement.style.opacity = 1;
+				};
 				document.body.insertBefore(div, ui.window);
 			},
 		};

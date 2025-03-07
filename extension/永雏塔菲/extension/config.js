@@ -4,7 +4,7 @@ export const CONFIG = {
 	version: {
 		nopointer: true,
 		clear: true,
-		name: "更新日期: 2025-2-26",
+		name: "更新日期: 2025-03-07",
 	},
 	github: {
 		clear: true,
