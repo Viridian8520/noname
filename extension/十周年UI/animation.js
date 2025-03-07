@@ -224,7 +224,12 @@ var duilib;
 				}
 			}
 			var domX, domY, domDefaultX, domDefaultY;
-			var dpr = e.dpr / (useNewDpr ? parseFloat(window.getComputedStyle(document.body).zoom) : 1);
+      // taffy: 注释animation.js原版代码
+      // var dpr = e.dpr / (useNewDpr ? parseFloat(window.getComputedStyle(document.body).zoom) : 1);
+      /* taffy分界线 */
+      // taffy: 修复document is not define问题
+			var dpr = e.dpr / (useNewDpr ? parseFloat(window.documentZoom) : 1);
+      /* taffy分界线 */
 			var referSize = { width: e.canvas.width, height: e.canvas.height };
 			var domNode = this.referNode instanceof HTMLElement ? this.referNode : undefined;
 			if (domNode) {
@@ -322,7 +327,12 @@ var duilib;
 			} else if (renderScaleX && renderScaleY) {
 				renderScale *= Math.min(renderScaleX, renderScaleY);
 			} else {
-				renderScale *= dpr * (useNewDpr ? parseFloat(window.getComputedStyle(document.body).zoom) : 1);
+				// taffy: 注释animation.js原版代码
+				// renderScale *= dpr * (useNewDpr ? parseFloat(window.getComputedStyle(document.body).zoom) : 1);
+				/* taffy分界线 */
+				// taffy: 修复document is not define问题
+				renderScale *= dpr * (useNewDpr ? parseFloat(window.documentZoom) : 1);
+				/* taffy分界线 */
 			}
 
 			if (renderScale != 1) {

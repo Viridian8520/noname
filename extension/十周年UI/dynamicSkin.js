@@ -556,6 +556,50 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					},
 				},
 			},
+			彩蝶恋花涩: {
+				name: "曹华/彩蝶恋花涩/daiji2",
+				teshu: {
+					name: "曹华/彩蝶恋花涩/chuchang2",
+					action: ["jineng"],
+					scale: 0.6,
+				},
+				play2: "play2",
+				shan: "play3",
+				x: [0, 0.45],
+				y: [0, 0.55],
+				scale: 0.7,
+				angle: 0,
+				// speed: 1,
+				shizhounian: true,
+				chuchang: {
+					name: "曹华/彩蝶恋花涩/chuchang",
+					action: "play",
+					scale: 0.75,
+				},
+				gongji: {
+					name: "曹华/彩蝶恋花涩/chuchang2",
+					action: ["gongji"],
+					scale: 0.6,
+				},
+				beijing: {
+					name: "曹华/彩蝶恋花涩/beijing",
+					x: [0, 0.5],
+					y: [0, 0.5],
+					scale: 0.3,
+				},
+				zhishixian: {
+					name: "曹华/彩蝶恋花涩/shouji2",
+					scale: 0.5,
+					speed: 0.6,
+					delay: 0.3,
+					effect: {
+						name: "曹华/彩蝶恋花涩/shouji",
+						scale: 0.5,
+						speed: 0.8,
+						delay: 0.4,
+					},
+				},
+			},
 		},
 		caojinyu: {
 			// 曹金玉

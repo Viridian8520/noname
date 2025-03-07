@@ -1,7 +1,7 @@
 # noname
 ## 简介
 
-- 本仓库为基于 [adeFuLoDgu](https://github.com/adeFuLoDgu) 的h5无名杀仓库自改的 Web 端无名杀
+- 本仓库为基于 [adeFuLoDgu](https://github.com/adeFuLoDgu) 的无名杀仓库自改的无名杀
 - [本体仓库](https://github.com/libccy/noname) 或者 [adeFuLoDgu仓库](https://github.com/adeFuLoDgu/noname) 有更新会基本保持同步更新
 - 除此之外自己也会随缘更一些好玩的东西~
 
@@ -123,7 +123,7 @@
 
   ```
   npm install body-parser express minimist
-  node index.js
+  node noname-server.js
   ```
 
   之后再启动只需输入 `node noname-server.js` 即可游玩
@@ -135,20 +135,21 @@
   node server.js
   ```
 
-- 部署仓库至自己的服务器后即可在线游玩
+- 部署仓库至自己的服务器后即可在线游玩，由于新版无名杀本体启用了 `ServiceWorker`，必须部署至证书有效的 https 域名才可正常运行游戏
+
+- 将本仓库压缩包通过 [本体官方客户端](https://github.com/libnoname/noname/releases/tag/chromium91-client) 进行导入即可游玩
 
 - 通过 `VSCode` 的 `Live-Server` 插件启动 `index.html`（不支持文件读写，部分扩展可能不兼容）
-
-- 双击 `index.html` 进行游玩（不推荐，无法引入扩展）
 
 ## 游玩环境
 
 - PC端游玩推荐使用 Chromium 内核的浏览器（Edge、Chrome 等）
-- 安卓端游玩推荐使用支持原生 WebView 的浏览器
+- 移动端游玩推荐使用支持原生 WebView 的浏览器
 
 ## 已知问题
 
 - 皮肤切换扩展报错 `Cannot read properties of undefined (reading 'chuchang')`（解决方法：菜单 -> 选项 -> 其他 -> 重置游戏设置）
+- 开启皮肤切换扩展会导致动皮出框特效偏移（解决方法：PC端请将游戏本体内置的缩放率调整回100%，再用浏览器自带的缩放功能进行缩放即可；移动端请参考 [无名杀特效偏移/特效错位的解决方法](https://www.bilibili.com/video/BV1Ggwze4EAN) 对手机 WebView 降级至 128 以下版本即可）
 
 ## 在线部署地址
 
