@@ -676,6 +676,16 @@ const translates = {
 	taffyold_wechatpingjiang_info: "出牌阶段，你可以视为对一名有“讨逆”标记的角色使用一张【决斗】。若你胜，其弃置所有“讨逆”标记且本回合你使用的【决斗】获得〖无双〗效果且造成的伤害+1；否则此技能失效直到回合结束。",
 	taffyold_wechatdingye: "鼎业",
 	taffyold_wechatdingye_info: "锁定技，结束阶段，你回复X点体力（X为本回合受到过伤害的角色数）。",
+	taffyshen_shamoke: "神沙摩柯",
+	taffyshen_shamoke_prefix: "神",
+	taffyshen_gzjili: "蒺藜",
+	taffyshen_gzjili_info: "①当你于一回合内使用或打出牌时，你可以摸攻击范围张牌，然后若你以此法摸的牌数：大于1，你令下次以此法摸的牌数-1；为1，将此技能摸牌数重置为你的攻击范围。②当你使用的武器牌结算结束后，你将此技能摸牌数重置为你的攻击范围。",
+	taffyshen_gzjili_append: `<span style="font-family: yuanli">得此神兵，某当纵横天下！</span>`,
+	taffyre_shamoke: "界沙摩柯",
+	taffyre_shamoke_prefix: "界",
+	taffyre_gzjili: "蒺藜",
+	taffyre_gzjili_info: "当你于一回合内使用或打出第X的倍数张牌时，你可以摸X张牌（X为你的攻击范围）。",
+	taffyre_gzjili_append: `<span style="font-family: yuanli">善使双弓，好不威风！</span>`,
 	aruijier: "瑞吉儿",
 };
 

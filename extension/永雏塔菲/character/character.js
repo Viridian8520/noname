@@ -101,6 +101,8 @@ const characters = {
 	taffyold_wechat_ji_caocao: ["male", "wei", 4, ["taffyold_wechatdelu", "taffyold_wechatzhujiu"]],
 	taffyold_wechat_ji_zhugeliang: ["male", "shu", 3, ["taffyold_wechatsangu", "taffyold_wechatyanshi"], ["name:诸葛|亮"]],
 	taffyold_wechat_ji_sunce: ["male", "wu", 4, ["taffyold_wechattaoni", "taffyold_wechatpingjiang", "taffyold_wechatdingye"], ["zhu"]],
+	taffyshen_shamoke: ["male", "shen", 4, ["taffyshen_gzjili"], ["shu", "name:null|null", "character:ty_shamoke", "die:shamoke"]],
+	taffyre_shamoke: ["male", "shu", 4, ["taffyre_gzjili"], ["name:null|null", "character:shamoke", "die:shamoke"]],
 	aruijier: ["female", "shen", "", [], ["unseen", "qun"]],
 };
 

@@ -1,0 +1,286 @@
+
+shouji2.png
+size: 1903,1903
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ooo/01_00
+  rotate: true
+  xy: 1546, 1144
+  size: 569, 200
+  orig: 569, 234
+  offset: 0, 13
+  index: -1
+ooo/01_04
+  rotate: true
+  xy: 1344, 573
+  size: 569, 200
+  orig: 569, 234
+  offset: 0, 13
+  index: -1
+ooo/01_08
+  rotate: true
+  xy: 1546, 573
+  size: 569, 200
+  orig: 569, 234
+  offset: 0, 13
+  index: -1
+ooo/01_12
+  rotate: false
+  xy: 769, 146
+  size: 569, 200
+  orig: 569, 234
+  offset: 0, 13
+  index: -1
+ooo/01_16
+  rotate: false
+  xy: 2, 5
+  size: 569, 200
+  orig: 569, 234
+  offset: 0, 13
+  index: -1
+ooo/01_20
+  rotate: true
+  xy: 1344, 2
+  size: 569, 200
+  orig: 569, 234
+  offset: 0, 13
+  index: -1
+ooo/01_24
+  rotate: true
+  xy: 1546, 2
+  size: 569, 200
+  orig: 569, 234
+  offset: 0, 13
+  index: -1
+ooo/01_28
+  rotate: true
+  xy: 1344, 1144
+  size: 569, 200
+  orig: 569, 234
+  offset: 0, 13
+  index: -1
+vfx/dayan_01
+  rotate: true
+  xy: 1343, 1715
+  size: 186, 420
+  orig: 197, 421
+  offset: 9, 1
+  index: -1
+vfx/huoqiu3
+  rotate: true
+  xy: 2, 207
+  size: 139, 765
+  orig: 139, 765
+  offset: 0, 0
+  index: -1
+vfx/shouji/dandao_tx1_00
+  rotate: false
+  xy: 1765, 1232
+  size: 111, 669
+  orig: 139, 765
+  offset: 19, 72
+  index: -1
+vfx/shouji/dandao_tx1_01
+  rotate: false
+  xy: 1748, 561
+  size: 112, 669
+  orig: 139, 765
+  offset: 18, 72
+  index: -1
+vfx/shouji/dandao_tx1_02
+  rotate: true
+  xy: 2, 351
+  size: 112, 669
+  orig: 139, 765
+  offset: 18, 72
+  index: -1
+vfx/shouji/dandao_tx1_03
+  rotate: true
+  xy: 673, 348
+  size: 112, 669
+  orig: 139, 765
+  offset: 18, 72
+  index: -1
+vfx/shouji/dandao_tx1_04
+  rotate: true
+  xy: 2, 804
+  size: 111, 669
+  orig: 139, 765
+  offset: 19, 72
+  index: -1
+vfx/shouji/dandao_tx1_05
+  rotate: true
+  xy: 673, 801
+  size: 111, 669
+  orig: 139, 765
+  offset: 19, 72
+  index: -1
+vfx/shouji/dandao_tx1_06
+  rotate: true
+  xy: 2, 691
+  size: 111, 669
+  orig: 139, 765
+  offset: 19, 72
+  index: -1
+vfx/shouji/dandao_tx1_07
+  rotate: true
+  xy: 673, 1359
+  size: 109, 669
+  orig: 139, 765
+  offset: 20, 72
+  index: -1
+vfx/shouji/dandao_tx1_08
+  rotate: true
+  xy: 673, 1470
+  size: 108, 669
+  orig: 139, 765
+  offset: 21, 72
+  index: -1
+vfx/shouji/dandao_tx1_09
+  rotate: true
+  xy: 2, 1251
+  size: 109, 669
+  orig: 139, 765
+  offset: 20, 72
+  index: -1
+vfx/shouji/dandao_tx1_10
+  rotate: true
+  xy: 673, 1248
+  size: 109, 669
+  orig: 139, 765
+  offset: 20, 72
+  index: -1
+vfx/shouji/dandao_tx1_11
+  rotate: true
+  xy: 2, 1140
+  size: 109, 669
+  orig: 139, 765
+  offset: 20, 72
+  index: -1
+vfx/shouji/dandao_tx1_12
+  rotate: true
+  xy: 673, 1137
+  size: 109, 669
+  orig: 139, 765
+  offset: 20, 72
+  index: -1
+vfx/shouji/dandao_tx1_13
+  rotate: true
+  xy: 2, 1029
+  size: 109, 669
+  orig: 139, 765
+  offset: 20, 72
+  index: -1
+vfx/shouji/dandao_tx1_14
+  rotate: true
+  xy: 673, 1026
+  size: 109, 669
+  orig: 139, 765
+  offset: 20, 72
+  index: -1
+vfx/shouji/dandao_tx1_15
+  rotate: true
+  xy: 2, 1472
+  size: 107, 669
+  orig: 139, 765
+  offset: 22, 72
+  index: -1
+vfx/shouji/dandao_tx1_16
+  rotate: true
+  xy: 673, 1688
+  size: 106, 668
+  orig: 139, 765
+  offset: 23, 73
+  index: -1
+vfx/shouji/dandao_tx1_17
+  rotate: true
+  xy: 2, 1796
+  size: 105, 668
+  orig: 139, 765
+  offset: 24, 73
+  index: -1
+vfx/shouji/dandao_tx1_18
+  rotate: true
+  xy: 672, 1796
+  size: 105, 669
+  orig: 139, 765
+  offset: 24, 72
+  index: -1
+vfx/shouji/dandao_tx1_19
+  rotate: true
+  xy: 2, 1581
+  size: 106, 669
+  orig: 139, 765
+  offset: 24, 72
+  index: -1
+vfx/shouji/dandao_tx1_20
+  rotate: true
+  xy: 2, 1689
+  size: 105, 669
+  orig: 139, 765
+  offset: 25, 72
+  index: -1
+vfx/shouji/dandao_tx1_21
+  rotate: true
+  xy: 673, 1580
+  size: 106, 669
+  orig: 139, 765
+  offset: 24, 72
+  index: -1
+vfx/shouji/dandao_tx1_22
+  rotate: true
+  xy: 2, 1362
+  size: 108, 669
+  orig: 139, 765
+  offset: 22, 72
+  index: -1
+vfx/shouji/dandao_tx1_23
+  rotate: true
+  xy: 673, 688
+  size: 111, 669
+  orig: 139, 765
+  offset: 19, 72
+  index: -1
+vfx/shouji/dandao_tx1_24
+  rotate: true
+  xy: 2, 578
+  size: 111, 669
+  orig: 139, 765
+  offset: 19, 72
+  index: -1
+vfx/shouji/dandao_tx1_25
+  rotate: true
+  xy: 673, 575
+  size: 111, 669
+  orig: 139, 765
+  offset: 19, 72
+  index: -1
+vfx/shouji/dandao_tx1_26
+  rotate: true
+  xy: 2, 465
+  size: 111, 669
+  orig: 139, 765
+  offset: 19, 72
+  index: -1
+vfx/shouji/dandao_tx1_27
+  rotate: true
+  xy: 2, 917
+  size: 110, 669
+  orig: 139, 765
+  offset: 20, 72
+  index: -1
+vfx/shouji/dandao_tx1_28
+  rotate: true
+  xy: 673, 914
+  size: 110, 669
+  orig: 139, 765
+  offset: 20, 72
+  index: -1
+vfx/shouji/dandao_tx1_29
+  rotate: true
+  xy: 673, 462
+  size: 111, 669
+  orig: 139, 765
+  offset: 19, 72
+  index: -1

@@ -3250,6 +3250,53 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				},
 			},
 		},
+		shamoke: {
+			// 沙摩柯
+			骁勇金衔: {
+				name: "沙摩柯/骁勇金衔/daiji2",
+				play2: "play2",
+				shan: "play3",
+				x: [0, 0.7],
+				y: [0, 0.45],
+				scale: 0.9,
+				angle: 0,
+				// speed: 1,
+				shizhounian: true,
+				chuchang: {
+					name: "沙摩柯/骁勇金衔/chuchang",
+					action: "play",
+					scale: 0.7,
+				},
+				gongji: {
+					name: "沙摩柯/骁勇金衔/chuchang2",
+					action: "gongji",
+					scale: 0.7,
+				},
+				teshu: {
+					name: "沙摩柯/骁勇金衔/chuchang2",
+					action: "jineng",
+					scale: 0.7,
+				},
+				beijing: {
+					name: "沙摩柯/骁勇金衔/beijing",
+					x: [0, 0.5],
+					y: [0, 0.5],
+					scale: 0.3,
+				},
+				zhishixian: {
+					name: "沙摩柯/骁勇金衔/shouji2",
+					scale: 0.5,
+					speed: 1.2,
+					delay: 0.3,
+					effect: {
+						name: "沙摩柯/骁勇金衔/shouji",
+						scale: 0.6,
+						speed: 0.6,
+						delay: 0.7,
+					},
+				},
+			},
+		},
 		shen_caocao: {
 			// 神曹操
 			四方归心: {
@@ -6650,7 +6697,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				chuchang: {
 					name: "周善/骁勇金衔/chuchang",
 					action: "play",
-					scale: 0.5,
+					scale: 0.7,
 				},
 				gongji: {
 					name: "周善/骁勇金衔/chuchang2",
@@ -7336,6 +7383,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		taffyold_scs_duangui: decadeUI.dynamicSkin.scs_duangui,
 		taffyold_scs_guosheng: decadeUI.dynamicSkin.scs_guosheng,
 		taffyold_scs_gaowang: decadeUI.dynamicSkin.scs_gaowang,
+
+		// 沙摩柯
+		ty_shamoke: decadeUI.dynamicSkin.shamoke,
+		taffyshen_shamoke: decadeUI.dynamicSkin.shamoke,
+		taffyre_shamoke: decadeUI.dynamicSkin.shamoke,
 
 		// 神曹操
 		old_caocao: decadeUI.dynamicSkin.shen_caocao,

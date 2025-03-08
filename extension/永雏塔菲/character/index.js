@@ -57,6 +57,8 @@ export const characterPackFunc = function () {
 				taffy_liubianxing: "#gViridian",
 				mutsumi: "#gViridian",
 				mortis: "#gViridian",
+				taffyshen_shamoke: "#gViridian",
+				taffyre_shamoke: "#gViridian",
 				limulu: "#gLazysun Viridian",
 			},
 			dynamicTranslate: { ...dynamicTranslates },
@@ -67,7 +69,7 @@ export const characterPackFunc = function () {
 			translate: { ...translates, ...voices, ...characterSortTranslate },
 			pinyins: { ...pinyins },
 		};
-		const whiteList = new Set([...oobj.characterSort.taffy_character.taffy_old_ol, ...oobj.characterSort.taffy_character.taffy_old_mb, ...oobj.characterSort.taffy_character.taffy_old_dc, ...oobj.characterSort.taffy_character.taffy_old_etc, ...oobj.characterSort.taffy_character.taffy_mobile_changshi, "taffymb_shen_caocao", "taffyre_xuyou", "taffy_liubianxing"]);
+		const whiteList = new Set([...oobj.characterSort.taffy_character.taffy_old_ol, ...oobj.characterSort.taffy_character.taffy_old_mb, ...oobj.characterSort.taffy_character.taffy_old_dc, ...oobj.characterSort.taffy_character.taffy_old_etc, ...oobj.characterSort.taffy_character.taffy_mobile_changshi, "taffymb_shen_caocao", "taffyre_xuyou", "taffy_liubianxing", "taffyshen_shamoke", "taffyre_shamoke"]);
 		["taffyold_baby_shen_simayi", "taffyold_wechat_ji_guanyu", "taffyold_wechat_ji_caocao", "taffyold_wechat_ji_zhugeliang", "taffyold_wechat_ji_sunce"].forEach(i => {
 			whiteList.delete(i);
 		});

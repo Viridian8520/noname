@@ -6856,6 +6856,176 @@ const diy = {
 			},
 		},
 	},
+  // 神沙摩柯
+  taffyshen_gzjili: {
+    audio: "gzjili",
+    trigger: { player: ["useCard", "respond"] },
+    frequent: true,
+    locked: false,
+    preHidden: true,
+    filter: () => true,
+		prompt2(event, player) {
+			const num = player.getAttackRange() - player.countMark("taffyshen_gzjili");
+			let info = "摸" + get.cnNumber(num) + "张牌";
+			if (num === 1) info += "，然后重置【蒺藜】摸牌数";
+			else if (num > 1) info += "，然后令你下次以此法摸的牌数-1";
+			return info;
+		},
+    async content(event, trigger, player) {
+      const { name: mark } = event;
+			let num = player.getAttackRange() - player.countMark(mark);
+			if (num > 1) {
+				player.addMark(mark, 1, false);
+        await player.draw(num);
+			} else if (num === 1) {
+        await player.draw(num);
+        player.clearMark(mark, false);
+			} else {
+        player.clearMark(mark, false);
+        num = player.getAttackRange() - player.countMark(mark);
+        await player.draw(num);
+      }
+    },
+    onremove: true,
+		mark: true,
+		intro: {
+			markcount: (storage, player) => player.getAttackRange() - player.countMark("taffyshen_gzjili"),
+			content: (storage, player) => `下次【蒺藜】摸牌数：${player.getAttackRange() - player.countMark("taffyshen_gzjili")}`,
+		},
+    group: ["taffyshen_gzjili_equip"],
+    subSkill: {
+      equip: {
+        audio: "taffyshen_gzjili",
+        trigger: {
+          player: "useCardAfter",
+        },
+        silent: true,
+        filter: function (event, player) {
+          if (get.type(event.card) != "equip") return false;
+          if (get.subtype(event.card) != "equip1") return false;
+          return true;
+        },
+        content: function () {
+          player.clearMark("taffyshen_gzjili", false);
+        },
+      },
+    },
+  },
+  // 界沙摩柯
+	taffyre_gzjili: {
+		mod: {
+			aiOrder(player, card, num) {
+				if (player.isPhaseUsing() && get.subtype(card) == "equip1" && !get.cardtag(card, "gifts")) {
+					var range0 = player.getAttackRange();
+					var range = 0;
+					var info = get.info(card);
+					if (info && info.distance && info.distance.attackFrom) {
+						range -= info.distance.attackFrom;
+					}
+					if (player.getEquip(1)) {
+						var num = 0;
+						var info = get.info(player.getEquip(1));
+						if (info && info.distance && info.distance.attackFrom) {
+							num -= info.distance.attackFrom;
+						}
+						range0 -= num;
+					}
+					range0 += range;
+					if (
+						(player.getHistory("useCard").length + player.getHistory("respond").length + 2) % range0 === 0 &&
+						player.countCards("h", function (cardx) {
+							return get.subtype(cardx) != "equip1" && player.getUseValue(cardx) > 0;
+						})
+					)
+						return num + 10;
+				}
+			},
+		},
+		trigger: { player: ["useCard", "respond"] },
+		frequent: true,
+		locked: false,
+		preHidden: true,
+		onremove(player) {
+			player.removeTip("taffyre_gzjili");
+      player.clearMark("taffyre_gzjili", false);
+		},
+		filter(event, player) {
+			let count = player.getHistory("useCard").length + player.getHistory("respond").length;
+			player.addTip("taffyre_gzjili", "蒺藜 " + count, true);
+      player.storage.taffyre_gzjili = count;
+			return count % player.getAttackRange() === 0;
+		},
+		audio: "gzjili",
+		content() {
+			player.draw(player.getAttackRange());
+		},
+		ai: {
+			threaten: 1.8,
+			effect: {
+				target_use(card, player, target, current) {
+					let used = target.getHistory("useCard").length + target.getHistory("respond").length;
+					if (get.subtype(card) == "equip1" && !get.cardtag(card, "gifts")) {
+						if (player != target || !player.isPhaseUsing()) return;
+						let range0 = player.getAttackRange();
+						let range = 0;
+						let info = get.info(card);
+						if (info && info.distance && info.distance.attackFrom) {
+							range -= info.distance.attackFrom;
+						}
+						if (player.getEquip(1)) {
+							let num = 0;
+							let info = get.info(player.getEquip(1));
+							if (info && info.distance && info.distance.attackFrom) {
+								num -= info.distance.attackFrom;
+							}
+							range0 -= num;
+						}
+						range0 += range;
+						let delta = range0 - used;
+						if (delta < 0) return;
+						let num = player.countCards("h", function (card) {
+							return (get.cardtag(card, "gifts") || get.subtype(card) != "equip1") && player.getUseValue(card) > 0;
+						});
+						if (delta == 2 && num > 0) return [1, 3];
+						if (num >= delta) return "zeroplayertarget";
+					} else if (get.tag(card, "respondShan") > 0) {
+						if (current < 0 && used % (target.getAttackRange() - 1) === 0) {
+							if (card.name === "sha") {
+								if (
+									!target.mayHaveShan(
+										player,
+										"use",
+										target.getCards("h", i => {
+											return i.hasGaintag("sha_notshan");
+										})
+									)
+								)
+									return;
+							} else if (!target.mayHaveShan(player)) return 0.9;
+							return [1, (used + 1) / 2];
+						}
+					} else if (get.tag(card, "respondSha") > 0) {
+						if (current < 0 && used % (target.getAttackRange() - 1) === 0 && target.mayHaveSha(player)) return [1, (used + 1) / 2];
+					}
+				},
+			},
+		},
+    group: "taffyre_gzjili_count",
+    intro: {
+      content: (storage, player) => `总次数：${storage}`,
+    },
+  },
+  taffyre_gzjili_count: {
+    trigger: { player: ["useCard1", "respond"] },
+    silent: true,
+    firstDo: true,
+    noHidden: true,
+    sourceSkill: "taffyre_gzjili",
+    content() {
+      player.storage.taffyre_gzjili = player.getHistory("useCard").length + player.getHistory("respond").length;
+      player.markSkill("taffyre_gzjili");
+    },
+  },
 };
 
 export default diy;

@@ -66,6 +66,7 @@ const characterReplaces = {
 	wechat_zhiyin_caocao: ["wechat_zhiyin_caocao", "taffyold_wechat_ji_caocao"],
 	wechat_zhiyin_zhugeliang: ["wechat_zhiyin_zhugeliang", "taffyold_wechat_ji_zhugeliang"],
 	wechat_zhiyin_sunce: ["wechat_zhiyin_sunce", "taffyold_wechat_ji_sunce"],
+	shamoke: ["shamoke", "ty_shamoke", "taffyshen_shamoke", "taffyre_shamoke"],
 };
 
 export default characterReplaces;

@@ -2709,35 +2709,6 @@ export class Create {
 		// @ts-ignore
 		while (lib.arenaReady.length) lib.arenaReady.shift()();
 		delete lib.arenaReady;
-		// taffy: 来自adeFuLoDgu的自定义扩展加载
-		//load custom extension start
-		var addtional_extention_names=[
-			['十周年UI', true],
-			['挑战卡牌', false],
-			['千幻聆音', true],
-			['皮肤切换', true],
-			['全能搜索', true],
-			['永雏塔菲', true],
-			['标记补充', true],
-			['手杀MVP', true],
-			['无名补丁', true],
-			['指示线', true],
-			['拖拽指示线', true],
-			['补应变卡', true],
-			['活动武将', true],
-		];
-		var need_reload=false;
-		for(var i=0;i<addtional_extention_names.length;i++){
-			if(!lib.config.extensions.includes(addtional_extention_names[i][0])&&addtional_extention_names[i][1]){
-				var need_reload=true;
-				lib.config.extensions.add(addtional_extention_names[i][0]);
-				game.saveConfig('extensions',lib.config.extensions);
-				game.saveConfig('extension_'+addtional_extention_names[i][0]+'_enable',addtional_extention_names[i][1]);
-			}
-		}
-		if(need_reload) game.reload();
-		//load custom extension end
-		/* taffy分界线 */
 		if (lib.config.auto_check_update && !sessionStorage.getItem("auto_check_update")) {
 			setTimeout(() => {
 				sessionStorage.setItem("auto_check_update", "1");
