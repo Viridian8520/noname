@@ -976,7 +976,7 @@ game.import("card", function () {
 					result: {
 						target(player, target) {
 							if (target == player) {
-								if (!target.hasShan()) return 2;
+								if (!target.hasShan("all")) return 2;
 								var num = target.needsToDiscard(2);
 								if (num == 0) return 1.5;
 								if (num == 1) return 1;

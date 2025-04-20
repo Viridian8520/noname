@@ -3,28 +3,125 @@ game.import("character", function () {
 	return {
 		name: "gujian",
 		character: {
-			gjqt_bailitusu: ["male", "shu", 4, ["xuelu", "fanshi", "shahun"], ["name:百里|屠苏"]],
-			gjqt_fengqingxue: ["female", "wu", 3, ["qinglan", "yuehua", "swd_wuxie"]],
-			gjqt_xiangling: ["female", "wu", 3, ["xlqianhuan", "meihu", "xidie"]],
-			gjqt_fanglansheng: ["male", "wu", 3, ["fanyin", "mingkong", "fumo"]],
-			gjqt_yinqianshang: ["male", "qun", 4, ["zuiji", "zuizhan"]],
-			gjqt_hongyu: ["female", "shu", 4, ["jianwu", "meiying"]],
+			gjqt_bailitusu: {
+				sex: "male",
+				group: "shu",
+				hp: 4,
+				skills: ["xuelu", "fanshi", "shahun"],
+				names: "百里|屠苏",
+			},
+			gjqt_fengqingxue: {
+				sex: "female",
+				group: "wu",
+				hp: 3,
+				skills: ["qinglan", "yuehua", "swd_wuxie"],
+			},
+			gjqt_xiangling: {
+				sex: "female",
+				group: "wu",
+				hp: 3,
+				skills: ["xlqianhuan", "meihu", "xidie"],
+			},
+			gjqt_fanglansheng: {
+				sex: "male",
+				group: "wu",
+				hp: 3,
+				skills: ["fanyin", "mingkong", "fumo"],
+			},
+			gjqt_yinqianshang: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["zuiji", "zuizhan"],
+			},
+			gjqt_hongyu: {
+				sex: "female",
+				group: "shu",
+				hp: 4,
+				skills: ["jianwu", "meiying"],
+			},
 
-			gjqt_yuewuyi: ["male", "wei", 4, ["yanjia", "xiuhua", "liuying"]],
-			gjqt_wenrenyu: ["female", "shu", 4, ["chizhen", "dangping"], ["name:闻人|羽"]],
-			gjqt_xiayize: ["male", "qun", 3, ["xuanning", "liuguang", "yangming"]],
-			gjqt_aruan: ["female", "wu", 3, ["zhaolu", "jiehuo", "yuling"], ["name:null|阮"]],
+			gjqt_yuewuyi: {
+				sex: "male",
+				group: "wei",
+				hp: 4,
+				skills: ["yanjia", "xiuhua", "liuying"],
+			},
+			gjqt_wenrenyu: {
+				sex: "female",
+				group: "shu",
+				hp: 4,
+				skills: ["chizhen", "dangping"],
+				names: "闻人|羽",
+			},
+			gjqt_xiayize: {
+				sex: "male",
+				group: "qun",
+				hp: 3,
+				skills: ["xuanning", "liuguang", "yangming"],
+			},
+			gjqt_aruan: {
+				sex: "female",
+				group: "wu",
+				hp: 3,
+				skills: ["zhaolu", "jiehuo", "yuling"],
+				names: "null|阮",
+			},
 
-			gjqt_xunfang: ["female", "shu", 3, ["manwu", "xfanghua"]],
-			gjqt_ouyangshaogong: ["male", "shu", 3, ["yunyin", "shishui", "duhun"], ["name:欧阳|少恭"]],
+			gjqt_xunfang: {
+				sex: "female",
+				group: "shu",
+				hp: 3,
+				skills: ["manwu", "xfanghua"],
+			},
+			gjqt_ouyangshaogong: {
+				sex: "male",
+				group: "shu",
+				hp: 3,
+				skills: ["yunyin", "shishui", "duhun"],
+				names: "欧阳|少恭",
+			},
 
-			gjqt_xieyi: ["male", "qun", 3, ["lingyan", "xunjian", "humeng"]],
-			gjqt_yanjiaxieyi: ["male", "qun", 2, ["xianju"], ["unseen"]],
-			gjqt_chuqi: ["male", "qun", 2, ["xuanci"], ["unseen", "name:谢|衣"]],
+			gjqt_xieyi: {
+				sex: "male",
+				group: "qun",
+				hp: 3,
+				skills: ["lingyan", "xunjian", "humeng"],
+			},
+			gjqt_yanjiaxieyi: {
+				sex: "male",
+				group: "qun",
+				hp: 2,
+				skills: ["xianju"],
+				isUnseen: true,
+			},
+			gjqt_chuqi: {
+				sex: "male",
+				group: "qun",
+				hp: 2,
+				skills: ["xuanci"],
+				isUnseen: true,
+				names: "谢|衣",
+			},
 
-			gjqt_beiluo: ["male", "qun", 4, ["lingnu", "zhenying", "cihong"]],
-			gjqt_yunwuyue: ["female", "wei", 3, ["yange", "woxue", "lianjing"]],
-			gjqt_cenying: ["female", "shu", 3, ["yunyou", "xuanzhen", "qingshu"]],
+			gjqt_beiluo: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["lingnu", "zhenying", "cihong"],
+			},
+			gjqt_yunwuyue: {
+				sex: "female",
+				group: "wei",
+				hp: 3,
+				skills: ["yange", "woxue", "lianjing"],
+			},
+			gjqt_cenying: {
+				sex: "female",
+				group: "shu",
+				hp: 3,
+				skills: ["yunyou", "xuanzhen", "qingshu"],
+			},
 		},
 		characterIntro: {
 			gjqt_bailitusu: "原名韩云溪，太子长琴半身。幼时经历灭族之灾，本来已死去，但因体内被封进了太子长琴一半魂魄而得以死而复生。身怀凶剑焚寂的煞气，在某次煞气发作中被紫胤真人所救，后拜入昆仑山天墉城，以“屠绝鬼气，苏醒人魂”之意更名为“百里屠苏”。",
@@ -415,7 +512,6 @@ game.import("character", function () {
 						});
 						event.card = card;
 						game.log(player, "将", trigger.card, "变为", card);
-						// if(!event.isMine()) game.delayx();
 						trigger.card = get.autoViewAs(card);
 						trigger.cards = [card];
 						game.cardsGotoOrdering(card).relatedEvent = trigger;
@@ -844,10 +940,6 @@ game.import("character", function () {
 						player.logSkill("lianjing", result.targets);
 						player.insertEvent("lianjing", lib.skill.lianjing.content_phase);
 						player.storage.lianjing_targets = result.targets.slice(0);
-						// player.storage.lianjing--;
-						// if(player.storage.lianjing<=0){
-						// 	player.unmarkSkill('lianjing');
-						// }
 						game.delay();
 					}
 				},
@@ -1163,7 +1255,6 @@ game.import("character", function () {
 					if (player.countCards("h") == 0) return false;
 					return true;
 				},
-				// alter:true,
 				filterTarget(card, player, target) {
 					return target != player && target.countCards("h") > 0 && target.hp > 0 && target.hp <= player.maxHp;
 				},
@@ -1180,9 +1271,6 @@ game.import("character", function () {
 					}
 					"step 2";
 					player.changeHp(event.num);
-					if (get.is.altered("duhun")) {
-						event.finish();
-					}
 					"step 3";
 					event.target.changeHp(-event.num);
 					"step 4";
@@ -1796,7 +1884,6 @@ game.import("character", function () {
 				content() {
 					"step 0";
 					player.chooseTarget(get.prompt("fanyin"), function (card, player, target) {
-						// if(player==target) return false;
 						if (target.isLinked()) return true;
 						if (target.isTurnedOver()) return true;
 						if (target.countCards("j")) return true;
@@ -1984,7 +2071,6 @@ game.import("character", function () {
 				filter(event, player) {
 					return player.maxHp > player.hp && player.countCards("he", { color: "red" }) > 0;
 				},
-				// alter:true,
 				content() {
 					"step 0";
 					player.chooseCardTarget({
@@ -2007,11 +2093,7 @@ game.import("character", function () {
 					if (result.bool) {
 						event.target = result.targets[0];
 						player.logSkill("xuelu", event.target, "fire");
-						if (get.is.altered("xuelu")) {
-							event.num = 1;
-						} else {
-							event.num = Math.min(2, Math.ceil((player.maxHp - player.hp) / 2));
-						}
+						event.num = Math.min(2, Math.ceil((player.maxHp - player.hp) / 2));
 						player.discard(result.cards);
 					} else {
 						event.finish();
@@ -2045,7 +2127,6 @@ game.import("character", function () {
 				skillAnimation: true,
 				animationColor: "fire",
 				derivation: "juejing",
-				// alter:true,
 				filter(event, player) {
 					return !player.storage.shahun && player.hp <= 0;
 				},
@@ -2366,7 +2447,6 @@ game.import("character", function () {
 				intro: {
 					content: "time",
 				},
-				// alter:true,
 				ai: {
 					noh: true,
 					threaten: 0.8,
@@ -2428,7 +2508,6 @@ game.import("character", function () {
 					cardEnabled(card, player) {
 						if (_status.currentPhase != player) return;
 						var num = 2;
-						if (get.is.altered("yuling")) num = 1;
 						if (player.countUsed() >= player.maxHp + num) return false;
 					},
 				},
@@ -2474,7 +2553,6 @@ game.import("character", function () {
 			yunyou: "云游",
 			yunyou_info: "每两轮限一次，出牌阶段，你可以发现一张地图牌本局未使用过的地图牌并使用之。",
 			xuanzhen: "玄阵",
-			// xuanzhen_bg:'阵',
 			xuanzhen_info: "每轮限一次，当你成为一名其他角色的卡牌惟一目标时，你可以发现一张牌代替此牌。",
 			qingshu: "青书",
 			qingshu_info: "结束阶段，你可以令一名角色永久获得一个你使用过且不是当前地图的地图牌效果（每个地图最多发动一次）。",
@@ -2523,7 +2601,6 @@ game.import("character", function () {
 			shishui_info: "锁定技，每当你使用一张红色牌，你令目标失去1点体力。",
 			duhun: "渡魂",
 			duhun_info: "濒死阶段，你可以与一名体力值不超过你的体力上限的角色拼点，若你赢，你失去1点体力上限并与该角色交换体力值；若你没赢，你立即死亡。",
-			duhun_info_alter: "濒死阶段，你可以与一名体力值不超过你的体力上限的角色拼点，若你赢，你失去1点体力上限并将体力值回复至与该角色相同；若你没赢，你立即死亡。",
 			chizhen: "驰阵",
 			chizhen_info: "出牌阶段开始时，你可以摸X张牌并弃置X张牌，若你弃置了【杀】，可以视为使用一张决斗（X为你已损失的体力值且至少为1）。",
 			xidie: "戏蝶",
@@ -2552,13 +2629,11 @@ game.import("character", function () {
 			yuehua_info: "每当你于回合外使用、打出或弃置红色牌，你可以摸一张牌。",
 			xuelu: "血戮",
 			xuelu_info: "结束阶段，若你已受伤，你可以弃置一张红色牌并对一名其他角色造成1点火焰伤害；若你已损失体力值不少于3，改为造成2点火焰伤害。",
-			xuelu_info_alter: "结束阶段，若你已受伤，你可以弃置一张红色牌并对一名其他角色造成1点火焰伤害。",
 			fanshi: "反噬",
 			fanshi_info: "锁定技，弃牌阶段结束时，若你本回合内造成过伤害，你失去1点体力并摸一张牌。",
 			shahun: "煞魂",
 			shahun2: "煞魂",
 			shahun_info: "限定技，濒死阶段，你可以复原武将牌，弃置所有牌并摸三张牌，然后将体力回复至1；若如此做，你失去技能〖反噬〗，获得技能〖绝境〗，并于两回合后立即死亡。",
-			shahun_info_alter: "限定技，濒死阶段，你可以复原武将牌，弃置所有牌并摸三张牌，然后将体力回复至1；若如此做，你失去技能〖反噬〗，获得技能〖绝境〗，并于两回合后立即死亡。",
 
 			yanjia: "偃甲",
 			yanjia_info: "出牌阶段，你可以将两张非特殊装备牌合成为一张强化装备。",
@@ -2589,7 +2664,6 @@ game.import("character", function () {
 			zhaolu_info: "锁定技，每隔X回合，你失去1点体力上限，每当你受到1点伤害或有人死亡，视为减少两个回合，X为现存角色数且至多为5。",
 			jiehuo_info: "限定技，出牌阶段，你可以对一名其他角色造成2点火焰伤害，然后死亡。",
 			yuling_info: "锁定技，你没有摸牌和弃牌阶段，你的手牌数始终为5，你在一个出牌阶段最多使用X+2张牌，X为你的体力上限。",
-			yuling_info_alter: "锁定技，你没有摸牌和弃牌阶段，你的手牌数始终为5，你在一个出牌阶段最多使用X+1张牌，X为你的体力上限。",
 		},
 	};
 });

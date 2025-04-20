@@ -37,9 +37,7 @@ game.import("card", function () {
 							return _status.connectMode || get.name(card, target) == "du";
 						}, "h")
 					)
-						target
-							.chooseToDiscard("h", { name: "du" }, "是否弃置一张【毒】？（不失去体力）")
-							.set("ai", () => 1);
+						target.chooseToDiscard("h", { name: "du" }, "是否弃置一张【毒】？（不失去体力）").set("ai", () => 1);
 				},
 				ai: {
 					order: 2,
@@ -71,10 +69,7 @@ game.import("card", function () {
 						player.showCards(event.show_card);
 						target
 							.chooseControl()
-							.set("choiceList", [
-								`令${str}获得${get.translation(event.show_card)}`,
-								`受到${str}造成的${event.baseDamage + event.extraDamage}点伤害`,
-							])
+							.set("choiceList", [`令${str}获得${get.translation(event.show_card)}`, `受到${str}造成的${event.baseDamage + event.extraDamage}点伤害`])
 							.set("ai", function () {
 								var evt = _status.event.getParent(),
 									player = evt.target,
@@ -83,10 +78,7 @@ game.import("card", function () {
 								if (get.damageEffect(player, source, player) > 0) return 1;
 								if (get.attitude(player, source) * get.value(card, source) >= 0) return 0;
 								if (card.name == "tao") return 1;
-								return get.value(card, player) >
-									6 + (Math.max(player.maxHp, 3) - player.hp) * 1.5
-									? 1
-									: 0;
+								return get.value(card, player) > 6 + (Math.max(player.maxHp, 3) - player.hp) * 1.5 ? 1 : 0;
 							});
 					} else event.finish();
 					"step 2";
@@ -118,7 +110,7 @@ game.import("card", function () {
 					const { target } = event;
 					if (!target.countGainableCards(player, "hej")) return;
 					const { result } = await player.gainPlayerCard(target, "hej", true, [1, 2]);
-					if (result.bool && target.isIn()) {
+					if (result?.bool && result?.cards?.length && target.isIn()) {
 						const num = result.cards.length,
 							he = player.getCards("he");
 						if (!he.length) return;
@@ -197,13 +189,7 @@ game.import("card", function () {
 							var cards = target.getCards("e"),
 								js = target.getCards("j");
 							var val = get.value(cards, target);
-							for (var card of js)
-								val -= get.effect(
-									target,
-									card.viewAs ? { name: card.viewAs } : card,
-									target,
-									player
-								);
+							for (var card of js) val -= get.effect(target, card.viewAs ? { name: card.viewAs } : card, target, player);
 							return -val;
 						},
 					},
@@ -371,19 +357,11 @@ game.import("card", function () {
 				direct: true,
 				equipSkill: true,
 				filter(event, player) {
-					return (
-						event.card &&
-						event.card.name == "sha" &&
-						event.getParent().name == "sha" &&
-						player.isDamaged() &&
-						player.countCards("h") > 0
-					);
+					return event.card && event.card.name == "sha" && event.getParent().name == "sha" && player.isDamaged() && player.countCards("h") > 0;
 				},
 				content() {
 					"step 0";
-					player
-						.chooseToDiscard("h", get.prompt("yitianjian"), "弃置一张手牌并回复1点体力")
-						.set("ai", (card) => 7 - get.value(card)).logSkill = "yitianjian";
+					player.chooseToDiscard("h", get.prompt("yitianjian"), "弃置一张手牌并回复1点体力").set("ai", card => 7 - get.value(card)).logSkill = "yitianjian";
 					"step 1";
 					if (result.bool) player.recover();
 				},
@@ -501,11 +479,14 @@ game.import("card", function () {
 				trigger: { player: "equipAfter" },
 				forced: true,
 				equipSkill: true,
-				filter(event, player){
-					if(!event.card || event.card.name != "qixingbaodao") return false;
-					return event.card?.cards.length > 0 && player.hasCard(card => {
-						return !event.card.cards.includes(card) && lib.filter.cardDiscardable(card, player, "qixingbaodao");
-					}, "ej");
+				filter(event, player) {
+					if (!event.card || event.card.name != "qixingbaodao") return false;
+					return (
+						event.card?.cards.length > 0 &&
+						player.hasCard(card => {
+							return !event.card.cards.includes(card) && lib.filter.cardDiscardable(card, player, "qixingbaodao");
+						}, "ej")
+					);
 				},
 				async content(event, trigger, player) {
 					const cards = player.getCards("ej", card => {
@@ -517,13 +498,7 @@ game.import("card", function () {
 			g_du: {
 				trigger: {
 					player: ["loseAfter", "compare"],
-					global: [
-						"equipAfter",
-						"addJudgeAfter",
-						"gainAfter",
-						"loseAsyncAfter",
-						"addToExpansionAfter",
-					],
+					global: ["equipAfter", "addJudgeAfter", "gainAfter", "loseAsyncAfter", "addToExpansionAfter"],
 					target: "compare",
 				},
 				cardSkill: true,
@@ -550,10 +525,7 @@ game.import("card", function () {
 					}
 					return true;
 				},
-				whiteListFilter: [
-					(event) => event.getParent().name == "g_du_give",
-					(event) => event.getParent(3).name == "guaguliaodu",
-				],
+				whiteListFilter: [event => event.getParent().name == "g_du_give", event => event.getParent(3).name == "guaguliaodu"],
 				forced: true,
 				popup: false,
 				content() {
@@ -623,17 +595,12 @@ game.import("card", function () {
 						prompt2: "将本次获得的【毒】交给其他角色",
 						ai1(card) {
 							var player = get.player();
-							if (
-								["usedu", "keepdu"].some((tag) => player.hasSkillTag(tag)) ||
-								get.effect(player, { name: "losehp" }, player, player) > 0
-							)
-								return 0;
+							if (["usedu", "keepdu"].some(tag => player.hasSkillTag(tag)) || get.effect(player, { name: "losehp" }, player, player) > 0) return 0;
 							if (!ui.selected.cards.length) return 1;
 							return 0;
 						},
 						ai2(target) {
-							if (["usedu", "keepdu"].some((tag) => target.hasSkillTag(tag)))
-								return get.attitude(_status.event.player, target) - 0.01;
+							if (["usedu", "keepdu"].some(tag => target.hasSkillTag(tag))) return get.attitude(_status.event.player, target) - 0.01;
 							return -get.attitude(_status.event.player, target) + 0.01;
 						},
 					});
@@ -674,7 +641,7 @@ game.import("card", function () {
 					}
 					player.showCards(
 						cards,
-						`${get.translation(player)}对${((targets) => {
+						`${get.translation(player)}对${(targets => {
 							if (get.itemtype(targets) == "player") targets = [targets];
 							if (targets[0] != player) return get.translation(targets);
 							var selfTargets = targets.slice();
@@ -696,30 +663,16 @@ game.import("card", function () {
 			_gifting: {
 				enable: "phaseUse",
 				forceLoad: true,
-				filter: (event, player) =>
-					player.hasCard(
-						(card) => lib.skill._gifting.filterCard(card, player),
-						lib.skill._gifting.position
-					),
-				filterCard: (card, player) =>
-					game.hasPlayer((current) => player.canGift(card, current, true)),
-				filterTarget: (card, player, target) =>
-					ui.selected.cards.every((value) => player.canGift(value, target, true)),
+				filter: (event, player) => player.hasCard(card => lib.skill._gifting.filterCard(card, player), lib.skill._gifting.position),
+				filterCard: (card, player) => game.hasPlayer(current => player.canGift(card, current, true)),
+				filterTarget: (card, player, target) => ui.selected.cards.every(value => player.canGift(value, target, true)),
 				position: "he",
 				discard: false,
 				lose: false,
 				delay: false,
-				check: (card) => {
+				check: card => {
 					const player = _status.event.player;
-					if (
-						game.hasPlayer(
-							(current) =>
-								player.canGift(card, current, true) &&
-								!current.refuseGifts(card, player) &&
-								get.effect(current, card, player, player) > 0
-						)
-					)
-						return 2;
+					if (game.hasPlayer(current => player.canGift(card, current, true) && !current.refuseGifts(card, player) && get.effect(current, card, player, player) > 0)) return 2;
 					if (!player.needsToDiscard() && get.position(card) == "h") return 0;
 					return 1 + Math.random();
 				},
@@ -728,30 +681,11 @@ game.import("card", function () {
 					player.gift(cards, target);
 				},
 				ai: {
-					order: (item, player) =>
-						player.hasCard(
-							(card) =>
-								game.hasPlayer(
-									(current) =>
-										player.canGift(card, current, true) &&
-										!current.refuseGifts(card, player) &&
-										get.effect(current, card, player, player) > 0
-								),
-							"h"
-						)
-							? 7
-							: 0.51,
+					order: (item, player) => (player.hasCard(card => game.hasPlayer(current => player.canGift(card, current, true) && !current.refuseGifts(card, player) && get.effect(current, card, player, player) > 0), "h") ? 7 : 0.51),
 					result: {
 						target: (player, target) => {
-							const result = ui.selected.cards.map((value) =>
-								player.getGiftAIResultTarget(value, target)
-							);
-							return (
-								result.reduce(
-									(previousValue, currentValue) => previousValue + currentValue,
-									0
-								) / result.length
-							);
+							const result = ui.selected.cards.map(value => player.getGiftAIResultTarget(value, target));
+							return result.reduce((previousValue, currentValue) => previousValue + currentValue, 0) / result.length;
 						},
 					},
 				},
@@ -807,36 +741,28 @@ game.import("card", function () {
 		translate: {
 			gifts_tag: "赠",
 			du: "毒",
-			du_info:
-				"①当此牌正面向上离开你的手牌区，或作为你的拼点牌而亮出时，你失去1点体力。②当你因摸牌或分发起始手牌而获得【毒】后，你可展示之并交给其他角色（不触发〖毒①〗）。",
+			du_info: "①当此牌正面向上离开你的手牌区，或作为你的拼点牌而亮出时，你失去1点体力。②当你因摸牌或分发起始手牌而获得【毒】后，你可展示之并交给其他角色（不触发〖毒①〗）。",
 			g_du: "毒",
 			g_du_give: "赠毒",
 			du_given: "已分配",
 			guaguliaodu: "刮骨疗毒",
-			guaguliaodu_info:
-				"出牌阶段，对一名已受伤的角色使用。目标角色回复1点体力，然后其可以弃置一张【毒】（不触发〖毒①〗失去体力的效果）。",
+			guaguliaodu_info: "出牌阶段，对一名已受伤的角色使用。目标角色回复1点体力，然后其可以弃置一张【毒】（不触发〖毒①〗失去体力的效果）。",
 			chenghuodajie: "趁火打劫",
-			chenghuodajie_info:
-				"出牌阶段，对一名有手牌的其他角色使用。你展示其一张手牌，然后令其选择一项：①将此牌交给你。②你对其造成1点伤害。",
+			chenghuodajie_info: "出牌阶段，对一名有手牌的其他角色使用。你展示其一张手牌，然后令其选择一项：①将此牌交给你。②你对其造成1点伤害。",
 			tuixinzhifu: "推心置腹",
-			tuixinzhifu_info:
-				"出牌阶段，对一名距离为1的其他角色使用。你获得其区域内的至多两张牌，然后交给其等量的牌。",
+			tuixinzhifu_info: "出牌阶段，对一名距离为1的其他角色使用。你获得其区域内的至多两张牌，然后交给其等量的牌。",
 			yitianjian: "倚天剑",
-			yitianjian_info:
-				"当你因执行【杀】的效果而造成伤害后，若你已受伤，则你可弃置一张手牌，然后回复1点体力。",
+			yitianjian_info: "当你因执行【杀】的效果而造成伤害后，若你已受伤，则你可弃置一张手牌，然后回复1点体力。",
 			qixingbaodao: "七星宝刀",
 			qixingbaodao_info: "锁定技。当此牌进入你的装备区后，你弃置装备区和判定区内的所有其他牌。",
 			duanjian: "断剑",
 			duanjian_info: "这是一把坏掉的武器……",
 			duanjian_append: '<span class="text" style="font-family: yuanli">不要因为手快而装给自己。</span>',
 			serafuku: "水手服",
-			serafuku_info:
-				"锁定技。当你成为【杀】的目标后，若你的性别包含男性，则你进行判定：若结果为黑色，则此牌对你的伤害值基数+1。",
-			serafuku_append:
-				'<span class="text" style="font-family: yuanli">セーラー服だからです、<br>結論！ </span>',
+			serafuku_info: "锁定技。当你成为【杀】的目标后，若你的性别包含男性，则你进行判定：若结果为黑色，则此牌对你的伤害值基数+1。",
+			serafuku_append: '<span class="text" style="font-family: yuanli">セーラー服だからです、<br>結論！ </span>',
 			yinfengyi: "引蜂衣",
-			yinfengyi_info:
-				"锁定技。当你受到渠道为锦囊牌的伤害时，此伤害+1。当你因〖毒①〗而失去体力时，失去体力的量值+1。",
+			yinfengyi_info: "锁定技。当你受到渠道为锦囊牌的伤害时，此伤害+1。当你因〖毒①〗而失去体力时，失去体力的量值+1。",
 			yonglv: "庸驴",
 			yonglv_info: "锁定技。①你至其他角色的距离-1。②其他角色至你的距离视为1。",
 			yonglv_append: '<span class="text" style="font-family: yuanli">它旁边的就是王仲宣。</span>',

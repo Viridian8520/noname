@@ -19,6 +19,7 @@ import {
 import { ui, game, get, ai, lib, _status } from "../../../../../noname.js";
 import { nonameInitialized } from "../../../../util/index.js";
 import security from "../../../../util/security.js";
+import { Character } from "../../../../library/element/character.js";
 
 export const extensionMenu = function (connectMenu) {
 	if (connectMenu) return;
@@ -1034,7 +1035,13 @@ export const extensionMenu = function (connectMenu) {
 					}
 				}
 				if(!list.length){
-					if(!lib.character["noname_sunce"]) lib.character["noname_sunce"] = ["male", "wu", 4, ["jiang"], ["unseen"]];
+					if(!lib.character["noname_sunce"]) lib.character["noname_sunce"] = new Character({
+						sex: "male",
+						group: "wu",
+						hp: 4,
+						skills: ["jiang"],
+						isUnseen: true,
+					});
 					if(!lib.translate["noname_sunce"]) lib.translate["noname_sunce"] = "孙策";
 					list.push(["noname_sunce", lib.translate["noname_sunce"]]);
 				}
@@ -2020,13 +2027,32 @@ export const extensionMenu = function (connectMenu) {
 					var info = page.content.pack.skill[this.link];
 					container.code =
 						"skill=" +
-						get.stringify(
-							Object.defineProperty({ ...info }, "_priority", {
+						// 需要考虑getter和setter以及Symbol
+						(() => {
+							const obj = Object.defineProperty(get.copy(info), "_priority", {
 								enumerable: false,
 								writable: true,
 								configurable: true,
-							})
-						);
+							});
+							let str = "{\n";
+							const indent = "    ";
+							for (const key in obj) {
+								const descriptor = Object.getOwnPropertyDescriptor(obj, key);
+								if (descriptor?.get || descriptor?.set) {
+									if (descriptor.get) str += indent + get.stringify(descriptor.get, 1) + ",\n";
+									if (descriptor.set) str += indent + get.stringify(descriptor.set, 1) + ",\n";
+								}
+								else {
+									let keyString = (/[^a-zA-Z]/.test(key) ? `"${key}"` : key) + ": ";
+									str += indent + keyString + get.stringify(obj[key], 1) + ",\n";
+								}
+							}
+							Object.getOwnPropertySymbols(obj).forEach(symbol => {
+								str += `${indent}[${String(symbol)}]: ${get.stringify(obj[symbol], 1)},\n`;
+							});
+							str += "}";
+							return str;
+						})();
 					toggle.innerHTML = "编辑技能 <div>&gt;</div>";
 					editnode.innerHTML = "编辑技能";
 					editnode.classList.remove("disabled");
@@ -2178,7 +2204,13 @@ export const extensionMenu = function (connectMenu) {
 					}
 				}
 				if(!list.length){
-					if(!lib.character["noname_sunce"]) lib.character["noname_sunce"] = ["male", "wu", 4, ["jiang"], ["unseen"]];
+					if(!lib.character["noname_sunce"]) lib.character["noname_sunce"] = new Character({
+						sex: "male",
+						group: "wu",
+						hp: 4,
+						skills: ["jiang"],
+						isUnseen: true,
+					});
 					if(!lib.translate["noname_sunce"]) lib.translate["noname_sunce"] = "孙策";
 					list.push(["noname_sunce", lib.translate["noname_sunce"]]);
 				}
@@ -2253,13 +2285,32 @@ export const extensionMenu = function (connectMenu) {
 					cancelSkillButton.style.display = "none";
 					container.code =
 						"skill=" +
-						get.stringify(
-							Object.defineProperty({ ...lib.skill[skillopt.value] }, "_priority", {
+						// 需要考虑getter和setter以及Symbol
+						(() => {
+							const obj = Object.defineProperty(get.copy(lib.skill[skillopt.value]), "_priority", {
 								enumerable: false,
 								writable: true,
 								configurable: true,
-							})
-						);
+							});
+							let str = "{\n";
+							const indent = "    ";
+							for (const key in obj) {
+								const descriptor = Object.getOwnPropertyDescriptor(obj, key);
+								if (descriptor?.get || descriptor?.set) {
+									if (descriptor.get) str += indent + get.stringify(descriptor.get, 1) + ",\n";
+									if (descriptor.set) str += indent + get.stringify(descriptor.set, 1) + ",\n";
+								}
+								else {
+									let keyString = (/[^a-zA-Z]/.test(key) ? `"${key}"` : key) + ": ";
+									str += indent + keyString + get.stringify(obj[key], 1) + ",\n";
+								}
+							}
+							Object.getOwnPropertySymbols(obj).forEach(symbol => {
+								str += `${indent}[${String(symbol)}]: ${get.stringify(obj[symbol], 1)},\n`;
+							});
+							str += "}";
+							return str;
+						})();
 					editbutton.onclick.call(editbutton);
 					if (lib.translate[skillopt.value + "_info"]) {
 						newSkill.querySelector("input.new_description").value =

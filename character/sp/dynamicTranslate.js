@@ -22,8 +22,8 @@ const dynamicTranslates = {
 		return str;
 	},
 	youlong(player) {
-		if (player.storage.youlong) return '转换技，阴，每轮限一次，你可以废除你的一个装备栏，视为使用一张未以此法使用过的普通锦囊牌；<span class="bluetext">阳，每轮限一次，你可以废除你的一个装备栏，视为使用一张未以此法使用过的基本牌。</span>';
-		return '转换技，<span class="bluetext">阴，每轮限一次，你可以废除你的一个装备栏，视为使用一张未以此法使用过的普通锦囊牌；</span>阳，每轮限一次，你可以废除你的一个装备栏，视为使用一张未以此法使用过的基本牌。';
+		if (player.storage.youlong) return '转换技，每轮每项各限一次，你可以废除你的一个装备栏，视为使用一张未以此法使用过的：阴：普通锦囊牌；<span class="bluetext">阳：基本牌。</span>';
+		return '转换技，每轮每项各限一次，你可以废除你的一个装备栏，视为使用一张未以此法使用过的：<span class="bluetext">阴：普通锦囊牌；</span>阳：基本牌。';
 	},
 	luochong(player) {
 		var storage = player.getStorage("luochong");

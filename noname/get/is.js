@@ -7,6 +7,14 @@ import { get } from "./index.js";
 
 export class Is {
 	/**
+	 * @param { string } str
+	 * @returns
+	 */
+	emotion(str) {
+		let regExp = /^<img\b(?=[^>]*\bsrc="##assetURL##image\/emotion\/([^"\/]+)\/([^"\/]+)\.gif")(?=[^>]*\bwidth="50")(?=[^>]*\bheight="50")(?!.*\b(?!src|width|height)\w+=)[^>]*\/?>$/i;
+		return regExp.test(str);
+	}
+	/**
 	 * 判断是否为进攻坐骑
 	 * @param { Card | VCard } card
 	 * @param { false | Player } [player]
@@ -341,13 +349,6 @@ export class Is {
 	altered(skillName) {
 		return false;
 	}
-	/*
-	 skill=>{
-	 return false;
-	 // if(_status.connectMode) return true;
-	 // return !lib.config.vintageSkills.includes(skill);
-	 },
-	 */
 	/**
 	 * @param { any } obj
 	 * @returns { boolean }

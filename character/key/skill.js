@@ -1172,19 +1172,17 @@ const skills = {
 		},
 		ignoreMod: true,
 		position: "hes",
+		log: false,
 		precontent() {
 			player.logSkill("misuzu_nongyin");
 			player.$throw(event.result.cards);
 			player.addJudge({ name: "lebu" }, event.result.cards);
 			event.result.card.cards = [];
 			event.result.cards = [];
-			delete event.result.skill;
 			delete event.result.card.suit;
 			delete event.result.card.number;
 		},
-		ai: {
-			result: 0.5,
-		},
+		ai: { result: 0.5 },
 	},
 	misuzu_zhongxing: {
 		trigger: {
@@ -1378,7 +1376,7 @@ const skills = {
 						var player = _status.event.player;
 						var target = _status.event.getParent().player;
 						if (get.attitude(player, target) > 0) {
-							if (!target.hasShan() && card.name == "shan") return 10;
+							if (!target.hasShan("all") && card.name == "shan") return 10;
 							if (get.type(card) == "equip" && !get.cardtag(card, "gifts") && target.hasUseTarget(card)) return 10 - get.value(card);
 							return 6 - get.value(card);
 						}
@@ -2598,8 +2596,6 @@ const skills = {
 			}
 			"step 5";
 			if (event.index2 != 2) {
-				//if(event.target1) event.target1.lose(card,ui.special);
-				//else card.goto(ui.special);
 				event.way = result.control;
 			} else {
 				event.target2 = result.targets[0];
@@ -2784,7 +2780,6 @@ const skills = {
 							if (evt.gaintag_map[i].includes("fuuko_chuanyuan")) return true;
 						}
 					});
-					//return false;
 				},
 				content() {
 					trigger.addCount = false;
@@ -3322,7 +3317,6 @@ const skills = {
 				}
 			}
 			"step 2";
-			//player.recover();
 			player.draw();
 		},
 		content3() {
@@ -3395,7 +3389,6 @@ const skills = {
 					event.color = color;
 					event.goto(1);
 				} else if (color == event.color) event.goto(1);
-				//player.draw();
 			}
 			"step 4";
 			if (event.count > 0) player.recover(event.count);
@@ -4297,7 +4290,6 @@ const skills = {
 			var chooseButton = function () {
 				lib.skill.yufeng.$playFlappyBird(5, "小空飞天");
 			};
-			//event.switchToAuto=switchToAuto;
 			game.broadcastAll(createDialog, player, event.videoId);
 			if (event.isMine()) {
 				chooseButton();
@@ -4906,11 +4898,11 @@ const skills = {
 							nature: links[0][3],
 							isCard: true,
 						},
+						log: false,
 						popname: true,
 						precontent() {
 							player.logSkill("chihaya_youfeng");
 							player.gainMaxHp();
-							delete event.result.skill;
 							player.addTempSkill("chihaya_youfeng_" + (player.storage.chihaya_youfeng || false), "roundStart");
 							player.changeZhuanhuanji("chihaya_youfeng");
 						},
@@ -4931,10 +4923,10 @@ const skills = {
 						isCard: true,
 					},
 					popname: true,
+					log: false,
 					precontent() {
 						player.logSkill("chihaya_youfeng");
 						player.disableEquip(lib.skill.chihaya_youfeng_backup.equip);
-						delete event.result.skill;
 						player.addTempSkill("chihaya_youfeng_" + (player.storage.chihaya_youfeng || false), "roundStart");
 						player.changeZhuanhuanji("chihaya_youfeng");
 					},
@@ -4961,9 +4953,11 @@ const skills = {
 				player: 1,
 			},
 		},
+		subSkill: {
+			true: { charlotte: true },
+			false: { charlotte: true },
+		},
 	},
-	chihaya_youfeng_true: { charlotte: true },
-	chihaya_youfeng_false: { charlotte: true },
 	//七濑留美
 	rumi_shuwu: {
 		mod: {
@@ -6106,8 +6100,8 @@ const skills = {
 						return false;
 					},
 					selectCard: -1,
+					log: false,
 					precontent() {
-						delete event.result.skill;
 						var name = lib.skill.kotori_huazhan_backup.markname;
 						if (!player.storage.kotori_huazhan2) player.storage.kotori_huazhan2 = [];
 						player.storage.kotori_huazhan2.push(name);
@@ -6337,12 +6331,10 @@ const skills = {
 	godan_yuanyi: {
 		trigger: { player: "phaseBegin" },
 		forced: true,
-		content() {
-			"step 0";
-			var num = game.roundNumber;
-			if (num && typeof num == "number") player.draw(Math.min(3, num));
-			"step 1";
-			trigger.phaseList.splice(trigger.num, 0, "phaseUse|godan_yuanyi");
+		async content(event, trigger, player) {
+			const num = game.roundNumber;
+			if (num && typeof num == "number") await player.draw(Math.min(3, num));
+			trigger.phaseList.splice(trigger.num, 0, `phaseUse|${event.name}`);
 		},
 	},
 	godan_feiqu: {
@@ -6852,7 +6844,7 @@ const skills = {
 	shizuru_nianli: {
 		enable: "chooseToUse",
 		charlotte: true,
-		prompt: "展示一张♦/♣/♥/♠手牌，然后视为使用一张雷杀/闪/桃/无懈可击",
+		prompt: "展示一张♦/♣/♥/♠手牌，然后视为使用一张雷【杀】/【闪】/【桃】/【无懈可击】",
 		viewAs(cards, player) {
 			var name = false;
 			var nature = null;
@@ -6927,13 +6919,14 @@ const skills = {
 			if (filter({ name: "wuxie" }, player, event) && player.countCards("h", { suit: "spade" })) return true;
 			return false;
 		},
+		log: false,
 		precontent() {
 			player.logSkill("shizuru_nianli");
+			player.addTempSkill("shizuru_nianli_clear");
 			player.addTempSkill("shizuru_nianli_round", "roundStart");
 			player.showCards(get.translation(player) + "发动了【念力】", event.result.cards.slice(0));
 			event.result.card.cards = [];
 			event.result.cards = [];
-			delete event.result.skill;
 			delete event.result.card.suit;
 			delete event.result.card.number;
 			event.getParent().addCount = false;
@@ -6997,13 +6990,14 @@ const skills = {
 			if (name == "tao") return player.countCards("h", { suit: "heart" }) > 0 && !player.hasSkill("shizuru_nianli_round");
 			return false;
 		},
-		group: "shizuru_nianli_clear",
 		subSkill: {
 			round: {
+				charlotte: true,
 				mark: true,
 				intro: { content: "本轮已发动" },
 			},
 			clear: {
+				charlotte: true,
 				trigger: { player: "useCardAfter" },
 				lastDo: true,
 				silent: true,
@@ -8259,6 +8253,7 @@ const skills = {
 		filter(event, player) {
 			return player != event.player && event.targets && event.targets.includes(player) && (_status.connectMode || player.hasSha());
 		},
+		clearTime: true,
 		content() {
 			"step 0";
 			player.chooseToUse({
@@ -10427,7 +10422,6 @@ const skills = {
 				player.chooseControl(list).set("prompt", "选择获得一个技能");
 			}
 			"step 4";
-			//player.addSkills(result.control,get.groupnature(event.temp.group)||'key');
 			player.addSkills(result.control);
 			var info = get.info(result.control);
 			if (info.zhuSkill) {

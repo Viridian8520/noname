@@ -179,7 +179,7 @@ export class Library {
 		xiaojiu_emotion: 20,
 		biexiao_emotion: 18,
 		chaijun_emotion: 43,
-		huangdou_emotion: 20,
+		huangdou_emotion: 50,
 		maoshu_emotion: 18,
 	};
 	animate = {
@@ -232,6 +232,7 @@ export class Library {
 	 *  observing:[],
 	 *  torespond:{},
 	 *  torespondtimeout:{},
+	 *  waitForResult: Record<number | string, ((result: any) => void)[]>,
 	 * } }
 	 */
 	node;
@@ -390,7 +391,7 @@ export class Library {
 														return ai - get.value(cardx);
 													} else if (get.attitude(player, source) <= 0) return 0;
 													return 5 - get.value(cardx);
-												},
+											  },
 								});
 								if (!game.online) return;
 								_status.event._resultid = id;
@@ -667,6 +668,7 @@ export class Library {
 	actualCardName = new Map([
 		["挟令", "挟天子以令诸侯"],
 		["霹雳投石车", "霹雳车"],
+		["金箍棒", "如意金箍棒"],
 	]);
 	characterDialogGroup = {
 		收藏: function (name, capt) {
@@ -5140,6 +5142,7 @@ export class Library {
 					item: {
 						off: "不限制",
 						group: "按势力筛选",
+						3: "三",
 						4: "四",
 						6: "六",
 						8: "八",
@@ -5740,6 +5743,7 @@ export class Library {
 					item: {
 						off: "不限制",
 						group: "按势力筛选",
+						3: "三",
 						4: "四",
 						6: "六",
 						8: "八",
@@ -8325,7 +8329,7 @@ export class Library {
 					for (const content of item) {
 						yield content;
 					}
-				})()
+			  })()
 			: Promise.resolve(item);
 	}
 	gnc = {
@@ -8738,7 +8742,6 @@ export class Library {
 			const characters = lib.config.all.characters.slice(0);
 			characters.remove("standard");
 			characters.remove("old");
-			game.saveConfig("vintageSkills", vintage);
 			game.saveConfig("favouriteCharacter", favs);
 			game.saveConfig("favouriteMode", favmodes);
 			game.saveConfig("theme", "simple");
@@ -10128,6 +10131,7 @@ export class Library {
 				var mod2 = game.checkMod(card, player, "unchanged", "cardEnabled2", player);
 				if (mod2 != "unchanged") return mod2;
 			}
+			card = get.autoViewAs(card);
 			var mod = game.checkMod(card, player, target, "unchanged", "cardSavable", player);
 			if (mod != "unchanged") return mod;
 			var savable = get.info(card).savable;
@@ -10325,17 +10329,19 @@ export class Library {
 		cardRespondable: function (card, player, event) {
 			event = event || _status.event;
 			if (event.name != "chooseToRespond") return true;
+			if (player == undefined) player = _status.event.player;
+			if (!player) return false;
 			var source = event.getParent().player;
 			if (source && source != player) {
 				if (source.hasSkillTag("norespond", false, [card, player, event], true)) {
 					return false;
 				}
 			}
-			if (player == undefined) player = _status.event.player;
 			if (get.itemtype(card) == "card") {
 				var mod2 = game.checkMod(card, player, event, "unchanged", "cardEnabled2", player);
 				if (mod2 != "unchanged") return mod2;
 			}
+			card = get.autoViewAs(card);
 			var mod = game.checkMod(card, player, "unchanged", "cardRespondable", player);
 			if (mod != "unchanged") return mod;
 			return true;
@@ -10586,10 +10592,10 @@ export class Library {
 			return target.canAddJudge(card);
 		},
 		autoRespondSha: function () {
-			return !this.player.hasSha(true);
+			return !this.player.hasSha("respond");
 		},
 		autoRespondShan: function () {
-			return !this.player.hasShan();
+			return !this.player.hasShan("respond");
 		},
 		wuxieSwap: function (event) {
 			if (event.type == "wuxie") {
@@ -10930,7 +10936,7 @@ export class Library {
 								storage: {
 									stratagem_buffed: 1,
 								},
-							})
+						  })
 						: new lib.element.VCard();
 				}
 				return null;
@@ -13385,6 +13391,9 @@ export class Library {
 			cancel: function (id) {
 				if (_status.event._parent_id == id) {
 					ui.click.cancel();
+					if (_status.event.getParent().name == "chooseToUse" && _status.event.getParent().id == id) {
+						_status.event.getParent().cancel(null, null, false);
+					}
 				}
 				if (_status.event.id == id) {
 					if (_status.event._backup) ui.click.cancel();
@@ -14097,6 +14106,13 @@ export class Library {
 			},
 		],
 		[
+			"韩氏",
+			{
+				color: "#ffff99",
+				nature: "firemm",
+			},
+		],
+		[
 			"幻",
 			{
 				color: "#ffff99",
@@ -14185,6 +14201,21 @@ export class Library {
 				 * @returns {string}
 				 */
 				getSpan: () => `${get.prefixSpan("TW")}${get.prefixSpan("谋")}`,
+			},
+		],
+		[
+			"闪",
+			{
+				color: "#00bfff",
+				nature: "watermm",
+			},
+		],
+		[
+			"ddd",
+			{
+				showName: "3D",
+				color: "#edb5b5",
+				nature: "watermm",
 			},
 		],
 	]);

@@ -319,7 +319,10 @@ const skills = {
 					}
 					player.popup("整肃成功", "wood");
 					game.log(player, "整肃成功");
-					var list = player.getStorage("houfeng_share").filter(i => i[1] == event.indexedData && i[0].isIn()).map(i => i[0]);
+					var list = player
+						.getStorage("houfeng_share")
+						.filter(i => i[1] == event.indexedData && i[0].isIn())
+						.map(i => i[0]);
 					list.unshift(player);
 					let control;
 					if (list.some(i => i.isDamaged())) {
@@ -337,8 +340,7 @@ const skills = {
 							})
 							.set("goon", [num1, num2])
 							.forResultControl();
-					}
-					else control = "摸两张牌";
+					} else control = "摸两张牌";
 					if (control === "摸两张牌") await game.asyncDraw(list, 2);
 					else {
 						for (const target of list) await target.recover();
@@ -1302,7 +1304,7 @@ const skills = {
 		},
 		ai: {
 			combo: "spxizhan",
-			halfneg: true
+			halfneg: true,
 		},
 	},
 	spxizhan: {
@@ -1317,31 +1319,35 @@ const skills = {
 			return "spxizhan" + [null, "spade", null, "heart", "club", "diamond"].indexOf(suit) + ".mp3";
 		},
 		async cost(event, trigger, player) {
-			const result = await player.chooseToDiscard("he", "嬉战：弃置一张牌或失去1点体力", "根据弃置的牌对" + get.translation(trigger.player) + "视为使用如下牌：<br>♠，其使用【酒】；♥，你使用【无中生有】<br>♣，对其使用【铁索连环】；♦：对其使用火【杀】").set("ai", function (card) {
-				var player = _status.event.player,
-					target = _status.event.getTrigger().player;
-				var suit = get.suit(card, player),
-					list;
-				switch (suit) {
-					case "spade":
-						list = [{ name: "jiu" }, target, target];
-						break;
-					case "heart":
-						list = [{ name: "wuzhong" }, player, player];
-						break;
-					case "club":
-						list = [{ name: "tiesuo" }, player, target];
-						break;
-					case "diamond":
-						list = [{ name: "sha", nature: "fire" }, player, target];
-						break;
-				}
-				list[0].isCard = true;
-				var eff = 0;
-				if (list[1].canUse(list[0], list[2], false)) eff = get.effect(list[2], list[0], list[1], player);
-				if (eff >= 0 || suit == "club") eff = Math.max(eff, 5);
-				return eff * 1.5 - get.value(card);
-			}).set("chooseonly", true).forResult();
+			const result = await player
+				.chooseToDiscard("he", "嬉战：弃置一张牌或失去1点体力", "根据弃置的牌对" + get.translation(trigger.player) + "视为使用如下牌：<br>♠，其使用【酒】；♥，你使用【无中生有】<br>♣，对其使用【铁索连环】；♦：对其使用火【杀】")
+				.set("ai", function (card) {
+					var player = _status.event.player,
+						target = _status.event.getTrigger().player;
+					var suit = get.suit(card, player),
+						list;
+					switch (suit) {
+						case "spade":
+							list = [{ name: "jiu" }, target, target];
+							break;
+						case "heart":
+							list = [{ name: "wuzhong" }, player, player];
+							break;
+						case "club":
+							list = [{ name: "tiesuo" }, player, target];
+							break;
+						case "diamond":
+							list = [{ name: "sha", nature: "fire" }, player, target];
+							break;
+					}
+					list[0].isCard = true;
+					var eff = 0;
+					if (list[1].canUse(list[0], list[2], false)) eff = get.effect(list[2], list[0], list[1], player);
+					if (eff >= 0 || suit == "club") eff = Math.max(eff, 5);
+					return eff * 1.5 - get.value(card);
+				})
+				.set("chooseonly", true)
+				.forResult();
 			event.result = {
 				bool: true,
 				cards: result.cards || [],
@@ -1368,17 +1374,16 @@ const skills = {
 						break;
 					case "diamond":
 						if (player.canUse({ name: "sha", isCard: true, nature: "fire" }, target, false)) {
-							await player.useCard({ name: "sha", isCard: true, nature: "fire", }, target, false);
+							await player.useCard({ name: "sha", isCard: true, nature: "fire" }, target, false);
 						}
 						break;
 				}
-			}
-			else {
+			} else {
 				await player.loseHp();
 			}
 		},
 		ai: {
-			halfneg: true
+			halfneg: true,
 		},
 	},
 	//高览
@@ -1492,7 +1497,7 @@ const skills = {
 			"step 1";
 			if (result.bool) num += result.cards.length;
 			player.draw(num);
-			"step 2"
+			"step 2";
 			if (event.num > 2) player.loseHp();
 		},
 		mod: {
@@ -1560,9 +1565,9 @@ const skills = {
 		},
 		check(event, player) {
 			var card = {
-				name: "sha",
-				cards: event.cards.filterInD(),
-			},
+					name: "sha",
+					cards: event.cards.filterInD(),
+				},
 				target = event.source;
 			return !player.canUse(card, target, false) || get.effect(target, card, player, player) > 0;
 		},
@@ -1806,7 +1811,7 @@ const skills = {
 			if (cards.length) player.loseToDiscardpile(cards);
 		},
 		ai: {
-			combo: "yaohu"
+			combo: "yaohu",
 		},
 	},
 	yaohu: {
@@ -1870,7 +1875,7 @@ const skills = {
 			}
 		},
 		ai: {
-			combo: "jutu"
+			combo: "jutu",
 		},
 		intro: { content: "已选择了$势力" },
 		group: "yaohu_gain",
@@ -1919,13 +1924,10 @@ const skills = {
 					var target2 = result.targets[0];
 					player.line(target2, "green");
 					target
-						.chooseToUse(
-							function (card, player, event) {
-								if (get.name(card) != "sha") return false;
-								return lib.filter.filterCard.apply(this, arguments);
-							},
-							"对" + get.translation(target2) + "使用一张杀，否则交给其两张牌"
-						)
+						.chooseToUse(function (card, player, event) {
+							if (get.name(card) != "sha") return false;
+							return lib.filter.filterCard.apply(this, arguments);
+						}, "对" + get.translation(target2) + "使用一张杀，否则交给其两张牌")
 						.set("targetRequired", true)
 						.set("complexSelect", true)
 						.set("filterTarget", function (card, player, target) {
@@ -2779,13 +2781,8 @@ const skills = {
 					if (player.group != "wu" || !arg || !arg.card || !arg.card.storage || !arg.card.storage.dbchongjian) return false;
 					return true;
 				}
-				return (
-					player.group == "wu" &&
-					arg == "use" &&
-					player.hasCard(function (card) {
-						return get.type(card) == "equip";
-					}, "hes")
-				);
+				if (arg === "respond") return false;
+				return player.group == "wu" && player.hasCard({ type: "equip" }, "hes");
 			},
 			order(item, player) {
 				if (_status.event.type != "phase") return 1;
@@ -3992,7 +3989,7 @@ const skills = {
 			game.cardsGotoSpecial(get.cards(), "toRenku");
 		},
 		ai: {
-			combo: "spsongshu"
+			combo: "spsongshu",
 		},
 	},
 	spsongshu: {
@@ -4036,7 +4033,7 @@ const skills = {
 			},
 		},
 		ai: {
-			combo: "gebo"
+			combo: "gebo",
 		},
 	},
 	//张机
@@ -4077,7 +4074,7 @@ const skills = {
 			},
 		},
 		ai: {
-			combo: "binglun"
+			combo: "binglun",
 		},
 	},
 	xinliaoyi: {
@@ -5105,7 +5102,7 @@ const skills = {
 			player.storage.renku = true;
 		},
 		ai: {
-			combo: "shuchen"
+			combo: "shuchen",
 		},
 	},
 	shuchen: {
@@ -5126,7 +5123,7 @@ const skills = {
 			trigger.player.recover();
 		},
 		ai: {
-			combo: "yuanqing"
+			combo: "yuanqing",
 		},
 	},
 	hxrenshi: {
@@ -5526,7 +5523,7 @@ const skills = {
 					let list = player.getStorage("xunyi").concat([player]);
 					if (!list.includes(viewer)) return false;
 					let target = list.find(current => current != viewer);
-					if (!target || name == "damageEnd" && !target.countCards("he")) return false;
+					if (!target || (name == "damageEnd" && !target.countCards("he"))) return false;
 					return target.isIn() && target != event[name != "damageEnd" ? "player" : "source"];
 				},
 				logTarget(event, player, name) {
@@ -5632,13 +5629,10 @@ const skills = {
 		content() {
 			"step 0";
 			target
-				.chooseToUse(
-					function (card, player, event) {
-						if (get.name(card) != "sha") return false;
-						return lib.filter.filterCard.apply(this, arguments);
-					},
-					"引裾：对" + get.translation(player) + "使用一张杀，或跳过下回合的出牌阶段和弃牌阶段"
-				)
+				.chooseToUse(function (card, player, event) {
+					if (get.name(card) != "sha") return false;
+					return lib.filter.filterCard.apply(this, arguments);
+				}, "引裾：对" + get.translation(player) + "使用一张杀，或跳过下回合的出牌阶段和弃牌阶段")
 				.set("targetRequired", true)
 				.set("complexSelect", true)
 				.set("filterTarget", function (card, player, target) {
@@ -5820,16 +5814,14 @@ const skills = {
 			if (_status.connectMode && player.countCards("h") > 0) return true;
 			return player.hasSha() || player.hasUsableCard("juedou");
 		},
+		clearTime: true,
 		content() {
 			player
-				.chooseToUse(
-					function (card, player, event) {
-						var name = get.name(card);
-						if (name != "sha" && name != "juedou") return false;
-						return lib.filter.cardEnabled.apply(this, arguments);
-					},
-					"合击：是否对" + get.translation(trigger.targets[0]) + "使用一张【杀】或【决斗】？"
-				)
+				.chooseToUse(function (card, player, event) {
+					var name = get.name(card);
+					if (name != "sha" && name != "juedou") return false;
+					return lib.filter.cardEnabled.apply(this, arguments);
+				}, "合击：是否对" + get.translation(trigger.targets[0]) + "使用一张【杀】或【决斗】？")
 				.set("logSkill", "heji")
 				.set("complexSelect", true)
 				.set("filterTarget", function (card, player, target) {
@@ -5862,12 +5854,12 @@ const skills = {
 					return (
 						num +
 						0.6 *
-						(_status.event.name == "chooseToUse" &&
+							(_status.event.name == "chooseToUse" &&
 							player.hasHistory("useCard", function (evt) {
 								return evt.card.name == "sha" && evt.cards.length == 1;
 							})
-							? 1
-							: -1)
+								? 1
+								: -1)
 					);
 			},
 		},
@@ -6124,7 +6116,7 @@ const skills = {
 								target.countCards("h", function (card) {
 									return target.hasValueTarget(card) && get.effect(player, card, target, target) > 0;
 								}) *
-								Math.sqrt(target.countCards("h")))
+									Math.sqrt(target.countCards("h")))
 						);
 					return (
 						0.3 *
@@ -6132,13 +6124,14 @@ const skills = {
 							target.countCards("h", function (card) {
 								return target.hasValueTarget(card) && get.effect(player, card, target, target) > 0;
 							}) *
-							Math.sqrt(target.countCards("h")))
+								Math.sqrt(target.countCards("h")))
 					);
 				},
 			},
 		},
 		subSkill: {
 			draw: {
+				audio: "fyjianyu",
 				charlotte: true,
 				trigger: { global: "useCardToPlayer" },
 				filter(event, player) {

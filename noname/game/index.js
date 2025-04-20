@@ -1349,12 +1349,16 @@ export class Game extends GameCompatible {
 	countChoose(clear) {
 		if (_status.imchoosing) return;
 		_status.imchoosing = true;
+		let num;
+		let info = _status.event?.player?.forceCountChoose;
 		if (_status.connectMode && !_status.countDown) {
 			ui.timer.show();
-			let num;
-			//这么一大行都是为了祢衡
-			if (_status.event && _status.event.name == "chooseToUse" && _status.event.type == "phase" && _status.event.player && _status.event.player.forceCountChoose && typeof _status.event.player.forceCountChoose.phaseUse == "number") {
-				num = _status.event.player.forceCountChoose.phaseUse;
+			if (_status.event?.name == "chooseToUse" && _status.event.type == "phase" && typeof info?.phaseUse == "number") {
+				num = info.phaseUse;
+			} else if (typeof info?.[_status.event.name] == "number") {
+				num = info[_status.event.name];
+			} else if (typeof info?.default == "number") {
+				num = info.default;
 			} else if (_status.connectMode) {
 				num = lib.configOL.choose_timeout;
 			} else {
@@ -1374,9 +1378,7 @@ export class Game extends GameCompatible {
 					game.me.showTimer();
 				}
 			}
-		} else if (_status.event.player.forceCountChoose && _status.event.isMine() && !_status.countDown) {
-			let info = _status.event.player.forceCountChoose;
-			let num;
+		} else if (info && _status.event.isMine() && !_status.countDown) {
 			if (_status.event.name == "chooseToUse" && _status.event.type == "phase" && typeof info.phaseUse == "number") {
 				num = info.phaseUse;
 			} else if (typeof info[_status.event.name] == "number") {
@@ -1507,6 +1509,7 @@ export class Game extends GameCompatible {
 		lib.node.observing = [];
 		lib.node.torespond = {};
 		lib.node.torespondtimeout = {};
+		lib.node.waitForResult = {};
 		lib.playerOL = {};
 		lib.cardOL = {};
 		lib.vcardOL = {};
@@ -1983,7 +1986,7 @@ export class Game extends GameCompatible {
 		if (typeof object == "function") {
 			if (isClass(object)) {
 				const filters = await object.filter?.();
-				if (filters ?? true) object = await object.init?.() ?? new object();
+				if (filters ?? true) object = (await object.init?.()) ?? new object();
 				else return;
 			} else {
 				object = await (gnc.is.generatorFunc(object) ? gnc.of(object) : object)(lib, game, ui, get, ai, _status);
@@ -2005,35 +2008,49 @@ export class Game extends GameCompatible {
 		if (objectPackage) {
 			const author = Object.getOwnPropertyDescriptor(objectPackage, "author");
 			if (author) {
-				Object.defineProperty((extensionMenu.author = {
-					get name() {
-						return `作者：${this.author}`;
-					},
-					clear: true,
-					nopointer: true,
-				}), "author", author);
+				Object.defineProperty(
+					(extensionMenu.author = {
+						get name() {
+							return `作者：${this.author}`;
+						},
+						clear: true,
+						nopointer: true,
+					}),
+					"author",
+					author
+				);
 			}
 			const intro = Object.getOwnPropertyDescriptor(objectPackage, "intro");
 			if (intro) {
-				Object.defineProperty((extensionMenu.intro = {
-					clear: true,
-					nopointer: true,
-				}), "name", intro);
+				Object.defineProperty(
+					(extensionMenu.intro = {
+						clear: true,
+						nopointer: true,
+					}),
+					"name",
+					intro
+				);
 			}
 		}
 		const objectConfig = object.config;
 		if (objectConfig) {
-			Object.defineProperties(extensionMenu, Object.keys(objectConfig).reduce((propertyDescriptorMap, key) => {
-				propertyDescriptorMap[key] = Object.getOwnPropertyDescriptor(objectConfig, key);
-				return propertyDescriptorMap;
-			}, {}));
+			Object.defineProperties(
+				extensionMenu,
+				Object.keys(objectConfig).reduce((propertyDescriptorMap, key) => {
+					propertyDescriptorMap[key] = Object.getOwnPropertyDescriptor(objectConfig, key);
+					return propertyDescriptorMap;
+				}, {})
+			);
 		}
 		const help = object.help;
 		if (help) {
-			Object.defineProperties(lib.help, Object.keys(help).reduce((propertyDescriptorMap, key) => {
-				propertyDescriptorMap[key] = Object.getOwnPropertyDescriptor(help, key);
-				return propertyDescriptorMap;
-			}, {}));
+			Object.defineProperties(
+				lib.help,
+				Object.keys(help).reduce((propertyDescriptorMap, key) => {
+					propertyDescriptorMap[key] = Object.getOwnPropertyDescriptor(help, key);
+					return propertyDescriptorMap;
+				}, {})
+			);
 		}
 		if (object.editable !== false && lib.config.show_extensionmaker) {
 			extensionMenu.edit = {
@@ -2048,7 +2065,7 @@ export class Game extends GameCompatible {
 		extensionMenu.delete = {
 			name: "删除此扩展",
 			clear: true,
-			onclick () {
+			onclick() {
 				if (this.innerHTML != "<span>确认删除</span>") {
 					this.innerHTML = "<span>确认删除</span>";
 					new Promise(resolve => setTimeout(resolve, 1000)).then(() => (this.innerHTML = "<span>删除此扩展</span>"));
@@ -6228,7 +6245,7 @@ export class Game extends GameCompatible {
 	 */
 	delay(time = 1, time2 = 0) {
 		time = time * lib.config.duration + time2;
-		if (lib.config.speed == "vvfast") time /= 3;
+		if (lib.config.game_speed == "vvfast") time /= 3;
 		return _status.pauseManager.setDelay(delay(time));
 	}
 	/**
@@ -7419,10 +7436,7 @@ export class Game extends GameCompatible {
 		const mode = get.mode(),
 			info = lib.skill[i],
 			iInfo = `${i}_info`;
-		if (info.alter) {
-			lib.translate[`${iInfo}_origin`] = lib.translate[iInfo];
-			if (!lib.config.vintageSkills.includes(i)) lib.translate[iInfo] = lib.translate[`${iInfo}_alter`];
-		} else if (_status.mode && lib.translate[iInfo + "_" + mode + "_" + _status.mode]) lib.translate[iInfo] = lib.translate[iInfo + "_" + mode + "_" + _status.mode];
+		if (_status.mode && lib.translate[iInfo + "_" + mode + "_" + _status.mode]) lib.translate[iInfo] = lib.translate[iInfo + "_" + mode + "_" + _status.mode];
 		else if (lib.translate[`${iInfo}_${mode}`]) lib.translate[iInfo] = lib.translate[`${iInfo}_${mode}`];
 		else if (lib.translate[`${iInfo}_zhu`] && (mode == "identity" || (mode == "guozhan" && _status.mode == "four"))) lib.translate[iInfo] = lib.translate[`${iInfo}_zhu`];
 		else if (lib.translate[`${iInfo}_combat`] && get.is.versus()) lib.translate[iInfo] = lib.translate[`${iInfo}_combat`];
@@ -7856,7 +7870,7 @@ export class Game extends GameCompatible {
 		} else if (Array.isArray(card)) {
 			node.cards = card[1].slice(0);
 			card = card[0];
-			const info = [card.suit || "", card.number || "", card.name || "", card.nature || ""];
+			const info = [get.plainText(card.suit || ""), card.number || "", card.name || "", card.nature || ""];
 			if (!Array.isArray(node.cards) || !node.cards.length) node.cards = [ui.create.card(node, "noclick", true).init(info)];
 			if (card.name == "wuxie") {
 				if (ui.historybar.firstChild && ui.historybar.firstChild.type == "wuxie") {

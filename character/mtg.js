@@ -3,9 +3,24 @@ game.import("character", function () {
 	return {
 		name: "mtg",
 		character: {
-			mtg_jiding: ["male", "qun", 4, ["mbaizhan", "msilian"]],
-			mtg_jiesi: ["male", "wei", 3, ["mtongnian", "msuoling", "mhuanyi"]],
-			mtg_lilianna: ["female", "qun", 3, ["lingyong", "mduohun"]],
+			mtg_jiding: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["mbaizhan", "msilian"],
+			},
+			mtg_jiesi: {
+				sex: "male",
+				group: "wei",
+				hp: 3,
+				skills: ["mtongnian", "msuoling", "mhuanyi"],
+			},
+			mtg_lilianna: {
+				sex: "female",
+				group: "qun",
+				hp: 3,
+				skills: ["lingyong", "mduohun"],
+			},
 		},
 		characterIntro: {
 			mtg_jiding:
@@ -56,12 +71,7 @@ game.import("character", function () {
 				ai: {
 					order: 1,
 					result: {
-						player(player, target) {
-							return 1;
-							// if(player.hp<=1) return 1;
-							// if(!player.needsToDiscard(player.hp-1)) return 1;
-							// return 0;
-						},
+						player: 1,
 					},
 				},
 				subSkill: {
