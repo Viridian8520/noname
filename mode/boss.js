@@ -814,103 +814,784 @@ export default () => {
 		},
 		characterPack: {
 			mode_boss: {
-				boss_hundun: ["male", "qun", 25, ["boss_xiongshou", "boss_wuzang", "boss_xiangde", "boss_yinzei", "boss_yinzei_switch"], ["qun", "boss", "bossallowed"], "qun"],
-				boss_qiongqi: ["male", "qun", "20/25", ["boss_xiongshou", "boss_zhue", "boss_futai", "boss_yandu", "boss_yandu_switch"], ["qun", "boss", "bossallowed"], "qun"],
-				boss_taotie: ["male", "qun", 20, ["boss_xiongshou", "boss_tanyu", "boss_cangmu", "boss_jicai", "boss_jicai_switch"], ["qun", "boss", "bossallowed"], "qun"],
-				boss_taowu: ["male", "qun", 25, ["boss_xiongshou", "boss_minwan", "boss_nitai", "boss_luanchang", "boss_luanchang_switch"], ["qun", "boss", "bossallowed"], "qun"],
-				boss_zhuyin: ["male", "qun", 4, ["boss_xiongshou"], ["qun", "hiddenboss", "bossallowed"], "qun"],
+				boss_hundun: {
+					sex: "male",
+					group: "qun",
+					hp: 25,
+					skills: ["boss_xiongshou", "boss_wuzang", "boss_xiangde", "boss_yinzei", "boss_yinzei_switch"],
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_qiongqi: {
+					sex: "male",
+					group: "qun",
+					hp: "20/25",
+					skills: ["boss_xiongshou", "boss_zhue", "boss_futai", "boss_yandu", "boss_yandu_switch"],
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_taotie: {
+					sex: "male",
+					group: "qun",
+					hp: 20,
+					skills: ["boss_xiongshou", "boss_tanyu", "boss_cangmu", "boss_jicai", "boss_jicai_switch"],
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_taowu: {
+					sex: "male",
+					group: "qun",
+					hp: 25,
+					skills: ["boss_xiongshou", "boss_minwan", "boss_nitai", "boss_luanchang", "boss_luanchang_switch"],
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_zhuyin: {
+					sex: "male",
+					group: "qun",
+					hp: 4,
+					skills: ["boss_xiongshou"],
+					groupInGuozhan: "qun",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
 
-				boss_xiangliu: ["male", "qun", 25, ["boss_yaoshou", "boss_duqu", "boss_jiushou", "boss_echou", "boss_echou_switch"], ["qun", "boss", "bossallowed"], "qun"],
-				boss_zhuyan: ["male", "qun", "25/30", ["boss_yaoshou", "boss_bingxian", "boss_juyuan", "boss_xushi", "boss_xushi_switch"], ["qun", "boss", "bossallowed"], "qun"],
-				boss_bifang: ["male", "qun", 25, ["boss_yaoshou", "boss_zhaohuo", "boss_honglianx", "boss_yanyu", "boss_yanyu_switch"], ["qun", "boss", "bossallowed"], "qun"],
-				boss_yingzhao: ["male", "qun", 25, ["boss_yaoshou", "boss_fengdong", "boss_xunyou", "boss_sipu", "boss_sipu_switch"], ["qun", "boss", "bossallowed"], "qun"],
+				boss_xiangliu: {
+					sex: "male",
+					group: "qun",
+					hp: 25,
+					skills: ["boss_yaoshou", "boss_duqu", "boss_jiushou", "boss_echou", "boss_echou_switch"],
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_zhuyan: {
+					sex: "male",
+					group: "qun",
+					hp: "25/30",
+					skills: ["boss_yaoshou", "boss_bingxian", "boss_juyuan", "boss_xushi", "boss_xushi_switch"],
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_bifang: {
+					sex: "male",
+					group: "qun",
+					hp: 25,
+					skills: ["boss_yaoshou", "boss_zhaohuo", "boss_honglianx", "boss_yanyu", "boss_yanyu_switch"],
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_yingzhao: {
+					sex: "male",
+					group: "qun",
+					hp: 25,
+					skills: ["boss_yaoshou", "boss_fengdong", "boss_xunyou", "boss_sipu", "boss_sipu_switch"],
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
 
-				boss_qingmushilian: ["male", "", 0, ["boss_qingmu", "boss_qingmu_intro1", "boss_qingmu_intro2", "boss_qingmu_intro3"], ["boss"], "wu"],
-				boss_qinglong: ["male", "qun", 4, ["boss_shenyi", "releiji", "boss_qingmu2"], ["wu", "hiddenboss", "bossallowed"]],
-				boss_mushengoumang: ["male", "shen", 5, ["boss_shenyi", "boss_buchun", "boss_qingmu3"], ["wu", "hiddenboss", "bossallowed"]],
-				boss_shujing: ["female", "shen", 2, ["boss_cuidu"], ["wu", "hiddenboss", "bossallowed"]],
-				boss_taihao: ["male", "shen", 6, ["boss_shenyi", "boss_shenen", "boss_qingyi"], ["wu", "hiddenboss", "bossallowed"]],
+				boss_qingmushilian: {
+					sex: "male",
+					group: "",
+					hp: 0,
+					skills: ["boss_qingmu", "boss_qingmu_intro1", "boss_qingmu_intro2", "boss_qingmu_intro3"],
+					isBoss: true,
+					extraModeData: "wu",
+				},
+				boss_qinglong: {
+					sex: "male",
+					group: "qun",
+					hp: 4,
+					skills: ["boss_shenyi", "releiji", "boss_qingmu2"],
+					groupInGuozhan: "wu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_mushengoumang: {
+					sex: "male",
+					group: "shen",
+					hp: 5,
+					skills: ["boss_shenyi", "boss_buchun", "boss_qingmu3"],
+					groupInGuozhan: "wu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_shujing: {
+					sex: "female",
+					group: "shen",
+					hp: 2,
+					skills: ["boss_cuidu"],
+					groupInGuozhan: "wu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_taihao: {
+					sex: "male",
+					group: "shen",
+					hp: 6,
+					skills: ["boss_shenyi", "boss_shenen", "boss_qingyi"],
+					groupInGuozhan: "wu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
 
-				boss_chiyanshilian: ["male", "", 0, ["boss_chiyan", "boss_chiyan_intro1", "boss_chiyan_intro2", "boss_chiyan_intro3"], ["boss"], "zhu"],
-				boss_zhuque: ["female", "shen", 4, ["boss_shenyi", "boss_fentian", "boss_chiyan2"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_huoshenzhurong: ["male", "shen", 5, ["boss_shenyi", "boss_xingxia", "boss_chiyan3"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_yanling: ["male", "shen", 4, ["boss_huihuo", "boss_furan"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_yandi: ["male", "shen", 6, ["boss_shenyi", "boss_shenen", "boss_chiyi"], ["shu", "hiddenboss", "bossallowed"]],
+				boss_chiyanshilian: {
+					sex: "male",
+					group: "",
+					hp: 0,
+					skills: ["boss_chiyan", "boss_chiyan_intro1", "boss_chiyan_intro2", "boss_chiyan_intro3"],
+					isBoss: true,
+					extraModeData: "zhu",
+				},
+				boss_zhuque: {
+					sex: "female",
+					group: "shen",
+					hp: 4,
+					skills: ["boss_shenyi", "boss_fentian", "boss_chiyan2"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_huoshenzhurong: {
+					sex: "male",
+					group: "shen",
+					hp: 5,
+					skills: ["boss_shenyi", "boss_xingxia", "boss_chiyan3"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_yanling: {
+					sex: "male",
+					group: "shen",
+					hp: 4,
+					skills: ["boss_huihuo", "boss_furan"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_yandi: {
+					sex: "male",
+					group: "shen",
+					hp: 6,
+					skills: ["boss_shenyi", "boss_shenen", "boss_chiyi"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
 
-				boss_baimangshilian: ["male", "", 0, ["boss_baimang", "boss_baimang_intro1", "boss_baimang_intro2", "boss_baimang_intro3"], ["boss"], "qun"],
-				boss_baihu: ["male", "shen", 4, ["boss_shenyi", "boss_kuangxiao", "boss_baimang2"], ["qun", "hiddenboss", "bossallowed"]],
-				boss_jinshenrushou: ["male", "shen", 5, ["boss_shenyi", "boss_xingqiu", "boss_baimang3"], ["qun", "hiddenboss", "bossallowed"]],
-				boss_mingxingzhu: ["female", "shen", 3, ["boss_qingzhu", "boss_jiazu", "boss_jiding"], ["qun", "hiddenboss", "bossallowed"]],
-				boss_shaohao: ["male", "shen", 6, ["boss_shenyi", "boss_shenen", "boss_baiyi"], ["qun", "hiddenboss", "bossallowed"]],
+				boss_baimangshilian: {
+					sex: "male",
+					group: "",
+					hp: 0,
+					skills: ["boss_baimang", "boss_baimang_intro1", "boss_baimang_intro2", "boss_baimang_intro3"],
+					isBoss: true,
+					extraModeData: "qun",
+				},
+				boss_baihu: {
+					sex: "male",
+					group: "shen",
+					hp: 4,
+					skills: ["boss_shenyi", "boss_kuangxiao", "boss_baimang2"],
+					groupInGuozhan: "qun",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_jinshenrushou: {
+					sex: "male",
+					group: "shen",
+					hp: 5,
+					skills: ["boss_shenyi", "boss_xingqiu", "boss_baimang3"],
+					groupInGuozhan: "qun",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_mingxingzhu: {
+					sex: "female",
+					group: "shen",
+					hp: 3,
+					skills: ["boss_qingzhu", "boss_jiazu", "boss_jiding"],
+					groupInGuozhan: "qun",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_shaohao: {
+					sex: "male",
+					group: "shen",
+					hp: 6,
+					skills: ["boss_shenyi", "boss_shenen", "boss_baiyi"],
+					groupInGuozhan: "qun",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
 
-				boss_xuanlinshilian: ["male", "", 0, ["boss_xuanlin", "boss_xuanlin_intro1", "boss_xuanlin_intro2", "boss_xuanlin_intro3"], ["boss"], "wei"],
-				boss_xuanwu: ["male", "shen", 4, ["boss_shenyi", "boss_lingqu", "boss_xuanlin2"], ["wei", "hiddenboss", "bossallowed"]],
-				boss_shuishengonggong: ["male", "shen", 5, ["boss_shenyi", "boss_juehong", "boss_xuanlin3"], ["wei", "hiddenboss", "bossallowed"]],
-				boss_shuishenxuanming: ["female", "shen", 5, ["boss_shenyi", "boss_zirun", "boss_xuanlin3"], ["wei", "hiddenboss", "bossallowed"]],
-				boss_zhuanxu: ["male", "shen", 6, ["boss_shenyi", "boss_shenen", "boss_zaoyi"], ["wei", "hiddenboss", "bossallowed"]],
+				boss_xuanlinshilian: {
+					sex: "male",
+					group: "",
+					hp: 0,
+					skills: ["boss_xuanlin", "boss_xuanlin_intro1", "boss_xuanlin_intro2", "boss_xuanlin_intro3"],
+					isBoss: true,
+					extraModeData: "wei",
+				},
+				boss_xuanwu: {
+					sex: "male",
+					group: "shen",
+					hp: 4,
+					skills: ["boss_shenyi", "boss_lingqu", "boss_xuanlin2"],
+					groupInGuozhan: "wei",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_shuishengonggong: {
+					sex: "male",
+					group: "shen",
+					hp: 5,
+					skills: ["boss_shenyi", "boss_juehong", "boss_xuanlin3"],
+					groupInGuozhan: "wei",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_shuishenxuanming: {
+					sex: "female",
+					group: "shen",
+					hp: 5,
+					skills: ["boss_shenyi", "boss_zirun", "boss_xuanlin3"],
+					groupInGuozhan: "wei",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_zhuanxu: {
+					sex: "male",
+					group: "shen",
+					hp: 6,
+					skills: ["boss_shenyi", "boss_shenen", "boss_zaoyi"],
+					groupInGuozhan: "wei",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
 
-				boss_zhuoguiquxie: ["male", "", 0, ["boss_bianshen", "boss_bianshen_intro1", "boss_bianshen_intro2", "boss_bianshen_intro3", "boss_bianshen_intro4"], ["boss"], "shu"],
-				boss_nianshou_heti: ["male", "shen", 12, ["boss_nianrui", "boss_mengtai", "boss_nbianshen", "boss_nbianshenx"], ["shu", "boss", "bossallowed"], "shu"],
-				boss_nianshou_jingjue: ["male", "shen", 12, ["boss_nianrui", "boss_mengtai", "boss_jingjue", "boss_nbianshen"], ["shu", "hiddenboss", "bossallowed"], "shu"],
-				boss_nianshou_renxing: ["male", "shen", 12, ["boss_nianrui", "boss_mengtai", "boss_renxing", "boss_nbianshen"], ["shu", "hiddenboss", "bossallowed"], "shu"],
-				boss_nianshou_ruizhi: ["male", "shen", 12, ["boss_nianrui", "boss_mengtai", "boss_ruizhi", "boss_nbianshen"], ["shu", "hiddenboss", "bossallowed"], "shu"],
-				boss_nianshou_baonu: ["male", "shen", 12, ["boss_nianrui", "boss_mengtai", "boss_nbaonu", "boss_shouyi", "boss_nbianshen"], ["shu", "hiddenboss", "bossallowed"], "shu"],
+				boss_zhuoguiquxie: {
+					sex: "male",
+					group: "",
+					hp: 0,
+					skills: ["boss_bianshen", "boss_bianshen_intro1", "boss_bianshen_intro2", "boss_bianshen_intro3", "boss_bianshen_intro4"],
+					isBoss: true,
+					extraModeData: "shu",
+				},
+				boss_nianshou_heti: {
+					sex: "male",
+					group: "shen",
+					hp: 12,
+					skills: ["boss_nianrui", "boss_mengtai", "boss_nbianshen", "boss_nbianshenx"],
+					groupInGuozhan: "shu",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "shu",
+				},
+				boss_nianshou_jingjue: {
+					sex: "male",
+					group: "shen",
+					hp: 12,
+					skills: ["boss_nianrui", "boss_mengtai", "boss_jingjue", "boss_nbianshen"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+					extraModeData: "shu",
+				},
+				boss_nianshou_renxing: {
+					sex: "male",
+					group: "shen",
+					hp: 12,
+					skills: ["boss_nianrui", "boss_mengtai", "boss_renxing", "boss_nbianshen"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+					extraModeData: "shu",
+				},
+				boss_nianshou_ruizhi: {
+					sex: "male",
+					group: "shen",
+					hp: 12,
+					skills: ["boss_nianrui", "boss_mengtai", "boss_ruizhi", "boss_nbianshen"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+					extraModeData: "shu",
+				},
+				boss_nianshou_baonu: {
+					sex: "male",
+					group: "shen",
+					hp: 12,
+					skills: ["boss_nianrui", "boss_mengtai", "boss_nbaonu", "boss_shouyi", "boss_nbianshen"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+					extraModeData: "shu",
+				},
 
-				boss_baiwuchang: ["male", "shen", 9, ["boss_baolian", "boss_qiangzheng", "boss_zuijiu", "juece", "boss_bianshen4"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_heiwuchang: ["male", "shen", 9, ["boss_guiji", "boss_taiping", "boss_suoming", "boss_xixing", "boss_bianshen4"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_luocha: ["female", "shen", 12, ["boss_modao", "boss_yushou", "yizhong", "boss_moyany"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_yecha: ["male", "shen", 11, ["boss_modao", "boss_mojian", "bazhen", "boss_danshu"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_niutou: ["male", "shen", 7, ["boss_baolian", "niepan", "boss_manjia", "boss_xiaoshou", "boss_bianshen3"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_mamian: ["male", "shen", 6, ["boss_guiji", "fankui", "boss_lianyu", "juece", "boss_bianshen3"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_chi: ["male", "shen", 5, ["boss_guimei", "boss_didong", "boss_shanbeng", "boss_bianshen2"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_mo: ["female", "shen", 5, ["boss_guimei", "enyuan", "boss_beiming", "boss_bianshen2"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_wang: ["male", "shen", 5, ["boss_guimei", "boss_luolei", "huilei", "boss_bianshen2"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_liang: ["female", "shen", 5, ["boss_guimei", "boss_guihuo", "boss_minbao", "boss_bianshen2"], ["shu", "hiddenboss", "bossallowed"]],
+				boss_baiwuchang: {
+					sex: "male",
+					group: "shen",
+					hp: 9,
+					skills: ["boss_baolian", "boss_qiangzheng", "boss_zuijiu", "juece", "boss_bianshen4"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_heiwuchang: {
+					sex: "male",
+					group: "shen",
+					hp: 9,
+					skills: ["boss_guiji", "boss_taiping", "boss_suoming", "boss_xixing", "boss_bianshen4"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_luocha: {
+					sex: "female",
+					group: "shen",
+					hp: 12,
+					skills: ["boss_modao", "boss_yushou", "yizhong", "boss_moyany"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_yecha: {
+					sex: "male",
+					group: "shen",
+					hp: 11,
+					skills: ["boss_modao", "boss_mojian", "bazhen", "boss_danshu"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_niutou: {
+					sex: "male",
+					group: "shen",
+					hp: 7,
+					skills: ["boss_baolian", "niepan", "boss_manjia", "boss_xiaoshou", "boss_bianshen3"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_mamian: {
+					sex: "male",
+					group: "shen",
+					hp: 6,
+					skills: ["boss_guiji", "fankui", "boss_lianyu", "juece", "boss_bianshen3"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_chi: {
+					sex: "male",
+					group: "shen",
+					hp: 5,
+					skills: ["boss_guimei", "boss_didong", "boss_shanbeng", "boss_bianshen2"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_mo: {
+					sex: "female",
+					group: "shen",
+					hp: 5,
+					skills: ["boss_guimei", "enyuan", "boss_beiming", "boss_bianshen2"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_wang: {
+					sex: "male",
+					group: "shen",
+					hp: 5,
+					skills: ["boss_guimei", "boss_luolei", "huilei", "boss_bianshen2"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_liang: {
+					sex: "female",
+					group: "shen",
+					hp: 5,
+					skills: ["boss_guimei", "boss_guihuo", "boss_minbao", "boss_bianshen2"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
 
-				boss_qinguangwang: ["male", "qun", 3, ["boss_panguan", "boss_juhun", "boss_wangxiang", "boss_newhuanren"], ["shu", "boss", "bossallowed"], "shu"],
-				boss_chujiangwang: ["male", "qun", 4, ["weimu", "refankui", "boss_bingfeng"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_songdiwang: ["male", "qun", 4, ["boss_heisheng", "boss_shengfu", "enyuan"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_wuguanwang: ["male", "qun", 4, ["boss_zhiwang", "boss_gongzheng", "boss_xuechi"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_yanluowang: ["male", "qun", 4, ["boss_tiemian", "boss_zhadao", "boss_zhuxin"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_bianchengwang: ["male", "qun", 4, ["boss_leizhou", "boss_leifu", "boss_leizhu"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_taishanwang: ["male", "qun", 4, ["boss_fudu", "boss_kujiu", "boss_renao"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_dushiwang: ["male", "qun", 4, ["boss_remen", "boss_zhifen", "boss_huoxing"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_pingdengwang: ["male", "qun", 4, ["boss_suozu", "boss_abi", "boss_pingdeng"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_zhuanlunwang: ["male", "qun", 6, ["boss_modao", "boss_lunhui", "boss_wangsheng", "boss_zlfanshi"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_mengpo: ["female", "qun", 3, ["boss_shiyou", "boss_wanghun", "boss_wangshi"], ["shu", "hiddenboss", "bossallowed"]],
-				boss_dizangwang: ["male", "qun", 8, ["boss_bufo", "boss_wuliang", "boss_dayuan", "boss_diting"], ["shu", "hiddenboss", "bossallowed"]],
-				//boss_shikieiki:['female','qun',8,['boss_yingzhong'],['qun','hiddenboss','bossallowed']],
+				boss_qinguangwang: {
+					sex: "male",
+					group: "qun",
+					hp: 3,
+					skills: ["boss_panguan", "boss_juhun", "boss_wangxiang", "boss_newhuanren"],
+					names: "蒋|子文",
+					groupInGuozhan: "shu",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "shu",
+				},
+				boss_chujiangwang: {
+					sex: "male",
+					group: "qun",
+					hp: 4,
+					skills: ["weimu", "refankui", "boss_bingfeng"],
+					names: "厉|温",
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_songdiwang: {
+					sex: "male",
+					group: "qun",
+					hp: 4,
+					skills: ["boss_heisheng", "boss_shengfu", "enyuan"],
+					names: "余|懃",
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_wuguanwang: {
+					sex: "male",
+					group: "qun",
+					hp: 4,
+					skills: ["boss_zhiwang", "boss_gongzheng", "boss_xuechi"],
+					names: "吕|岱",
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_yanluowang: {
+					sex: "male",
+					group: "qun",
+					hp: 4,
+					skills: ["boss_tiemian", "boss_zhadao", "boss_zhuxin"],
+					names: "包|拯",
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_bianchengwang: {
+					sex: "male",
+					group: "qun",
+					hp: 4,
+					skills: ["boss_leizhou", "boss_leifu", "boss_leizhu"],
+					names: "毕|元宾",
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_taishanwang: {
+					sex: "male",
+					group: "qun",
+					hp: 4,
+					skills: ["boss_fudu", "boss_kujiu", "boss_renao"],
+					names: "董|和",
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_dushiwang: {
+					sex: "male",
+					group: "qun",
+					hp: 4,
+					skills: ["boss_remen", "boss_zhifen", "boss_huoxing"],
+					names: "黄|中庸",
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_pingdengwang: {
+					sex: "male",
+					group: "qun",
+					hp: 4,
+					skills: ["boss_suozu", "boss_abi", "boss_pingdeng"],
+					names: "陆|游",
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_zhuanlunwang: {
+					sex: "male",
+					group: "qun",
+					hp: 6,
+					skills: ["boss_modao", "boss_lunhui", "boss_wangsheng", "boss_zlfanshi"],
+					names: "薛|礼",
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_mengpo: {
+					sex: "female",
+					group: "qun",
+					hp: 3,
+					skills: ["boss_shiyou", "boss_wanghun", "boss_wangshi"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_dizangwang: {
+					sex: "male",
+					group: "qun",
+					hp: 8,
+					skills: ["boss_bufo", "boss_wuliang", "boss_dayuan", "boss_diting"],
+					groupInGuozhan: "shu",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+				},
+				boss_shikieiki: {
+					sex: "female",
+					group: "qun",
+					hp: 8,
+					skills: ["boss_yingzhong"],
+					names: "夜魔仙那度|四季映姬",
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isHiddenBoss: false,
+					isBossAllowed: true,
+				},
 
-				boss_lvbu1: ["male", "shen", 8, ["mashu", "wushuang", "boss_baonu", "boss_jingjia", "boss_aozhan"], ["qun", "boss", "bossallowed"], "qun"],
-				boss_lvbu2: ["male", "shen", 6, ["mashu", "wushuang", "xiuluo", "shenwei", "shenji"], ["qun", "hiddenboss", "bossallowed"], "qun"],
-				boss_lvbu3: ["male", "shen", 6, ["wushuang", "shenqu", "jiwu"], ["qun", "hiddenboss", "bossallowed"], "qun"],
+				boss_lvbu1: {
+					sex: "male",
+					group: "shen",
+					hp: 8,
+					skills: ["mashu", "wushuang", "boss_baonu", "boss_jingjia", "boss_aozhan"],
+					names: "吕|布",
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_lvbu2: {
+					sex: "male",
+					group: "shen",
+					hp: 6,
+					skills: ["mashu", "wushuang", "xiuluo", "shenwei", "shenji"],
+					names: "吕|布",
+					groupInGuozhan: "qun",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_lvbu3: {
+					sex: "male",
+					group: "shen",
+					hp: 6,
+					skills: ["wushuang", "shenqu", "jiwu"],
+					names: "吕|布",
+					groupInGuozhan: "qun",
+					isHiddenBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
 
-				boss_caocao: ["male", "shen", 12, ["boss_guixin", "xiongcai"], ["wei", "boss", "bossallowed"], "wei"],
-				boss_guojia: ["male", "shen", 4, ["tiandu", "boss_guimou", "boss_yuance", "boss_qizuo"], ["wei", "boss", "bossallowed"], "zhu"],
-				boss_zhangchunhua: ["female", "shen", 4, ["jueqing", "boss_wuxin", "shangshix"], ["wei", "boss", "bossallowed"], "wei"],
-				boss_zhenji: ["female", "shen", 4, ["tashui", "lingbo", "jiaoxia", "fanghua"], ["wei", "boss", "bossallowed"], "wei"],
+				boss_caocao: {
+					sex: "male",
+					group: "shen",
+					hp: 12,
+					skills: ["boss_guixin", "xiongcai"],
+					names: "曹|操",
+					groupInGuozhan: "wei",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "wei",
+				},
+				boss_guojia: {
+					sex: "male",
+					group: "shen",
+					hp: 4,
+					skills: ["tiandu", "boss_guimou", "boss_yuance", "boss_qizuo"],
+					names: "郭|嘉",
+					groupInGuozhan: "wei",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "zhu",
+				},
+				boss_zhangchunhua: {
+					sex: "female",
+					group: "shen",
+					hp: 4,
+					skills: ["jueqing", "boss_wuxin", "shangshix"],
+					names: "张|春华",
+					groupInGuozhan: "wei",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "wei",
+				},
+				boss_zhenji: {
+					sex: "female",
+					group: "shen",
+					hp: 4,
+					skills: ["tashui", "lingbo", "jiaoxia", "fanghua"],
+					names: "甄|宓",
+					groupInGuozhan: "wei",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "wei",
+				},
 
-				boss_liubei: ["male", "shen", 8, ["xiaoxiong", "boss_zhangwu"], ["shu", "boss", "bossallowed"], "qun"],
-				boss_zhugeliang: ["male", "shen", "Infinity/Infinity", ["xiangxing", "yueyin", "fengqi", "gaiming"], ["shu", "boss", "bossallowed"], "qun"],
-				boss_huangyueying: ["female", "shen", 4, ["boss_gongshen", "boss_jizhi", "qicai", "boss_guiyin"], ["shu", "boss", "bossallowed"], "wei"],
-				boss_pangtong: ["male", "shen", 4, ["boss_tianyu", "qiwu", "niepan", "boss_yuhuo"], ["shu", "boss", "bossallowed"], "zhu"],
+				boss_liubei: {
+					sex: "male",
+					group: "shen",
+					hp: 8,
+					skills: ["xiaoxiong", "boss_zhangwu"],
+					names: "刘|备",
+					groupInGuozhan: "shu",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_zhugeliang: {
+					sex: "male",
+					group: "shen",
+					hp: "Infinity/Infinity",
+					skills: ["xiangxing", "yueyin", "fengqi", "gaiming"],
+					names: "诸葛|亮",
+					groupInGuozhan: "shu",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_huangyueying: {
+					sex: "female",
+					group: "shen",
+					hp: 4,
+					skills: ["boss_gongshen", "boss_jizhi", "qicai", "boss_guiyin"],
+					names: "黄|月英",
+					groupInGuozhan: "shu",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "wei",
+				},
+				boss_pangtong: {
+					sex: "male",
+					group: "shen",
+					hp: 4,
+					skills: ["boss_tianyu", "qiwu", "niepan", "boss_yuhuo"],
+					names: "庞|统",
+					groupInGuozhan: "shu",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "zhu",
+				},
 
-				boss_zhouyu: ["male", "shen", 6, ["huoshen", "boss_honglian", "boss_xianyin"], ["wu", "boss", "bossallowed"], "zhu"],
+				boss_zhouyu: {
+					sex: "male",
+					group: "shen",
+					hp: 6,
+					skills: ["huoshen", "boss_honglian", "boss_xianyin"],
+					names: "周|瑜",
+					groupInGuozhan: "wu",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "zhu",
+				},
 
-				boss_caiwenji: ["female", "shen", 4, ["beige", "boss_hujia", "boss_guihan"], ["qun", "boss", "bossallowed"], "wei"],
-				boss_zhangjiao: ["male", "shen", 8, ["boss_leiji", "tiandao", "jidian"], ["qun", "boss", "bossallowed"], "shu"],
-				boss_zuoci: ["male", "shen", 0, ["huanhua"], ["qun", "boss", "bossallowed"], "shu"],
+				boss_caiwenji: {
+					sex: "female",
+					group: "shen",
+					hp: 4,
+					skills: ["beige", "boss_hujia", "boss_guihan"],
+					names: "蔡|琰",
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "wei",
+				},
+				boss_zhangjiao: {
+					sex: "male",
+					group: "shen",
+					hp: 8,
+					skills: ["boss_leiji", "tiandao", "jidian"],
+					names: "张|角",
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "shu",
+				},
+				boss_zuoci: {
+					sex: "male",
+					group: "shen",
+					hp: 0,
+					skills: ["huanhua"],
+					names: "左|慈",
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "shu",
+				},
 
-				boss_diaochan: ["female", "shen", 4, ["fengwu", "yunshen", "lianji", "boss_wange", "yuehun"], ["qun", "boss", "bossallowed"], "qun"],
-				boss_huatuo: ["male", "shen", 6, ["chulao", "mazui", "boss_shengshou", "guizhen", "wuqin"], ["qun", "boss", "bossallowed"], "wu"],
-				boss_dongzhuo: ["male", "shen", 20, ["jiuchi", "boss_qiangzheng", "boss_baolin"], ["qun", "boss", "bossallowed"], "shu"],
+				boss_diaochan: {
+					sex: "female",
+					group: "shen",
+					hp: 4,
+					skills: ["fengwu", "yunshen", "lianji", "boss_wange", "yuehun"],
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "qun",
+				},
+				boss_huatuo: {
+					sex: "male",
+					group: "shen",
+					hp: 6,
+					skills: ["chulao", "mazui", "boss_shengshou", "guizhen", "wuqin"],
+					names: "华|佗",
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "wu",
+				},
+				boss_dongzhuo: {
+					sex: "male",
+					group: "shen",
+					hp: 20,
+					skills: ["jiuchi", "boss_qiangzheng", "boss_baolin"],
+					names: "董|卓",
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					extraModeData: "shu",
+				},
 
-				boss_sunce: ["male", "shen", "1/8", ["boss_jiang", "boss_hunzi", "boss_hunyou", "boss_taoni"], ["qun", "boss", "bossallowed", "InitFilter:noZhuHp:noZhuSkill", "die:sunce"], "wu"],
+				boss_sunce: {
+					sex: "male",
+					group: "shen",
+					hp: "1/8",
+					skills: ["boss_jiang", "boss_hunzi", "boss_hunyou", "boss_taoni"],
+					names: "孙|策",
+					groupInGuozhan: "qun",
+					isBoss: true,
+					isBossAllowed: true,
+					initFilters: ["noZhuHp", "noZhuSkill"],
+					dieAudios: ["sunce"],
+					extraModeData: "wu",
+				},
 
-				// boss_nianshou:['male','shen',Infinity,['boss_nianrui','boss_qixiang','boss_damagecount'],['boss'],'shu'],
-				// boss_yuji:['male','qun',8,[],['boss','bossallowed'],'nei'],
-				// boss_shuijing:['male','qun',8,[],['boss','bossallowed'],'wei'],
-				// boss_sunshangxiang:['male','qun',8,[],['boss','bossallowed'],'wei'],
+				boss_nianshou: {
+					sex: "male",
+					group: "shen",
+					hp: Infinity,
+					skills: ["boss_nianrui", "boss_qixiang", "boss_damagecount"],
+					isBoss: true,
+					extraModeData: "shu",
+				},
 			},
 		},
 		cardPack: {
@@ -918,6 +1599,7 @@ export default () => {
 		},
 		init() {
 			for (var i in lib.characterPack.mode_boss) {
+				if (!lib.characterPack.mode_boss[i].names) lib.characterPack.mode_boss[i].names = "null|null";
 				if (lib.characterPack.mode_boss[i].isHiddenBoss) continue;
 				lib.mode.boss.config[i + "_boss_config"] = {
 					name: get.translation(i),
@@ -1888,7 +2570,55 @@ export default () => {
 		},
 		skill: {
 			boss_yingzhong: {
-				//Unfinished
+				getList(type, outside) {
+					let characters = [];
+					if (type === "highHp") {
+						characters = [];
+					}
+					if (outside) {
+						game.filterPlayer2(cur => {
+							characters.removeArray(get.nameList(cur));
+						});
+					}
+					return characters.randomSort();
+				},
+				trigger: {
+					player: "phaseBegin",
+				},
+				filter: function (event, player, name) {
+					return player.phaseNumber === 1;
+				},
+				forced: true,
+				async content(event, trigger, player) {
+					let num = 2,
+						skills = [],
+						characters = lib.skill.boss_yingzhong.getList();
+					const func = name => {
+						const ss = get.character(name, 3);
+						if (ss.length) {
+							skills.addArray(get.character(name, 3));
+							return true;
+						}
+						return false;
+					};
+					for (const name of characters) {
+						if (func(name)) num--;
+						if (!num) break;
+					}
+					if (num && lib.rank) {
+						//备用方案
+						for (const r of ["s", "ap", "a", "am"]) {
+							if (!Array.isArray(lib.rank[r])) continue;
+							const ss = lib.rank[r].randomSort();
+							for (const name of ss) {
+								if (func(name)) num--;
+								if (!num) break;
+							}
+							if (!num) break;
+						}
+					}
+					if (skills.length) await player.addSkills(skills);
+				},
 			},
 			niaobaidaowenha_skill: {
 				trigger: { player: "loseMaxHpAfter" },
@@ -2390,6 +3120,25 @@ export default () => {
 					if (game.phaseNumber <= 50 && _status.shidianyanluo_level == 2 && _status.shidianyanluo_mengpodie == true) {
 						list = ["boss_dizangwang"];
 					}
+					if (
+						_status.shidianyanluo_level == 2 &&
+						game.boss
+							.getEnemies()
+							.map(cur => {
+								const names = get.nameList(cur);
+								for (let name of names) {
+									if (lib.rank.s.includes(name) || lib.rank.ap.includes(name) || lib.rank.a.includes(name) || lib.rank.am.includes(name)) return name;
+								}
+								return false;
+							})
+							.reduce((val, name) => {
+								if (lib.rank.s.includes(name)) return val + 1;
+								if (lib.rank.ap.includes(name)) return val + 0.36;
+								if (lib.rank.a.includes(name)) return val + 0.13;
+								if (lib.rank.am.includes(name)) return val + 0.05;
+							}, 0) > Math.random()
+					)
+						list = ["boss_shikieiki"];
 					if (list.length == 1) event._result = { control: list[0] };
 					else {
 						player
@@ -6402,9 +7151,12 @@ export default () => {
 									break;
 								case 3:
 									if (get.tag(card, "damage") || get.tag(card, "losehp")) {
-										if (!game.hasPlayer(current => {
-											return current !== target && current.countCards("e") >= 4;
-										})) return [1, 3, 1, -3];
+										if (
+											!game.hasPlayer(current => {
+												return current !== target && current.countCards("e") >= 4;
+											})
+										)
+											return [1, 3, 1, -3];
 									}
 									break;
 								case 2:
@@ -6418,8 +7170,8 @@ export default () => {
 								case 1:
 									if (game.players.length !== 2) return [1, 2, 1, -3];
 							}
-						}
-					}
+						},
+					},
 				},
 			},
 			xiangxing: {
@@ -6638,9 +7390,9 @@ export default () => {
 							if (typeof card !== "object" || get.type(card) !== "delay") return;
 							if (target.storage.xiangxing === 2 && target.storage.xiangxing_count > 4 && target.hasSkill("xiangxing") && target.hasSkill("yueyin")) return;
 							return 0.13;
-						}
-					}
-				}
+						},
+					},
+				},
 			},
 			tiandao: {
 				audio: true,
@@ -9010,10 +9762,8 @@ export default () => {
 			boss_nianshou_baonu: "暴怒年兽",
 			boss_nianshou_ruizhi: "睿智年兽",
 
-			boss_shuijing: "水镜先生",
 			boss_huangyueying: "奇智女杰",
 			boss_zhangchunhua: "冷血皇后",
-			boss_satan: "堕落天使",
 			boss_dongzhuo: "乱世魔王",
 			boss_lvbu1: "最强神话",
 			boss_lvbu2: "暴怒战神",
@@ -9023,11 +9773,9 @@ export default () => {
 			boss_zhugeliang: "祭风卧龙",
 			boss_zhangjiao: "天公将军",
 			boss_zuoci: "迷之仙人",
-			boss_yuji: "琅琊道士",
 			boss_liubei: "蜀汉烈帝",
 			boss_caiwenji: "异乡孤女",
 			boss_huatuo: "药坛圣手",
-			boss_luxun: "蹁跹君子",
 			boss_zhenji: "洛水仙子",
 			boss_diaochan: "绝代妖姬",
 			boss_guojia: "世之奇士",
@@ -9517,7 +10265,7 @@ export default () => {
 			boss_wangsheng_info: "锁定技，你的出牌阶段开始时，视为你随机使用一张【南蛮入侵】或【万箭齐发】。",
 			boss_zlfanshi: "反噬",
 			boss_zlfanshi_info: "锁定技，每个回合你受到第一次伤害后，若再次受到伤害，则对随机一名其他角色造成1点伤害。",
-			boss_shikieiki_ab: "四季映姫",
+			boss_shikieiki_ab: "四季映姬",
 			boss_shikieiki: "四季映姬·夜魔仙那度",
 			boss_yingzhong: "映冢",
 			boss_yingzhong_info: "锁定技。你登场后的第一个回合开始时，你随机获得两个“阴间武将”的全部技能。",
@@ -9582,7 +10330,7 @@ export default () => {
 
 			boss_newhuanren: "关卡说明",
 			boss_newhuanren_info: "",
-			boss_newhuanren_info_boss: "第一关：挑战秦广王<br>第二关：挑战楚江王，宋帝王，五官王，阎罗王中的一个<br>第三关：挑战卞城王，泰山王，都市王，平等王中的一个<br>第四关：挑战转轮王<br>注：孟婆将在每局前三个阶段随机一个阶段登场<br>地藏王登场规则为，50回合内通过第三关，并且在前三关中成功击杀孟婆。<li>选陆逊左慈张春华于吉蒋费孔融自动变孙笨",
+			boss_newhuanren_info_boss: "第一关：挑战秦广王<br>第二关：挑战楚江王，宋帝王，五官王，阎罗王中的一个<br>第三关：挑战卞城王，泰山王，都市王，平等王中的一个<br>第四关：挑战转轮王<br>注：孟婆将在每局前三个阶段随机一个阶段登场<br>地藏王登场规则为，50回合内通过第三关，并且在前三关中成功击杀孟婆。<br>选用的武将越阴间、占比越高，四季映姬登场概率就越大。<li>选陆逊左慈张春华于吉蒋费孔融自动变孙笨",
 			lingsheji: "灵蛇髻",
 			lingsheji2: "灵蛇髻",
 			shanrangzhaoshu: "禅让诏书",

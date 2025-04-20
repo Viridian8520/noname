@@ -3,70 +3,331 @@ game.import("character", function () {
 	return {
 		name: "gwent",
 		character: {
-			gw_huoge: ["male", "qun", 3, ["gwjinli"]],
-			gw_aisinie: ["female", "wu", 3, ["huihun"]],
-			gw_enxier: ["male", "wei", 4, ["gwbaquan"]],
+			gw_huoge: {
+				sex: "male",
+				group: "qun",
+				hp: 3,
+				skills: ["gwjinli"],
+			},
+			gw_aisinie: {
+				sex: "female",
+				group: "wu",
+				hp: 3,
+				skills: ["huihun"],
+			},
+			gw_enxier: {
+				sex: "male",
+				group: "wei",
+				hp: 4,
+				skills: ["gwbaquan"],
+			},
 
-			gw_kaerweite: ["male", "shu", 4, ["gwjiquan"]],
-			gw_falanxisika: ["female", "wu", 3, ["shewu"]],
-			gw_haluo: ["male", "qun", 4, ["nuhou"]],
+			gw_kaerweite: {
+				sex: "male",
+				group: "shu",
+				hp: 4,
+				skills: ["gwjiquan"],
+			},
+			gw_falanxisika: {
+				sex: "female",
+				group: "wu",
+				hp: 3,
+				skills: ["shewu"],
+			},
+			gw_haluo: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["nuhou"],
+			},
 
-			gw_airuiting: ["male", "wei", 4, ["kuanglie"]],
-			gw_laduoweide: ["male", "wei", 4, ["gwxiaoshou"]],
-			gw_dagong: ["male", "qun", 4, ["gwtianbian"]],
+			gw_airuiting: {
+				sex: "male",
+				group: "wei",
+				hp: 4,
+				skills: ["kuanglie"],
+			},
+			gw_laduoweide: {
+				sex: "male",
+				group: "wei",
+				hp: 4,
+				skills: ["gwxiaoshou"],
+			},
+			gw_dagong: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["gwtianbian"],
+			},
 
-			gw_bulanwang: ["male", "qun", 4, ["bolang"]],
-			gw_kuite: ["male", "qun", 4, ["gwxuezhan"]],
-			gw_fuertaisite: ["male", "wei", 3, ["zhengjun"]],
-			gw_hengsaite: ["male", "wei", 3, ["jielue"]],
-			gw_fulisi: ["male", "qun", 3, ["lanquan"]],
-			gw_gaier: ["male", "shu", 3, ["hunmo"]],
+			gw_bulanwang: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["bolang"],
+			},
+			gw_kuite: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["gwxuezhan"],
+			},
+			gw_fuertaisite: {
+				sex: "male",
+				group: "wei",
+				hp: 3,
+				skills: ["zhengjun"],
+			},
+			gw_hengsaite: {
+				sex: "male",
+				group: "wei",
+				hp: 3,
+				skills: ["jielue"],
+			},
+			gw_fulisi: {
+				sex: "male",
+				group: "qun",
+				hp: 3,
+				skills: ["lanquan"],
+			},
+			gw_gaier: {
+				sex: "male",
+				group: "shu",
+				hp: 3,
+				skills: ["hunmo"],
+			},
 
-			gw_jieluote: ["male", "qun", 6, ["fayin"]],
-			gw_yenaifa: ["female", "qun", 3, ["xuezhou"]],
-			gw_telisi: ["female", "wei", 3, ["huandie"]],
-			gw_xili: ["female", "wu", 3, ["fengjian"]],
-			gw_luoqi: ["male", "wei", 4, ["gwzhanjiang"]],
-			// gw_yioufeisi:['male','wu',4,['gwchuanxin']],
+			gw_jieluote: {
+				sex: "male",
+				group: "qun",
+				hp: 6,
+				skills: ["fayin"],
+			},
+			gw_yenaifa: {
+				sex: "female",
+				group: "qun",
+				hp: 3,
+				skills: ["xuezhou"],
+			},
+			gw_telisi: {
+				sex: "female",
+				group: "wei",
+				hp: 3,
+				skills: ["huandie"],
+			},
+			gw_xili: {
+				sex: "female",
+				group: "wu",
+				hp: 3,
+				skills: ["fengjian"],
+			},
+			gw_luoqi: {
+				sex: "male",
+				group: "wei",
+				hp: 4,
+				skills: ["gwzhanjiang"],
+			},
+			gw_yioufeisi: {
+				sex: "male",
+				group: "wu",
+				hp: 4,
+				skills: ["gwchuanxin"],
+				isUnseen: false,
+			},
 
-			gw_aigeleisi: ["female", "wu", 3, ["gwshenyu"]],
-			gw_aokeweisite: ["male", "qun", 4, ["yunhuo"]],
-			gw_kaxier: ["male", "shu", 4, ["gwfengchi"]],
-			gw_luobo: ["male", "qun", 3, ["junchi"]],
-			gw_mieren: ["male", "shu", 3, ["lingji"]],
-			gw_sanhanya: ["male", "shu", 3, ["gwjinyan"]],
-			gw_shanhu: ["female", "qun", 3, ["shuijian"]],
-			gw_zhangyujushou: ["male", "wu", 4, ["gwjushi"]],
-			gw_zhuoertan: ["male", "wu", 3, ["hupeng"]],
+			gw_aigeleisi: {
+				sex: "female",
+				group: "wu",
+				hp: 3,
+				skills: ["gwshenyu"],
+			},
+			gw_aokeweisite: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["yunhuo"],
+			},
+			gw_kaxier: {
+				sex: "male",
+				group: "shu",
+				hp: 4,
+				skills: ["gwfengchi"],
+			},
+			gw_luobo: {
+				sex: "male",
+				group: "qun",
+				hp: 3,
+				skills: ["junchi"],
+			},
+			gw_mieren: {
+				sex: "male",
+				group: "shu",
+				hp: 3,
+				skills: ["lingji"],
+			},
+			gw_sanhanya: {
+				sex: "male",
+				group: "shu",
+				hp: 3,
+				skills: ["gwjinyan"],
+			},
+			gw_shanhu: {
+				sex: "female",
+				group: "qun",
+				hp: 3,
+				skills: ["shuijian"],
+			},
+			gw_zhangyujushou: {
+				sex: "male",
+				group: "wu",
+				hp: 4,
+				skills: ["gwjushi"],
+			},
+			gw_zhuoertan: {
+				sex: "male",
+				group: "wu",
+				hp: 3,
+				skills: ["hupeng"],
+			},
 
-			gw_meizi: ["female", "wei", 3, ["gwjieyin"]],
-			gw_aimin: ["female", "wu", 3, ["huanshu"]],
-			gw_puxila: ["female", "qun", 3, ["gwqinwu"]],
+			gw_meizi: {
+				sex: "female",
+				group: "wei",
+				hp: 3,
+				skills: ["gwjieyin"],
+			},
+			gw_aimin: {
+				sex: "female",
+				group: "wu",
+				hp: 3,
+				skills: ["huanshu"],
+			},
+			gw_puxila: {
+				sex: "female",
+				group: "qun",
+				hp: 3,
+				skills: ["gwqinwu"],
+			},
 
-			gw_xigedelifa: ["female", "qun", 3, ["gwfusheng"]],
-			gw_laomaotou: ["male", "qun", 4, ["gwchenshui"]],
-			gw_qigaiwang: ["male", "qun", 4, ["julian"]],
+			gw_xigedelifa: {
+				sex: "female",
+				group: "qun",
+				hp: 3,
+				skills: ["gwfusheng"],
+			},
+			gw_laomaotou: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["gwchenshui"],
+			},
+			gw_qigaiwang: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["julian"],
+			},
 
-			gw_bierna: ["female", "qun", 3, ["gwfengshi"]],
-			gw_haizhiyezhu: ["male", "qun", 4, ["yangfan"]],
-			gw_nitelila: ["male", "wei", 4, ["shuangxi"]],
+			gw_bierna: {
+				sex: "female",
+				group: "qun",
+				hp: 3,
+				skills: ["gwfengshi"],
+			},
+			gw_haizhiyezhu: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["yangfan"],
+			},
+			gw_nitelila: {
+				sex: "male",
+				group: "wei",
+				hp: 4,
+				skills: ["shuangxi"],
+			},
 
-			gw_linjing: ["male", "wu", 4, ["gwyewu"]],
-			gw_kanbi: ["male", "qun", 1, ["gwfutian"]],
-			gw_nvyemo: ["female", "shu", 3, ["gwgouhun"]],
+			gw_linjing: {
+				sex: "male",
+				group: "wu",
+				hp: 4,
+				skills: ["gwyewu"],
+			},
+			gw_kanbi: {
+				sex: "male",
+				group: "qun",
+				hp: 1,
+				skills: ["gwfutian"],
+			},
+			gw_nvyemo: {
+				sex: "female",
+				group: "shu",
+				hp: 3,
+				skills: ["gwgouhun"],
+			},
 
-			gw_kairuisi: ["female", "qun", 3, ["gwweitu"]],
-			gw_oudimu: ["male", "shu", 3, ["gwjingshi"]],
-			gw_shasixiwusi: ["male", "qun", 4, ["gwjingtian"]],
+			gw_kairuisi: {
+				sex: "female",
+				group: "qun",
+				hp: 3,
+				skills: ["gwweitu"],
+			},
+			gw_oudimu: {
+				sex: "male",
+				group: "shu",
+				hp: 3,
+				skills: ["gwjingshi"],
+			},
+			gw_shasixiwusi: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["gwjingtian"],
+			},
 
-			gw_yioufeisisp: ["male", "wu", 3, ["gwminxiang"]],
-			gw_lanbote: ["male", "qun", 4, ["gwlangshi"]],
-			gw_fenghuang: ["male", "shu", 4, ["gwliaotian"]],
-			gw_diandian: ["male", "wu", 3, ["gwhuanbi"]],
-			gw_yisilinni: ["female", "wu", 3, ["gwhuanshuang"]],
-			gw_feilafanruide: ["male", "wei", 3, ["yinzhang"]],
+			gw_yioufeisisp: {
+				sex: "male",
+				group: "wu",
+				hp: 3,
+				skills: ["gwminxiang"],
+			},
+			gw_lanbote: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["gwlangshi"],
+			},
+			gw_fenghuang: {
+				sex: "male",
+				group: "shu",
+				hp: 4,
+				skills: ["gwliaotian"],
+			},
+			gw_diandian: {
+				sex: "male",
+				group: "wu",
+				hp: 3,
+				skills: ["gwhuanbi"],
+			},
+			gw_yisilinni: {
+				sex: "female",
+				group: "wu",
+				hp: 3,
+				skills: ["gwhuanshuang"],
+			},
+			gw_feilafanruide: {
+				sex: "male",
+				group: "wei",
+				hp: 3,
+				skills: ["yinzhang"],
+			},
 
-			gw_saqiya: ["female", "shu", 4, ["sqlongwu"]],
+			gw_saqiya: {
+				sex: "female",
+				group: "shu",
+				hp: 4,
+				skills: ["sqlongwu"],
+			},
 		},
 		characterIntro: {
 			gw_huoge: "那个老年痴呆？不知道他是活着还是已经被制成标本了！",
@@ -147,7 +408,6 @@ game.import("character", function () {
 						var target = result.targets[0];
 						player.line(target, "fire");
 						target.damage("fire", "nocard");
-						// player.discoverCard(ui.cardPile.childNodes);
 					} else {
 						player.gain(event.current, "draw");
 					}
@@ -609,21 +869,7 @@ game.import("character", function () {
 						targets[1].useCard({ name: cards[0].name }, targets[0], "noai");
 					}
 				},
-				// group:'gwminxiang_draw',
 				multiline: true,
-				// subSkill:{
-				// 	draw:{
-				// 		trigger:{global:'damageAfter'},
-				// 		silent:true,
-				// 		filter(event,player){
-				// 			var evt=event.getParent(3);
-				// 			return evt.name=='gwminxiang'&&evt.player==player;
-				// 		},
-				// 		content(){
-				// 			trigger.getParent(3).draw+=trigger.num;
-				// 		}
-				// 	}
-				// },
 				ai: {
 					order: 8,
 					result: {
@@ -760,8 +1006,6 @@ game.import("character", function () {
 			gwjingshi: {
 				enable: "phaseUse",
 				usable: 1,
-				//direct:true,
-				//delay:0,
 				filter(event, player) {
 					return game.hasPlayer(function (current) {
 						return current.countCards("h");
@@ -854,10 +1098,6 @@ game.import("character", function () {
 				},
 				content() {
 					player.changeHujia();
-					// var num=Math.min(trigger.cards.length,3-player.hujia);
-					// if(num>0){
-					// 	player.changeHujia();
-					// }
 				},
 				init(player) {
 					player.storage.gwweitu = 0;
@@ -1176,13 +1416,6 @@ game.import("character", function () {
 						return player.canUse("gw_ciguhanshuang", target);
 					}
 				},
-				// changeTarget(player,targets){
-				// 	if(!player.getStat('damage')){
-				// 		game.filterPlayer(function(current){
-				//             return get.distance(targets[0],current,'pure')==1;
-				//         },targets);
-				// 	}
-				// },
 				selectTarget() {
 					if (_status.event.player.getStat("damage")) {
 						return [1, 3];
@@ -2056,7 +2289,7 @@ game.import("character", function () {
 							event.target
 								.chooseControl(function (event, player) {
 									if (player.hp >= 3 && !player.needsToDiscard()) return 1;
-									if (player.hp == 2 && player.hasShan() && player.countCards("h") <= 1) return 1;
+									if (player.hp == 2 && player.hasShan("all") && player.countCards("h") <= 1) return 1;
 									return 0;
 								})
 								.set("choiceList", ["回复1点体力", "从弃牌堆中获得一张非金法术"]);
@@ -2092,6 +2325,7 @@ game.import("character", function () {
 			junchi: {
 				trigger: { global: "shaAfter" },
 				direct: true,
+				clearTime: true,
 				usable: 1,
 				filter(event, player) {
 					return (
@@ -2126,7 +2360,6 @@ game.import("character", function () {
 						},
 					},
 				},
-				// group:'junchi_gold'
 			},
 			hupeng: {
 				enable: "phaseUse",
@@ -2308,27 +2541,6 @@ game.import("character", function () {
 								})
 							) {
 								return -1;
-							}
-						},
-					},
-				},
-				// group:'hunmo_draw',
-				subSkill: {
-					draw: {
-						trigger: { player: "phaseEnd" },
-						filter(event, player) {
-							return player.getStat("skill").hunmo >= 3;
-						},
-						frequent: true,
-						content() {
-							"step 0";
-							player.chooseTarget(get.prompt("魂墨：造成1点伤害")).ai = function (target) {
-								return get.damageEffect(target, player, player);
-							};
-							"step 1";
-							if (result.bool) {
-								player.logSkill("hunmo_draw", result.targets);
-								result.targets[0].damage();
 							}
 						},
 					},
@@ -2559,7 +2771,7 @@ game.import("character", function () {
 							)
 								return -1;
 							if (get.effect(player, { name: "sha" }, target, player) >= 0) return -1;
-							if (!player.hasShan()) {
+							if (!player.hasShan("all")) {
 								if (ui.selected.targets.length) return 0;
 								if (player.hp >= 4) return -1;
 								if (player.hp >= 3 && target.hp == 1) return -1;
@@ -2749,7 +2961,6 @@ game.import("character", function () {
 					return get.effect(event.target, { name: "sha" }, player, player) > 0;
 				},
 				logTarget: "target",
-				// logLine:false,
 				content() {
 					"step 0";
 					var cards = get.cards();
@@ -2800,20 +3011,6 @@ game.import("character", function () {
 					threaten: 1.5,
 					noautowuxie: true,
 				},
-				// group:'fengjian_hide',
-				// subSkill:{
-				// 	hide:{
-				// 		trigger:{source:'damageEnd'},
-				// 		forced:true,
-				// 		popup:false,
-				// 		filter(event,player){
-				// 			return event.getParent(3).name=='fengjian';
-				// 		},
-				// 		content(){
-				// 			player.tempHide();
-				// 		}
-				// 	}
-				// }
 			},
 			huandie: {
 				trigger: { player: "phaseBegin" },
@@ -4171,8 +4368,6 @@ game.import("character", function () {
 
 			gw_saqiya: "萨琪亚",
 
-			// sqlongyin:'龙影',
-			// sqlongyin_info:'',
 			sqlongnu: "龙怒",
 			sqlongnu_info: "准备阶段，你可以发现一张牌堆中的牌，若你手牌中有同名牌，你可以改为造成1点火属性伤害锁定技。准备阶段开始时，你随机切换至一种形态。",
 			sqlonghuo: "龙火",

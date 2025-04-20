@@ -270,24 +270,26 @@ const skills = {
 	},
 	oldjiefan: {
 		audio: "jiefan",
-		enable: "chooseToUse",
+		trigger: { player: "chooseToUseBegin" },
 		filter(event, player) {
-			return event.type == "dying" && _status.currentPhase && _status.currentPhase.isIn();
+			return event.type == "dying" && _status.currentPhase !== player;
 		},
 		direct: true,
+		clearTime: true,
 		content() {
+			const list = [event.name, trigger.dying];
 			player
 				.chooseToUse(function (card, player, event) {
 					if (get.name(card) != "sha") return false;
 					return lib.filter.filterCard.apply(this, arguments);
-				}, get.prompt2("oldjiefan"))
+				}, get.prompt2(...list))
 				.set("targetRequired", true)
 				.set("complexSelect", true)
 				.set("filterTarget", function (card, player, target) {
 					if (target != _status.currentPhase && !ui.selected.targets.includes(_status.currentPhase)) return false;
 					return lib.filter.filterTarget.apply(this, arguments);
 				})
-				.set("logSkill", "oldjiefan")
+				.set("logSkill", list)
 				.set("oncard", function () {
 					_status.event.player.addTempSkill("oldjiefan_recover");
 				})
@@ -516,12 +518,17 @@ const skills = {
 						}
 						return get.value(cardx) - get.value(card);
 					},
-					precontent() {
+					async precontent(event, trigger, player) {
 						player.logSkill("old_guhuo");
-						player.addTempSkill("old_guhuo_guess");
-						var card = event.result.cards[0];
+						//player.addTempSkill("old_guhuo_guess");
+						let card = event.result.cards[0];
 						event.result.card.suit = get.suit(card);
 						event.result.card.number = get.number(card);
+						const guess_Event = game.createEvent("old_guhuo_guess");
+						guess_Event.player = player;
+						guess_Event.set("result", event.result);
+						guess_Event.setContent(lib.skill.old_guhuo_guess.content);
+						await guess_Event;
 					},
 				};
 			},
@@ -589,20 +596,17 @@ const skills = {
 			event.fake = false;
 			event.goon = true;
 			event.betrayers = [];
-			var card = trigger.cards[0];
-			if (card.name != trigger.card.name || (card.name == "sha" && !get.is.sameNature(trigger.card, card))) event.fake = true;
+			var card = event.result.cards[0];
+			if (card.name != event.result.card.name || (card.name == "sha" && !get.is.sameNature(event.result.card, card))) event.fake = true;
 			if (event.fake) {
 				player.addSkill("old_guhuo_cheated");
-				player.markAuto("old_guhuo_cheated", [trigger.card.name + trigger.card.nature]);
+				player.markAuto("old_guhuo_cheated", [event.result.card.name + event.result.card.nature]);
 			}
-			player.popup(trigger.card.name, "metal");
-			player.lose(card, ui.ordering).relatedEvent = trigger;
-			trigger.throw = false;
-			trigger.skill = "old_guhuo_backup";
-			game.log(player, "声明", trigger.targets && trigger.targets.length ? "对" : "", trigger.targets || "", trigger.name == "useCard" ? "使用" : "打出", trigger.card);
-			event.prompt = get.translation(player) + "声明" + (trigger.targets && trigger.targets.length ? "对" + get.translation(trigger.targets) : "") + (trigger.name == "useCard" ? "使用" : "打出") + (get.translation(trigger.card.nature) || "") + get.translation(trigger.card.name) + "，是否质疑？";
+			player.popup(event.result.card.name, "metal");
+			player.lose(card, ui.ordering);
+			game.log(player, "声明", event.result.targets && event.result.targets.length ? "对" : "", event.result.targets || "", event.getParent(2).name != "chooseToRespond" ? "使用" : "打出", event.result.card);
+			event.prompt = get.translation(player) + "声明" + (event.result.targets && event.result.targets.length ? "对" + get.translation(event.result.targets) : "") + (event.getParent(2).name != "chooseToRespond" ? "使用" : "打出") + (get.translation(event.result.card.nature) || "") + get.translation(event.result.card.name) + "，是否质疑？";
 			event.targets = game.filterPlayer(i => i != player && i.hp > 0).sortBySeat(_status.currentPhase);
-
 			game.broadcastAll(
 				function (card, player) {
 					_status.old_guhuoNode = card.copy("thrown");
@@ -618,7 +622,7 @@ const skills = {
 					_status.old_guhuoNode.style.transform = "perspective(600px) rotateY(180deg) translateX(0)";
 					player.$throwordered2(_status.old_guhuoNode);
 				},
-				trigger.cards[0],
+				event.result.cards[0],
 				player
 			);
 			event.onEnd01 = function () {
@@ -646,14 +650,14 @@ const skills = {
 			event.target.chooseButton([event.prompt, [["reguhuo_ally", "reguhuo_betray"], "vcard"]], true).set("ai", function (button) {
 				var player = _status.event.player;
 				var evt = _status.event.getParent("old_guhuo_guess"),
-					evtx = evt.getTrigger();
+					evtx = evt.result;
 				if (!evt) return Math.random();
-				var card = { name: evtx.card.name, nature: evtx.card.nature, isCard: true };
+				var card = evtx.card;
 				var ally = button.link[2] == "reguhuo_ally";
 				if (ally && (player.hp <= 1 || get.attitude(player, evt.player) >= 0)) return 1.1;
 				if (!ally && get.effect(player, { name: "losehp" }, player, player) >= 0) return 10;
 				if (!ally && get.attitude(player, evt.player) < 0) {
-					if (evtx.name == "useCard") {
+					if (["chooseToUse", "_wuxie"].includes(evt.getParent(2).name)) {
 						var eff = 0;
 						var targetsx = evtx.targets || [];
 						for (var target of targetsx) {
@@ -703,24 +707,27 @@ const skills = {
 					target.popup("质疑错误", "fire");
 					target.loseHp();
 				}
-				if (get.suit(trigger.cards[0], player) != "heart") {
+				if (get.suit(event.result.cards[0], player) != "heart") {
 					event.goon = false;
 				}
 			}
 			"step 7";
 			if (!event.goon) {
-				game.log(player, "声明的", trigger.card, "作废了");
-				trigger.cancel();
-				trigger.getParent().goto(0);
-				trigger.line = false;
+				game.log(player, "声明的", event.result.card, "作废了");
+				event.result.cancel = true;
 			}
 			"step 8";
 			game.delay();
 			"step 9";
 			if (!event.goon) {
 				if (event.fake) game.asyncDraw(event.betrayers);
-				game.broadcastAll(ui.clear);
 			}
+			game.broadcastAll(function () {
+				if (_status.old_guhuoNode) {
+					_status.old_guhuoNode.delete();
+					delete _status.old_guhuoNode;
+				}
+			});
 		},
 	},
 	old_zuilun: {

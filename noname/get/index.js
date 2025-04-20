@@ -32,8 +32,8 @@ export class Get extends GetCompatible {
 		const playername = get.slimName(player?.name);
 		const SeatNum = player.getSeatNum();
 		const addSeat = game.hasPlayer2(current => current != player && get.slimName(current?.name) == playername, true) && typeof SeatNum == "number";
-		let border = get.groupnature(get.bordergroup(player?.name), "raw");
-		let eventInfo = `<span style="font-weight:700"><span data-nature=${border}>${playername}${addSeat ? "[" + SeatNum + "]" : ""}</span><br/><span style="color:#FFD700">`;
+		let border = get.groupnature(get.bordergroup(player?.name));
+		let eventInfo = `<span style="font-weight:700"><span data-nature=${border}><span style="letter-spacing:0.1em">${playername}${addSeat ? "[" + SeatNum + "]" : ""}</span></span><br/><span style="color:#FFD700">`;
 		let name1 = name,
 			name2 = _status.event.getParent().name,
 			th_skill = false,
@@ -71,7 +71,7 @@ export class Get extends GetCompatible {
 			if ((name2 == "chooseToUse" || name2 == "chooseToRespond" || name2 == "_wuxie") && evt2.childEvents) {
 				let tempEvt;
 				for (let key of evt2.childEvents) {
-					if (key.name.indexOf("pre_") == 0 && key.name.indexOf("_backup") != -1) {
+					if (key.name.indexOf("pre_") == 0) {
 						tempEvt = key;
 						break;
 					}
@@ -90,27 +90,30 @@ export class Get extends GetCompatible {
 			} else if (name2.indexOf("lose_") == 0) name2 = name2.slice(5);
 			else if (name2.indexOf("_lose") != -1 && name2.length - name2.indexOf("_lose") == 5) name2 = name2.slice(0, name2.length - 5);
 		}
-		if (name1 == "useSkill") name1 = evt1.skill;
-		if (name2 == "useSkill") name2 = evt2.skill;
+		if (name1 == "useSkill") name1 = get.sourceSkillFor(evt1.skill);
+		if (name2 == "useSkill") name2 = get.sourceSkillFor(evt2.skill);
+		if (get.event().name == "judge" && get.event().getParent().name == "phaseJugde") {
+			(name1 = name), (name2 = _status.event.getParent().name), (th_skill = false), (evt1 = get.event()), (evt2 = get.event().getParent());
+		}
 		if (_status.event.skill) {
 			let skill = _status.event.skill;
-			if (info[skill]) {
+			if (info[get.sourceSkillFor(skill)]) {
 				th_skill = true;
-				eventInfo += info[skill];
+				eventInfo += info[get.sourceSkillFor(skill)];
 				if (sourceEvent) return _status.event;
 			}
-		} else if ((name1 && info[name1]) || (evt1.skill && info[evt1.skill])) {
+		} else if ((name1 && info[name1]) || (evt1.skill && info[get.sourceSkillFor(evt1.skill)])) {
 			if (name1 && info[name1]) {
 				if (lib.card[name1] && evt1.card && evt1.card.nature && info[evt1.card.nature]) eventInfo += info[evt1.card.nature];
 				eventInfo += info[name1];
-			} else eventInfo += info[evt1.skill];
+			} else eventInfo += info[get.sourceSkillFor(evt1.skill)];
 			th_skill = true;
 			if (sourceEvent) return evt1;
-		} else if ((name2 && info[name2]) || (evt2.skill && info[evt2.skill])) {
+		} else if ((name2 && info[name2]) || (evt2.skill && info[get.sourceSkillFor(evt2.skill)])) {
 			if (name2 && info[name2]) {
 				if (lib.card[name2] && evt2.card && evt2.card.nature && info[evt2.card.nature]) eventInfo += info[evt2.card.nature];
 				eventInfo += info[name2];
-			} else eventInfo += info[evt2.skill];
+			} else eventInfo += info[get.sourceSkillFor(evt2.skill)];
 			th_skill = true;
 			if (sourceEvent) return evt2;
 		}
@@ -669,11 +672,16 @@ export class Get extends GetCompatible {
 		return list;
 	}
 	/**
-	 * 返回本回合在进入弃牌堆且还在弃牌堆的牌
+	 * 返回本回合进入[过]弃牌堆的牌
 	 * @returns { Card[] }
 	 */
 	discarded() {
-		return _status.discarded.filter(item => item.parentNode == ui.discardPile);
+		return game
+			.getGlobalHistory("everything", evt => {
+				if (!evt.cards?.length) return false;
+				return evt.name === "cardsDiscard" || evt.position == ui.discardPile;
+			})
+			.reduce((cards, evt) => cards.addArray(evt.cards), []);
 	}
 	cardOffset() {
 		var x = ui.arena.getBoundingClientRect();
@@ -845,7 +853,7 @@ export class Get extends GetCompatible {
 			if (num === 3 || num === 4) return [];
 			return;
 		}
-		return info || get.convertedCharacter({ isNull: true });
+		return get.convertedCharacter(info || { isNull: true });
 	}
 	characterInitFilter(name) {
 		const info = get.character(name);
@@ -1531,37 +1539,37 @@ export class Get extends GetCompatible {
 		return num / list.length;
 	}
 	rank(name, num) {
-		if (typeof name == "object" && name.name) {
-			name = name.name;
+		if (typeof name === "object" && name.name) name = name.name;
+		num = num === true ? 9 : typeof num === "number" ? num : false;
+
+		if (name === _status.lord) {
+			return num ? Math.round((7 * (num - 1)) / 8 + 1) : "ap";
 		}
-		if (num == true) num = 9;
-		if (typeof num != "number") num = false;
-		if (name == _status.lord) return num ? Math.round((7 * (num - 1)) / 8 + 1) : "ap";
-		var rank = lib.rank;
-		if (lib.characterPack.standard[name] || lib.characterPack.shenhua[name]) {
-			var skills = get.character(name, 3);
-			for (var i = 0; i < skills.length; i++) {
-				if (skills[i].alter && !lib.config.vintageSkills.includes(skills[i])) {
-					name = lib.rank.a[0];
-					break;
-				}
+
+		const RANK_MAP = [
+			{ key: "s", factor: 8, ref: lib.rank.s },
+			{ key: "ap", factor: 7, ref: lib.rank.ap },
+			{ key: "a", factor: 6, ref: lib.rank.a },
+			{ key: "am", factor: 5, ref: lib.rank.am },
+			{ key: "bp", factor: 4, ref: lib.rank.bp }, // 中位数等级
+			{ key: "b", factor: 3, ref: lib.rank.b },
+			{ key: "bm", factor: 2, ref: lib.rank.bm },
+			{ key: "c", factor: 1, ref: lib.rank.c },
+			{ key: "d", factor: 0, ref: lib.rank.d },
+		];
+		for (const { key, factor, ref } of RANK_MAP) {
+			if (ref.includes(name)) {
+				return num ? Math.round((factor * (num - 1)) / 8 + 1) : key;
 			}
 		}
-		if (rank.s.includes(name)) return num ? Math.round((8 * (num - 1)) / 8 + 1) : "s";
-		if (rank.ap.includes(name)) return num ? Math.round((7 * (num - 1)) / 8 + 1) : "ap";
-		if (rank.a.includes(name)) return num ? Math.round((6 * (num - 1)) / 8 + 1) : "a";
-		if (rank.am.includes(name)) return num ? Math.round((5 * (num - 1)) / 8 + 1) : "am";
-		if (rank.bp.includes(name)) return num ? Math.round((4 * (num - 1)) / 8 + 1) : "bp";
-		if (rank.b.includes(name)) return num ? Math.round((3 * (num - 1)) / 8 + 1) : "b";
-		if (rank.bm.includes(name)) return num ? Math.round((2 * (num - 1)) / 8 + 1) : "bm";
-		if (rank.c.includes(name)) return num ? Math.round((1 * (num - 1)) / 8 + 1) : "c";
-		if (rank.d.includes(name)) return num ? Math.round((0 * (num - 1)) / 8 + 1) : "d";
-		if (lib.character[name]) {
-			if (lib.character[name].isBoss || lib.character[name].isBossAllowed || lib.character[name].isHiddenBoss) {
-				return num ? Math.round((9 * (num - 1)) / 8 + 1) : "sp";
-			}
+
+		const charInfo = lib.character[name];
+		if (charInfo?.isBoss || charInfo?.isBossAllowed || charInfo?.isHiddenBoss) {
+			return num ? Math.round((9 * (num - 1)) / 8 + 1) : "sp";
 		}
-		return num ? Math.round((9 * (num - 1)) / 8 + 1) : "x";
+
+		console.warn(`"${name}"未配置等级，已按众数"bp"处理`);
+		return num ? Math.round((4 * (num - 1)) / 8 + 1) : "bp";
 	}
 	skillRank(skill, type, grouped) {
 		var info = lib.skill[skill];

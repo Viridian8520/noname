@@ -1250,35 +1250,33 @@ const skills = {
 			if (!player.getStat().xvzhi) player.getStat().xvzhi = [];
 			player.getStat().xvzhi.addArray(targets);
 			if (targets.some(i => !i.countCards("h"))) return;
-			const next = player
-				.chooseCardOL(targets, "h", true, [1, Infinity], "蓄志：选择任意张手牌并与对方交换")
-				.set("ai", card => {
-					const player = get.event("player"),
-						target = get
-							.event()
-							.getParent(2)
-							.targets.find(i => i != player);
-					const sha = new lib.element.VCard({ name: "sha" });
-					const playerEffect = player.hasUseTarget(sha, false)
-						? Math.max(
-								...game
-									.filterPlayer(current => player.canUse(sha, current, false))
-									.map(current => {
-										return get.effect(current, sha, player, player);
-									})
-						  )
-						: 0;
-					const targetEffect = target.hasUseTarget(sha, false)
-						? Math.max(
-								...game
-									.filterPlayer(current => target.canUse(sha, current, false))
-									.map(current => {
-										return get.effect(current, sha, player, player);
-									})
-						  )
-						: 0;
-					return 5 + 2 * get.sgn(playerEffect - targetEffect) - get.value(card);
-				});
+			const next = player.chooseCardOL(targets, "h", true, [1, Infinity], "蓄志：选择任意张手牌并与对方交换").set("ai", card => {
+				const player = get.event("player"),
+					target = get
+						.event()
+						.getParent(2)
+						.targets.find(i => i != player);
+				const sha = new lib.element.VCard({ name: "sha" });
+				const playerEffect = player.hasUseTarget(sha, false)
+					? Math.max(
+							...game
+								.filterPlayer(current => player.canUse(sha, current, false))
+								.map(current => {
+									return get.effect(current, sha, player, player);
+								})
+					  )
+					: 0;
+				const targetEffect = target.hasUseTarget(sha, false)
+					? Math.max(
+							...game
+								.filterPlayer(current => target.canUse(sha, current, false))
+								.map(current => {
+									return get.effect(current, sha, player, player);
+								})
+					  )
+					: 0;
+				return 5 + 2 * get.sgn(playerEffect - targetEffect) - get.value(card);
+			});
 			next._args.remove("glow_result");
 			const result = await next.forResult();
 			await targets[0].swapHandcards(targets[1], result[0].cards, result[1].cards);
@@ -1906,7 +1904,6 @@ const skills = {
 				},
 				forced: true,
 				filter(event, player) {
-					if (!lib.suit.includes(get.suit(event.card))) return false;
 					return player.getStorage("qingbei_effect").length;
 				},
 				content() {
@@ -1914,7 +1911,7 @@ const skills = {
 				},
 				mark: true,
 				intro: {
-					content: storage => `本轮内不能使用${get.translation(storage)}花色的牌，且使用一张有花色的牌后摸${get.cnNumber(storage.length)}张牌`,
+					content: storage => `本轮内不能使用${get.translation(storage)}花色的牌，且使用牌后摸${get.cnNumber(storage.length)}张牌`,
 				},
 				mod: {
 					cardEnabled(card, player) {
@@ -3742,6 +3739,7 @@ const skills = {
 		filter(event, player) {
 			return event.player.isIn() && event.player.countCards("e") > 0 && lib.filter.targetEnabled({ name: "sha" }, player, event.player) && (player.hasSha() || (_status.connectMode && player.countCards("h") > 0));
 		},
+		clearTime: true,
 		content() {
 			player
 				.chooseToUse(function (card, player, event) {
@@ -4357,10 +4355,10 @@ const skills = {
 						};
 					},
 					ai: {
-						hasSha: true,
-						hasShan: true,
+						respondSha: true,
+						respondShan: true,
 						skillTagFilter(player, tag) {
-							const name = "s" + tag.slice(4);
+							const name = "s" + tag.slice("respondS".length);
 							return lib.skill.mpsixiao_use.hiddenCard(player, name);
 						},
 					},
@@ -4396,7 +4394,7 @@ const skills = {
 		prompt: "将一张锦囊牌当【酒】使用",
 		filter(event, player) {
 			if (event.name == "chooseToUse") return player.hasCard(card => get.type2(card) == "trick", "hs");
-			return event.card.name == "jiu" && player.countMark("mpjiusong") < 3;
+			return event.card?.name == "jiu" && player.countMark("mpjiusong") < 3;
 		},
 		forced: true,
 		locked: false,

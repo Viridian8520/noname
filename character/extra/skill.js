@@ -16,27 +16,32 @@ const skills = {
 		},
 		content() {
 			for (const i of event.targets) {
-				i.addTempSkill("luansuo_debuff", ["phaseBeginStart", "phaseAfter"]);
+				i.addTempSkill("luansuo_debuff");
 				i.addGaintag(i.getCards("h"), "luansuo_debuff");
 			}
 		},
+		global: "luansuo_discard",
 		subSkill: {
+			discard: {
+				mod: {
+					cardDiscardable(card) {
+						if (_status.currentPhase?.hasSkill("luansuo") && get.position(card) === "h") return false;
+					},
+					canBeDiscarded(card) {
+						if (_status.currentPhase?.hasSkill("luansuo") && get.position(card) === "h") return false;
+					},
+				},
+			},
 			debuff: {
 				mod: {
-					cardname(card, player) {
+					cardname(card) {
 						if (get.itemtype(card) !== "card" || get.position(card) !== "h") return;
-						if (card.hasGaintag("luansuo_debuff") && !player.getStorage("luansuo_debuff").includes(get.suit(card))) return "tiesuo";
+						if (card.hasGaintag("luansuo_debuff")) return "tiesuo";
 					},
-					cardnature(card, player) {
+					cardnature(card) {
 						if (get.itemtype(card) !== "card" || get.position(card) !== "h") return;
-						if (card.hasGaintag("luansuo_debuff") && !player.getStorage("luansuo_debuff").includes(get.suit(card))) return false;
+						if (card.hasGaintag("luansuo_debuff")) return false;
 					},
-					cardDiscardable(card, player) {
-						if (get.position(card) === "h") return false;
-					},
-					//canBeDiscarded(card, player) {
-					//	if (get.position(card) === "h") return false;
-					//},
 					aiOrder(player, card, num) {
 						if (num > 0 && get.name(card, player) === "huogong") return 0;
 					},
@@ -49,7 +54,6 @@ const skills = {
 				},
 				charlotte: true,
 				onremove(player, skill) {
-					delete player.storage[skill];
 					player.removeGaintag(skill);
 				},
 				trigger: { global: ["loseAfter", "equipAfter", "addJudgeAfter", "gainAfter", "loseAsyncAfter", "addToExpansionAfter", "cardsDiscardAfter"] },
@@ -974,7 +978,7 @@ const skills = {
 		locked: false,
 		logAudio: () => 1,
 		async content(event, trigger, player) {
-			const cards = get.cards(get.mode() == "doudizhu" ? 1 : 2);
+			const cards = get.cards(2);
 			const next = player.addToExpansion(cards, "draw");
 			next.gaintag.add(event.name);
 			await next;
@@ -1235,9 +1239,16 @@ const skills = {
 		audio: 2,
 		trigger: {
 			player: ["chooseToUseAfter", "chooseToRespondAfter"],
+			global: "_wuxieAfter",
 		},
 		filter(event, player) {
 			if (player.countMark("xinrenjie_used") >= 4) return false;
+			if (event.name == "chooseToUse" && event.type == "wuxie") return false;
+			if (event.name == "_wuxie") {
+				if (event.wuxieresult && event.wuxieresult == player) return false;
+				if (event._info_map.player == player) return false;
+				return true;
+			}
 			return event.respondTo && event.respondTo[0] !== player && !event.result.bool;
 		},
 		forced: true,
@@ -3672,10 +3683,10 @@ const skills = {
 					player.storage.twshelie = 1 - result.index;
 					const evt = trigger.getParent("phase", true, true);
 					if (result.index == 0) {
-						if (evt && evt.phaseList) evt.phaseList.splice(evt.num + 1, 0, "phaseDraw|twshelie");
+						if (evt?.phaseList) evt.phaseList.splice(evt.num + 1, 0, "phaseDraw|twshelie");
 					}
 					if (result.index == 1) {
-						if (evt && evt.phaseList) evt.phaseList.splice(evt.num + 1, 0, "phaseUse|twshelie");
+						if (evt?.phaseList) evt.phaseList.splice(evt.num + 1, 0, "phaseUse|twshelie");
 					}
 				},
 			},
@@ -4435,7 +4446,7 @@ const skills = {
 		audio: 2,
 		mod: {
 			cardUsable(card) {
-				if (card.storage && card.storage.shouli) return Infinity;
+				if (card.storage?.shouli) return Infinity;
 			},
 		},
 		enable: ["chooseToUse", "chooseToRespond"],
@@ -4621,7 +4632,6 @@ const skills = {
 						replace: { window() {} },
 					});
 				} else {
-					delete evt.result.skill;
 					delete evt.result.used;
 					evt.result.card = get.autoViewAs(
 						{
@@ -4673,9 +4683,7 @@ const skills = {
 					game.setNature(trigger, "thunder");
 				},
 				marktext: "⚡",
-				intro: {
-					content: "受到的伤害+1且改为雷属性",
-				},
+				intro: { content: "受到的伤害+1且改为雷属性" },
 				ai: {
 					effect: {
 						target: (card, player, target) => {
@@ -4731,31 +4739,28 @@ const skills = {
 					if (event.num < targets.length) event.redo();
 				},
 			},
+			backup: {
+				precontent() {
+					"step 0";
+					var cards = event.result.card.cards;
+					event.result.cards = cards;
+					var owner = get.owner(cards[0]);
+					event.target = owner;
+					owner.$give(cards[0], player, false);
+					player.popup(event.result.card.name, "metal");
+					game.delayx();
+					event.getParent().addCount = false;
+					"step 1";
+					if (player != target) target.addTempSkill("fengyin");
+					target.addTempSkill("shouli_thunder");
+					player.addTempSkill("shouli_thunder");
+				},
+				filterCard: () => false,
+				prompt: "请选择【杀】的目标",
+				selectCard: -1,
+				log: false,
+			},
 		},
-	},
-	shouli_backup: {
-		sourceSkill: "shouli",
-		precontent() {
-			"step 0";
-			delete event.result.skill;
-			var cards = event.result.card.cards;
-			event.result.cards = cards;
-			var owner = get.owner(cards[0]);
-			event.target = owner;
-			owner.$give(cards[0], player, false);
-			player.popup(event.result.card.name, "metal");
-			game.delayx();
-			event.getParent().addCount = false;
-			"step 1";
-			if (player != target) target.addTempSkill("fengyin");
-			target.addTempSkill("shouli_thunder");
-			player.addTempSkill("shouli_thunder");
-		},
-		filterCard() {
-			return false;
-		},
-		prompt: "请选择【杀】的目标",
-		selectCard: -1,
 	},
 	hengwu: {
 		audio: 2,
@@ -5028,15 +5033,13 @@ const skills = {
 				trigger: { player: "phaseChange" },
 				forced: true,
 				filter(event, player) {
-					if (!player.storage.yuheng) return false;
-					var list = ["xinfu_guanwei", "bizheng", "xinanguo"];
-					for (var i of list) {
-						if (!player.storage.yuheng.includes(i)) return false;
-					}
+					if (!player.storage.yuheng?.length) return false;
+					const list = ["xinfu_guanwei", "bizheng", "xinanguo"];
+					if (list.some(skill => !player.storage.yuheng.includes(skill))) return false;
 					return event.phaseList[event.num].indexOf("phaseJudge") != -1;
 				},
 				content() {
-					trigger.phaseList[trigger.num] = "phaseDraw|clanguixiang";
+					trigger.phaseList[trigger.num] = `phaseDraw|${event.name}`;
 					game.delayx();
 				},
 				init(player, skill) {
@@ -6495,11 +6498,11 @@ const skills = {
 					filterCard: () => false,
 					selectCard: -1,
 					popname: true,
+					log: false,
 					precontent() {
 						player.logSkill("zuoxing");
 						var target = player.storage.zuoxing;
 						target.loseMaxHp();
-						//delete event.result.skill;
 					},
 				};
 			},
@@ -9713,7 +9716,7 @@ const skills = {
 			if (player.hasEnabledSlot() && !player.hasEnabledSlot(5)) return false;
 			return true;
 		},
-		bannedList: ["bifa", "buqu", "gzbuqu", "songci", "funan", "xinfu_guhuo", "reguhuo", "huashen", "rehuashen", "old_guhuo", "shouxi", "xinpojun", "taoluan", "xintaoluan", "yinbing", "xinfu_yingshi", "zhenwei", "zhengnan", "xinzhengnan", "zhoufu"],
+		bannedList: ["bifa", "buqu", "gzbuqu", "songci", "funan", "xinfu_guhuo", "reguhuo", "huashen", "rehuashen", "old_guhuo", "shouxi", "xinpojun", "taoluan", "xintaoluan", "xinfu_yingshi", "zhenwei", "zhengnan", "xinzhengnan"],
 		logTarget: "player",
 		content() {
 			"step 0";
@@ -9802,72 +9805,45 @@ const skills = {
 	},
 	drlt_zhiti: {
 		audio: 2,
-		locked: true,
-		group: ["drlt_zhiti_damage", "drlt_zhiti_compare", "drlt_zhiti_juedou"],
-		global: "g_drlt_zhiti",
-		subSkill: {
-			juedou: {
-				audio: "drlt_zhiti",
-				trigger: {
-					player: "juedouAfter",
-					target: "juedouAfter",
-				},
-				forced: true,
-				filter(event, player) {
-					if (!event.turn || event.turn === player || !player.hasDisabledSlot()) return false;
-					const opposite = event.player === player ? event.target : event.player;
-					if (!opposite.isDamaged()) return false;
-					return opposite && opposite.isIn() && opposite.inRangeOf(player);
-				},
-				content() {
-					player.chooseToEnable();
-				},
-			},
-			compare: {
-				audio: "drlt_zhiti",
-				trigger: {
-					player: ["chooseToCompareAfter", "compareMultipleAfter"],
-					target: ["chooseToCompareAfter", "compareMultipleAfter"],
-				},
-				filter(event, player) {
-					if (event.preserve || !player.hasDisabledSlot()) return false;
-					let opposite;
-					if (player === event.player) {
-						if (event.num1 > event.num2) {
-							opposite = event.target;
-						} else {
-							return false;
-						}
-					} else {
-						if (event.num1 < event.num2) {
-							opposite = event.player;
-						} else {
-							return false;
-						}
-					}
-					if (!opposite.isDamaged()) return false;
-					return opposite && opposite.isIn() && opposite.inRangeOf(player);
-				},
-				forced: true,
-				content() {
-					player.chooseToEnable();
-				},
-			},
-			damage: {
-				audio: "drlt_zhiti",
-				trigger: { player: "damageEnd" },
-				forced: true,
-				filter(event, player) {
-					if (!player.hasDisabledSlot()) return false;
-					const opposite = event.source;
-					if (!opposite.isDamaged()) return false;
-					return opposite && opposite.isIn() && opposite.inRangeOf(player);
-				},
-				content() {
-					player.chooseToEnable();
-				},
-			},
+		trigger: {
+			global: ["juedouAfter", "chooseToCompareAfter", "compareMultipleAfter"],
+			player: "damageEnd",
 		},
+		filter(event, player) {
+			if (!player.hasDisabledSlot()) return false;
+			if (event.name == "juedou") {
+				if (![event.player, event.target].includes(player)) return false;
+				if (!event.turn || event.turn === player) return false;
+				const opposite = event.player === player ? event.target : event.player;
+				return opposite?.isIn() && opposite.inRangeOf(player) && opposite.isDamaged();
+			} else if (event.name == "damage") {
+				const opposite = event.source;
+				return opposite?.isIn() && opposite.inRangeOf(player) && opposite.isDamaged();
+			} else {
+				if (![event.player, event.target].includes(player)) return false;
+				if (event.preserve) return false;
+				let opposite;
+				if (player === event.player) {
+					if (event.num1 > event.num2) {
+						opposite = event.target;
+					} else {
+						return false;
+					}
+				} else {
+					if (event.num1 < event.num2) {
+						opposite = event.player;
+					} else {
+						return false;
+					}
+				}
+				return opposite?.isIn() && opposite.inRangeOf(player) && opposite.isDamaged();
+			}
+		},
+		forced: true,
+		content() {
+			player.chooseToEnable();
+		},
+		global: "g_drlt_zhiti",
 	},
 	g_drlt_zhiti: {
 		mod: {

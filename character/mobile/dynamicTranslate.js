@@ -66,7 +66,7 @@ const dynamicTranslates = {
 					hp: "你的体力值",
 					damagedHp: "你的损失体力值",
 					countplayer: "场上存活角色数",
-				}[player.storage.pothanzhan]
+				}[player.storage.potzhanlie]
 		);
 	},
 	mbfunan(player) {

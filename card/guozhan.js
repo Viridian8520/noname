@@ -180,36 +180,64 @@ game.import("card", function () {
 				},
 				modTarget: true,
 				async content(event, trigger, player) {
-					const target = event.target,
+					const { target } = event,
 						judge = get.mode() == "guozhan" ? "identity" : "group";
 					await target.draw(8);
-					const result = await target.chooseToDiscard("请弃置至少六张手牌", [6, target.countCards("h")], true, "h").forResult();
-					if (target[judge] != "wu" || !result.cards || !result.cards.length) return;
-					const give_cards = result.cards.filterInD("d"),
-						give_list = [];
-					if (!give_cards.length) return;
-					while (
-						game.hasPlayer(function (current) {
-							return current != target && current[judge] == "wu" && !give_list.includes(current);
+					if (!target.countDiscardableCards(target, "h")) return;
+					const targets = game.filterPlayer(current => current != target && current[judge] == "wu");
+					const result = await target
+						.chooseToDiscard("请弃置至少六张手牌", [6, target.countCards("h")], true, "h")
+						.set("ai", card => {
+							const { player, targetx } = get.event();
+							if (2 * ui.selected.targets >= targetx.filter(current => get.attitude(player, current) > 0).length) return 0;
+							return 6 - get.value(card);
 						})
-					) {
-						const result2 = await target.chooseButton(["是否将弃置的牌交给其他吴势力角色？", give_cards], [1, 2]).forResult();
-						if (result2.bool) {
-							const cards2 = result2.links;
-							const result3 = await target
-								.chooseTarget(true, "选择获得" + get.translation(cards2) + "的角色", function (card, player, target) {
-									return target != player && target[judge] == "wu" && !_status.event.targetx.includes(target);
+						.set("targetx", targets)
+						.forResult();
+					if (target[judge] != "wu" || !result.cards?.someInD("d")) return;
+					const give_cards = result.cards.filterInD("d");
+					while (targets.length && give_cards.length) {
+						let result;
+						result = await target
+							.chooseButton(["是否将弃置的牌交给其他吴势力角色？", give_cards], [1, 2])
+							.set("ai", button => {
+								const { player, targetx, cards } = get.event();
+								const { link } = button;
+								if (targetx.some(current => get.attitude(player, current) > 0)) return get.value(link);
+								if (!ui.selected.buttons.length && get.name(link) == "du" && targetx.some(current => get.attitude(player, current) < 0 && !current.hasSkillTag("nodu"))) return 1;
+								return 0;
+							})
+							.set("targetx", targets)
+							.set("cards", give_cards)
+							.forResult();
+						if (result?.bool && result?.links?.length) {
+							const { links } = result;
+							result = await target
+								.chooseTarget(true, `选择获得${get.translation(links)}的角色`, (card, player, target) => {
+									return get.event("targetx").includes(target);
 								})
-								.set("targetx", give_list)
+								.set("targetx", targets)
+								.set("ai", target => {
+									const { player, toEnemy } = get.event();
+									let att = get.attitude(player, target);
+									if (toEnemy) {
+										if (target.hasSkillTag("nodu")) return 0;
+										return 1 - att;
+									}
+									if (att < 3) return 0;
+									if (target.hasSkillTag("nogain")) att /= 10;
+									return Math.max(0.1, att / Math.sqrt(1 + target.countCards("h")));
+								})
+								.set("toEnemy", get.name(links[0]) == "du")
 								.forResult();
-							if (result3.bool && result3.targets && result3.targets.length) {
-								const current = result3.targets[0];
+							if (result?.bool && result?.targets?.length) {
+								const [current] = result.targets;
 								target.line(current, "green");
-								const next = current.gain(cards2, "gain2");
+								targets.remove(current);
+								give_cards.removeArray(links);
+								const next = current.gain(links, "gain2");
 								next.giver = target;
 								await next;
-								give_list.push(current);
-								give_cards.removeArray(cards2);
 							} else break;
 						} else break;
 					}
@@ -224,7 +252,7 @@ game.import("card", function () {
 							}
 						}
 					},
-					order: 6,
+					order: 8,
 					value: 9,
 					useful: 6,
 					tag: {
@@ -236,16 +264,7 @@ game.import("card", function () {
 						target(player, target) {
 							const judge = get.mode() == "guozhan" ? "identity" : "group";
 							if (target[judge] != "wu") return 3;
-							return Math.max(
-								3,
-								Math.min(
-									8,
-									2 *
-										game.countPlayer(function (current) {
-											return current[judge] == "wu";
-										})
-								)
-							);
+							return Math.max(3, Math.min(8, 2 * game.countPlayer(current => current[judge] == "wu")));
 						},
 					},
 				},

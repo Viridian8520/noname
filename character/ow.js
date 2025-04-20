@@ -3,32 +3,152 @@ game.import("character", function () {
 	return {
 		name: "ow",
 		character: {
-			ow_liekong: ["female", "shu", 3, ["shanxian", "shanhui"]],
-			ow_sishen: ["male", "shu", 4, ["xiandan", "yihun", "shouge"]],
-			ow_tianshi: ["female", "qun", 3, ["shouhu", "ziyu", "feiying"]],
-			ow_falaozhiying: ["female", "shu", 3, ["feidan", "huoyu", "feiying"]],
-			ow_zhixuzhiguang: ["female", "qun", 3, ["guangshu"]],
-			ow_luxiao: ["male", "wu", 3, ["yuedong", "kuoyin", "huhuan"]],
-			ow_shibing: ["male", "shu", 4, ["tuji", "mujing", "lichang"]],
-			ow_yuanshi: ["male", "qun", 3, ["feiren", "lianpo", "zhanlong"]],
-			ow_chanyata: ["male", "qun", 3, ["xie", "luan", "sheng"]],
-			ow_dva: ["female", "shu", 2, ["jijia", "tuijin", "zihui", "chongzhuang"]],
-			ow_mei: ["female", "wei", 3, ["bingqiang", "jidong", "baoxue"]],
-			ow_ana: ["female", "wei", 3, ["zhiyuan", "mianzhen", "aqianghua"]],
-			ow_heibaihe: ["female", "qun", 3, ["juji", "duwen", "dulei"]],
-			ow_maikelei: ["male", "shu", 4, ["shanguang", "tiandan", "shenqiang"]],
-			ow_kuangshu: ["male", "shu", 3, ["liudan", "shoujia", "shihuo"]],
+			ow_liekong: {
+				sex: "female",
+				group: "shu",
+				hp: 3,
+				skills: ["shanxian", "shanhui"],
+			},
+			ow_sishen: {
+				sex: "male",
+				group: "shu",
+				hp: 4,
+				skills: ["xiandan", "yihun", "shouge"],
+			},
+			ow_tianshi: {
+				sex: "female",
+				group: "qun",
+				hp: 3,
+				skills: ["shouhu", "ziyu", "feiying"],
+			},
+			ow_falaozhiying: {
+				sex: "female",
+				group: "shu",
+				hp: 3,
+				skills: ["feidan", "huoyu", "feiying"],
+			},
+			ow_zhixuzhiguang: {
+				sex: "female",
+				group: "qun",
+				hp: 3,
+				skills: ["guangshu"],
+			},
+			ow_luxiao: {
+				sex: "male",
+				group: "wu",
+				hp: 3,
+				skills: ["yuedong", "kuoyin", "huhuan"],
+			},
+			ow_shibing: {
+				sex: "male",
+				group: "shu",
+				hp: 4,
+				skills: ["tuji", "mujing", "lichang"],
+			},
+			ow_yuanshi: {
+				sex: "male",
+				group: "qun",
+				hp: 3,
+				skills: ["feiren", "lianpo", "zhanlong"],
+			},
+			ow_chanyata: {
+				sex: "male",
+				group: "qun",
+				hp: 3,
+				skills: ["xie", "luan", "sheng"],
+			},
+			ow_dva: {
+				sex: "female",
+				group: "shu",
+				hp: 2,
+				skills: ["jijia", "tuijin", "zihui", "chongzhuang"],
+			},
+			ow_mei: {
+				sex: "female",
+				group: "wei",
+				hp: 3,
+				skills: ["bingqiang", "jidong", "baoxue"],
+			},
+			ow_ana: {
+				sex: "female",
+				group: "wei",
+				hp: 3,
+				skills: ["zhiyuan", "mianzhen", "aqianghua"],
+			},
+			ow_heibaihe: {
+				sex: "female",
+				group: "qun",
+				hp: 3,
+				skills: ["juji", "duwen", "dulei"],
+			},
+			ow_maikelei: {
+				sex: "male",
+				group: "shu",
+				hp: 4,
+				skills: ["shanguang", "tiandan", "shenqiang"],
+			},
+			ow_kuangshu: {
+				sex: "male",
+				group: "shu",
+				hp: 3,
+				skills: ["liudan", "shoujia", "shihuo"],
+			},
 
-			ow_tuobiang: ["male", "shu", 3, ["paotai", "maoding"]],
-			ow_baolei: ["male", "qun", 4, ["bshaowei", "zhencha"]],
-			ow_banzang: ["male", "qun", 4, ["bfengshi", "yinbo"]],
-			ow_laiyinhate: ["male", "qun", 4, ["zhongdun", "mengji"]],
-			ow_luba: ["male", "shu", 4, ["liangou", "xiyang"]],
-			ow_wensidun: ["male", "shu", 4, ["feitiao", "dianji"]],
-			ow_zhaliya: ["female", "wei", 4, ["pingzhang", "owliyong"]],
+			ow_tuobiang: {
+				sex: "male",
+				group: "shu",
+				hp: 3,
+				skills: ["paotai", "maoding"],
+			},
+			ow_baolei: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["bshaowei", "zhencha"],
+			},
+			ow_banzang: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["bfengshi", "yinbo"],
+			},
+			ow_laiyinhate: {
+				sex: "male",
+				group: "qun",
+				hp: 4,
+				skills: ["zhongdun", "mengji"],
+			},
+			ow_luba: {
+				sex: "male",
+				group: "shu",
+				hp: 4,
+				skills: ["liangou", "xiyang"],
+			},
+			ow_wensidun: {
+				sex: "male",
+				group: "shu",
+				hp: 4,
+				skills: ["feitiao", "dianji"],
+			},
+			ow_zhaliya: {
+				sex: "female",
+				group: "wei",
+				hp: 4,
+				skills: ["pingzhang", "owliyong"],
+			},
 
-			ow_heiying: ["female", "wei", 3, ["qinru", "yinshen", "maichong"]],
-			ow_orisa: ["female", "wu", 4, ["qianggu", "woliu"]],
+			ow_heiying: {
+				sex: "female",
+				group: "wei",
+				hp: 3,
+				skills: ["qinru", "yinshen", "maichong"],
+			},
+			ow_orisa: {
+				sex: "female",
+				group: "wu",
+				hp: 4,
+				skills: ["qianggu", "woliu"],
+			},
 		},
 		characterIntro: {
 			ow_orisa: "奥丽莎是用在努巴尼昙花一现的OR15防御机器人的零件组装而成的，她是这座城市的新一代守护者，但依然有很大的成长空间",
@@ -163,7 +283,7 @@ game.import("character", function () {
 								if (target.hasSkill("qianggu2") && get.attitude(player, target) > 0) {
 									return [0, num];
 								}
-								if (target.hp == 1 && !target.hasShan()) return;
+								if (target.hp == 1 && !target.hasShan("all")) return;
 								return [1, num];
 							}
 						},
@@ -434,7 +554,6 @@ game.import("character", function () {
 			zhencha2: {},
 			pingzhang: {
 				trigger: { global: "damageBegin" },
-				// alter:true,
 				intro: {
 					content(storage, player) {
 						if (player.hasSkill("pingzhang2")) {
@@ -456,7 +575,7 @@ game.import("character", function () {
 				},
 				filter(event, player) {
 					if (event.num <= 0) return false;
-					var position = get.is.altered("pingzhang") ? "h" : "he";
+					var position = "he";
 					if (event.player == player) {
 						if (player.hasSkill("pingzhang2")) return false;
 						return player.countCards(position, { suit: "heart" });
@@ -468,7 +587,7 @@ game.import("character", function () {
 				direct: true,
 				content() {
 					"step 0";
-					var position = get.is.altered("pingzhang") ? "h" : "he";
+					var position = "he";
 					var suit = player == trigger.player ? "heart" : "spade";
 					var next = player.chooseToDiscard(position, { suit: suit }, get.prompt("pingzhang", trigger.player));
 					next.ai = function (card) {
@@ -567,18 +686,6 @@ game.import("character", function () {
 			},
 			liangou2: {
 				mod: {
-					// cardEnabled:function(card,player){
-					// 	return false;
-					// },
-					// cardUsable:function(card,player){
-					// 	return false;
-					// },
-					// cardRespondable:function(card,player){
-					// 	return false;
-					// },
-					// cardSavable:function(card,player){
-					// 	return false;
-					// },
 					globalTo(from, to) {
 						if (from == to.storage.liangou2) return -Infinity;
 					},
@@ -591,14 +698,6 @@ game.import("character", function () {
 				content() {
 					trigger.num++;
 				},
-				// ai:{
-				//     effect:{
-				//         target:function(card,player,target){
-				//             if(get.tag(card,'damage')) return [1,-2];
-				//             if(get.tag(card,'respond')) return [1,-1];
-				//         }
-				//     }
-				// }
 			},
 			xiyang: {
 				trigger: { player: "phaseEnd" },
@@ -792,10 +891,9 @@ game.import("character", function () {
 			},
 			zhongdun: {
 				unique: true,
-				// alter:true,
 				init2(player) {
 					if (!player.storage.zhongdun) {
-						player.changeHujia(get.is.altered("zhongdun") ? 6 : 8);
+						player.changeHujia(8);
 						player.storage.zhongdun = true;
 					}
 				},
@@ -837,11 +935,6 @@ game.import("character", function () {
 			maoding: {
 				trigger: { player: "damageEnd", source: "damageEnd" },
 				frequent: true,
-				filter(event, player) {
-					if (get.is.altered("maoding") && event.source != player) return false;
-					return true;
-				},
-				// alter:true,
 				content() {
 					var list = get.typeCard("hslingjian");
 					if (!list.length) {
@@ -865,7 +958,6 @@ game.import("character", function () {
 					return !target.hujia;
 				},
 				selectCard: 2,
-				// usable:1,
 				content() {
 					target.changeHujia();
 				},
@@ -966,14 +1058,12 @@ game.import("character", function () {
 			bfengshi: {
 				trigger: { player: "shaBegin" },
 				forced: true,
-				// alter:true,
 				check(event, player) {
 					return get.attitude(player, event.target) <= 0;
 				},
 				filter(event, player) {
 					if (player.hasSkill("bfengshi4")) return false;
 					var num = 0.2;
-					if (get.is.altered("bfengshi")) num = 0.15;
 					return Math.random() < num * player.countUsed();
 				},
 				content() {
@@ -995,7 +1085,6 @@ game.import("character", function () {
 				filter(event, player) {
 					if (player.hasSkill("bfengshi4")) return false;
 					var num = 0.2;
-					if (get.is.altered("bfengshi")) num = 0.15;
 					return event.card && event.card.name == "sha" && Math.random() < num * player.countUsed();
 				},
 				content() {
@@ -1057,7 +1146,6 @@ game.import("character", function () {
 			aqianghua: {
 				enable: "phaseUse",
 				usable: 1,
-				// alter:true,
 				filter(event, player) {
 					return player.countCards("h") >= 1;
 				},
@@ -1070,7 +1158,7 @@ game.import("character", function () {
 				prepare: "give",
 				content() {
 					target.gain(cards);
-					if (!get.is.altered("aqianghua")) target.changeHujia();
+					target.changeHujia();
 					target.addSkill("aqianghua2");
 				},
 				ai: {
@@ -1338,7 +1426,6 @@ game.import("character", function () {
 				selectTarget() {
 					return [1, _status.event.player.countCards("he", { color: "black" })];
 				},
-				// alter:true,
 				delay: false,
 				contentBefore() {
 					"step 0";
@@ -1351,11 +1438,9 @@ game.import("character", function () {
 				},
 				content() {
 					"step 0";
-					if (!get.is.altered("baoxue")) {
-						var he = target.getCards("he");
-						if (he.length) {
-							target.discard(he.randomGet());
-						}
+					var he = target.getCards("he");
+					if (he.length) {
+						target.discard(he.randomGet());
 					}
 					"step 1";
 					target.turnOver(true);
@@ -1818,13 +1903,12 @@ game.import("character", function () {
 				filter(event, player) {
 					return player.hp == 1 && !player.isTurnedOver();
 				},
-				// alter:true,
 				content() {
 					"step 0";
 					player.turnOver();
 					player.recover(2);
 					"step 1";
-					if (player.isTurnedOver() && !get.is.altered("jidong")) {
+					if (player.isTurnedOver()) {
 						player.addTempSkill("jidong2", { player: "turnOverAfter" });
 					}
 				},
@@ -1975,13 +2059,9 @@ game.import("character", function () {
 				skillAnimation: true,
 				animationColor: "fire",
 				line: "fire",
-				// alter:true,
 				content() {
 					"step 0";
 					var num = player.storage.jijia;
-					if (get.is.altered("zihui")) {
-						num = Math.max(1, Math.min(num, target.countCards("he")));
-					}
 					target.chooseToDiscard(num, "he", "弃置" + get.cnNumber(num) + "张牌，或受到2点火焰伤害").ai = function (card) {
 						if (target.hasSkillTag("nofire")) return 0;
 						if (get.type(card) != "basic") return 11 - get.value(card);
@@ -2239,9 +2319,8 @@ game.import("character", function () {
 			feiren: {
 				trigger: { source: "damageBegin" },
 				forced: true,
-				// alter:true,
 				filter(event, player) {
-					return !get.is.altered("feiren") && event.card && event.card.name == "sha" && get.suit(event.card) == "spade" && event.notLink();
+					return event.card && event.card.name == "sha" && get.suit(event.card) == "spade" && event.notLink();
 				},
 				content() {
 					trigger.num++;
@@ -2409,7 +2488,6 @@ game.import("character", function () {
 						current.removeSkill("luan2");
 					}
 					target.addSkill("luan2");
-					// target.storage.luan='now';
 					target.storage.luan2 = player;
 				},
 				ai: {
@@ -2794,15 +2872,12 @@ game.import("character", function () {
 				enable: "phaseUse",
 				filterCard: true,
 				selectCard() {
-					if (get.is.altered("kuoyin")) return 1;
 					if (_status.event.player.storage.yuedong_eff) return 1;
 					if (_status.event.player.storage.yuedong_num) return 2;
 					return [1, 2];
 				},
 				position: "he",
-				// alter:true,
 				filter(event, player) {
-					if (get.is.altered("kuoyin") && player.storage.yuedong_num) return false;
 					if (player.storage.yuedong_eff && player.storage.yuedong_num) return false;
 					return player.countCards("he") > 0;
 				},
@@ -2970,10 +3045,8 @@ game.import("character", function () {
 				trigger: { global: "phaseEnd" },
 				direct: true,
 				filter(event, player) {
-					if (get.is.altered("ziyu")) return game.phaseNumber % 6 == 0;
 					return game.phaseNumber % 4 == 0;
 				},
-				// alter:true,
 				content() {
 					player.chooseDrawRecover(get.prompt("ziyu")).logSkill = "ziyu";
 				},
@@ -3013,7 +3086,6 @@ game.import("character", function () {
 				check(event, player) {
 					return get.attitude(player, event.player) < 0 && ((player.countCards("h") > player.hp && player.countCards("h", "lebu") == 0) || get.distance(player, event.player) > 1);
 				},
-				// alter:true,
 				intro: {
 					content(storage, player) {
 						var str = "";
@@ -3056,10 +3128,8 @@ game.import("character", function () {
 				logTarget: "player",
 				content() {
 					"step 0";
-					if (!get.is.altered("shanxian")) {
-						player.draw(false);
-						player.$draw();
-					}
+					player.draw(false);
+					player.$draw();
 					"step 1";
 					player.storage.shanxian_h = player.getCards("h");
 					player.storage.shanxian_e = player.getCards("e");
@@ -3159,7 +3229,6 @@ game.import("character", function () {
 			qianggu2: "强固",
 			pingzhang: "屏障",
 			pingzhang_info: "每轮各限一次，当你受到伤害时，你可以弃置一张红桃牌令伤害-1；当一名其他角色受到伤害时，你可以弃置一张黑桃牌令伤害-1。",
-			pingzhang_info_alter: "每轮各限一次，当你受到伤害时，你可以弃置一张红桃手牌令伤害-1；当一名其他角色受到伤害时，你可以弃置一张黑桃手牌令伤害-1。",
 			owliyong: "力涌",
 			owliyong_info: "锁定技，你摸牌阶段摸牌数+X，X为你上一轮发动屏障的次数。",
 			dianji: "电击",
@@ -3181,7 +3250,6 @@ game.import("character", function () {
 			yinshen_info: "锁定技，每当你失去最后一张基本牌，你获得潜行直到下一回合开始。",
 			maichong: "脉冲",
 			maichong_info: "锁定技，每当你使用一张普通锦囊牌，你令最近三回合内被你侵入过的角色各随机弃置一张牌。",
-			maichong_info_alter: "准备阶段，你可以令最近两名被你侵入的角色各随机弃置一张牌。",
 			lichang: "力场",
 			lichang2: "力场",
 			lichang_info: "结束阶段，你可以弃置一张红色牌，若如此做，你可以在下个准备阶段令一名距离1以内的角色回复1点体力或摸两张牌。",
@@ -3189,18 +3257,15 @@ game.import("character", function () {
 			mengji_info: "锁定技，若你已发动重盾，当你没有护甲时，你的【杀】造成的伤害+1。",
 			zhongdun: "重盾",
 			zhongdun_info: "游戏开始时，你获得8点护甲；出牌阶段限一次，你可以弃置一张牌并将1点护甲分给一名没有护甲的其他角色。",
-			zhongdun_info_alter: "游戏开始时，你获得6点护甲；出牌阶段限一次，你可以弃置一张牌并将1点护甲分给一名没有护甲的其他角色。",
 			paotai: "炮台",
 			paotai2: "炮台",
 			paotai_info: "出牌阶段，你可以弃置一张【杀】布置或升级一个炮台（最高3级）；结束阶段，炮台有一定机率对一名随机敌人造成1点火焰伤害；每当你受到1点伤害，炮台降低一级。",
 			maoding: "铆钉",
 			maoding2: "铆钉",
 			maoding_info: "每当你造成或受到一次伤害，你可以获得一个零件；出牌阶段，你可以弃置两张零件牌令一名没有护甲的角色获得1点护甲。",
-			maoding_info_alter: "每当你造成一次伤害，你可以获得一个零件；出牌阶段，你可以弃置两张零件牌令一名没有护甲的角色获得1点护甲。",
 			bfengshi: "风矢",
 			bfengshi2: "风矢",
 			bfengshi_info: "锁定技，在一合内每当你使用一张牌，你的攻击范围+1；你的首张【杀】增加20%的概率强制命中；你的首张【杀】造成伤害后增加20%的概率令伤害+1。",
-			bfengshi_info_alter: "锁定技，在一合内每当你使用一张牌，你的攻击范围+1；你的首张【杀】增加15%的概率强制命中；你的首张【杀】造成伤害后增加15%的概率令伤害+1。",
 			yinbo: "音波",
 			yinbo_info: "出牌阶段限一次，你可以弃置一张黑桃牌，然后随机弃置三名敌人各一张牌。",
 			liudan: "榴弹",
@@ -3223,7 +3288,6 @@ game.import("character", function () {
 			aqianghua: "强化",
 			aqianghua2: "强化",
 			aqianghua_info: "出牌阶段限一次，你可以将你的全部手牌（至少一张）交给一名其他角色，该角色获得1点护甲且下一次造成的伤害+1。",
-			aqianghua_info_alter: "出牌阶段限一次，你可以将你的全部手牌（至少一张）交给一名其他角色，该角色下一次造成的伤害+1。",
 			zhiyuan: "支援",
 			zhiyuan_info: "每当你即将造成伤害，你可以防止此伤害，改为令目标回复等量的体力。",
 			juji: "狙击",
@@ -3238,7 +3302,6 @@ game.import("character", function () {
 			dulei_info: "出牌阶段，若你武将牌上没有牌，你可以将一张牌背面朝上置于你的武将牌上，当一名角色使用与该牌花色相同的牌指定你为目标时，你展示并移去此牌，然后该角色失去1点体力并随机弃置一张牌。",
 			baoxue: "暴雪",
 			baoxue_info: "限定技，出牌阶段，若你未翻面，你可以展示并弃置你的所有黑色牌，然后令至多X名其他角色随机弃置一张牌并将武将牌翻至背面，X为你的弃牌数；结算后你将武将牌翻至背面。",
-			baoxue_info_alter: "限定技，出牌阶段，你可以展示并弃置你的所有黑色牌，并选择等量其他角色将武将牌翻至背面，结算后你将武将牌翻至背面。",
 			bingqiang: "冰墙",
 			bingqiang2: "冰墙",
 			bingqiang2_bg: "墙",
@@ -3251,12 +3314,10 @@ game.import("character", function () {
 			bingqiang_info: "出牌阶段，你可以弃置X张红色牌令一名角色和其相邻角色的防御离+X，或弃置X张黑色牌令一名角色和其相邻角色的进攻离-X，效果持续到你的下个回合开始。",
 			jidong: "急冻",
 			jidong_info: "在一名角色的结束阶段，若你的体力值为1且未翻面，你可以翻面并回复2点体力，在你的武将牌翻至正面前，你防止所有伤害，也不能成为其他角色卡牌的目标。",
-			jidong_info_alter: "在一名角色的结束阶段，若你的体力值为1，你可以翻面并回复2点体力。",
 			jijia: "机甲",
 			jijia_info: "锁定技，游戏开始时，你获得一个体力为4的机甲；你的手牌上限为你和机甲的体力之和；你受到的伤害由机甲承担。",
 			zihui: "自毁",
 			zihui_info: "出牌阶段，你可以令距离2以内的所有其他角色选择一项：弃置数量等同你机甲体力值的牌，或受到2点火焰伤害，并在结算完毕后摧毁你的机甲。",
-			zihui_info_alter: "出牌阶段，你可以令距离2以内的所有其他角色选择一项：1. 弃置数量等同你机甲体力值的牌（不足则全弃，至少弃一张）；2. 或受到2点火焰伤害，并在结算完毕后摧毁你的机甲。",
 			tuijin: "推进",
 			tuijin2: "推进",
 			tuijin_info: "出牌阶段限一次，若你有机甲，你可以指定一名角色，本回合内视为与其距离为1。",
@@ -3272,7 +3333,6 @@ game.import("character", function () {
 			feiren: "飞刃",
 			feiren2: "飞刃",
 			feiren_info: "你的【杀】无视距离；你的黑桃【杀】造成的伤害+1，梅花【杀】可以额外指定一个目标。",
-			feiren_info_alter: "你的【杀】无视距离；你的梅花【杀】可以额外指定一个目标。",
 			zhanlong: "斩龙",
 			zhanlong_info: "限定技，准备阶段，若你体力值为1，你可以弃置所有牌（至少一张），然后将三张【杀】置入你的手牌，若如此做，你本回合使用【杀】无次数限制。",
 			xie: "谐",
@@ -3295,7 +3355,6 @@ game.import("character", function () {
 			yuedong_info: "出牌阶段结束时，你可以令一名角色摸一张牌。",
 			kuoyin: "扩音",
 			kuoyin_info: "出牌阶段，你可以弃置一张牌令本回合乐动的目标数改为3，或弃置两张牌令本回合乐动的摸牌量改为2。",
-			kuoyin_info_alter: "出牌阶段，你可以弃置一张牌令本回合乐动的目标数改为3。",
 			huhuan: "互换",
 			huhuan_info: "出牌阶段，你可以弃置两张牌令本回合乐动的摸牌效果改为回复等量体力。",
 			guangshu: "光枢",
@@ -3306,12 +3365,10 @@ game.import("character", function () {
 			guangshu_info: "出牌阶段，你可以弃置一张牌，并指定一名角色，根据弃置牌的花色执行如下效果：♥该角色下次受到伤害时回复1点体力；♦︎该角色下次造成伤害时摸两张牌；♣该角色无法使用【杀】直到下一回合结束；♠该角色于下个结束阶段受到1点无来源的雷电伤害。",
 			ziyu: "自愈",
 			ziyu_info: "在一名角色的结束阶段，你可以回复1点体力或摸一张牌，每隔四回合发动一次。",
-			ziyu_info_alter: "在一名角色的结束阶段，你可以回复1点体力或摸一张牌，每隔六回合发动一次。",
 			shouhu: "守护",
 			shouhu_info: "你不能使用【杀】；出牌阶段，你可以弃置一张【杀】令一名其他角色回复1点体力。",
 			shanxian: "闪现",
 			shanxian_info: "在一名其他角色的回合开始前，若你的武将牌正面朝上，你可以摸一张牌并进行一个额外回合，并在回合结束后将武将牌翻至背面。若如此做，你对其使用卡牌无视距离直到回合结束。",
-			shanxian_info_alter: "在一名其他角色的回合开始前，若你的武将牌正面朝上，你可以进行一个额外回合，并在回合结束后将武将牌翻至背面。若如此做，你对其使用卡牌无视距离直到回合结束。",
 			shanhui: "闪回",
 			shanhui_info: "当你造成或受到伤害后，你可以将你的牌重置为上次发动闪现时的状态，若你的牌数因此而减少，你回复1点体力。",
 			ow_liekong: "猎空",
