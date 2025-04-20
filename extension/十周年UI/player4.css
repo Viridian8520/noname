@@ -5,19 +5,33 @@
 	height: 180px;
 	width: 120px;
 	border-radius: 8px;
-	box-shadow: 0px -1px 3px black, 0px 3px 8px black;
-	background-image: linear-gradient(rgb(53, 38, 32), rgb(53, 38, 32));
-	transition-property: transform, opacity, left, top, right, bottom;
-}
-
-.dui-mobile.player {
-	box-shadow: 0px -1px 2px black, 0px 1px 5px black;
 }
 
 .player.dead {
 	animation: player-died 0.5s linear;
 	-webkit-animation: player-died 0.5s linear;
 	animation-iteration-count: 1;
+}
+
+/* 国战模式使用bj2背景 */
+[data-mode='guozhan'] .player,
+.player[data-mode='guozhan'] {
+	background: url('assets/image/bj2.png') no-repeat center center !important;
+	background-size: 100% 100% !important;
+}
+
+/* 其他模式保持原有的单双将判断 */
+[data-mode]:not([data-mode='guozhan']) .player:not(.fullskin2):not(.double-character):not([data-double='1']) {
+	background: url('assets/image/bj1.png') no-repeat center center !important;
+	background-size: 100% 100% !important;
+}
+
+[data-mode]:not([data-mode='guozhan']) .player.fullskin2,
+[data-mode]:not([data-mode='guozhan']) .player.double-character,
+[data-mode]:not([data-mode='guozhan']) .player[data-double='1'],
+[data-mode]:not([data-mode='guozhan']) .player.double {
+	background: url('assets/image/bj2.png') no-repeat center center !important;
+	background-size: 100% 100% !important;
 }
 
 .player::before {
@@ -665,7 +679,7 @@
 	-webkit-clip-path: url(#duor-clip);
 }
 
-/*武将牌动皮显示*/
+/* 默认状态（关闭动皮露头时）的样式 */
 .player>.dynamic-wrap {
 	display: block;
 	position: absolute;
@@ -674,6 +688,24 @@
 	width: 100%;
 	height: 100%;
 	border-radius: 8px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	pointer-events: none;
+	z-index: 60;
+}
+
+/* 打开动皮露头时的样式 */
+#arena[data-dynamic-skin-outcrop="on"] .player>.dynamic-wrap {
+	display: block;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	border-top-left-radius: 100px 40px;
+	border-top-right-radius: 100px 40px;
+	border-bottom-right-radius: 8px;
+	border-bottom-left-radius: 8px;
 	background-size: cover;
 	background-repeat: no-repeat;
 	pointer-events: none;
@@ -1091,7 +1123,7 @@
 	top: auto;
 	right: auto;
 	left: -12px;
-	bottom: -6px;
+	bottom: -1px;
 	line-height: 28px;
 	height: 28px;
 	width: 28px;
@@ -1123,6 +1155,33 @@
 	white-space: pre;
 	width: 100%;
 	z-index: -1;
+}
+
+/* 只隐藏主玩家的手牌数字显示 */
+.player[data-position="0"]>.card-count {
+	position: absolute;
+	bottom: 5px;
+	left: -12px;
+	height: 28px;
+	width: 28px;
+	background: url("image/decoration/new_card_count6.png");
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	background-position: 0 -1px;
+	border: none;
+	border-radius: 0px;
+	z-index: 89;
+	transition: transform, opacity;
+	visibility: visible !important;
+	/* 隐藏数字 */
+	color: transparent;
+	font-size: 0;
+}
+
+/* 隐藏主玩家手牌数字的伪元素 */
+.player[data-position="0"]>.card-count::before,
+.player[data-position="0"]>.card-count::after {
+	display: none;
 }
 
 /*玩家身份标记*/

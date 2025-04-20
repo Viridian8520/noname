@@ -101,8 +101,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					}
 				},
 				true,
-				{ x: dots[0], y: dots[1] },
-				{ x: dots[2], y: dots[3] }
+				{
+					x: dots[0],
+					y: dots[1],
+				},
+				{
+					x: dots[2],
+					y: dots[3],
+				}
 			);
 		},
 
@@ -167,7 +173,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			} else {
 				var sz = bounds.size;
 				var scale = (anim.canvas.width / sz.x) * 1.2;
-				anim.playSpine("effect_jisha1", { scale: scale });
+				anim.playSpine("effect_jisha1", {
+					scale: scale,
+				});
 				ui.window.appendChild(effect);
 				ui.refresh(effect);
 			}
@@ -243,8 +251,30 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					effect.innerHTML = skillName;
 					effect.style.top = "calc(50% + " + 165 * sprite.scale + "px)";
 
+					var effect = decadeUI.element.create("skill-name");
+					effect.innerHTML = skillName;
+					effect.style.top = "calc(50% + " + 165 * sprite.scale + "px)";
+					var nameEffect = decadeUI.element.create("general-name");
+					nameEffect.innerHTML = playerName;
+					nameEffect.style.cssText = `
+					position: absolute;
+					right: calc(50% - ${200 * sprite.scale}px);
+					top: calc(50% - ${160 * sprite.scale}px);
+					writing-mode: vertical-lr;
+					text-orientation: upright;
+					font-family: xingkai;
+					color: rgb(215, 234, 67);
+					font-size: 25px;
+					text-shadow: 0 0 5px black, 0 0 10px black;
+					pointer-events: none;
+					letter-spacing: 5px;
+					z-index: 17;
+					`;
+
 					ui.arena.appendChild(effect);
+					ui.arena.appendChild(nameEffect);
 					effect.removeSelf(2180);
+					nameEffect.removeSelf(2180);
 				};
 
 				bgImage.onerror = function () {
@@ -257,13 +287,22 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 
 			image.onerror = function () {
 				image.onerror = void 0;
-				image.src = lib.assetURL + "imagearacter/default_silhouette_" + (player.sex == "female" ? "female" : "male") + ".jpg";
+				if (image.src.includes("image/lihui")) {
+					if (url.indexOf('url("') == 0) {
+						image.src = url.slice(5, url.indexOf('")'));
+					} else if (url.indexOf("url('") == 0) {
+						image.src = url.slice(5, url.indexOf("')"));
+					}
+				} else {
+					image.src = lib.assetURL + "image/character/default_silhouette_" + (player.sex == "female" ? "female" : "male") + ".jpg";
+				}
 			};
-
 			if (url.indexOf('url("') == 0) {
-				image.src = url.slice(5, url.indexOf('")'));
+				let originalPath = url.slice(5, url.indexOf('")'));
+				image.src = originalPath.replace(/image\/character/, "image/lihui");
 			} else if (url.indexOf("url('") == 0) {
-				image.src = url.slice(5, url.indexOf("')"));
+				let originalPath = url.slice(5, url.indexOf("')"));
+				image.src = originalPath.replace(/image\/character/, "image/lihui");
 			}
 		},
 	};

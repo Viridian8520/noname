@@ -2,7 +2,7 @@
 	/*技能按钮*/
 	max-width: 200px;
 	/*同列技能可容纳最大宽度，建议别调*/
-	bottom: 25px;
+	bottom: 45px;
 	/*整体上移，建议别调*/
 	right: 165px;
 	/*技能显示右移，越小越靠右，建议别调*/
@@ -71,9 +71,9 @@
 	height: var(--h);
 	line-height: 42px;
 	text-align: center;
-	font-family: "yuanli";
+	font-family: "xingkai";
 	font-weight: 500;
-	font-size: 22px;
+	font-size: 27px;
 	color: #f7f5e7;
 	background-image: url("./images/new_btnn1.png");
 	background-size: 100% 100%;
@@ -88,11 +88,11 @@
 	height: var(--h);
 	line-height: 42px;
 	text-align: center;
-	font-family: "yuanli";
+	font-family: "xingkai";
 	font-weight: 500;
 	/*å­—ç²—ç»†*/
 	color: #f7f5e7;
-	font-size: 22px;
+	font-size: 27px;
 	background-image: url("./images/new_btnn4.png");
 	background-size: 100% 100%;
 }
@@ -315,9 +315,9 @@
 	align-items: center;
 	align-content: center;
 	justify-content: center;
-	font-family: "yuanli";
+	font-family: "xingkai";
 	/*字体样式*/
-	font-size: 20px;
+	font-size: 27px;
 	/*字体大小，没用*/
 	background-image: url("./images/new_btnn1.png");
 	background-size: 100% 100%;
@@ -348,7 +348,7 @@
 	font-weight: 500;
 	/*å­—ç²—ç»†*/
 	color: #f7f5e7;
-	font-size: 22px;
+	font-size: 27px;
 	background-image: url("./images/new_btnn4.png");
 	background-size: 100% 100%;
 	/*border: 1px solid rgb(3,4,5);/*调试用*/

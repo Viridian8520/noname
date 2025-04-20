@@ -139,7 +139,7 @@
 	margin-bottom: -15px !important;
 	color: #2F4F4F;
 	-webkit-text-stroke: 0.4px #803B02;
-	font-family: 'kaiti';
+	font-family: 'yuanli';
 	font-size: 20px;
 }
 
@@ -215,14 +215,14 @@
 }
 
 .handcardNumber>.cardPicture {
-	left: 90px;
-	bottom: -6px;
-	--w: 130px;
-	--h: calc(var(--w) * 92 / 400);
+	left: 110px;
+	bottom: 10px;
+	--w: 100px;
+	--h: calc(var(--w) * 92 / 370);
 	/*宽和长*/
 	width: var(--w);
 	height: var(--h);
-	background-image: url("./images/uibutton/new_count1.png");
+	background-image: url("./images/uibutton/new_count5.png");
 	background-size: 100% 100%;
 	position: relative;
 	z-index: -1;
@@ -230,8 +230,8 @@
 
 /*手牌数参数*/
 .handcardNumber>.cardNumber {
-	left: 138px;
-	bottom: 15px;
+	left: 115px;
+	bottom: 30px;
 	height: 8px;
 	line-height: 25px;
 	text-align: center;

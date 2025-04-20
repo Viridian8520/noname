@@ -237,39 +237,6 @@
 	flex-direction: column;
 }
 
-/*
-.player>.equips>div,
-.player>.equips>.card {
-	position: absolute;
-}
-
-.player>.equips>.card {
-	top: -16px;
-}
-
-.player>.equips>div.equip1 {
-	top: 16px;
-}
-
-.player>.equips>div.equip2 {
-	top: 32px;
-}
-
-.player>.equips>div.equip3,
-.player>.equips>div.equip6 {
-	top: 48px;
-}
-
-.player>.equips>div.equip4 {
-	top: auto;
-	bottom: 0;
-}
-
-.player>.equips>div.equip5 {
-	top: 0;
-}
-*/
-
 #arena.decadeUI:not(.long).mobile:not(.oldlayout) .player.unseen:not([data-position="0"]) .equips:not(*:empty),
 #arena.decadeUI:not(.long):not(.mobile):not(.oldlayout) .player.unseen .equips:not(*:empty),
 #arena.decadeUI.long.mobile:not(.oldlayout) .player.unseen2:not([data-position="0"]) .equips:not(*:empty),

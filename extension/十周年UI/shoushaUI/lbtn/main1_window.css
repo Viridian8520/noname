@@ -6,7 +6,7 @@
 	/*按钮高度*/
 	left: 18px;
 	/*左边距，越大越靠右*/
-	bottom: 15%;
+	bottom: 14.2%;
 	/*整体上移*/
 	width: var(--width);
 	z-index: 4;
@@ -161,7 +161,7 @@
 	height: 55px;
 	background-image: url("./images/uibutton/btn-paixu.png");
 	left: 1.6%;
-	bottom: 22%;
+	bottom: 26%;
 	z-index: 5;
 	font-size: 18.1px;
 	/*字体大小*/
@@ -198,8 +198,12 @@
 	border-radius: 1px;
 	width: 68px;
 	height: 55px;
+	/*--w: 68px;
+	--h: calc(var(--w) * 78/91);
+	width: var(--w);
+	height: var(--h);*/
 	background-image: url("./images/uibutton/btn-jilu.png");
-	bottom: 12%;
+	bottom: 15%;
 	z-index: 5;
 }
 
@@ -219,20 +223,9 @@
 
 /*无懈按钮位置*/
 #arena>#dui-controls>.control.stayleft {
-	left: calc(50% - 440px) !important;
-	margin-bottom: 0vmin !important;
-}
-
-.control.dou3>div {
-	/*无懈按钮*/
-	background-size: contain;
-	font-size: 0px;
-	/*字体大小*/
-	margin-top: 3px !important;
-	margin-left: 152px !important;
-	background-repeat: no-repeat;
-	padding: 6px 24px !important;
-	/*按钮高度+宽度 建议别调*/
+	left: calc(50% - 420px) !important;
+	margin-bottom: 0px !important;
+	order: 3;
 }
 
 .control>div {
@@ -241,30 +234,29 @@
 	background-size: 100% 100%;
 	line-height: 30px;
 	text-align: center;
-	padding: 10px 18px !important;
+	padding: 10px 15px !important;
 	/*按钮高度+宽度 建议别调5.5 10.5*/
 	min-width: 140px !important;
 	/*限制最小宽度*/
 	min-height: 18px !important;
 	/*限制最大高度*/
 	/*margin: 0px 5px !important;/*与其他按钮之间的距离，越小越靠近0 5*/
-	margin-left: 5px !important;
-	margin-right: 5px !important;
-	margin-top: 0px !important;
-	margin-bottom: 12px !important;
-	text-shadow: 0 0 1.3px #5b6727, 0 0 1.3px #5b6727, 0 0 1.3px #5b6727, 0 0 1.3px #5b6727, 0 0 1.3px #5b6727, 0 0 1.3px #5b6727, 0 0 1.3px #5b6727, 0 0 1.3px #5b6727, 0 0 1.3px #5b6727, 0 0 1.3px #5b6727, 0 0 1.3px #5b6727;
+	margin-left: 2px !important;
+	margin-right: 2px !important;
+	margin-top: 20px !important;
+	margin-bottom: 0px !important;
+	-webkit-text-stroke: 0.1px #5b6727;
+	text-shadow: 1px 1px 0px #5b6727, -1px -1px 0px #5b6727, 2px 2px 0px #5b6727, -2px -2px 0px #5b6727;
 	color: #c2c374;
 	font-family: "HYZLSJ";
-	font-size: 24px;
+	font-size: 30px;
 	font-weight: 500;
 	border-radius: 4px;
 	overflow: visible;
 	transition: none;
 }
 
-.control>div.primary,
-.control>div.qi,
-.control>div.huan {
+.control>div.primary {
 	--p: calc(var(--h) * 11 / 75);
 	background-image: none;
 }
@@ -275,7 +267,7 @@
 	background-image: url("./images/uibutton/cbtn.png");
 	background-size: 100% 100%;
 	text-align: center;
-	padding: 10px 18px !important;
+	padding: 10px 15px !important;
 	/*按钮高度+宽度 建议别调*/
 	min-width: 120px !important;
 	/*限制最小宽度*/
@@ -285,11 +277,12 @@
 	/*外边距，别管*/
 	font-family: "shousha";
 	/*字体样式*/
-	font-size: 24px;
+	font-size: 30px;
 	/*字体大小*/
 	border-radius: 4px;
-	color: #d9d190;
-	text-shadow: 1px 0 1.5px #646224, 1px 0 1.5px #646224, -1px 0 1.5px #646224, -1px 0 1.5px #646224, 0 1px 1.5px #646224, 0 1px 1.5px #646224, 0 -1px 1.5px #646224, 0 -1px 1.5px #646224, 1px 0 1.5px #646224, 0 1px 1.5px #646224, 0 -1px 1.5px #646224, -1px 0 1.5px #646224;
+	color: #c2c374;
+	-webkit-text-stroke: 0.1px #5b6727;
+	text-shadow: 1px 1px 0px #5b6727, -1px -1px 0px #5b6727, 2px 2px 0px #5b6727, -2px -2px 0px #5b6727;
 	overflow: visible;
 	transition: none;
 }
@@ -299,6 +292,7 @@
 	font-size: 30px !important;
 	/*字体大小*/
 	background-image: url("./images/uibutton/confirm-bg-c.png");
+	padding: 8px 12px !important;
 }
 
 .control>div+div {
@@ -313,21 +307,21 @@
 	/*按钮变灰*/
 }
 
-.control>div>span {
+.control>div.primary>span {
 	/*确认按钮*/
 	--sh: calc(var(--h) - 6px);
 	display: block;
 	font-size: 40px;
 	line-height: var(--sh);
 	/*top: calc(100% - 44px);/*按钮位置数字越小越往下*/
-	margin: 0px 35px !important;
+	margin: 0px 5px !important;
 	/*0 35*/
 	background-image: url("./images/uibutton/btn.png");
-	padding: 22px 68px !important;
+	padding: 20px 60px !important;
 	/*按钮高度+宽度 建议别调22 68*/
-	min-height: 22px;
+	min-height: 20px;
 	/*限制最小高度*/
-	min-width: 68px;
+	min-width: 60px;
 	/*限制最小宽度*/
 	background-size: 100% 108%;
 	text-shadow: 1px 1px 2.5px rgba(62, 57, 38, 0.1);
@@ -339,12 +333,49 @@
 	display: none;
 }
 
-.control>div.qi>span {
-	background-image: url("./images/uibutton/qipai.png");
+.control>div.huan {
+	--sh: calc(var(--h) - 6px);
+	display: block;
+	font-size: 40px;
+	line-height: var(--sh);
+	margin: 0px 5px !important;
+	/*元素离边缘的距离，外边距，简单说就是确定与取消之间的距离*/
+	background-image: url("./images/uibutton/huanpai.png");
+	padding: 12px 36px !important;
+	/*按钮高度+宽度 建议别调*/
+	min-height: 20px;
+	/*限制最小高度*/
+	min-width: 60px;
+	/*限制最小宽度*/
+	background-size: 100% 108%;
+	background-repeat: no-repeat;
+	text-shadow: 1px 1px 2.5px rgba(62, 57, 38, 0.1);
+	margin-top: 20px !important;
+	position: relative;
 }
 
-.control>div.huan>span {
-	background-image: url("./images/uibutton/huanpai.png");
+.control>div.huan.huan2 {
+	background-image: url("./images/uibutton/huanpai2.png");
+}
+
+.control>div.qi {
+	--sh: calc(var(--h) - 6px);
+	display: block;
+	font-size: 40px;
+	line-height: var(--sh);
+	margin: 0px 5px !important;
+	/*元素离边缘的距离，外边距，简单说就是确定与取消之间的距离*/
+	background-image: url("./images/uibutton/qipai.png");
+	padding: 15px 30px !important;
+	/*按钮高度+宽度 建议别调*/
+	min-height: 20px;
+	/*限制最小高度*/
+	min-width: 60px;
+	/*限制最小宽度*/
+	background-size: 100% 100%;
+	text-shadow: 1px 1px 2.5px rgba(62, 57, 38, 0.1);
+	margin-top: 21px !important;
+	position: relative;
 }
 
 /*手牌*/
@@ -356,27 +387,19 @@
 	color: #ffffff;
 	font-weight: 100 !important;
 	font-size: 13px !important;
-	/*	text-shadow: #F5D78E 0 0 1px,
-		black 0 0 2px,
-		black 0 0 2px,
-		black 0 0 2px,
-		black 0 0 2px,
-		black 0 0 2px,
-		black 0 0 2px;*/
 }
 
 /*手牌数图片*/
 .handcardNumber>.cardPicture {
-	left: 335px;
-	bottom: -16px;
-	--w: 417px;
-	--h: calc(var(--w) * 235 / 500);
+	left: 338px;
+	bottom: -10px;
+	--w: 450px;
+	--h: calc(var(--w) * 300 / 720);
 	/*宽和长*/
 	width: var(--w);
 	height: var(--h);
 	background-image: url("./images/uibutton/shoupai1.png");
 	background-size: 100% 100%;
-	/*	box-shadow: 2px 2px 1px #2b2219;*/
 	position: relative;
 	z-index: -1;
 }
@@ -384,14 +407,15 @@
 /*手牌数值
 /*由于重新设置了数值，所以不调用默认值*/
 .handcardNumber>.cardNumber {
-	left: 470px;
-	bottom: 12px;
+	left: 490px;
+	bottom: 15px;
 	height: 8px;
 	font-family: "HYZLSJ";
-	font-weight: 100 !important;
-	text-align: center;
-	font-size: 18px !important;
-	color: #ffffff;
+	font-weight: 600;
+	line-height: 25px;
+	text-align: right;
+	font-size: 18px;
+	-webkit-text-stroke: 0.3px black;
 	white-space: nowrap;
 }
 
@@ -407,30 +431,29 @@
 
 /*牌堆图片*/
 .cardRoundNumber>.cardPileNumber {
-	bottom: 38px;
-	width: 52.1px;
-	height: 69px;
+	bottom: -15px;
+	width: 44px;
+	height: 57px;
 	background-image: url("./images/uibutton/cardback.png");
 	background-size: 100% 100%;
-	left: 1px;
+	left: -8px;
 	position: relative;
-	z-index: 92px;
 	/*为了兼容武将界面*/
 }
 
 .cardRoundNumber>.cardPileNumber>span {
 	left: 3.7px;
-	bottom: 31.2px;
+	bottom: 18px;
 	width: 100%;
 	color: #e2d3c2;
 	display: block;
 	position: absolute;
-	line-height: 18px;
+	line-height: 16px;
 	text-align: center;
 	font-family: "HYZLSJ";
 	font-stretch: ultra-condensed;
-	font-size: 29px;
-	font-weight: 600;
+	font-size: 25px;
+	font-weight: 100;
 }
 
 /*游戏轮数和时间*/
@@ -438,13 +461,13 @@
 .cardRoundNumber>.roundNumber,
 .cardRoundNumber>.time {
 	/*游戏轮数显示*/
-	left: -66px;
-	bottom: 83px;
+	left: -20px;
+	bottom: 55px;
 	height: 16px;
 	line-height: 16px;
 	letter-spacing: 3.2px;
 	font-family: "shousha";
-	font-size: 21px;
+	font-size: 20px;
 	font-weight: 900;
 	white-space: nowrap;
 	color: #97856a;
@@ -453,15 +476,27 @@
 /*游戏时间显示*/
 /*Q：可能有小伙伴不李姐了，说上面不是定义了游戏时间的参数了吗？为啥这里又来一遍？A：js里创造了两个布局一个是时间，另一个是游戏轮数。关于位置关系，不能一同用一种参数调用，不然会叠在一起（不信你试试），当然下面的颜色属性是可以删掉的，不影响。*/
 .cardRoundNumber>.time {
-	bottom: 83px;
-	font-size: 21px;
+	bottom: 55px;
+	font-size: 20px;
 	font-family: "shousha";
 	line-height: 16px;
 	/*文字行高*/
 	letter-spacing: 3.2px;
-	left: -136px;
+	left: -90px;
 	color: #97856a;
 	/*font-size: 0px;*/
+}
+
+.control.dou3>div {
+	/*无懈按钮*/
+	background-size: contain;
+	font-size: 0px;
+	/*字体大小*/
+	margin-top: 3px !important;
+	margin-left: 152px !important;
+	background-repeat: no-repeat;
+	padding: 6px 24px !important;
+	/*按钮高度+宽度 建议别调*/
 }
 
 /*假装无敌牌堆计数*/
@@ -552,14 +587,31 @@
 	flex: 0.2;
 }
 
+#arenalog>div {
+	position: relative;
+	display: block;
+	width: calc(100% - 23px);
+	left: 20px;
+	font-size: 18px;
+	line-height: 21px;
+	background: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.5) 10%, rgba(0, 0, 0, 0.5) 90%, transparent 100%);
+	/*background-image: url("./info.png");*/
+	background-size: 100% 100%;
+}
+
+#window:not(.low_performance) #arena #arenalog>div {
+	animation: game_start 0.5s;
+	-webkit-animation: game_start 0.5s;
+}
+
 /*托管中图片（手杀）*/
 #autonode>div:last-child {
 	z-index: 10;
-	top: calc(100% - 180px);
-	left: calc(50% - 530px);
+	margin-left: 150px !important;
+	margin-bottom: -46px !important;
 	font-size: 0px;
 	text-shadow: none;
-	--w: 306px;
+	--w: 285px;
 	--h: calc(var(--w) * 169 / 365);
 	/*高和长*/
 	width: var(--w);
@@ -581,10 +633,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/zhugong.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务忠臣*/
@@ -594,10 +646,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/zhongchen.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务反贼*/
@@ -607,10 +659,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/fanzei.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务内奸*/
@@ -620,10 +672,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/neijian.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务地主*/
@@ -633,10 +685,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/dizhu.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务农民*/
@@ -646,10 +698,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/nongmin.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务虎队*/
@@ -659,10 +711,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/hu.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务魏国*/
@@ -672,10 +724,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/weiguo.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务蜀国*/
@@ -685,10 +737,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/shuguo.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务吴国*/
@@ -698,10 +750,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/wuguo.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务晋国*/
@@ -711,10 +763,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/jinguo.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务野心家*/
@@ -724,10 +776,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/yexinjia.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务群雄*/
@@ -737,10 +789,10 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/qunxiong.png") !important;
 	background-size: 100% 100%;
-	width: 750px;
-	height: 400px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*身份任务未知*/
@@ -750,10 +802,36 @@
 	background-repeat: no-repeat;
 	background-image: url("./images/JSJM/undefined.png") !important;
 	background-size: 100% 100%;
-	width: 720px;
-	height: 420px;
-	left: 230px;
-	bottom: 80px;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
+}
+
+/*单挑任务先手*/
+.sfrwxianshou {
+	position: fixed;
+	background-color: none;
+	background-repeat: no-repeat;
+	background-image: url("./images/JSJM/xianshou.png") !important;
+	background-size: 100% 100%;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
+}
+
+/*单挑任务后手*/
+.sfrwhoushou {
+	position: fixed;
+	background-color: none;
+	background-repeat: no-repeat;
+	background-image: url("./images/JSJM/houshou.png") !important;
+	background-size: 100% 100%;
+	width: 1000px;
+	height: 435px;
+	left: 110px;
+	bottom: 60px;
 }
 
 /*以下左手模式添加的css*/
@@ -762,7 +840,7 @@
 	height: 55px;
 	background-image: url("./images/uibutton/btn-paixu.png");
 	right: 1.2%;
-	bottom: 22%;
+	bottom: 25%;
 	z-index: 5;
 	font-size: 18.1px;
 	background-size: 100% 100%;
@@ -791,8 +869,12 @@
 	border-radius: 1px;
 	width: 68px;
 	height: 55px;
+	/*--w: 68px;
+	--h: calc(var(--w) * 78/91);
+	width: var(--w);
+	height: var(--h);*/
 	background-image: url("./images/uibutton/btn-jilu.png");
-	bottom: 12%;
+	bottom: 15%;
 	z-index: 5;
 }
 

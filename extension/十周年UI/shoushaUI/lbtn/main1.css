@@ -163,18 +163,26 @@
 	left: 1.6%;
 	bottom: 26%;
 	z-index: 5;
-	font-size: 18.1px; /*字体大小*/
+	font-size: 18.1px;
+	/*字体大小*/
 	background-size: 100% 100%;
 	background-color: transparent;
 	line-height: 45px;
-	text-align: center; /*使文本位于元素中心*/
+	text-align: center;
+	/*使文本位于元素中心*/
 	white-space: nowrap;
-	color: #c5af88; /*颜色色值*/
-	font-family: "shousha"; /*字体*/
-	font-weight: bold; /*字体加粗*/
-	-webkit-text-stroke: 1.1px rgba(43, 31, 25, 0.5); /*描边*/
-	text-shadow: none; /*文字阴影*/
-	border-radius: 0px; /*元素边缘圆角大小*/
+	color: #c5af88;
+	/*颜色色值*/
+	font-family: "shousha";
+	/*字体*/
+	font-weight: bold;
+	/*字体加粗*/
+	-webkit-text-stroke: 1.1px rgba(43, 31, 25, 0.5);
+	/*描边*/
+	text-shadow: none;
+	/*文字阴影*/
+	border-radius: 0px;
+	/*元素边缘圆角大小*/
 }
 
 .lbtn-control+.lbtn-control {
@@ -237,12 +245,12 @@
 	margin-right: 2px !important;
 	margin-top: 20px !important;
 	margin-bottom: 0px !important;
-	-webkit-text-stroke: 0.7px #5b6727;
+	-webkit-text-stroke: 0.1px #5b6727;
 	text-shadow: 1px 1px 0px #5b6727, -1px -1px 0px #5b6727, 2px 2px 0px #5b6727, -2px -2px 0px #5b6727;
 	color: #c2c374;
 	font-family: "HYZLSJ";
 	font-size: 30px;
-	font-weight: 900;
+	font-weight: 500;
 	border-radius: 4px;
 	overflow: visible;
 	transition: none;
@@ -273,7 +281,7 @@
 	/*字体大小*/
 	border-radius: 4px;
 	color: #c2c374;
-	-webkit-text-stroke: 0.7px #5b6727;
+	-webkit-text-stroke: 0.1px #5b6727;
 	text-shadow: 1px 1px 0px #5b6727, -1px -1px 0px #5b6727, 2px 2px 0px #5b6727, -2px -2px 0px #5b6727;
 	overflow: visible;
 	transition: none;
@@ -383,7 +391,7 @@
 
 /*手牌数图片*/
 .handcardNumber>.cardPicture {
-	left: 354px;
+	left: 338px;
 	bottom: -10px;
 	--w: 450px;
 	--h: calc(var(--w) * 300 / 720);
@@ -399,7 +407,7 @@
 /*手牌数值
 /*由于重新设置了数值，所以不调用默认值*/
 .handcardNumber>.cardNumber {
-	left: 500px;
+	left: 490px;
 	bottom: 15px;
 	height: 8px;
 	font-family: "HYZLSJ";
@@ -407,7 +415,7 @@
 	line-height: 25px;
 	text-align: right;
 	font-size: 18px;
-	-webkit-text-stroke: 0.4px black;
+	-webkit-text-stroke: 0.3px black;
 	white-space: nowrap;
 }
 
@@ -423,30 +431,29 @@
 
 /*牌堆图片*/
 .cardRoundNumber>.cardPileNumber {
-	bottom: 10px;
-	width: 40px;
-	height: 52px;
+	bottom: -15px;
+	width: 44px;
+	height: 57px;
 	background-image: url("./images/uibutton/cardback.png");
 	background-size: 100% 100%;
-	left: 1px;
+	left: -8px;
 	position: relative;
-	z-index: 92px;
 	/*为了兼容武将界面*/
 }
 
 .cardRoundNumber>.cardPileNumber>span {
 	left: 3.7px;
-	bottom: 24px;
+	bottom: 18px;
 	width: 100%;
 	color: #e2d3c2;
 	display: block;
 	position: absolute;
-	line-height: 18px;
+	line-height: 16px;
 	text-align: center;
 	font-family: "HYZLSJ";
 	font-stretch: ultra-condensed;
 	font-size: 25px;
-	font-weight: 600;
+	font-weight: 100;
 }
 
 /*游戏轮数和时间*/
@@ -454,8 +461,8 @@
 .cardRoundNumber>.roundNumber,
 .cardRoundNumber>.time {
 	/*游戏轮数显示*/
-	left: 10px;
-	bottom: 70px;
+	left: -20px;
+	bottom: 55px;
 	height: 16px;
 	line-height: 16px;
 	letter-spacing: 3.2px;
@@ -469,13 +476,13 @@
 /*游戏时间显示*/
 /*Q：可能有小伙伴不李姐了，说上面不是定义了游戏时间的参数了吗？为啥这里又来一遍？A：js里创造了两个布局一个是时间，另一个是游戏轮数。关于位置关系，不能一同用一种参数调用，不然会叠在一起（不信你试试），当然下面的颜色属性是可以删掉的，不影响。*/
 .cardRoundNumber>.time {
-	bottom: 70px;
+	bottom: 55px;
 	font-size: 20px;
 	font-family: "shousha";
 	line-height: 16px;
 	/*文字行高*/
 	letter-spacing: 3.2px;
-	left: -60px;
+	left: -90px;
 	color: #97856a;
 	/*font-size: 0px;*/
 }
