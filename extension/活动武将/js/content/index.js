@@ -7,7 +7,9 @@ export function content(config, pack) {
 			const result = originLoading.apply(this, arguments);
 			const extensionPack = Array.from(document.getElementsByTagName('div')).find(div => div.innerHTML === '扩展');
 			if (extensionPack) {
+				const originClick = extensionPack.onclick || function () { };
 				extensionPack.onclick = () => {
+					originClick.apply(this, arguments);
 					const plagueExtension = Array.from(document.querySelectorAll('.menubutton.large')).find(div => div.innerHTML === '活动武将');
 					if (plagueExtension) plagueExtension.innerHTML = "<img style=width:100px src=" + lib.assetURL + "extension/活动武将/image/default/活动武将.png>";
 				};
@@ -759,108 +761,93 @@ export function content(config, pack) {
 	//仁库
 	if (lib.config.extension_活动武将_HD_renku) {
 		game.updateRenku = function () {
-			game.broadcast(function (renku) {
-				_status.renku = renku;
-			}, _status.renku);
+			game.broadcast(renku => _status.renku = renku, _status.renku);
 			if (!window.rkbg) {
 				window.rkbg = ui.create.div('.renkubeijinggua', ui.arena);
 				if (lib.config.hdwj_renkuIndex) {
-					window.rkbg.style.setProperty('--l', Math.round(lib.config.hdwj_renkuIndex.x * document.body.offsetWidth) + 'px');
-					window.rkbg.style.setProperty('--t', Math.round(lib.config.hdwj_renkuIndex.y * document.body.offsetHeight) + 'px');
+					window.rkbg.style.left = Math.round(lib.config.hdwj_renkuIndex.x * document.body.offsetWidth) + 'px';
+					window.rkbg.style.top = Math.round(lib.config.hdwj_renkuIndex.y * document.body.offsetHeight) + 'px';
 				}
 			}
-			if (_status.renku.length < 6) {
-				window.rkbg.innerHTML = '仁' + _status.renku.length;
-			}
-			else {
-				window.rkbg.innerHTML = '仁' + '<b><font color=\"#FF5500\">' + _status.renku.length;
-			}
-			var flag = 0, ol = 0, ot = 0;
-			function defaultevent(e) {
-				e.preventDefault();
+			window.rkbg.innerHTML = '仁' + (_status.renku.length < 6 ? '' : '<b><font color=\"#FF5500\">') + _status.renku.length;
+			let isDragging = false;
+			let offsetX = 0, offsetY = 0;
+			let animationFrameId = null;
+			let saveRenkuPosition = function () {
+				if (!lib.config.hdwj_renkuIndex) lib.config.hdwj_renkuIndex = {};
+				lib.config.hdwj_renkuIndex.x = window.rkbg.offsetLeft / document.body.offsetWidth;
+				lib.config.hdwj_renkuIndex.y = window.rkbg.offsetTop / document.body.offsetHeight;
+				game.saveConfig('hdwj_renkuIndex', lib.config.hdwj_renkuIndex);
 			}
 			if (lib.config.touchscreen) {
+				let defaultevent = e => e.preventDefault();
 				window.rkbg.addEventListener('touchstart', function (e) {
-					var evt = e || window.event;
-					ol = evt.touches[0].clientX - window.rkbg.offsetLeft;
-					ot = evt.touches[0].clientY - window.rkbg.offsetTop;
+					let evt = e || window.event;
+					let zoom = game.documentZoom || 1;
+					offsetX = (evt.touches[0].clientX - window.rkbg.offsetLeft * zoom) / zoom;
+					offsetY = (evt.touches[0].clientY - window.rkbg.offsetTop * zoom) / zoom;
 					document.addEventListener('touchmove', defaultevent, false);
 				});
 				window.rkbg.addEventListener('touchmove', function (e) {
-					var evt = e || window.event;
-					var oleft = evt.touches[0].clientX - ol;
-					var otop = evt.touches[0].clientY - ot;
+					let evt = e || window.event;
+					let zoom = game.documentZoom || 1;
+					let oleft = evt.touches[0].clientX / zoom - offsetX;
+					let otop = evt.touches[0].clientY / zoom - offsetY;
 					window.rkbg.style.left = oleft + 'px';
 					window.rkbg.style.top = otop + 'px';
 				});
 				window.rkbg.addEventListener('touchend', function () {
-					if (!lib.config.hdwj_renkuIndex) {
-						lib.config.hdwj_renkuIndex = {
-							x: this.offsetLeft / document.body.offsetWidth,
-							y: this.offsetTop / document.body.offsetHeight,
-						}
-					} else {
-						lib.config.hdwj_renkuIndex.x = this.offsetLeft / document.body.offsetWidth;
-						lib.config.hdwj_renkuIndex.y = this.offsetTop / document.body.offsetHeight;
-					}
-					game.saveConfig('hdwj_renkuIndex', lib.config.hdwj_renkuIndex);
+					saveRenkuPosition();
 					document.removeEventListener('touchmove', defaultevent);
 				});
-			} else {
-				window.rkbg.onmousedown = function (e) {
-					var evt = e || window.event;
-					if (document.setCapture) this.setCapture();
-					if (window.captureEvents) window.captureEvents(Event.MOUSEMOVE | Event.MOUSEUP);
-					flag = 1;
-					ol = evt.clientX - window.rkbg.offsetLeft;
-					ot = evt.clientY - window.rkbg.offsetTop;
-				}
-				document.onmousemove = function (e) {
-					var evt = e || window.event;
-					if (flag) {
-						window.rkbg.style.left = parseInt(evt.clientX - ol) + 'px';
-						window.rkbg.style.top = parseInt(evt.clientY - ot) + 'px';
-					} else {
-						return null;
-					}
-				}
-				window.rkbg.onmouseup = function () {
-					if (!lib.config.hdwj_renkuIndex) {
-						lib.config.hdwj_renkuIndex = {
-							x: this.offsetLeft / document.body.offsetWidth,
-							y: this.offsetTop / document.body.offsetHeight,
-						}
-					} else {
-						lib.config.hdwj_renkuIndex.x = this.offsetLeft / document.body.offsetWidth;
-						lib.config.hdwj_renkuIndex.y = this.offsetTop / document.body.offsetHeight;
-					}
-					game.saveConfig('hdwj_renkuIndex', lib.config.hdwj_renkuIndex);
-					if (document.releaseCapture) this.releaseCapture();
-					if (window.releaseEvents) window.releaseEvents(Event.MOUSEMOVE | Event.MOUSEUP); flag = 0;
-				}
 			}
-
-			if (_status.renku.length == 0) {
-				window.rkbg.remove(window.rkbg);
+			else {
+				window.rkbg.addEventListener('mousedown', function (e) {
+					let zoom = game.documentZoom || 1;
+					isDragging = true;
+					offsetX = (e.clientX - window.rkbg.offsetLeft * zoom) / zoom;
+					offsetY = (e.clientY - window.rkbg.offsetTop * zoom) / zoom;
+					document.body.style.userSelect = 'none';
+					e.preventDefault();
+				});
+				document.addEventListener('mousemove', function (e) {
+					if (isDragging) {
+						if (animationFrameId) cancelAnimationFrame(animationFrameId);
+						animationFrameId = requestAnimationFrame(() => {
+							let zoom = game.documentZoom || 1;
+							let newX = e.clientX / zoom - offsetX;
+							let newY = e.clientY / zoom - offsetY;
+							window.rkbg.style.left = newX + 'px';
+							window.rkbg.style.top = newY + 'px';
+						});
+					}
+				});
+				document.addEventListener('mouseup', function () {
+					if (isDragging) {
+						isDragging = false;
+						document.body.style.userSelect = '';
+						saveRenkuPosition();
+					}
+				});
+			}
+			if (_status.renku.length === 0) {
+				window.rkbg.remove();
 				window.rkbg = null;
 			}
-			else window.rkbg.onclick = function () {
-				if (!window.dialogguagua) {
-					window.dialogguagua = ui.create.dialog('仁库', _status.renku);
-					window.rkbg.innerHTML = '❌';
-				}
-				else {
-					window.dialogguagua.remove();
-					window.dialogguagua = null;
-					if (_status.renku.length < 6) {
-						window.rkbg.innerHTML = '仁' + _status.renku.length;
+			else {
+				window.rkbg.onclick = function () {
+					if (!window.dialogguagua) {
+						window.dialogguagua = ui.create.dialog('仁库', _status.renku);
+						window.rkbg.innerHTML = '❌';
 					}
 					else {
-						window.rkbg.innerHTML = '仁' + '<b><font color=\"#FF5500\">' + _status.renku.length;
+						window.dialogguagua.remove();
+						window.dialogguagua = null;
+						window.rkbg.innerHTML = '仁' + (_status.renku.length < 6 ? '' : '<b><font color=\"#FF5500\">') + _status.renku.length;
 					}
-				}
+				};
 			}
-		}
+		};
 	}
 
 	//precGuoZhan(分界线，便于我搜过来)
@@ -1027,6 +1014,7 @@ export function content(config, pack) {
 				legend: [
 					//活动武将包武将
 					'bilibili_zhengxuan',
+					'bilibili_nanhualaoxian',
 					'old_zuoci',
 					'bilibili_guanning',
 					'bilibili_litiansuo',
@@ -1203,18 +1191,30 @@ export function content(config, pack) {
 
 	//名称重置
 	if (lib.config.extension_活动武将_HD_REname) {
-		var list = Object.keys(lib.translate);
-		var list2 = ['jsrg_zhenji', 'wolong_card', 'pcaudio_wolong_card'];//不修改名称的ID白名单
-		var list3 = ['卧龙凤雏', '祭风卧龙', '卧龙演策'];//不修改名称的translate白名单
-		[['张机', '张仲景'], ['蔡琰', '蔡文姬'], ['卧龙', '卧龙诸葛'],
-		['严虎', '严白虎'], ['甄宓', '甄姬'], ['伏寿', '伏皇后'],
-		['吉本', '吉平']].forEach(name => {
-			list.filter(name2 => !list2.includes(name2) && typeof lib.translate[name2] === "string" && list3.filter(name4 => lib.translate[name2].includes(name4)).length == 0 && lib.translate[name2].includes(name[0])).forEach(name3 => {
-				var str = lib.translate[name3];
-				var num = str.indexOf(name[0]);
-				lib.translate[name3] = str.slice(0, num) + name[1] + str.slice(num + name[0].length, str.length);
-			});
-		});
+		const changeMap = {
+			'张机': '张仲景',
+			'蔡琰': '蔡文姬',
+			'卧龙': '卧龙诸葛',
+			'严虎': '严白虎',
+			'甄宓': '甄姬',
+			'伏寿': '伏皇后',
+			'吉本': '吉平',
+		};
+		const BanIdList = ['jsrg_zhenji'].concat(_status?._HD_REname?.BanIdList ?? []);//不修改名称的ID白名单，必须ID完全符合才不替换
+		const BanTransList = ['卧龙凤雏', '祭风卧龙'].concat(_status?._HD_REname?.BanTransList ?? []);//不修改名称的translate白名单，包含此翻译的均不替换
+		for (const name in lib.translate) {
+			const translation = lib.translate[name];
+			if (typeof translation !== 'string' || get.character(name).isNull) continue;
+			if (BanIdList.includes(name) || BanTransList.some(str => translation.includes(str))) continue;
+			const item = Object.keys(changeMap).find(str => translation.includes(str));
+			/*
+			if (item) {
+				const num = translation.indexOf(item);
+				lib.translate[name] = translation.slice(0, num) + changeMap[item] + translation.slice(num + item.length, translation.length);
+			}
+			*/
+			if (item) lib.translate[name] = lib.translate[name].replace(item, changeMap[item]);
+		}
 	}
 
 	//虎牢关

@@ -4377,15 +4377,7 @@ const packs = function () {
             },
         },
         translate: {
-            fh_zhi: '<span style="font-family: yuanli">本包前言：</span>' +
-                '<br><span style="font-family: yuanli">2023年活动武将年底大活，开启</span>' +
-                '<br><span style="font-family: yuanli">此包游戏将会加入额外牌堆机制</span>' +
-                '<br><span style="font-family: yuanli">，游戏牌堆会加入一张方片12的</span>' +
-                '<br><span style="font-family: yuanli">' + get.bolInformX('银月枪', '其他角色的回合结束时，若你本回合失去过手牌，则你可以对一名攻击范围内本回合获得过牌的角色使用一张【杀】。') + '，此包建议单独开启使</span>' +
-                '<br><span style="font-family: yuanli">用</span>' +
-                '<br>' +
-                '<br>' +
-                '飞鸿·智',
+            fh_zhi: '飞鸿·智',
             fh_xin: '飞鸿·信',
             fh_ren: '飞鸿·仁',
             fh_yong: '飞鸿·勇',
@@ -4417,7 +4409,7 @@ const packs = function () {
             fh_xianming: '显名',
             fh_xianming_info: '每回合限一次，当额外牌堆失去最后的基本牌后，你可以摸两张牌并回复1点体力。',
             fh_dingyi: '定仪',
-            fh_dingyi_info: '一轮游戏开始时，你可以摸一张牌，然后将一张场上“定仪”牌没有的花色的牌置于一名没有“定仪”牌的角色的武将牌上，其根据其拥有对应花色的“定仪”牌获得对应效果：♥，每回合首次脱离濒死状态后回复2点体力；♦，摸牌阶段额外摸两张牌；♠，手牌上限+4；♣，使用牌无距离限制。',
+            fh_dingyi_info: '每轮开始时，你可以摸一张牌，然后将一张场上“定仪”牌没有的花色的牌置于一名没有“定仪”牌的角色的武将牌上，其根据其拥有对应花色的“定仪”牌获得对应效果：♥，每回合首次脱离濒死状态后回复2点体力；♦，摸牌阶段额外摸两张牌；♠，手牌上限+4；♣，使用牌无距离限制。',
             fh_zuici: '罪辞',
             fh_zuici_info: '当你受到伤害后，你可以获得一名角色的“定仪”牌，然后从额外牌堆中选择一张智囊令其获得。',
             fh_wuku: '武库',
@@ -4816,6 +4808,41 @@ const packs = function () {
     }
     else lib.config.characters.remove('MX_feihongyinxue');
     lib.translate['MX_feihongyinxue_character_config'] = '<span style="font-family: xingkai">飞鸿印雪</span>';
+    if (ui?.create?.menu) {
+        const originLoading = ui.create.menu;
+        ui.create.menu = function () {
+            const result = originLoading.apply(this, arguments);
+            const characterPack = Array.from(document.getElementsByTagName('div')).find(div => div.innerHTML === '武将');
+            if (characterPack) {
+                const originClick = characterPack.onclick || function () { };
+                characterPack.onclick = () => {
+                    originClick.apply(this, arguments);
+                    const characterPackage = Array.from(document.querySelectorAll('.menubutton.large')).find(div => div.innerHTML === lib.translate['MX_feihongyinxue_character_config']);
+                    if (characterPackage) {
+                        const originClick2 = characterPackage.onclick || function () { };
+                        characterPackage.onclick = () => {
+                            originClick2.apply(this, arguments);
+                            const rightPane = document.querySelector('.menu-buttons.leftbutton');
+                            if (rightPane && !rightPane.init) {
+                                rightPane.init = true;
+                                const cfgNodes = rightPane.querySelectorAll('.config.toggle');
+                                for (let i = 0; i < cfgNodes.length; i++) {
+                                    if (cfgNodes[i].textContent === '仅点将可用') {
+                                        const addIntro = document.createElement('div');
+                                        addIntro.classList.add('config', 'pointerspan');
+                                        addIntro.innerHTML = '<span style="font-family: yuanli">本包前言：<br>2023年活动武将年底大活，开启此包游戏将会加入额外牌堆机制，游戏牌堆会加入一张方片12的' + get.bolInformX(...['fh_yinyueqiang', 'fh_yinyueqiang_info'].map(i => lib.translate[i])) + '，此包建议单独开启使用</span>';
+                                        cfgNodes[i].parentNode.insertBefore(addIntro, cfgNodes[i].nextSibling);
+                                        break;
+                                    }
+                                }
+                            }
+                        };
+                    }
+                };
+            }
+            return result;
+        };
+    }
     return MX_feihongyinxue;
 };
 
