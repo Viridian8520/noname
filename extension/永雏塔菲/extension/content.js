@@ -72,6 +72,7 @@ export const CONTENT = function (config, pack) {
 	setAudioname2("dcfencheng", { taffyold_ol_sb_dongzhuo: "dcfencheng_ol_sb_dongzhuo" });
 	setAudioname2("benghuai", { taffyold_ol_sb_dongzhuo: "benghuai_re_dongzhuo" });
 	setAudioname2("liegong", { taffy_liubianxing: "liegong_re_huangzhong" });
+	setAudioname2("clanquhuo", { taffyold_clan_yangxiu: "clanquhuo_clan_yangxiu" });
 	// OL虎牢关
 	const addCharacter = function (name, character, packss) {
 		if (lib.character[name]) delete lib.character[name];

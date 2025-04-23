@@ -28,6 +28,12 @@ export const characterPackFunc = function () {
 				],
 				mutsumi: [["mortis"], []],
 				mortis: [["mutsumi"], []],
+				taffyold_pot_taishici: [
+					["pot_taishici_shadow1", ["die:pot_taishici"]],
+					["pot_taishici_shadow2", ["die:pot_taishici"]],
+					["pot_taishici_shadow3", ["die:pot_taishici"]],
+					["pot_taishici_shadow4", ["die:pot_taishici"]],
+				],
 			},
 			characterFilter: { ...characterFilters },
 			characterTitle: {

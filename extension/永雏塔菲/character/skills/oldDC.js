@@ -2946,6 +2946,211 @@ const oldDC = {
 			trigger.num = 1 - trigger.player.hp;
 		},
 	},
+	//群祝融
+	taffyold_dcremanhou: {
+		audio: "dcmanhou",
+		enable: "phaseUse",
+		usable: 1,
+		chooseButton: {
+			dialog(event, player) {
+				return ui.create.dialog("###蛮后###摸至多四张牌并执行等量项");
+			},
+			chooseControl(event, player) {
+				var list = Array.from({
+					length: 4,
+				}).map((_, i) => get.cnNumber(i + 1) + "张");
+				list.push("cancel2");
+				return list;
+			},
+			check(event, player) {
+				if (get.effect(player, { name: "losehp" }, player, player) > 4 || player.countCards("hs", card => player.canSaveCard(card, player)) > 0 || player.hp > 2) return "四张";
+				return "两张";
+			},
+			backup(result, player) {
+				return {
+					num: result.control,
+					audio: "dcmanhou",
+					filterCard: () => false,
+					selectCard: -1,
+					async content(event, trigger, player) {
+						var num =
+							Array.from({
+								length: 4,
+							})
+								.map((_, i) => get.cnNumber(i + 1) + "张")
+								.indexOf(lib.skill.taffyold_dcremanhou_backup.num) + 1;
+						await player.draw(num);
+						if (num >= 1) await player.removeSkills("taffyold_dcretanluan");
+						if (num >= 2 && player.countCards("h")) await player.chooseToDiscard("h", true);
+						if (num >= 3) {
+							await player.loseHp();
+							if (game.hasPlayer(target => target !== player && target.countCards("h"))) {
+								const [target] =
+									(await player
+										.chooseTarget("是否获得一名其他角色的一张手牌？", (card, player, target) => {
+											return target !== player && target.countCards("h");
+										})
+										.set("ai", target => {
+											const player = get.player();
+											return get.effect(target, { name: "shunshou_copy", position: "h" }, player, player);
+										})
+										.forResult("targets")) ?? [];
+								if (target) {
+									player.line(target);
+									await player.gainPlayerCard(target, "h", true);
+								}
+							}
+						}
+						if (num >= 4) {
+							if (game.hasPlayer(target => target.countDiscardableCards(player, "ej"))) {
+								const [target] =
+									(await player
+										.chooseTarget(
+											"弃置场上的一张牌",
+											(card, player, target) => {
+												return target.countDiscardableCards(player, "ej");
+											},
+											true
+										)
+										.set("ai", target => {
+											const player = get.player();
+											return get.effect(target, { name: "guohe_copy", position: "ej" }, player, player);
+										})
+										.forResult("targets")) ?? [];
+								if (target) {
+									player.line(target);
+									await player.discardPlayerCard(target, "ej", true);
+								}
+							}
+							await player.addSkills("taffyold_dcretanluan");
+						}
+					},
+				};
+			},
+		},
+		ai: {
+			order: 8,
+			result: { player: 1 },
+		},
+		subSkill: { backup: {} },
+	},
+	taffyold_dcretanluan: {
+		init(player, skill) {
+			if (typeof player.getStat("skill")?.[skill] === "number") {
+				delete player.getStat("skill")[skill];
+			}
+		},
+		onChooseToUse(event) {
+			if (!game.online && !event.taffyold_dcretanluan) {
+				event.set(
+					"taffyold_dcretanluan",
+					game.filterPlayer2().reduce((list, target) => {
+						return list.addArray(
+							target
+								.getHistory("lose", evt => {
+									return evt.type === "discard";
+								})
+								.map(evt => evt.cards.filterInD("d"))
+								.flat()
+								.unique()
+						);
+					}, [])
+				);
+			}
+		},
+		audio: "dctanluan",
+		enable: "phaseUse",
+		filter(event, player) {
+			return event.taffyold_dcretanluan?.some(card => player.hasUseTarget(card));
+		},
+		usable: 1,
+		chooseButton: {
+			dialog(event, player) {
+				const dialog = ui.create.dialog('###探乱###<div class="text center">' + lib.translate.taffyold_dcretanluan_info + "</div>");
+				dialog.add(event.taffyold_dcretanluan);
+				return dialog;
+			},
+			filter(button, player) {
+				return player.hasUseTarget(button.link);
+			},
+			check(button) {
+				const card = button.link;
+				return get.player().getUseValue(card) * (get.tag(card, "damage") >= 1 ? 3 : 1);
+			},
+			prompt(links) {
+				return '###探乱###<div class="text center">使用' + get.translation(links) + "，若你因此造成伤害，则重置〖蛮后〗</div>";
+			},
+			backup(links, player) {
+				return {
+					audio: "dctanluan",
+					filterCard: () => false,
+					selectCard: -1,
+					popname: true,
+					viewAs: links[0],
+					card: links[0],
+					precontent() {
+						player.addTempSkill("taffyold_dcretanluan_effect");
+						const card = get.info("taffyold_dcretanluan_backup").card;
+						event.result.cards = [card];
+						event.result.card = get.autoViewAs(card, [card]);
+						event.result.card.taffyold_dcretanluan = true;
+					},
+				};
+			},
+		},
+		subSkill: {
+			backup: {},
+			effect: {
+				charlotte: true,
+				audio: "dctanluan",
+				trigger: { source: "damageSource" },
+				filter(event, player) {
+					if (typeof player.getStat("skill")["taffyold_dcremanhou"] !== "number") return false;
+					return event.card?.taffyold_dcretanluan === true;
+				},
+				forced: true,
+				content() {
+					delete player.getStat("skill")["taffyold_dcremanhou"];
+					player.popup("taffyold_dcremanhou");
+					game.log(player, "重置了技能", "【" + get.translation("taffyold_dcremanhou") + "】");
+				},
+			},
+		},
+	},
+	//旧二刘
+	taffyold_dcllqixin: {
+		audio: "dcllqixin",
+		trigger: {
+			player: ["gainAfter", "useCard"],
+			global: "loseAsyncAfter",
+		},
+		filter(event, player) {
+			if (event.name === "useCard") return event.getParent(2).name !== "taffyold_dcllqixin" && get.type(event.card) === "basic";
+			if (event.name === "gain" && (event.getParent().name !== "draw" || event.getParent(2).name === "taffyold_dcllqixin")) return false;
+			if (event.name !== "gain" && event.type !== "draw") return false;
+			return event.getg(player).length === 2;
+		},
+		direct: true,
+		clearTime: true,
+		frequent: true,
+		async content(event, trigger, player) {
+			if (trigger.name === "useCard") {
+				const bool = await player.chooseBool(get.prompt(event.name), "摸两张牌").set("frequentSkill", event.name).forResult("bool");
+				if (bool) {
+					player.logSkill(event.name);
+					await player.draw(2);
+				}
+			} else {
+				await player
+					.chooseToUse(function (card, player, event) {
+						if (get.type(card) !== "basic") return false;
+						return lib.filter.cardEnabled.apply(this, arguments);
+					}, get.translation(event.name) + "：是否使用一张基本牌？")
+					.set("logSkill", event.name)
+					.set("addCount", false);
+			}
+		},
+	},
 };
 
 export default oldDC;

@@ -44,5 +44,31 @@ const dynamicTranslates = {
 		if (player.storage.himari_jianshi_modified) return "蓄力技（3/10）。①一名其他角色的回合开始时，你可以消耗3点蓄力值，令其造成的伤害翻倍直到回合结束。②锁定技。一名角色的回合结束时，你获得1点蓄力值。";
 		return "蓄力技（3/10）。①一名其他角色的出牌阶段开始时，你可以消耗3点蓄力值，令其造成的伤害翻倍直到出牌阶段结束。②锁定技。一名角色的回合结束时，你获得1点蓄力值。";
 	},
+	taffyold_pothanzhan(player) {
+		let str = lib.translate.taffyold_pothanzhan_info;
+		if (!player.storage.taffyold_pothanzhan) return str;
+		return str.replace(
+			"X为各自体力上限",
+			"X为" +
+				{
+					hp: "各自体力值",
+					damagedHp: "各自损失体力值",
+					countplayer: "场上存活角色数",
+				}[player.storage.taffyold_pothanzhan]
+		);
+	},
+	taffyold_potzhanlie(player) {
+		let str = lib.translate.taffyold_potzhanlie_info;
+		if (!player.storage.taffyold_potzhanlie) return str;
+		return str.replace(
+			"X为你的攻击范围",
+			"X为" +
+				{
+					hp: "你的体力值",
+					damagedHp: "你的损失体力值",
+					countplayer: "场上存活角色数",
+				}[player.storage.taffyold_potzhanlie]
+		);
+	},
 };
 export default dynamicTranslates;

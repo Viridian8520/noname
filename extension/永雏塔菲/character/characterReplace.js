@@ -39,7 +39,7 @@ const characterReplaces = {
 	zhaoyǎn: ["zhaoyǎn", "dc_zhaoyǎn", "taffyold_dc_zhaoyǎn"],
 	lukai: ["ol_lukai", "lukai", "taffyold_lukai"],
 	liuli: ["dc_liuli", "taffyold_dc_liuli"],
-	miheng: ["yue_miheng", "re_miheng", "miheng", "scl_miheng", "taffyold_yue_miheng"],
+	miheng: ["ol_miheng", "yue_miheng", "re_miheng", "miheng", "scl_miheng", "taffyold_yue_miheng", "taffyold_ol_miheng"],
 	fuqian: ["fuqian", "taffyold_fuqian"],
 	guozhao: ["guozhao", "xin_guozhao", "jsrg_guozhao", "ol_guozhao", "taffyold_xin_guozhao", "taffype_guozhao"],
 	wenyang: ["wenyang", "db_wenyang", "diy_wenyang", "std_db_wenyang", "taffyold_db_wenyang"],
@@ -67,6 +67,11 @@ const characterReplaces = {
 	wechat_zhiyin_zhugeliang: ["wechat_zhiyin_zhugeliang", "taffyold_wechat_ji_zhugeliang"],
 	wechat_zhiyin_sunce: ["wechat_zhiyin_sunce", "taffyold_wechat_ji_sunce"],
 	shamoke: ["shamoke", "ty_shamoke", "taffyshen_shamoke", "taffyre_shamoke"],
+	taishici: ["taishici", "re_taishici", "ol_sb_taishici", "sp_taishici", "re_sp_taishici", "pot_taishici", "taffyold_pot_taishici"],
+	zhurong: ["zhurong", "ol_zhurong", "re_zhurong", "sb_zhurong", "dc_sp_zhurong", "taffyold_dc_sp_zhurong"],
+	liujinliupei: ["liujinliupei", "taffyold_liujinliupei"],
+	chendao: ["chendao", "pot_chendao", "ns_chendao", "old_chendao", "taffyold_pot_chendao"],
+	yangxiu: ["yangxiu", "clan_yangxiu", "taffyold_clan_yangxiu"],
 };
 
 export default characterReplaces;

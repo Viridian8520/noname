@@ -103,6 +103,12 @@ const characters = {
 	taffyold_wechat_ji_sunce: ["male", "wu", 4, ["taffyold_wechattaoni", "taffyold_wechatpingjiang", "taffyold_wechatdingye"], ["zhu"]],
 	taffyshen_shamoke: ["male", "shen", 4, ["taffyshen_gzjili"], ["shu", "name:null|null", "character:ty_shamoke", "die:shamoke"]],
 	taffyre_shamoke: ["male", "shu", 4, ["taffyre_gzjili"], ["name:null|null", "character:shamoke", "die:shamoke"]],
+	taffyold_pot_taishici: ["male", "wu", 4, ["taffyold_pothanzhan", "taffyold_potzhanlie", "taffyold_potzhenfeng"], ["character:pot_taishici", "die:pot_taishici"]],
+	taffyold_dc_sp_zhurong: ["female", "qun", 4, ["taffyold_dcremanhou", "taffyold_dcretanluan"], ["name:null|null", "character:dc_sp_zhurong", "die:dc_sp_zhurong"]],
+	taffyold_liujinliupei: ["female", "wei", 3, ["taffyold_dcllqixin", "dcjiusi"], ["name:刘|衿-刘|佩", "character:liujinliupei", "die:liujinliupei"]],
+	taffyold_pot_chendao: ["male", "shu", 4, ["taffyold_potwanglie", "taffyold_pothongyi"], ["character:pot_chendao", "die:pot_chendao"]],
+	taffyold_ol_miheng: ["male", "qun", 4, ["taffyold_olkuangjuan", "taffyold_olfeibian"], ["character:ol_miheng", "die:ol_miheng"]],
+	taffyold_clan_yangxiu: ["male", "wei", 3, ["taffyold_clanjiewu", "taffyold_clangaoshi", "clanquhuo"], ["clan:弘农杨氏", "character:clan_yangxiu", "die:clan_yangxiu"]],
 	aruijier: ["female", "shen", "", [], ["unseen", "qun"]],
 };
 

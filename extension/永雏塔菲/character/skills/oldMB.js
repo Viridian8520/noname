@@ -4613,6 +4613,561 @@ const oldMB = {
 			},
 		},
 	},
+	//旧势太史慈 --- by 刘巴
+	taffyold_potzhanlie: {
+		audio: "potzhanlie",
+		trigger: { global: "phaseBegin" },
+		forced: true,
+		locked: false,
+		logAudio: () => 2,
+		content() {
+			const effectMap = new Map([
+				["hp", player.getHp()],
+				["damagedHp", player.getDamagedHp()],
+				["countplayer", game.countPlayer()],
+			]);
+			const num = effectMap.get(player.storage.taffyold_potzhanlie) || player.getAttackRange();
+			player.addTempSkill("taffyold_potzhanlie_addMark");
+			if (num > 0) player.addMark("taffyold_potzhanlie_addMark", num, false);
+		},
+		get limit() {
+			return 8;
+		},
+		group: "taffyold_potzhanlie_lie",
+		subSkill: {
+			addMark: {
+				charlotte: true,
+				onremove: true,
+				audio: "potzhanlie3.mp3",
+				trigger: {
+					global: ["loseAfter", "loseAsyncAfter", "cardsDiscardAfter"],
+				},
+				getIndex(event, player) {
+					return Math.min(
+						event.getd().filter(i => i.name === "sha").length,
+						get.info("taffyold_potzhanlie").limit - player.countMark("taffyold_potzhanlie_lie"),
+						Math.max(
+							player.countMark("taffyold_potzhanlie_addMark") -
+								game
+									.getGlobalHistory(
+										"everything",
+										evt => {
+											if (evt === event) return false;
+											return ["lose", "loseAsync", "cardsDiscard"].includes(evt.name) && evt.getd().some(i => i.name === "sha");
+										},
+										event
+									)
+									.reduce((sum, evt) => sum + evt.getd().filter(i => i.name === "sha").length, 0),
+							0
+						)
+					);
+				},
+				forced: true,
+				content() {
+					player.addMark("taffyold_potzhanlie_lie", 1);
+				},
+				intro: {
+					content: "本回合前#张【杀】进入弃牌堆后，获得等量“烈”标记",
+				},
+			},
+			lie: {
+				trigger: { player: "phaseUseEnd" },
+				filter: (event, player) => player.hasUseTarget(new lib.element.VCard({ name: "sha" }), false),
+				direct: true,
+				content() {
+					const str = player.hasMark("taffyold_potzhanlie_lie") ? "移去所有“烈”，" : "";
+					player.chooseUseTarget("###" + get.prompt("taffyold_potzhanlie") + '###<div class="text center">' + str + "视为使用一张无次数限制的【杀】</div>", new lib.element.VCard({ name: "sha" }), false).set("oncard", () => {
+						const event = get.event(),
+							{ player } = event,
+							num = player.countMark("taffyold_potzhanlie_lie");
+						player.addTempSkill("taffyold_potzhanlie_buff");
+						player.clearMark("taffyold_potzhanlie_lie");
+						event.set("taffyold_potzhanlie", Math.floor(num / 2));
+					}).logSkill = "taffyold_potzhanlie";
+				},
+				marktext: "烈",
+				intro: {
+					name: "烈",
+					content: "mark",
+				},
+			},
+			buff: {
+				charlotte: true,
+				trigger: { player: "useCard1" },
+				filter: event => event?.taffyold_potzhanlie,
+				forced: true,
+				locked: false,
+				popup: false,
+				async content(event, trigger, player) {
+					const num = trigger.taffyold_potzhanlie,
+						str = get.translation(trigger.card);
+					const result = await player
+						.chooseButton([
+							"战烈：是否选择至多" + get.cnNumber(num) + "项执行？",
+							[
+								[
+									["目标+1", "令" + str + "可以额外指定一个目标"],
+									["伤害+1", "令" + str + "基础伤害值+1"],
+									["弃牌响应", "令" + str + "需额外弃置一张牌方可响应"],
+									["摸牌", str + "结算完毕后，你摸两张牌"],
+								],
+								"textbutton",
+							],
+						])
+						.set("selectButton", [1, num])
+						.set("ai", button => {
+							const player = get.player(),
+								trigger = get.event().getTrigger(),
+								choice = button.link;
+							switch (choice) {
+								case "目标+1":
+									return Math.max(
+										...game
+											.filterPlayer(target => {
+												return !trigger.targets?.includes(target) && lib.filter.targetEnabled2(trigger.card, player, target) && lib.filter.targetInRange(trigger.card, player, target);
+											})
+											.map(target => get.effect(target, trigger.card, player, player))
+									);
+								case "伤害+1":
+									return (trigger.targets || []).reduce((sum, target) => {
+										const effect = get.damageEffect(target, player, player);
+										return (
+											sum +
+											effect *
+												(target.hasSkillTag("filterDamage", null, {
+													player: player,
+													card: trigger.card,
+												})
+													? 1
+													: 1 + (trigger.baseDamage || 1) + (trigger.extraDamage || 0))
+										);
+									}, 0);
+								case "弃牌响应":
+									return (trigger.targets || []).reduce((sum, target) => {
+										const card = get.copy(trigger.card);
+										game.setNature(card, "stab");
+										return sum + get.effect(target, card, player, player);
+									}, 0);
+								case "摸牌":
+									return get.effect(player, { name: "draw" }, player, player) * 2;
+							}
+						})
+						.forResult();
+					if (result.bool) {
+						const choices = result.links;
+						game.log(player, "选择了", "#g【战烈】", "的", "#y" + choices);
+						for (const choice of choices) {
+							player.popup(choice);
+							switch (choice) {
+								case "目标+1":
+									player
+										.when("useCard2")
+										.filter(evt => evt === trigger)
+										.then(() => {
+											player
+												.chooseTarget("是否为" + get.translation(trigger.card) + "增加一个目标？", (card, player, target) => {
+													const evt = get.event().getTrigger();
+													return !evt.targets.includes(target) && lib.filter.targetEnabled2(evt.card, player, target) && lib.filter.targetInRange(evt.card, player, target);
+												})
+												.set("ai", target => {
+													const player = get.player(),
+														evt = get.event().getTrigger();
+													return get.effect(target, evt.card, player);
+												});
+										})
+										.then(() => {
+											if (result?.bool && result.targets?.length) {
+												const [target] = result.targets;
+												player.line(target, trigger.card.nature);
+												trigger.targets.add(target);
+												game.log(target, "成为了", trigger.card, "的额外目标");
+											}
+										});
+									break;
+								case "伤害+1":
+									trigger.baseDamage++;
+									game.log(trigger.card, "造成的伤害", "#y+1");
+									break;
+								case "弃牌响应":
+									player.addTempSkill("taffyold_potzhanlie_guanshi");
+									player.markAuto("taffyold_potzhanlie_guanshi", [trigger.card]);
+									break;
+								case "摸牌":
+									player
+										.when("useCardAfter")
+										.filter(evt => evt === trigger)
+										.then(() => player.draw(2));
+									break;
+							}
+						}
+					}
+				},
+			},
+			guanshi: {
+				charlotte: true,
+				onremove: true,
+				audio: "potzhanlie",
+				trigger: { player: "useCardToBegin" },
+				filter(event, player) {
+					if (!event.target?.isIn()) return false;
+					return !event.getParent().directHit.includes(event.target) && player.getStorage("taffyold_potzhanlie_guanshi").includes(event.card);
+				},
+				forced: true,
+				logTarget: "target",
+				async content(event, trigger, player) {
+					const { target } = trigger;
+					const { result } = await target.chooseToDiscard("战烈：弃置一张牌，否则不可响应" + get.translation(trigger.card)).set("ai", card => {
+						const player = get.player(),
+							trigger = get.event().getTrigger();
+						if (get.effect(player, trigger.card, trigger.player, player) >= 0) return 0;
+						const num = player.countCards("hs", { name: "shan" });
+						if (num === 0) return 0;
+						if (card.name === "shan" && num <= 1) return 0;
+						return 8 - get.value(card);
+					});
+					if (!result?.bool) {
+						trigger.set("directHit", true);
+						game.log(target, "不可响应", trigger.card);
+					}
+				},
+			},
+		},
+	},
+	taffyold_pothanzhan: {
+		audio: "pothanzhan",
+		enable: "phaseUse",
+		usable: 1,
+		filterTarget: lib.filter.notMe,
+		async content(event, trigger, player) {
+			const target = event.targets[0];
+			for (const drawer of [player, target]) {
+				const num = (() => {
+					return (
+						({
+							hp: drawer.getHp(),
+							damagedHp: drawer.getDamagedHp(),
+							countplayer: game.countPlayer(),
+						}[player.storage.taffyold_pothanzhan] ?? drawer.maxHp) - drawer.countCards("h")
+					);
+				})();
+				if (num > 0) await drawer.draw(Math.min(num, 5));
+			}
+			const juedou = new lib.element.VCard({ name: "juedou" });
+			if (player.canUse(juedou, target)) await player.useCard(juedou, target, false);
+		},
+		ai: {
+			order(item, player) {
+				if ((player.countCards("h", { name: "sha" }) || player.maxHp - player.countCards("h")) > 1) return 10;
+				return 1;
+			},
+			result: {
+				target(player, target) {
+					return (
+						get.effect(target, new lib.element.VCard({ name: "juedou" }), player, player) -
+						Math.max(
+							0,
+							Math.min(
+								5,
+								(() => {
+									return (
+										({
+											hp: target.getHp(),
+											damagedHp: target.getDamagedHp(),
+											countplayer: game.countPlayer(),
+										}[player.storage.taffyold_pothanzhan] ?? target.maxHp) - target.countCards("h")
+									);
+								})()
+							)
+						) *
+							get.effect(target, { name: "draw" }, player, player)
+					);
+				},
+			},
+		},
+	},
+	taffyold_potzhenfeng: {
+		limited: true,
+		audio: "potzhenfeng",
+		enable: "phaseUse",
+		filter(event, player) {
+			return player.isDamaged() || ["taffyold_pothanzhan", "taffyold_potzhanlie"].some(skill => player.hasSkill(skill, null, null, false));
+		},
+		skillAnimation: true,
+		animationColor: "metal",
+		logAudio: index => (typeof index === "number" ? "potzhenfeng" + index + ".mp3" : 2),
+		chooseButton: {
+			dialog(event, player) {
+				const dialog = ui.create.dialog("振锋：你可以选择一项", "hidden");
+				dialog.add([
+					[
+						["recover", "回复2点体力"],
+						["cover", "修改〖酣战〗和〖战烈〗描述中的“X”值"],
+					],
+					"textbutton",
+				]);
+				return dialog;
+			},
+			filter(button, player) {
+				switch (button.link) {
+					case "recover":
+						return player.isDamaged();
+					case "cover":
+						return ["taffyold_pothanzhan", "taffyold_potzhanlie"].some(skill => player.hasSkill(skill, null, null, false));
+				}
+			},
+			check(button) {
+				const player = get.player();
+				if (button.link == "recover") return player.getHp() + player.countCards("h", { name: "tao" }) < 2;
+				if (button.link == "cover") {
+					let numbers = [player.getHp(), player.getDamagedHp(), game.countPlayer()];
+					if (numbers.some(c => c > player.getAttackRange())) return Math.max(...numbers) * 2;
+				}
+				return 0.1;
+			},
+			backup(links) {
+				return {
+					item: links[0],
+					skillAnimation: true,
+					animationColor: "metal",
+					log: false,
+					async content(event, trigger, player) {
+						player.awakenSkill("taffyold_potzhenfeng");
+						if (get.info(event.name).item === "recover") {
+							player.logSkill("taffyold_potzhenfeng", null, null, null, [null]);
+							player.changeSkin({ characterName: "taffyold_pot_taishici" }, "pot_taishici_shadow1");
+							await player.recover(2);
+						} else {
+							let dialog = [],
+								skills = ["taffyold_pothanzhan", "taffyold_potzhanlie"].filter(skill => player.hasSkill(skill, null, null, false)),
+								list = [
+									["hp", "当前体力值"],
+									["damagedHp", "当前已损失体力值"],
+									["countplayer", "场上存活角色数"],
+								];
+							dialog.push("振锋：修改" + skills.map(skill => "〖" + get.translation(skill) + "〗").join("和") + "描述中的“X”为...");
+							for (const skill of skills) {
+								dialog.push('<div class="text center">' + get.translation(skill) + "</div>");
+								dialog.push([list.map(item => [item[0] + "|" + skill, item[1]]), "tdnodes"]);
+							}
+							const result = await player
+								.chooseButton(dialog, [1, Math.min(2, skills.length)], true)
+								.set("filterButton", button => {
+									return !ui.selected.buttons.some(but => but.link.split("|")[1] === button.link.split("|")[1]);
+								})
+								.set("ai", button => {
+									const player = get.player();
+									switch (button.link.split("|")[0]) {
+										case "hp":
+											return player.getHp();
+										case "damagedHp":
+											return player.getDamagedHp();
+										case "countplayer":
+											return game.countPlayer();
+									}
+								})
+								.forResult();
+							if (result?.bool && result.links?.length) {
+								player.logSkill("taffyold_potzhenfeng", null, null, null, [get.rand(3, 4)]);
+								let changeList = [];
+								for (const link of result.links) {
+									const [change, skill] = link.split("|");
+									if (skill == "taffyold_pothanzhan") changeList.push(change);
+									player.storage[skill] = change;
+									player.popup(skill);
+									game.log(player, "修改", "#g【" + get.translation(skill) + "】", "的", "#yX", "为", "#g" + list.find(item => item[0] === change)[1]);
+								}
+								if (changeList[0]) {
+									switch (changeList[0]) {
+										case "hp":
+											player.changeSkin({ characterName: "taffyold_pot_taishici" }, "pot_taishici_shadow2");
+											break;
+										case "damagedHp":
+											player.changeSkin({ characterName: "taffyold_pot_taishici" }, "pot_taishici_shadow3");
+											break;
+										case "countplayer":
+											player.changeSkin({ characterName: "taffyold_pot_taishici" }, "pot_taishici_shadow4");
+									}
+								} else {
+									player.changeSkin({ characterName: "taffyold_pot_taishici" }, "pot_taishici_shadow1");
+								}
+							}
+						}
+					},
+				};
+			},
+			prompt(links) {
+				return `点击“确定”，${links[0] === "recover" ? "回复2点体力" : "修改〖酣战〗和〖战烈〗描述中的“X”值"}`;
+			},
+		},
+		subSkill: {
+			backup: {},
+		},
+		ai: {
+			order: 15,
+			threaten: 2,
+			result: {
+				player(player) {
+					if ([player.getHp(), player.getDamagedHp(), game.countPlayer()].some(c => c > player.getAttackRange())) return 10;
+					return get.recoverEffect(player, player, player);
+				},
+			},
+		},
+	},
+	//势陈到
+	taffyold_potwanglie: {
+		audio: "potwanglie",
+		trigger: { player: "phaseUseBegin" },
+		filter(event, player) {
+			return player.countCards("h");
+		},
+		async cost(event, trigger, player) {
+			event.result = await player
+				.chooseCard(get.prompt2("taffyold_potwanglie"), "h")
+				.set("ai", card => {
+					const player = get.player();
+					if (player.hasValueTarget(card, true)) {
+						return player.getUseValue(card, false, true) * (get.tag(card, "damage") > 0.5 ? 2 : 1);
+					}
+					return 0.1 + Math.random();
+				})
+				.forResult();
+		},
+		async content(event, trigger, player) {
+			const card = event.cards[0];
+			player.addGaintag(card, "taffyold_potwanglie");
+			player.addTempSkill(event.name + "_effect", "phaseUseAfter");
+			await game.delayx();
+		},
+		locked: false,
+		mod: {
+			aiOrder(player, card, num) {
+				if (!player.isPhaseUsing() || typeof card !== "object" || num <= 0) return;
+				if (get.itemtype(card) == "card" && card.hasGaintag("taffyold_potwanglie")) num / 20;
+				return num;
+			},
+		},
+		subSkill: {
+			effect: {
+				charlotte: true,
+				onremove(player) {
+					player.removeGaintag("taffyold_potwanglie");
+				},
+				mod: {
+					targetInRange(card, player, target) {
+						if (card.cards?.some(cardx => cardx.hasGaintag("taffyold_potwanglie"))) return true;
+					},
+				},
+				audio: "potwanglie",
+				trigger: { player: ["useCard", "useCardAfter"] },
+				filter(event, player) {
+					return player.hasHistory("lose", evt => {
+						if (event !== evt.getParent()) return false;
+						return Object.values(evt.gaintag_map).flat().includes("taffyold_potwanglie");
+					});
+				},
+				silent: true,
+				content() {
+					if (event.triggername == "useCard") {
+						player.logSkill(event.name);
+						trigger.directHit.addArray(game.players);
+						game.log(trigger.card, "不可被响应");
+					} else {
+						player.addTempSkill("taffyold_potwanglie_debuff", "phaseUseAfter");
+					}
+				},
+				ai: {
+					directHit_ai: true,
+					skillTagFilter(player, tag, arg) {
+						if (arg?.card?.cards?.some(card => card.hasGaintag("taffyold_potwanglie"))) return true;
+					},
+				},
+			},
+			debuff: {
+				mark: true,
+				charlotte: true,
+				intro: { content: "本阶段不能对其他角色使用牌" },
+				mod: {
+					playerEnabled(card, player, target) {
+						if (player !== target) return false;
+					},
+				},
+			},
+		},
+	},
+	taffyold_pothongyi: {
+		audio: "pothongyi",
+		locked: true,
+		popup: false,
+		trigger: { player: "phaseZhunbeiBegin" },
+		filter(event, player) {
+			return player.hasMark("taffyold_pothongyi");
+		},
+		//提前若为
+		maxMark() {
+			//if (get.mode() == "doudizhu") return 1;
+			return 4;
+		},
+		logAudio: index => (typeof index === "number" ? "pothongyi" + index + ".mp3" : 2),
+		async cost(event, trigger, player) {
+			const num = player.countMark("taffyold_pothongyi");
+			let list = [`摸${get.cnNumber(num)}张牌`, `移去所有“毅”标记，视为使用${get.cnNumber(num)}张【杀】`];
+			const result = await player
+				.chooseControl()
+				.set("prompt", get.translation(event.skill) + "：请选择一项执行")
+				.set("choiceList", list)
+				.set("num", num)
+				.set("ai", () => {
+					const { player, num } = get.event();
+					const card = new lib.element.VCard({ name: "sha", isCard: true });
+					if (num < get.info("taffyold_pothongyi").maxMark() || !player.hasValueTarget(card)) return 0;
+					return 1;
+				})
+				.forResult();
+			event.result = { bool: true, cost_data: result.index };
+		},
+		async content(event, trigger, player) {
+			player.logSkill("taffyold_pothongyi", null, null, null, [get.rand(1, 2)]);
+			const control = event.cost_data;
+			const num = player.countMark("taffyold_pothongyi");
+			if (!num) return;
+			if (control === 0) {
+				await player.draw(num);
+			} else if (control === 1) {
+				player.clearMark("taffyold_pothongyi");
+				for (let i = 0; i < num; i++) {
+					const card = new lib.element.VCard({ name: "sha", isCard: true });
+					if (player.hasUseTarget(card)) await player.chooseUseTarget(card, true, false).set("prompt2", `还可以再使用${num - i}张`);
+					else break;
+				}
+			}
+		},
+		marktext: "毅",
+		intro: {
+			name2: "毅",
+			content: "mark",
+		},
+		group: "taffyold_pothongyi_mark",
+		subSkill: {
+			mark: {
+				audio: ["pothongyi3.mp3", "pothongyi4.mp3"],
+				trigger: {
+					global: "phaseBefore",
+					source: "damageSource",
+					player: ["enterGame", "damageEnd"],
+				},
+				getIndex: event => (event.name === "damage" ? event.num : 1),
+				filter(event, player) {
+					if (player.countMark("taffyold_pothongyi") >= get.info("taffyold_pothongyi").maxMark()) return false;
+					return event.name != "phase" || game.phaseNumber == 0;
+				},
+				forced: true,
+				async content(event, trigger, player) {
+					const num = get.info("taffyold_pothongyi").maxMark() - player.countMark("taffyold_pothongyi");
+					player.addMark("taffyold_pothongyi", Math.min(trigger.name === "damage" ? 1 : 2, num));
+				},
+			},
+		},
+	},
 };
 
 export default oldMB;

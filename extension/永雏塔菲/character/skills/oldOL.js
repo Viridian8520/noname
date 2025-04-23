@@ -3599,6 +3599,286 @@ const oldOL = {
 			},
 		},
 	},
+	//旧OL猴子
+	taffyold_olkuangjuan: {
+		audio: "olkuangjuan",
+		enable: "phaseUse",
+		filter(event, player) {
+			return game.hasPlayer(target => get.info("taffyold_olkuangjuan").filterTarget(null, player, target));
+		},
+		filterTarget(card, player, target) {
+			return target.countCards("h") > player.countCards("h") && !player.getStorage("taffyold_olkuangjuan_used").includes(target);
+		},
+		content() {
+			player.addTempSkill("taffyold_olkuangjuan_used");
+			player.markAuto("taffyold_olkuangjuan_used", [target]);
+			player.addTempSkill("taffyold_olkuangjuan_effect");
+			player.drawTo(target.countCards("h")).gaintag.add("taffyold_olkuangjuan_effect");
+		},
+		ai: {
+			order: 0.1,
+			result: {
+				player(player, target) {
+					return target.countCards("h") - player.countCards("h");
+				},
+			},
+		},
+		subSkill: {
+			used: {
+				charlotte: true,
+				onremove: true,
+			},
+			effect: {
+				charlotte: true,
+				trigger: { player: "useCard0" },
+				filter(event, player) {
+					if (event.addCount === false) return false;
+					return player.hasHistory("lose", evt => {
+						if (evt.getParent() !== event) return false;
+						return Object.values(evt.gaintag_map).flat().includes("taffyold_olkuangjuan_effect");
+					});
+				},
+				forced: true,
+				popup: false,
+				firstDo: true,
+				content() {
+					trigger.addCount = false;
+					player.getStat("card")[trigger.card.name]--;
+				},
+				mod: {
+					cardUsable(card, player) {
+						if (!card.cards || card.cards.length !== 1) return;
+						if (get.itemtype(card.cards[0]) === "card" && card.cards[0].hasGaintag("taffyold_olkuangjuan_effect")) return true;
+					},
+				},
+			},
+		},
+	},
+	taffyold_olfeibian: {
+		audio: "olfeibian",
+		trigger: { global: "useCardAfter" },
+		filter(event, player) {
+			if (event.player === player) return _status.currentPhase === player;
+			return event.targets?.includes(player);
+		},
+		forced: true,
+		logTarget: "player",
+		async content(event, trigger, player) {
+			const target = trigger.player;
+			const cards = target.getDiscardableCards(target, "h");
+			if (cards.length) await target.discard(cards.randomGets(1));
+			const info = target.forceCountChoose;
+			if (_status.countDown) return;
+			let time;
+			if (typeof info?.["chooseToUse"] === "number") time = info["chooseToUse"];
+			else if (typeof info?.default === "number") time = info.default;
+			else {
+				if (!_status.connectMode) return;
+				time = lib.configOL.choose_timeout;
+			}
+			if (time) {
+				time = parseInt(time);
+				if (time > 1) {
+					time--;
+					target.addTempSkill("taffyold_olfeibian_time", "roundStart");
+					target.addMark("taffyold_olfeibian_time", 1, false);
+					game.broadcastAll(
+						(player, time) => {
+							if (!player.forceCountChoose) player.forceCountChoose = {};
+							player.forceCountChoose.chooseToUse = time;
+						},
+						target,
+						time
+					);
+					game.log(target, "出牌时限", "#y-1s");
+				}
+			}
+		},
+		group: ["taffyold_olfeibian_init", "taffyold_olfeibian_loseHp"],
+		init() {
+			game.broadcastAll(() => {
+				const countDown = game.countDown;
+				if (typeof countDown !== "function") return;
+				game.countDown = function (time, onEnd) {
+					const newOnEnd = () => {
+						const event = get.event();
+						if (event?.name === "chooseToUse" && event.player?.isIn()) event.player.addTempSkill("taffyold_olfeibian_effect");
+						if (typeof onEnd === "function") onEnd();
+					};
+					return countDown.call(this, time, newOnEnd);
+				};
+			});
+		},
+		subSkill: {
+			effect: { charlotte: true },
+			time: {
+				charlotte: true,
+				onremove(player, skill) {
+					game.broadcastAll(
+						(player, time) => {
+							player.forceCountChoose.chooseToUse = time;
+						},
+						player,
+						player.forceCountChoose.chooseToUse + player.countMark(skill)
+					);
+					delete player.storage[skill];
+				},
+			},
+			init: {
+				audio: "olfeibian",
+				trigger: { global: "phaseBefore", player: "enterGame" },
+				filter: event => event.name !== "phase" || game.phaseNumber === 0,
+				forced: true,
+				content() {
+					game.broadcastAll(player => {
+						if (!player.forceCountChoose) player.forceCountChoose = {};
+						player.forceCountChoose.chooseToUse = 15;
+					}, player);
+					game.log(player, "的出牌时限改为了", "#g15s");
+				},
+			},
+			loseHp: {
+				audio: "olfeibian",
+				trigger: { global: "phaseEnd" },
+				filter(event, player) {
+					return game.hasPlayer(target => target.hasSkill("taffyold_olfeibian_effect"));
+				},
+				logTarget(event, player) {
+					return game.filterPlayer(target => target.hasSkill("taffyold_olfeibian_effect"));
+				},
+				forced: true,
+				content() {
+					for (const i of event.targets) i.loseHp();
+				},
+			},
+		},
+	},
+	//族杨修 —— by 刘巴
+	taffyold_clanjiewu: {
+		audio: "clanjiewu",
+		trigger: {
+			player: "phaseUseBegin",
+		},
+		async cost(event, trigger, player) {
+			event.result = await player
+				.chooseTarget(get.prompt("taffyold_clanjiewu"), "令一名角色的手牌在本阶段对你可见")
+				.set("ai", target => {
+					let items = target.getCards("h");
+					let count = [...new Set(items.map(item => get.suit(item, target)))].length;
+					const player = get.player();
+					return (4 - count) * get.effect(target, { name: "draw" }, target, player);
+				})
+				.forResult();
+		},
+		async content(event, trigger, player) {
+			const target = event.targets[0];
+			player.markAuto(event.name + "_effect", target);
+			player.addSkill(event.name + "_effect");
+			player
+				.when({ global: "phaseUseAfter" })
+				.filter(evt => evt === trigger)
+				.then(() => player.removeSkill("taffyold_clanjiewu_effect"));
+		},
+		subSkill: {
+			effect: {
+				charlotte: true,
+				onremove: true,
+				trigger: {
+					player: "useCardToPlayered",
+				},
+				filter: (event, player) => event.isFirstTarget,
+				async cost(event, trigger, player) {
+					event.result = await player
+						.chooseTarget(get.prompt("taffyold_clanjiewu"), "选择一名「捷悟」角色展示其一张手牌")
+						.set("filterTarget", (card, player, target) => target.hasCard(true, "h") && player.getStorage("taffyold_clanjiewu_effect").includes(target))
+						.set("ai", target => {
+							let items = target.getCards("h");
+							let count = [...new Set(items.map(item => get.suit(item, target)))].length;
+							const player = get.player();
+							return (4 - count) * get.effect(target, { name: "draw" }, target, player);
+						})
+						.forResult();
+				},
+				async content(event, trigger, player) {
+					const target = event.targets[0];
+					let cards;
+					if (target === player) {
+						cards = await player.chooseCard("h", true, `捷悟：展示你的一张手牌`).forResultCards();
+					} else {
+						cards = await player.choosePlayerCard(target, true, "h", `捷悟：展示${get.translation(target)}的一张手牌`).forResultCards();
+					}
+					if (!cards?.length) return;
+					const card = cards[0];
+					await player.showCards(card, `${get.translation(player)}对${get.translation(target)}发动了【捷悟】`).set("taffyold_clanjiewu", true);
+					if (get.suit(trigger.card, player) === get.suit(card, target)) await player.draw();
+					if (
+						game.getGlobalHistory("everything", evt => {
+							return evt.name === "showCards" && evt.cards.length && evt.cards.some(c => c === card) && evt?.taffyold_clanjiewu;
+						}).length > 1
+					) {
+						let cardsx;
+						if ((target.countCards("h") !== player.countCards("h") && target !== player) || target === player) {
+							const putee = player.countCards("h") > target.countCards("h") || target === player ? player : target;
+							if (!putee.countCards("he")) return;
+							if (player !== putee) {
+								cardsx = await player.choosePlayerCard(putee, true, "he", "捷悟：将" + get.translation(putee) + "的一张牌置于牌堆顶").forResultCards();
+							} else {
+								cardsx = await player.chooseCard("he", true, "捷悟：将你的一张牌置于牌堆顶").forResultCards();
+							}
+							const card = cardsx[0];
+							putee.$throw(get.position(card) == "h" ? 1 : card, 1000);
+							game.log(player, "将", putee === player ? "" : get.translation(putee) + "的", get.position(card) == "h" ? "一张牌" : card, "置于牌堆顶");
+							await putee.lose(card, ui.cardPile, "insert");
+						}
+					}
+				},
+				ai: {
+					viewHandcard: true,
+					skillTagFilter(player, tag, arg) {
+						if (!player.getStorage("taffyold_clanjiewu_effect").includes(arg)) return false;
+					},
+				},
+			},
+		},
+	},
+	taffyold_clangaoshi: {
+		audio: "clangaoshi",
+		trigger: { player: "phaseJieshuBegin" },
+		frequent: true,
+		filter: (event, player) => player.hasHistory("useSkill", evt => ["taffyold_clanjiewu", "taffyold_clanjiewu_effect"].includes(evt.skill)),
+		prompt(event, player) {
+			return get.prompt("taffyold_clangaoshi") + "（可亮出" + get.cnNumber(player.getHistory("useSkill", evt => ["taffyold_clanjiewu", "taffyold_clanjiewu_effect"].includes(evt.skill)).length) + "张牌）";
+		},
+		async content(event, trigger, player) {
+			const num = player.getHistory("useSkill", evt => {
+				return ["taffyold_clanjiewu", "taffyold_clanjiewu_effect"].includes(evt.skill);
+			}).length;
+			const names = player.getHistory("useCard", evt => evt.isPhaseUsing()).map(evt => evt.card.name);
+			let cards = get.cards(num);
+			await game.cardsGotoOrdering(cards);
+			await player.showCards(cards, `${get.translation(player)}发动了〖高视〗`);
+			//game.log(player, "亮出了牌堆顶的", cards);
+			while (cards.some(card => player.hasUseTarget(card))) {
+				const links = await player
+					.chooseButton([`高视：是否使用其中一张牌？`, cards])
+					.set("filterButton", button => {
+						const player = get.player(),
+							card = button.link;
+						return player.hasUseTarget(card) && !get.event().names.includes(card.name);
+					})
+					.set("names", names)
+					.set("ai", button => {
+						return get.player().getUseValue(button.link);
+					})
+					.forResultLinks();
+				if (!links?.length) break;
+				cards.remove(links[0]);
+				player.$gain(links[0], false);
+				await player.chooseUseTarget(links[0], true, false);
+			}
+			if (!cards.length) await player.draw(2);
+		},
+	},
 };
 
 export default oldOL;

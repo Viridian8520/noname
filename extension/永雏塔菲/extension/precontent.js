@@ -270,6 +270,24 @@ export const PRECONTENT = function (config) {
 					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("极")}`,
 				},
 			],
+			[
+				"旧势",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("势")}`,
+				},
+			],
+			[
+				"旧新杀SP",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("新杀")}${get.prefixSpan("SP")}`,
+				},
+			],
 		];
 		prefixList.forEach(i => {
 			lib.namePrefix.set(i[0], i[1]);
