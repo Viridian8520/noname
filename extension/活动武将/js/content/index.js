@@ -1220,12 +1220,20 @@ export function content(config, pack) {
 	//虎牢关
 	if (lib.config.extension_活动武将_ShenLvBu && get.mode() != 'boss' && (!lib.config.plays || !lib.config.plays.boss)) {
 		game.loadModeAsync('boss', mode => {
-			['skill', 'translate'].forEach(i => {
-				for (var j in mode[i]) {
-					if (!lib[i][j] && !j.startsWith('_')) lib[i][j] = mode[i][j];
-					if (i == 'skill') game.finishSkill(j);
+			for (const i of ['translate', 'dynamicTranslate', 'skill']) {
+				for (const j in mode[i]) {
+					if (!j.startsWith('_') && !lib[i][j]) {
+						lib[i][j] = mode[i][j];
+						if (i === "skill") {
+							if (lib.skill[j].inherit && !lib.skill[lib.skill[j].inherit] && mode.skill[lib.skill[j].inherit]) {
+								lib.skill[lib.skill[j].inherit] = mode.skill[lib.skill[j].inherit];
+								game.finishSkill(lib.skill[j].inherit);
+							}
+							game.finishSkill(j);
+						}
+					}
 				}
-			});
+			}
 			//虎牢关彩蛋
 			['boss_lvbu1', 'boss_lvbu2', 'boss_lvbu3'].forEach(name => {
 				lib.rank.rarity.legend.add(name);

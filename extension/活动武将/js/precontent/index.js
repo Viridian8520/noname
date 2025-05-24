@@ -20,23 +20,14 @@ export function precontent(bilibilicharacter) {
         return game.TrueHasExtension(ext) && lib.config['extension_' + ext + '_enable'];
     };
     //阵亡配音
-    lib.skill._HD_die = {
-        charlotte: true,
-        ruleSkill: true,
-        trigger: { player: 'dieBegin' },
-        filter(event, player) {
-            return lib.config.background_speak && event.player.name;
-        },
-        firstDo: true,
-        direct: true,
-        priority: -Infinity,
-        lasrDo: true,
-        content() {
-            game.broadcastAll(function (name) {
+    lib.hooks['checkDie'].push(function HD_die(trigger) {
+        const target = trigger.player, name = target?.name;
+        if (name && lib.config.background_speak) {
+            game.broadcastAll(name => {
                 game.playAudio('..', 'extension', '活动武将/audio/die', name);
-            }, trigger.player.name);
-        },
-    };
+            }, name);
+        }
+    });
     //困难年兽体力上限和体力值为所有其他角色的体力上限和
     lib.skill._YJplusmaxHp = {
         charlotte: true,
@@ -54,25 +45,6 @@ export function precontent(bilibilicharacter) {
             }
             player.hp = player.maxHp;
             player.update();
-        },
-    };
-    //一轮的结束
-    lib.skill._bilibili_roundEnd = {
-        charlotte: true,
-        ruleSkill: true,
-        trigger: { player: ['phaseAfter', 'phaseCancelled', 'phaseSkipped'] },//伪·一轮的结束
-        filter(event, player) {
-            return !event.skill && player.next == _status.roundStart;
-        },
-        forceDie: true,
-        direct: true,
-        priority: -Infinity,
-        lastDo: true,
-        content() {
-            'step 0'
-            event.trigger('roundEnd');//End时机常用于技能结算
-            'step 1'
-            event.trigger('roundAfter');//After时机常用于效果清除
         },
     };
     //闪闪节

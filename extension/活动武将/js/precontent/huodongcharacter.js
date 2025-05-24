@@ -55,7 +55,7 @@ const packs = function () {
             bilibili_xizhicaikobe: ['male', 'key', 4, ['bilibili_biexiao', 'bilibili_xingshi', 'bilibili_zhangcai'], ['doublegroup:wei:shu:wu:qun:jin', 'clan:肘家军', 'clan:肘击群', 'clan:活动群', 'name:戏|子宓']],
             bilibili_yanjing: ['male', 'key', 3, ['bilibili_dongxi', 'bilibili_mingcha', 'bilibili_huiyan'], ['clan:宿舍群', 'clan:肘击群', 'clan:活动群', 'name:tooenough|眼睛']],
             bilibili_caifuren: ['female', 'qun', 3, ['bilibili_kuilei'], ["name:蔡|null"]],
-            bilibili_nanhualaoxian: ['male', 'qun', 3, ['bilibili_qingshu', 'olshoushu', 'olhedao'], ['die:ol_nanhualaoxian', 'name:庄|周']],
+            bilibili_nanhualaoxian: ['male', 'qun', 4, ['bilibili_qingshu', 'olshoushu', 'olhedao'], ['die:ol_nanhualaoxian', 'name:庄|周']],
             bilibili_xiaoyaoruyun: ['female', 'key', 4, ['bilibili_chuandu', 'bilibili_huaikui', 'bilibili_xyduoyang'], ['clan:宿舍群', 'clan:肘击群', 'clan:活动群', 'name:鹿都|智川介']],
             bilibili_shuijiaobuboli: ['female', 'key', '3/4', ['bilibili_qicai', 'bilibili_jizhi', 'bilibili_fengliang', 'bilibili_guiyin'], ['clan:宿舍群', 'clan:活动群', 'name:黄|月英']],
             bilibili_kuailiangkuaiyue: ['male', 'qun', 4, ['bilibili_chouhua'], ['character:kuailiangkuaiyue']],
@@ -268,7 +268,7 @@ const packs = function () {
                                                 if (!pileTop) return;
                                                 this._pileTop = pileTop;
                                                 const skill = 'bolshicai_effect';
-                                                for (const player of game.filterPlayer2()) {
+                                                for (const player of game.filterPlayer()) {
                                                     if (player.hasSkill(skill)) get.info(skill).getCards(player, skill);
                                                 }
                                             },
@@ -6142,7 +6142,7 @@ const packs = function () {
                     }
                 },
                 group: ['bolchouyou3', 'bolchouyou5'],
-                getFilter(skill, player) {
+                getFilter(skill, player, info) {
                     if (skill.indexOf('_') == 0 || !info || info.equipSkill || info.charlotte || info.silent || info.nopop || info.popup === false) return false;
                     return !lib.skill.global.includes(skill) && !get.is.locked(skill, player);
                 },
@@ -6174,7 +6174,7 @@ const packs = function () {
                 trigger: { global: 'logSkillBegin' },
                 filter(event, player) {
                     const { skill } = event, info = get.info(skill);
-                    return get.info('bolchouyou2').getFilter(skill, player);
+                    return get.info('bolchouyou2').getFilter(skill, player, info);
                 },
                 forced: true,
                 popup: false,
@@ -8240,7 +8240,7 @@ const packs = function () {
                 content() {
                     'step 0'
                     if (trigger.source.hasSex('male')) {
-                        trigger.source.chooseCard(get.prompt('bolhuidu'), '重铸任意张牌，防止对' + get.translation(player) + '造成的伤害', lib.filter.cardRecastable, [1, Infinity]).set('ai', function (card) {
+                        trigger.source.chooseCard(get.prompt('bolhuidu'), '重铸任意张牌，防止对' + get.translation(player) + '造成的伤害', lib.filter.cardRecastable, [1, Infinity], 'he').set('ai', function (card) {
                             if (_status.event.goon) return lib.skill.zhiheng.check(card) + 1;
                             return 0;
                         }).set('goon', get.damageEffect(player, trigger.source, trigger.source));

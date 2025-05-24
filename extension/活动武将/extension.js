@@ -13,6 +13,7 @@ game.bolShowNewPack = function () {
 	var HuoDong_update = [
 		'/setPlayer/',
 		'bugfix',
+		'技能修改，素材补充，新武将',
 		'寝室/肘击群杂谈系列新武将：'
 		+ '<br>不好孩子们，我们的群聊都被病毒攻陷了！ ———— 逍遥如云'
 		+ '<br>黄月英打了三年的复活赛，终于打赢了…… ———— 睡觉不玻璃',
@@ -20,12 +21,17 @@ game.bolShowNewPack = function () {
 		'修改名人堂“随性似风”的【多样】，防止与“逍遥如云”重复',
 		'对部分音频素材进行音质提升，对部分图片素材进行画质提升，补充捉鬼驱邪的武将介绍。by--逍遥如云',
 		'优化仁库拖动逻辑，提高拖动仁库流畅度，修复仁库位置不计算偏移的bug',
-		//'技能修改，配音补充',
+		'活动武将阵亡配音改为塞入hooks，以让播放时机更合理',
+		'小程序：SP甄宓、极郭皇后、极辛宪英、谋曹操',
+		'欢杀：许贡、朱佩兰、赵昂、战张辽、界吴国太、神鲁肃、谋孙权、SP徐晃、曹安民',
 		'To be continued...',
 	];
 	//更新武将
 	var HuoDong_players = [
 		'bilibili_xiaoyaoruyun', 'bilibili_shuijiaobuboli', 'bilibili_yanjing', 'bilibili_suixingsifeng',
+		'wechat_sp_zhenji', 'wechat_zhiyin_guohuanghou', 'wechat_zhiyin_xinxianying',
+		'wechat_sb_caocao', 'Mbaby_xugong', 'Mbaby_zhupeilan', 'Mbaby_zhaoang', 'Mfight_zhangliao',
+		'Mbaby_shen_lusu', 'Mbaby_sb_sunquan', 'Mbabysp_xuhuang', 'Mbaby_caoanmin',
 	];
 	//加载
 	var dialog = ui.create.dialog(
@@ -69,24 +75,25 @@ let extensionPackage = {
 	precontent: precontent,
 	config: config,
 	help: help,
-	package: {
-		intro: '新人制作扩展，希望大家支持。' +
-			'<br>新人技术不足，希望大家包涵。' +
-			'<br><a href="https://github.com/HuoDong-Update-Organization/HuoDong-update">点击前往活动武将Github仓库</a>' +
-			'<br><li>欢迎大家进群支持活动武将' +
-			//入群二维码图片
-			'<br><img style=width:238px src=' + lib.assetURL + 'extension/活动武将/HuoDong_QQ.png>' +
-			'',
-		author: '萌新（转型中）',
-		diskURL: '',
-		forumURL: '',
-		version: '0.3.8 - 待定',
-		//新人制作扩展，希望大家支持。
-		//新人技术不足，希望大家包涵。
-		//壹、贰、叁、肆、伍、陆、柒、捌、玖、拾
-	},
-	files: {}
+	files: {},
+	//新人制作扩展，希望大家支持。
+	//新人技术不足，希望大家包涵。
+	//壹、贰、叁、肆、伍、陆、柒、捌、玖、拾
 };
 
 export let type = 'extension';
-export default extensionPackage;
+export default async function () {
+	const { name, intro, ...otherInfo } = await lib.init.promises.json(`${lib.assetURL}extension/活动武将/info.json`);
+	extensionPackage.package = {
+		...otherInfo,
+		intro: [
+			'新人制作扩展，希望大家支持。',
+			'新人技术不足，希望大家包涵。',
+			'<a href="https://github.com/HuoDong-Update-Organization/HuoDong-update">点击前往活动武将Github仓库</a>',
+			'<li>欢迎大家进群支持活动武将',
+			//入群二维码图片
+			'<img style=width:238px src=' + lib.assetURL + 'extension/活动武将/HuoDong_QQ.png>',
+		].join('<br>'),
+	};
+	return extensionPackage;
+};

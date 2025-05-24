@@ -227,6 +227,7 @@ window.config = {
 	extension_十周年UI_dynamicSkin: true,
 	extension_十周年UI_dynamicSkin_dieAfter: false,
 	extension_十周年UI_showTemp: true,
+	extension_十周年UI_wujiangbeijing: true,
 	extension_十周年UI_borderLevel: "four",
 	extension_十周年UI_playerMarkStyle: "yellow",
 	extension_十周年UI_newDecadeStyle: "othersOff",
