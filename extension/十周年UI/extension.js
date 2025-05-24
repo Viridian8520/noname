@@ -103,7 +103,6 @@ export default async function () {
 							skillState: get.skillState,
 						},
 						game: {
-							gameDraw: game.gameDraw,
 							swapSeat: game.swapSeat,
 						},
 						lib: {
@@ -128,6 +127,10 @@ export default async function () {
 									$draw: lib.element.player.$draw,
 									$handleEquipChange: lib.element.player.$handleEquipChange,
 									removeVirtualEquip: lib.element.player.removeVirtualEquip,
+								},
+								content: {
+									lose: lib.element.content.lose,
+									gain: lib.element.content.gain,
 								},
 								dialog: {
 									close: lib.element.dialog.close,
@@ -1080,32 +1083,84 @@ export default async function () {
 									return this;
 								},
 								$addVirtualJudge(VCard, cards) {
-									const player = this;
-									const isViewAsCard = cards.length !== 1 || cards[0].name !== VCard.name;
-									cards.forEach(card => {
-										card.fix();
-										card.style.transform = "";
-										card.classList.remove("drawinghidden");
-										delete card._transform;
-										const bgMark = lib.translate[VCard.name + "_bg"] || get.translation(VCard.name)[0];
-										if (isViewAsCard) {
-											card.viewAs = VCard.name;
-											if (window.decadeUI) {
-												card.classList.add("fakejudge");
-												card.node.judgeMark.node.judge.innerHTML = bgMark;
-											} else if (card.classList.contains("fullskin") || card.classList.contains("fullborder")) {
-												card.classList.add("fakejudge");
-												card.node.background.innerHTML = bgMark;
+									if (game.online) return;
+									const player = this,
+										card = VCard;
+									const isViewAsCard = cards.length !== 1 || cards[0].name !== VCard.name || !card.isCard;
+									let cardx;
+									if (get.itemtype(card) == "card" && card.isViewAsCard) {
+										cardx = card;
+									} else cardx = isViewAsCard ? game.createCard(card.name, cards.length == 1 ? get.suit(cards[0]) : "none", cards.length == 1 ? get.number(cards[0]) : 0) : cards[0];
+									game.broadcastAll(
+										(player, cardx, isViewAsCard, VCard, cards) => {
+											cardx.fix();
+											if (!cardx.isViewAsCard) {
+												const cardSymbol = Symbol("card");
+												cardx.cardSymbol = cardSymbol;
+												cardx[cardSymbol] = VCard;
 											}
-										} else {
-											delete card.viewAs;
-											card.classList.remove("fakejudge");
-											if (window.decadeUI) card.node.judgeMark.node.judge.innerHTML = bgMark;
-										}
-										card.classList.add("drawinghidden");
-										player.node.judges.insertBefore(card, player.node.judges.firstChild);
-									});
-									ui.updatej(player);
+											cardx.style.transform = "";
+											cardx.classList.remove("drawinghidden");
+											delete cardx._transform;
+											if (isViewAsCard && !cardx.isViewAsCard) {
+												cardx.isViewAsCard = true;
+												cardx.destroyLog = false;
+												for (let i of cards) {
+													i.goto(ui.special);
+													i.destiny = player.node.judges;
+												}
+												if (cardx.destroyed) cardx._destroyed_Virtua = cardx.destroyed;
+												cardx.destroyed = function (card, id, player, event) {
+													if (card._destroyed_Virtua) {
+														if (typeof card._destroyed_Virtua == "function") {
+															let bool = card._destroyed_Virtua(card, id, player, event);
+															if (bool === true) return true;
+														} else if (lib.skill[card._destroyed_Virtua]) {
+															if (player) {
+																if (player.hasSkill(card._destroyed_Virtua)) {
+																	delete card._destroyed_Virtua;
+																	return false;
+																}
+															}
+															return true;
+														} else if (typeof card._destroyed_Virtua == "string") {
+															return card._destroyed_Virtua == id;
+														} else if (card._destroyed_Virtua === true) return true;
+													}
+													if (id == "ordering" && ["phaseJudge", "executeDelayCardEffect"].includes(event.getParent().name)) return false;
+													if (id != "judge") {
+														return true;
+													}
+												};
+											}
+											const suit = get.translation(cardx.suit),
+												number = get.strNumber(cardx.number);
+											cardx.classList.add("drawinghidden");
+											if (isViewAsCard) {
+												cardx.cards = cards || [];
+												cardx.viewAs = VCard.name;
+												const bgMark = lib.translate[cardx.viewAs + "_bg"] || get.translation(cardx.viewAs)[0];
+												//cardx.node.name2.innerHTML = `${suit}${number} [${get.translation(VCard.name)}]`;
+												if (cardx.classList.contains("fullskin") || cardx.classList.contains("fullborder")) {
+													if (window.decadeUI) cardx.node.judgeMark.node.judge.innerHTML = bgMark;
+													else cardx.node.background.innerHTML = bgMark;
+												}
+												cardx.classList.add("fakejudge");
+											} else {
+												delete cardx.viewAs;
+												//cardx.node.name2.innerHTML = `${suit}${number} ${VCard.name}`;
+												cardx.classList.remove("fakejudge");
+												if (window.decadeUI) cardx.node.judgeMark.node.judge.innerHTML = lib.translate[cardx.name + "_bg"] || get.translation(cardx.name)[0];
+											}
+											player.node.judges.insertBefore(cardx, player.node.judges.firstChild);
+											ui.updatej(player);
+										},
+										player,
+										cardx,
+										isViewAsCard,
+										VCard,
+										cards
+									);
 								},
 								useCard() {
 									var event = base.lib.element.player.useCard.apply(this, arguments);
@@ -1497,88 +1552,99 @@ export default async function () {
 
 									this.queueCssAnimation("player-hurt 0.3s");
 								},
-								$throw(card, time, init, nosource, cardsetion) {
-									if (!cardsetion && cardsetion !== false && lib.config.card_animation_info) {
-										let source = this;
-										if (["useCard", "respond"].includes(get.event().name)) source = get.player();
-										cardsetion = get.cardsetion(source);
-									}
-									if (typeof card == "number") {
-										var tmp = card;
-										card = [];
-										while (tmp--) {
-											var cardx = ui.create.card();
-											cardx.classList.add("infohidden");
-											cardx.classList.add("infoflip");
-											if (cardsetion) {
-												var next = ui.create.div(".cardsetion", cardsetion, cardx);
-												next.style.setProperty("display", "block", "important");
-												if (cardx.node) {
-													if (cardx.node.cardsetion) {
-														cardx.node.cardsetion.remove();
-														delete cardx.node.cardsetion;
-													}
-													cardx.node.cardsetion = next;
-												}
+
+								$throw(cards, time, record, nosource) {
+									var itemtype;
+									var duiMod = cards.duiMod && game.me == this && !nosource;
+									if (typeof cards == "number") {
+										itemtype = "number";
+										cards = new Array(cards);
+									} else {
+										itemtype = get.itemtype(cards);
+										if (itemtype == "cards") {
+											cards = cards.concat();
+											game.playAudio("..", "extension", "十周年UI", "audio/GameShowCard");
+										} else if (itemtype == "card") {
+											cards = [cards];
+											game.playAudio("..", "extension", "十周年UI", "audio/GameShowCard");
+										} else {
+											var evt = _status.event;
+											if (evt && evt.card && evt.cards === cards) {
+												var card = ui.create.card().init([evt.card.suit, evt.card.number, evt.card.name, evt.card.nature]);
+												if (evt.card.suit == "none") card.node.suitnum.style.display = "none";
+												card.dataset.virtual = 1;
+												cards = [card];
+												game.playAudio("..", "extension", "十周年UI", "audio/GameShowCard");
 											}
-											card.push(cardx);
 										}
 									}
-									if (init !== false) {
-										if (init !== "nobroadcast") {
+									var card;
+									var clone;
+									var player = this;
+									var hand = dui.boundsCaches.hand;
+									hand.check();
+									for (var i = 0; i < cards.length; i++) {
+										card = cards[i];
+										if (card) {
+											clone = card.copy("thrown");
+											if (duiMod && (card.throwWith == "h" || card.throwWith == "s")) {
+												clone.tx = Math.round(hand.x + card.tx);
+												clone.ty = Math.round(hand.y + 30 + card.ty);
+												clone.scaled = true;
+												clone.throwordered = true;
+												clone.style.transform = "translate(" + clone.tx + "px," + clone.ty + "px) scale(" + hand.cardScale + ")";
+											}
+											card = clone;
+										} else {
+											card = dui.element.create("card infohidden infoflip");
+											card.moveTo = lib.element.card.moveTo;
+											card.moveDelete = lib.element.card.moveDelete;
+										}
+										cards[i] = card;
+									}
+									if (record !== false) {
+										if (record !== "nobroadcast") {
 											game.broadcast(
-												function (player, card, time, init, nosource, cardsetion) {
-													player.$throw(card, time, init, nosource, cardsetion);
+												function (player, cards, time, record, nosource) {
+													player.$throw(cards, time, record, nosource);
 												},
 												this,
-												card,
-												time,
-												init,
-												nosource,
-												cardsetion
+												cards,
+												0,
+												record,
+												nosource
 											);
 										}
-										if (get.itemtype(card) != "cards") {
-											if (get.itemtype(card) == "card") {
-												card = [card];
-											} else {
-												return;
-											}
-										}
-										game.addVideo("throw", this, [get.cardsInfo(card), time, nosource]);
+										game.addVideo("throw", this, [get.cardsInfo(cards), 0, nosource]);
 									}
-									for (var i = card.length - 1; i >= 0; i--)
-										this.$throwordered2(card[i].copy('thrown'), nosource);
-									if (game.chess) {
-										this.chessFocus();
+									cards.sort(function (a, b) {
+										if (a.tx == undefined && b.tx == undefined) return 0;
+										if (a.tx == undefined) return duicfg.rightLayout ? -1 : 1;
+										if (b.tx == undefined) return duicfg.rightLayout ? 1 : -1;
+										return b.tx - a.tx;
+									});
+									for (var i = 0; i < cards.length; i++) {
+										(function (card, i) {
+											setTimeout(function () {
+												player.$throwordered2(card, nosource);
+												if (card.fixed) {
+													card.style.transition = "all 0.5s cubic-bezier(.4, 0, .2, 1)";
+													setTimeout(function () {
+														if (card.parentNode) {
+															card.style.opacity = "0.7";
+															card.style.transform = card.style.transform + " scale(0.9)";
+														}
+													}, 100);
+												}
+											}, i * 50);
+										})(cards[i], i);
 									}
-									return card[card.length - 1];
-									// if (game.chess) {
-									// 	this.chessFocus();
-									// }
-									// if (get.itemtype(card) == "cards") {
-									// 	var node;
-									// 	for (var i = 0; i < card.length; i++) {
-									// 		node = this.$throw(card[i], time, false, nosource, cardsetion);
-									// 	}
-									// 	return node;
-									// } else {
-									// 	var node;
-									// 	if (card == undefined || card.length == 0) return;
-									// 	node = this.$throwordered(card.copy("thrown"), nosource, cardsetion);
-									// 	if (time != undefined) {
-									// 		node.fixed = true;
-									// 		setTimeout(function () {
-									// 			node.delete();
-									// 		}, time);
-									// 	}
-									// 	lib.listenEnd(node);
-									// 	return node;
-									// }
+
+									if (game.chess) this.chessFocus();
+									return cards[cards.length - 1];
 								},
 								$throwordered2(card, nosource) {
 									if (_status.connectMode) ui.todiscard = [];
-
 									if (card.throwordered == undefined) {
 										var x, y;
 										var bounds = dui.boundsCaches.arena;
@@ -1614,336 +1680,23 @@ export default async function () {
 											break;
 										}
 									}
-									//牌面信息添加
-									if (1) {
-										let node = card;
-										const player = this;
-										let event = _status.event.blameEvent ? _status.event.blameEvent : _status.event;
-										let eventInfo;
-										const playername = get.translation(player);
-										//事件名称
-										let getName = function (card, player, event) {
-											if (!card || !player || !event) return;
-											if (event.blameEvent) event = event.blameEvent;
-											let tagText;
-											const playername = get.slimName(player?.name);
-											let border = get.groupnature(get.bordergroup(player?.name), "raw");
-											let eventInfo = `<span style="font-weight:700"><span data-nature=${border}>${playername}</span><br/><span style="color:#FFD700">`;
-											switch (event.name) {
-												case "useCard":
-												case "respond":
-													tagText = eventInfo + (event.name === "useCard" ? "使用" : "打出") + "</span>";
-													break;
-												default:
-													tagText = get.cardsetion(player);
-													break;
-											}
-											return tagText;
-										};
-										eventInfo = getName(node, player, event);
-										if (node && node.node) {
-											const cardInfo = {
-												name: get.name(node),
-												number: get.number(node),
-												suit: get.suit(node),
-											};
-											game.broadcastAll(
-												(node, eventInfo, { name, number, suit }, event) => {
-													let card = node;
-													if (!node.node) {
-														node = [...ui.arena.childNodes].find(c => {
-															if (c.classList.contains("thrown") && c.classList.contains("card")) {
-																const n = get.number(c);
-																const na = get.name(c);
-																const s = get.suit(c);
-																if (n === number && na === name && s === suit && !c.selectedt) {
-																	c.selectedt = true;
-																	return true;
-																}
-															}
-														});
-													}
-													if (!node.node) return;
-													const no = ["image", "info", "name", "name2", "background", "intro", "range", "gaintag"];
-													const some = [...node.childNodes].some(n => {
-														if (n.innerText && eventInfo.includes && eventInfo.includes(n.innerText) && !no.includes(n.classList[0])) {
-															n.innerHTML = eventInfo;
-															return true;
-														}
-													});
-													if (some) return;
-													if (!node.node.cardsetion) {
-														node.node.cardsetion = ui.create.div(".used-info", eventInfo, node);
-													} else {
-														node.node.cardsetion.innerHTML = eventInfo || playername;
-													}
-												},
-												node,
-												eventInfo,
-												cardInfo,
-												event
-											);
-											const addStyle = () => {
-												const style = document.createElement("style");
-												style.innerHTML = /*css*/ `
-								                .card .tempname.tempimage {
-								                    opacity:1 !important;
-								                }   
-								                `;
-												document.head.appendChild(style);
-											};
-											if (!game.throwCardStyle) {
-												addStyle();
-												game.throwCardStyle = true;
-											}
-											if (lib.node && lib.node.clients) {
-												lib.node.clients.forEach(c => {
-													if (!c.gameOptions) {
-														c.gameOptions = {};
-													}
-													if (!c.gameOptions.Cardstyle) {
-														c.send(addStyle);
-														c.gameOptions.Cardstyle = true;
-													}
-												});
-											}
-											game.addVideo("cardInfo", null, {
-												eventInfo,
-												cardInfo,
-											});
-										}
-										//播放动画骨骼
-										switch (event.name) {
-											//使用打出牌
-											case "useCard":
-											case "respond":
-												const cardname = event.card.name,
-													cardnature = get.nature(event.card);
-												if (lib.config.cardtempname != "off" && (card.name != cardname || !get.is.sameNature(cardnature, card.nature, true))) {
-													if (lib.config.extension_十周年UI_showTemp) {
-														let vname2 = cardname;
-														if (cardnature && cardname == "sha") vname2 = cardname + "_" + cardnature;
-														let path = "extension/十周年UI/image/vcard/" + vname2 + ".png";
-														if (_status.connectMode) {
-															if (!card._tempName) card._tempName = ui.create.div(".temp-name", card);
-															let tempname = "",
-																tempname2 = get.translation(cardname);
-															if (cardnature) {
-																card._tempName.dataset.nature = cardnature;
-																if (cardname == "sha") {
-																	tempname2 = get.translation(cardnature) + tempname2;
-																}
-															}
-															tempname += tempname2;
-															card._tempName.innerHTML = tempname;
-															card._tempName.tempname = tempname;
-														} else
-															game.checkFile(path, function (a) {
-																if (a) {
-																	if (!card._tempName) card._tempName = ui.create.div(".temp-name2", card);
-																	card._tempName.innerHTML = "";
-																	card._tempName.tempname = "";
-																	card._tempName.setBackgroundImage(path);
-																	card._tempName.style.top = "calc(50% - 18px)";
-																	card._tempName.style.height = "30px";
-																} else {
-																	if (!card._tempName) card._tempName = ui.create.div(".temp-name", card);
-																	let tempname = "",
-																		tempname2 = get.translation(cardname);
-																	if (cardnature) {
-																		card._tempName.dataset.nature = cardnature;
-																		if (cardname == "sha") {
-																			tempname2 = get.translation(cardnature) + tempname2;
-																		}
-																	}
-																	tempname += tempname2;
-																	card._tempName.innerHTML = tempname;
-																	card._tempName.tempname = tempname;
-																}
-															});
-													} else {
-														var node0 = ui.create.cardTempName(event.card, card);
-														var cardtempnameConfig = lib.config.cardtempname;
-														if (cardtempnameConfig !== "default") node0.classList.remove("vertical");
-													}
-												}
-												const cardnumber = get.number(event.card),
-													cardsuit = get.suit(event.card);
-												if (card.dataset && card.dataset.views != 1 && event.card.cards && event.card.cards.length == 1 && (card.number != cardnumber || card.suit != cardsuit)) {
-													dui.cardTempSuitNum(card, cardsuit, cardnumber);
-												}
-												if (duicfg.cardUseEffect && event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
-													var name0 = event.card.name,
-														nature = event.card.nature;
 
-													switch (name0) {
-														case "effect_caochuanjiejian":
-															decadeUI.animation.cap.playSpineTo(card, "effect_caochuanjiejian");
-															break;
-														case "sha":
-															switch (nature) {
-																case "thunder":
-																	decadeUI.animation.cap.playSpineTo(card, "effect_leisha");
-																	break;
-																case "fire":
-																	decadeUI.animation.cap.playSpineTo(card, "effect_huosha");
-																	break;
-																// case "ice":
-																//     decadeUI.animation.cap.playSpineTo(card, "effect_bingsha");
-																//     break;
-																default:
-																	if (get.color(card) == "red") {
-																		decadeUI.animation.cap.playSpineTo(card, "effect_hongsha");
-																	} else {
-																		decadeUI.animation.cap.playSpineTo(card, "effect_heisha");
-																	}
-																	break;
-															}
-															break;
-														case "shan":
-															decadeUI.animation.cap.playSpineTo(card, "effect_shan");
-															break;
-														case "tao":
-															decadeUI.animation.cap.playSpineTo(card, "effect_tao", {
-																scale: 0.9,
-															});
-															break;
-														case "tiesuo":
-															decadeUI.animation.cap.playSpineTo(card, "effect_tiesuolianhuan", {
-																scale: 0.9,
-															});
-															break;
-														case "jiu":
-															decadeUI.animation.cap.playSpineTo(card, "effect_jiu", {
-																y: [-30, 0.5],
-															});
-															break;
-														case "kaihua":
-															decadeUI.animation.cap.playSpineTo(card, "effect_shushangkaihua");
-															break;
-														case "wuzhong":
-															decadeUI.animation.cap.playSpineTo(card, "effect_wuzhongshengyou");
-															break;
-														case "wuxie":
-															decadeUI.animation.cap.playSpineTo(card, "effect_wuxiekeji", {
-																y: [10, 0.5],
-																scale: 0.9,
-															});
-															break;
-														case "juedou":
-															decadeUI.animation.cap.playSpineTo(card, "SF_eff_jiangling_juedou", {
-																x: [10, 0.4],
-																scale: 1,
-															});
-															break;
-														case "nanman":
-															decadeUI.animation.cap.playSpineTo(card, "effect_nanmanruqin", {
-																scale: 0.45,
-															});
-															break;
-														case "wanjian":
-															decadeUI.animation.cap.playSpineTo(card, "effect_wanjianqifa", {
-																scale: 0.78,
-															});
-															break;
-														case "wugu":
-															decadeUI.animation.cap.playSpineTo(card, "effect_wugufengdeng", {
-																y: [10, 0.5],
-															});
-															break;
-														case "taoyuan":
-															decadeUI.animation.cap.playSpineTo(card, "SF_kapai_eff_taoyuanjieyi", {
-																y: [10, 0.5],
-															});
-															break;
-														case "shunshou":
-															decadeUI.animation.cap.playSpineTo(card, "effect_shunshouqianyang");
-															break;
-														case "huogong":
-															decadeUI.animation.cap.playSpineTo(card, "effect_huogong", {
-																x: [8, 0.5],
-																scale: 0.5,
-															});
-															break;
-														case "guohe":
-															decadeUI.animation.cap.playSpineTo(card, "effect_guohechaiqiao", {
-																y: [10, 0.5],
-															});
-															break;
-														case "yuanjiao":
-															decadeUI.animation.cap.playSpineTo(card, "effect_yuanjiaojingong");
-															break;
-														case "zhibi":
-															decadeUI.animation.cap.playSpineTo(card, "effect_zhijizhibi");
-															break;
-														case "zhulu_card":
-															decadeUI.animation.cap.playSpineTo(card, "effect_zhulutianxia");
-															break;
-													}
-												}
-												break;
-											//判定
-											case "judge":
-												event.addMessageHook("judgeResult", function () {
-													var event = this;
-													var card = event.result.card.clone;
-													var apcard = event.apcard;
-													if (event.result.suit != get.suit(card) || event.result.number != get.number(card)) {
-														dui.cardTempSuitNum(card, event.result.suit, event.result.number);
-													}
-													var action;
-													var judgeValue;
-													var getEffect = event.judge2;
-													if (getEffect) {
-														judgeValue = getEffect(event.result);
-													} else {
-														judgeValue = decadeUI.get.judgeEffect(event.judgestr, event.result.judge);
-													}
-													if (typeof judgeValue == "boolean") {
-														judgeValue = judgeValue ? 1 : -1;
-													} else {
-														judgeValue = event.result.judge;
-													}
-													if (judgeValue >= 0) {
-														action = "play4";
-													} else {
-														action = "play5";
-													}
-													if (apcard && apcard._ap) apcard._ap.stopSpineAll();
-													if (apcard && apcard._ap && apcard == card) {
-														apcard._ap.playSpine({
-															name: "effect_panding",
-															action: action,
-														});
-													} else {
-														decadeUI.animation.cap.playSpineTo(card, {
-															name: "effect_panding",
-															action: action,
-														});
-													}
-													event.apcard = undefined;
-												});
-												if (duicfg.cardUseEffect) {
-													decadeUI.animation.cap.playSpineTo(card, {
-														name: "effect_panding",
-														action: "play",
-														loop: true,
-													});
-													event.apcard = card;
-												}
-												break;
-										}
-									}
+									var tagNode = card.querySelector(".used-info");
+									if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
+
+									card.$usedtag = tagNode;
 									ui.thrown.unshift(card);
 									if (before) ui.arena.insertBefore(before, card);
 									else ui.arena.appendChild(card);
+
+									dui.tryAddPlayerCardUseTag(card, this, _status.event);
 									dui.queueNextFrameTick(dui.layoutDiscard, dui);
 									return card;
 								},
 								$phaseJudge(card) {
 									game.addVideo("phaseJudge", this, get.cardInfo(card));
-									if (card.cards?.length) {
-										const cards = card.cards;
+									if (card[card.cardSymbol]?.cards?.length) {
+										const cards = card[card.cardSymbol].cards;
 										this.$throw(cards);
 									} else {
 										const VCard = game.createCard(card.name, "虚拟", "");
@@ -1983,172 +1736,116 @@ export default async function () {
 									event.trigger("changeHp");
 									dui.delay(68);
 								},
-								gain() {
-									"step 0";
-									if (event.animate == "give") event.visible = true;
-									if (get.itemtype(cards) == "cards") {
-										var map = {};
-										for (var i of cards) {
-											var owner = get.owner(i, "judge");
-											if (owner && (owner != player || get.position(i) != "h")) {
-												var id = owner.playerid;
-												if (!map[id]) map[id] = [[], [], []];
-												map[id][0].push(i);
-												var position = get.position(i);
-												if (position == "h") map[id][1].push(i);
-												else map[id][2].push(i);
-												if (event.visible) i.addKnower("everyone");
-											} else if (!event.updatePile && get.position(i) == "c") event.updatePile = true;
-										}
-										event.losing_map = map;
-										for (var i in map) {
-											var owner = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
-											var next = owner.lose(map[i][0], ui.special).set("type", "gain").set("forceDie", true).set("getlx", false);
-											if (event.visible == true) next.visible = true;
+								gain: [
+									...base.lib.element.content.gain.slice(0, -2),
+									async (event, trigger, player) => {
+										let { cards, gaintag } = event;
+										var handcards = player.node.handcards1;
+										var fragment = document.createDocumentFragment();
 
-											event.relatedLose = next;
+										for (var i = 0; i < cards.length; i++) {
+											var card = cards[i];
+											var sort = lib.config.sort_card(card);
+											if (lib.config.reverse_sort) sort = -sort;
+											if (["o", "d"].includes(get.position(card, true))) {
+												card.addKnower("everyone");
+											}
+											card.fix();
+											card.style.transform = "";
+											if (card.parentNode == handcards) {
+												cards.splice(i--, 1);
+												continue;
+											}
+
+											gaintag.forEach(tag => card.addGaintag(tag));
+											if (event.knowers) card.addKnower(event.knowers);
+
+											fragment.insertBefore(card, fragment.firstChild);
+											if (_status.discarded) _status.discarded.remove(card);
+
+											for (var j = 0; j < card.vanishtag.length; j++) {
+												if (card.vanishtag[j][0] != "_") card.vanishtag.splice(j--, 1);
+											}
 										}
-									} else {
-										event.finish();
-									}
-									"step 1";
-									event.cards = cards = cards.map(i => (i.cards ? i.cards : [i])).flat();
-									for (var i = 0; i < cards.length; i++) {
-										if (cards[i].willBeDestroyed("handcard", player, event)) {
-											cards[i].selfDestroy(event);
-											cards.splice(i--, 1);
-										} else if (event.losing_map) {
-											for (var id in event.losing_map) {
-												if (event.losing_map[id][0].includes(cards[i])) {
-													var source = (_status.connectMode ? lib.playerOL : game.playerMap)[id];
-													var hs = source.getCards("hejsx");
-													if (hs.includes(cards[i])) {
-														cards.splice(i--, 1);
-													} else {
-														cards[i].addKnower(event.visible ? "everyone" : source);
-													}
+										var gainTo = function (cards, nodelay) {
+											cards.duiMod = event.source;
+											if (player == game.me) {
+												dui.layoutHandDraws(cards.reverse());
+												dui.queueNextFrameTick(dui.layoutHand, dui);
+												game.addVideo("gain12", player, [get.cardsInfo(fragment.childNodes), gaintag]);
+											}
+
+											var s = player.getCards("s");
+											if (s.length) handcards.insertBefore(fragment, s[0]);
+											else handcards.appendChild(fragment);
+
+											game.broadcast(
+												function (player, cards, num, gaintag) {
+													player.directgain(cards, null, gaintag);
+													_status.cardPileNum = num;
+												},
+												player,
+												cards,
+												ui.cardPile.childNodes.length,
+												gaintag
+											);
+
+											if (nodelay !== true) {
+												setTimeout(
+													function (player) {
+														player.update();
+														game.resume();
+													},
+													get.delayx(400, 400) + 66,
+													player
+												);
+											} else {
+												player.update();
+											}
+										};
+										if (event.animate == "draw") {
+											game.pause();
+											gainTo(cards);
+											player.$draw(cards.length);
+										} else if (event.animate == "gain") {
+											game.pause();
+											gainTo(cards);
+											player.$gain(cards, event.log);
+										} else if (event.animate == "gain2" || event.animate == "draw2") {
+											game.pause();
+											gainTo(cards);
+											player.$gain2(cards, event.log);
+										} else if (event.animate == "give" || event.animate == "giveAuto") {
+											game.pause();
+											gainTo(cards);
+											var evtmap = event.losing_map;
+											if (event.animate == "give") {
+												for (var i in evtmap) {
+													var source = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
+													source.$give(evtmap[i][0], player, event.log);
+												}
+											} else {
+												for (var i in evtmap) {
+													var source = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
+													if (evtmap[i][1].length) source.$giveAuto(evtmap[i][1], player, event.log);
+													if (evtmap[i][2].length) source.$give(evtmap[i][2], player, event.log);
 												}
 											}
-										}
-									}
-									if (cards.length == 0) {
-										event.finish();
-										return;
-									}
-									player.getHistory("gain").push(event);
-									"step 2";
-									if (player.getStat().gain == undefined) {
-										player.getStat().gain = cards.length;
-									} else {
-										player.getStat().gain += cards.length;
-									}
-									"step 3";
-									var gaintag = event.gaintag;
-									var handcards = player.node.handcards1;
-									var fragment = document.createDocumentFragment();
-
-									var card;
-									for (var i = 0; i < cards.length; i++) {
-										card = cards[i];
-										sort = lib.config.sort_card(cards[num]);
-										if (lib.config.reverse_sort) sort = -sort;
-										if (["o", "d"].includes(get.position(card, true))) {
-											card.addKnower("everyone");
-										}
-										card.fix();
-										if (card.parentNode == handcards) {
-											cards.splice(i--, 1);
-											continue;
-										}
-
-										if (gaintag) card.addGaintag(gaintag);
-
-										if (event.knowers) card.addKnower(event.knowers);
-
-										fragment.insertBefore(card, fragment.firstChild);
-										if (_status.discarded) _status.discarded.remove(card);
-
-										for (var j = 0; j < card.vanishtag.length; j++) {
-											if (card.vanishtag[j][0] != "_") card.vanishtag.splice(j--, 1);
-										}
-									}
-									var gainTo = function (cards, nodelay) {
-										cards.duiMod = event.source;
-										if (player == game.me) {
-											dui.layoutHandDraws(cards.reverse());
-											dui.queueNextFrameTick(dui.layoutHand, dui);
-											game.addVideo("gain12", player, [get.cardsInfo(fragment.childNodes), gaintag]);
-										}
-
-										var s = player.getCards("s");
-										if (s.length) handcards.insertBefore(fragment, s[0]);
-										else handcards.appendChild(fragment);
-
-										game.broadcast(
-											function (player, cards, num, gaintag) {
-												player.directgain(cards, null, gaintag);
-												_status.cardPileNum = num;
-											},
-											player,
-											cards,
-											ui.cardPile.childNodes.length,
-											gaintag
-										);
-
-										if (nodelay !== true) {
-											setTimeout(
-												function (player) {
-													player.update();
-													game.resume();
-												},
-												get.delayx(400, 400) + 66,
-												player
-											);
+										} else if (typeof event.animate == "function") {
+											var time = event.animate(event);
+											game.pause();
+											setTimeout(function () {
+												gainTo(cards, true);
+												game.resume();
+											}, get.delayx(time, time));
 										} else {
-											player.update();
-										}
-									};
-									if (event.animate == "draw") {
-										game.pause();
-										gainTo(cards);
-										player.$draw(cards.length);
-									} else if (event.animate == "gain") {
-										game.pause();
-										gainTo(cards);
-										player.$gain(cards, event.log);
-									} else if (event.animate == "gain2" || event.animate == "draw2") {
-										game.pause();
-										gainTo(cards);
-										player.$gain2(cards, event.log);
-									} else if (event.animate == "give" || event.animate == "giveAuto") {
-										game.pause();
-										gainTo(cards);
-										var evtmap = event.losing_map;
-										if (event.animate == "give") {
-											for (var i in evtmap) {
-												var source = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
-												source.$give(evtmap[i][0], player, event.log);
-											}
-										} else {
-											for (var i in evtmap) {
-												var source = (_status.connectMode ? lib.playerOL : game.playerMap)[i];
-												if (evtmap[i][1].length) source.$giveAuto(evtmap[i][1], player, event.log);
-												if (evtmap[i][2].length) source.$give(evtmap[i][2], player, event.log);
-											}
-										}
-									} else if (typeof event.animate == "function") {
-										var time = event.animate(event);
-										game.pause();
-										setTimeout(function () {
 											gainTo(cards, true);
-											game.resume();
-										}, get.delayx(time, time));
-									} else {
-										gainTo(cards, true);
-									}
-									"step 4";
-									if (event.updatePile) game.updateRoundNumber();
-								},
+										}
+									},
+									async (event, trigger, player) => {
+										if (event.updatePile) game.updateRoundNumber();
+									},
+								],
 								judge() {
 									"step 0";
 									var judgestr = get.translation(player) + "的" + event.judgestr + "判定";
@@ -2217,16 +1914,9 @@ export default async function () {
 										game.broadcastAll(ui.clear);
 									}
 
-									//event.dialog.close();
-									game.broadcast(
-										function (/*id*/) {
-											/*
-					var dialog = get.idDialog(id);
-					if (dialog) dialog.close();
-					*/
-											if (!window.decadeUI) ui.arena.classList.remove("thrownhighlight");
-										} /*, event.videoId*/
-									);
+									game.broadcast(function () {
+										if (!window.decadeUI) ui.arena.classList.remove("thrownhighlight");
+									});
 
 									game.addVideo("judge2", null, event.videoId);
 									game.log(player, "的判定结果为", event.result.card);
@@ -2244,307 +1934,274 @@ export default async function () {
 										}
 									}
 								},
-								lose() {
-									"step 0";
-									var evt = event.getParent();
-									if ((evt.name != "discard" || event.type != "discard") && (evt.name != "loseToDiscardpile" || event.type != "loseToDiscardpile")) {
-										event.delay = false;
-										if (event.blameEvent == undefined) event.animate = false;
-									} else {
-										if (evt.delay === false) event.delay = false;
-										if (event.blameEvent && event.animate == undefined) event.animate = evt.animate;
-									}
-									"step 1";
-									event.gaintag_map = {};
-									if (event.insert_card && event.position == ui.cardPile) event.cards.reverse();
-									event.stockcards = event.cards.slice(0);
-									var hs = [],
-										es = [],
-										js = [],
-										ss = [],
-										xs = [],
-										unmarks = [];
-									var evt = event.getParent(),
-										card,
-										pileNode,
-										hej = player.getCards("hejsx");
-									for (var i = 0; i < cards.length; i++) {
-										card = cards[i];
-										var cardx = [card];
-										pileNode = card.parentNode;
-										if (!hej.includes(card)) {
-											cards.splice(i--, 1);
-											continue;
-										} else if (pileNode) {
-											if (pileNode.classList.contains("equips")) {
-												card.throwWith = card.original = "e";
-												let loseCards = card.cards ? card.cards : [card];
-												cardx.addArray(loseCards);
-												loseCards.forEach(cardi => {
-													es.push(cardi);
-													event.vcard_map.set(cardi, card.card || get.autoViewAs(card, void 0, false));
-												});
-											} else if (pileNode.classList.contains("judges")) {
-												card.throwWith = card.original = "j";
-												js.push(card);
-												const VJudge = player.getVCards("j").find(card => card.cards?.includes(card));
-												if (VJudge) event.vcard_map.set(card, VJudge);
-												else event.vcard_map.set(card, get.autoViewAs(card, void 0, false));
-											} else if (pileNode.classList.contains("expansions")) {
-												card.throwWith = card.original = "x";
-												xs.push(card);
-												event.vcard_map.set(card, get.autoViewAs(card, void 0, false));
-												if (card.gaintag && card.gaintag.length) unmarks.addArray(card.gaintag);
-											} else if (pileNode.classList.contains("handcards")) {
-												if (card.classList.contains("glows")) {
-													card.throwWith = card.original = "s";
-													ss.push(card);
-													event.vcard_map.set(card, get.autoViewAs(card, void 0, false));
-												} else {
-													card.throwWith = card.original = "h";
-													hs.push(card);
-													event.vcard_map.set(card, get.autoViewAs(card, void 0, player));
-												}
-											} else {
-												card.throwWith = card.original = null;
-											}
+								lose: [
+									async (event, trigger, player) => {
+										var evt = event.getParent();
+										if ((evt.name != "discard" || event.type != "discard") && (evt.name != "loseToDiscardpile" || event.type != "loseToDiscardpile")) {
+											event.delay = false;
+											if (event.blameEvent == undefined) event.animate = false;
+										} else {
+											if (evt.delay === false) event.delay = false;
+											if (event.blameEvent && event.animate == undefined) event.animate = evt.animate;
 										}
-										for (var j = 0; j < cardx.length; j++) {
-											if (cardx[j].gaintag && cardx[j].gaintag.length) {
-												event.gaintag_map[cardx[j].cardid] = cardx[j].gaintag.slice(0);
-												cardx[j].removeGaintag(true);
-											}
-
-											cardx[j].recheck();
-											cardx[j].classList.remove("glow");
-											cardx[j].classList.remove("glows");
-
-											var info = lib.card[cardx[j].name];
-											if ("_destroy" in cardx[j]) {
-												if (cardx[j]._destroy) {
-													cardx[j].delete();
-													cardx[j].destroyed = cardx[j]._destroy;
-													continue;
-												}
-											} else if ("destroyed" in cardx[j]) {
-												if (event.getlx !== false && event.position && cardx[j].willBeDestroyed(event.position.id, null, event)) {
-													cardx[j].selfDestroy(event);
-													continue;
-												}
-											} else if (info.destroy) {
-												cardx[j].delete();
-												cardx[j].destroyed = info.destroy;
+									},
+									async (event, trigger, player) => {
+										let { cards } = event;
+										event.vcards = {
+											//这玩意拿来存储假牌
+											cards: [],
+											es: [],
+											js: [],
+										};
+										//这个拿来存储虚拟牌对应的实体牌
+										event.vcard_cards = [];
+										event.gaintag_map = {};
+										var hs = [],
+											es = [],
+											js = [],
+											ss = [],
+											xs = [];
+										var unmarks = [];
+										if (event.insert_card && event.position == ui.cardPile) event.cards.reverse();
+										var hej = player.getCards("hejsx");
+										event.stockcards = cards.slice(0);
+										for (var i = 0; i < cards.length; i++) {
+											let cardx = [cards[i]];
+											if (!hej.includes(cards[i])) {
+												cards.splice(i--, 1);
 												continue;
-											}
-											if (event.position) {
-												if (_status.discarded) {
-													if (event.position == ui.discardPile) {
-														_status.discarded.add(cardx[j]);
-													} else {
-														_status.discarded.remove(cardx[j]);
+											} else if (cards[i].parentNode) {
+												if (cards[i].parentNode.classList.contains("equips")) {
+													cards[i].throwWith = cards[i].original = "e";
+													const VEquip = cards[i][cards[i].cardSymbol];
+													if (VEquip) {
+														//判断是否是假牌
+														if (cards[i].isViewAsCard) {
+															let loseCards = VEquip.cards;
+															//解体！
+															cardx.addArray(loseCards);
+															event.vcard_cards.addArray(loseCards);
+															loseCards.forEach(cardi => {
+																cardi.throwWith = cardi.original = "e";
+																delete cardi.destiny;
+																es.push(cardi);
+																event.vcard_map.set(cardi, VEquip || get.autoViewAs(cards[i], void 0, false));
+															});
+														} else {
+															es.push(cards[i]);
+															event.vcard_map.set(cards[i], VEquip || get.autoViewAs(cards[i], void 0, false));
+															event.vcard_cards.add(cards[i]);
+														}
+														event.vcards.cards.push(cards[i]);
+														event.vcards.es.push(cards[i]);
 													}
-												}
-												if (event.insert_index) {
-													cardx[j].fix();
-													event.position.insertBefore(cardx[j], event.insert_index(event, cardx[j]));
-												} else if (event.insert_card) {
-													cardx[j].fix();
-													event.position.insertBefore(cardx[j], event.position.firstChild);
+												} else if (cards[i].parentNode.classList.contains("judges")) {
+													cards[i].throwWith = cards[i].original = "j";
+													const VJudge = cards[i][cards[i].cardSymbol];
+													if (VJudge) {
+														//判断是否是假牌
+														if (cards[i].isViewAsCard) {
+															let loseCards = VJudge.cards;
+															//解体！
+															cardx.addArray(loseCards);
+															event.vcard_cards.addArray(loseCards);
+															loseCards.forEach(cardi => {
+																cardi.throwWith = cardi.original = "j";
+																delete cardi.destiny;
+																js.push(cardi);
+																event.vcard_map.set(cardi, VJudge || get.autoViewAs(cards[i], void 0, false));
+															});
+														} else {
+															js.push(cards[i]);
+															event.vcard_map.set(cards[i], VJudge || get.autoViewAs(cards[i], void 0, false));
+															event.vcard_cards.add(cards[i]);
+														}
+														event.vcards.cards.push(cards[i]);
+														event.vcards.js.push(cards[i]);
+													}
+												} else if (cards[i].parentNode.classList.contains("expansions")) {
+													cards[i].throwWith = cards[i].original = "x";
+													xs.push(cards[i]);
+													event.vcard_map.set(cards[i], get.autoViewAs(cards[i], void 0, false));
+													if (cards[i].gaintag && cards[i].gaintag.length) unmarks.addArray(cards[i].gaintag);
+												} else if (cards[i].parentNode.classList.contains("handcards")) {
+													if (cards[i].classList.contains("glows")) {
+														cards[i].throwWith = cards[i].original = "s";
+														ss.push(cards[i]);
+														event.vcard_map.set(cards[i], get.autoViewAs(cards[i], void 0, false));
+													} else {
+														cards[i].throwWith = cards[i].original = "h";
+														hs.push(cards[i]);
+														event.vcard_map.set(cards[i], get.autoViewAs(cards[i], void 0, player));
+													}
 												} else {
-													if (event.position == ui.cardPile) cardx[j].fix();
-													event.position.appendChild(cardx[j]);
+													cards[i].throwWith = cards[i].original = null;
 												}
-											} else {
-												cardx[j].remove();
+											}
+											for (var j = 0; j < cardx.length; j++) {
+												if (cardx[j].gaintag && cardx[j].gaintag.length) {
+													event.gaintag_map[cardx[j].cardid] = cardx[j].gaintag.slice(0);
+													//仅移除非永久标记
+													const tags = cardx[j].gaintag.filter(tag => !tag.startsWith("eternal_"));
+													tags.forEach(tag => cardx[j].removeGaintag(tag));
+												}
+
+												cardx[j].style.transform += " scale(0.2)";
+												cardx[j].classList.remove("glow");
+												cardx[j].classList.remove("glows");
+												cardx[j].recheck();
+
+												var info = lib.card[cardx[j].name];
+												if ("_destroy" in cardx[j]) {
+													if (cardx[j]._destroy) {
+														cardx[j].delete();
+														cardx[j].destroyed = cardx[j]._destroy;
+														continue;
+													}
+												} else if ("destroyed" in cardx[j]) {
+													if (event.getlx !== false && event.position && cardx[j].willBeDestroyed(event.position.id, null, event)) {
+														cardx[j].selfDestroy(event);
+														continue;
+													}
+												} else if (info.destroy) {
+													cardx[j].delete();
+													cardx[j].destroyed = info.destroy;
+													continue;
+												}
+												if (event.position) {
+													if (_status.discarded) {
+														if (event.position == ui.discardPile) {
+															_status.discarded.add(cardx[j]);
+														} else {
+															_status.discarded.remove(cardx[j]);
+														}
+													}
+													if (event.insert_index) {
+														cardx[j].fix();
+														event.position.insertBefore(cardx[j], event.insert_index(event, cardx[j]));
+													} else if (event.insert_card) {
+														cardx[j].fix();
+														event.position.insertBefore(cardx[j], event.position.firstChild);
+													} else if (event.position == ui.cardPile) {
+														cardx[j].fix();
+														event.position.appendChild(cardx[j]);
+													} else cardx[j].goto(event.position);
+												} else {
+													cardx[j].remove();
+												}
+												//if(ss.includes(cardx[j])) cards.splice(i--,1);
 											}
 										}
-									}
-									if (player == game.me) dui.queueNextFrameTick(dui.layoutHand, dui);
-									ui.updatej(player);
-									game.broadcast(
-										function (player, cards, num) {
-											for (var i = 0; i < cards.length; i++) {
-												cards[i].classList.remove("glow");
-												cards[i].classList.remove("glows");
-												cards[i].fix();
-												cards[i].remove();
-											}
-											if (player == game.me) ui.updatehl();
-											ui.updatej(player);
-											_status.cardPileNum = num;
-										},
-										player,
-										cards,
-										ui.cardPile.childNodes.length
-									);
-									if (event.animate != false) {
-										evt.discardid = lib.status.videoId++;
-										game.broadcastAll(
-											function (player, cards, id, visible) {
-												const cardx = cards
-													.slice()
-													.map(i => (i.cards ? i.cards : [i]))
-													.flat();
-												cardx.duiMod = true;
-												if (visible) player.$throw(cardx, null, "nobroadcast");
-												var cardnodes = [];
-												cardnodes._discardtime = get.time();
-												for (var i = 0; i < cardx.length; i++) {
-													if (cardx[i].clone) cardnodes.push(cardx[i].clone);
+										if (player == game.me) dui.queueNextFrameTick(dui.layoutHand, dui);
+										ui.updatej(player);
+										game.broadcast(
+											function (player, cards, num) {
+												for (var i = 0; i < cards.length; i++) {
+													cards[i].removeGaintag(true);
+													cards[i].classList.remove("glow");
+													cards[i].classList.remove("glows");
+													cards[i].fix();
+													cards[i].remove();
 												}
-												ui.todiscard[id] = cardnodes;
+												if (player == game.me) ui.updatehl();
+												ui.updatej(player);
+												_status.cardPileNum = num;
 											},
 											player,
-											cards,
-											evt.discardid,
-											event.visible
+											cards.slice(),
+											ui.cardPile.childNodes.length
 										);
-										if (lib.config.sync_speed && cards[0]?.clone) {
-											if (evt.delay != false) {
-												var waitingForTransition = get.time();
-												evt.waitingForTransition = waitingForTransition;
-												cards[0].clone.listenTransition(function () {
-													if (_status.waitingForTransition == waitingForTransition && _status.paused) {
-														game.resume();
+										if (event.animate != false) {
+											var evt = event.getParent();
+											evt.discardid = lib.status.videoId++;
+											game.broadcastAll(
+												function (player, cards, id, visible) {
+													const cardx = cards
+														.slice()
+														.map(i => (i.cards ? i.cards : [i]))
+														.flat();
+													cardx.duiMod = true;
+													if (visible) player.$throw(cardx, null, "nobroadcast");
+													var cardnodes = [];
+													cardnodes._discardtime = get.time();
+													for (var i = 0; i < cardx.length; i++) {
+														if (cardx[i].clone) cardnodes.push(cardx[i].clone);
 													}
-													delete evt.waitingForTransition;
-												});
-											} else if (evt.getParent().discardTransition) {
-												delete evt.getParent().discardTransition;
-												var waitingForTransition = get.time();
-												evt.getParent().waitingForTransition = waitingForTransition;
-												cards[0].clone.listenTransition(function () {
-													if (_status.waitingForTransition == waitingForTransition && _status.paused) {
-														game.resume();
-													}
-													delete evt.getParent().waitingForTransition;
-												});
-											}
-										}
-									}
-									game.addVideo("lose", player, [get.cardsInfo(hs), get.cardsInfo(es), get.cardsInfo(js), get.cardsInfo(ss), get.cardsInfo(xs)]);
-									event.cards2 = hs.concat(es);
-									player.getHistory("lose").push(event);
-									game.getGlobalHistory().cardMove.push(event);
-									player.update();
-									game.addVideo("loseAfter", player);
-									event.num = 0;
-									if (event.position == ui.ordering) {
-										var evt = event.relatedEvent || event.getParent();
-										if (!evt.orderingCards) evt.orderingCards = [];
-										if (!event.noOrdering && !event.cardsOrdered) {
-											event.cardsOrdered = true;
-											var next = game.createEvent("orderingDiscard", false);
-											event.next.remove(next);
-											evt.after.push(next);
-											next.relatedEvent = evt;
-											next.setContent("orderingDiscard");
-										}
-										if (!event.noOrdering) {
-											evt.orderingCards.addArray(cards);
-										}
-									} else if (event.position == ui.cardPile) {
-										game.updateRoundNumber();
-									}
-									if (unmarks.length) {
-										for (var i of unmarks) {
-											player[(lib.skill[i] && lib.skill[i].mark) || player.hasCard(card => card.hasGaintag(i), "x") ? "markSkill" : "unmarkSkill"](i);
-										}
-									}
-									event.hs = hs;
-									event.es = es;
-									event.js = js;
-									event.ss = ss;
-									event.xs = xs;
-									game.clearCardKnowers(hs);
-									if (hs.length && !event.visible) {
-										player.getCards("h").forEach(hcard => hcard.clearKnowers());
-									}
-									"step 2";
-									if (num < cards.length) {
-										if (event.es.includes(cards[num]) || cards[num].cards?.some(i => event.es.includes(i))) {
-											event.loseEquip = true;
-											const VEquip = cards[num][cards[num].cardSymbol];
-											if (VEquip) {
-												player.removeVirtualEquip(VEquip);
-												//player.removeEquipTrigger(cards[num]);
-												var info = get.info(VEquip, false);
-												if (info.onLose && (!info.filterLose || info.filterLose(VEquip, player))) {
-													event.goto(3);
-													event.currentVEquip = VEquip;
-													return;
+													ui.todiscard[id] = cardnodes;
+												},
+												player,
+												cards,
+												evt.discardid,
+												event.visible
+											);
+											if (lib.config.sync_speed && cards[0]?.clone) {
+												if (evt.delay != false) {
+													var waitingForTransition = get.time();
+													evt.waitingForTransition = waitingForTransition;
+													cards[0].clone.listenTransition(function () {
+														if (_status.waitingForTransition == waitingForTransition && _status.paused) {
+															game.resume();
+														}
+														delete evt.waitingForTransition;
+													});
+												} else if (evt.getParent().discardTransition) {
+													delete evt.getParent().discardTransition;
+													var waitingForTransition = get.time();
+													evt.getParent().waitingForTransition = waitingForTransition;
+													cards[0].clone.listenTransition(function () {
+														if (_status.waitingForTransition == waitingForTransition && _status.paused) {
+															game.resume();
+														}
+														delete evt.getParent().waitingForTransition;
+													});
 												}
 											}
-										} else if (event.js.includes(cards[num])) {
-											const VJudge = player.getVCards("j").find(card => {
-												return card.cards?.includes(cards[num]);
-											});
-											if (VJudge) {
-												player.removeVirtualJudge(VJudge);
+										}
+										game.addVideo("lose", player, [get.cardsInfo(hs), get.cardsInfo(es), get.cardsInfo(js), get.cardsInfo(ss)]);
+										event.cards2 = hs.concat(es);
+										cards.removeArray(event.vcards.cards);
+										cards.addArray(event.vcard_cards);
+										player.getHistory("lose").push(event);
+										game.getGlobalHistory().cardMove.push(event);
+										player.update();
+										game.addVideo("loseAfter", player);
+										event.num = 0;
+										if (event.position == ui.ordering) {
+											var evt = event.relatedEvent || event.getParent();
+											if (!evt.orderingCards) evt.orderingCards = [];
+											if (!evt.noOrdering && !evt.cardsOrdered) {
+												evt.cardsOrdered = true;
+												var next = game.createEvent("orderingDiscard", false);
+												event.next.remove(next);
+												evt.after.push(next);
+												next.relatedEvent = evt;
+												next.setContent("orderingDiscard");
+											}
+											if (!evt.noOrdering) {
+												evt.orderingCards.addArray(cards);
+											}
+										} else if (event.position == ui.cardPile) {
+											game.updateRoundNumber();
+										}
+										if (unmarks.length) {
+											for (var i of unmarks) {
+												player[(lib.skill[i] && lib.skill[i].mark) || player.hasCard(card => card.hasGaintag(i), "x") ? "markSkill" : "unmarkSkill"](i);
 											}
 										}
-										event.num++;
-										event.redo();
-									} else {
-										if (event.loseEquip) {
-											player.addEquipTrigger();
+										event.hs = hs;
+										event.es = es;
+										event.js = js;
+										event.ss = ss;
+										event.xs = xs;
+										game.clearCardKnowers(hs);
+										if (hs.length && !event.visible) {
+											player.getCards("h").forEach(hcard => {
+												hcard.clearKnowers();
+											});
 										}
-										event.goto(4);
-									}
-									"step 3";
-									const VEquip = event.currentVEquip;
-									var info = get.info(VEquip, false);
-									if (info.loseDelay != false && (player.isAlive() || info.forceDie)) {
-										player.popup(VEquip.name);
-										game.delayx();
-									}
-									if (Array.isArray(info.onLose)) {
-										for (var i = 0; i < info.onLose.length; i++) {
-											var next = game.createEvent("lose_" + VEquip.name);
-											next.setContent(info.onLose[i]);
-											if (info.forceDie) next.forceDie = true;
-											next.player = player;
-											next.card = VEquip;
-											next.cards = VEquip.cards;
-										}
-									} else {
-										var next = game.createEvent("lose_" + VEquip.name);
-										next.setContent(info.onLose);
-										next.player = player;
-										if (info.forceDie) next.forceDie = true;
-										next.card = VEquip;
-										next.cards = VEquip.cards;
-									}
-									event.num++;
-									event.goto(2);
-									"step 4";
-									event.cards = cards.map(i => (i.cards ? i.cards : [i])).flat();
-									if (event.toRenku) {
-										_status.renku.addArray(
-											cards.filter(function (card) {
-												return !card.willBeDestroyed("renku", null, event);
-											})
-										);
-										if (_status.renku.length > 6) {
-											var cards = _status.renku.splice(0, _status.renku.length - 6);
-											game.log(cards, "从仁库进入了弃牌堆");
-											game.cardsDiscard(cards).set("outRange", true).fromRenku = true;
-										}
-										game.updateRenku();
-									}
-									"step 5";
-									var evt = event.getParent();
-									if (evt.name != "discard" && event.type != "discard" && evt.name != "loseToDiscardpile" && event.type != "loseToDiscardpile") return;
-									if (event.animate === false || event.delay === false) return;
-									if (evt.delay != false) {
-										if (evt.waitingForTransition) {
-											_status.waitingForTransition = evt.waitingForTransition;
-											game.pause();
-										} else {
-											game.delayx();
-										}
-									}
-								},
+									},
+									...base.lib.element.content.lose.slice(2),
+								],
 								/*-----------------分割线-----------------*/
 								turnOver() {
 									game.log(player, "翻面");
@@ -3401,10 +3058,12 @@ export default async function () {
 						}
 					};
 					//根据手杀ui选项开关调用不同结束出牌阶段的弹出样式
+					//为onlineUI样式单独改为取消
 					lib.hooks["checkEnd"].push(function decadeUI_UIconfirm() {
 						if (ui.confirm && ui.confirm.lastChild.link == "cancel") {
 							if (_status.event.type == "phase") {
-								const innerHTML = lib.config.extension_十周年UI_newDecadeStyle != "othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" : "结束出牌";
+								const isOnlineUI = lib.config.extension_十周年UI_newDecadeStyle === "onlineUI";
+								const innerHTML = isOnlineUI ? "取消" : lib.config.extension_十周年UI_newDecadeStyle != "othersOff" || decadeUI.config.newDecadeStyle == "on" ? "回合结束" : "结束出牌";
 								ui.confirm.lastChild.innerHTML = _status.event.skill ? "取消" : innerHTML;
 							}
 						}
@@ -3466,9 +3125,8 @@ export default async function () {
 
 					game.swapControl = function (player) {
 						var result = swapControlFunction.call(this, player);
-						/*-----------------分割线-----------------*/
 						// 单独装备栏
-						if (lib.config.extension_十周年UI_aloneEquup) {
+						if (lib.config.extension_十周年UI_aloneEquip) {
 							if (game.me && game.me != ui.equipSolts.me) {
 								ui.equipSolts.me.appendChild(ui.equipSolts.equips);
 								ui.equipSolts.me = game.me;
@@ -3477,7 +3135,12 @@ export default async function () {
 								game.me.$syncExpand();
 							}
 						}
-
+						if (ui.equipSolts && game.me && typeof game.me.$handleEquipChange === "function") {
+							game.me.$handleEquipChange();
+						}
+						if (ui.equipSolts && player && typeof player.$handleEquipChange === "function") {
+							player.$handleEquipChange();
+						}
 						return result;
 					};
 
@@ -4040,7 +3703,7 @@ export default async function () {
 										/*-----------------分割线-----------------*/
 										// 不同样式身份标记
 										if (lib.config.extension_十周年UI_newDecadeStyle == "onlineUI") {
-											image.src = decadeUIPath + "image/decorations/identity2_" + filename + ".png";
+											image.src = decadeUIPath + "image/decorationo/identity2_" + filename + ".png";
 										} else if (lib.config.extension_十周年UI_newDecadeStyle == "babysha") {
 											image.src = decadeUIPath + "image/decorationh/identity3_" + filename + ".png";
 										} else if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff") {
@@ -4779,167 +4442,168 @@ export default async function () {
 						game.broadcastAll(ui.clear);
 						event.cards.add(event.card1);
 					};
+					//联机禁用chhoseToGuanxing函数
+					if (!_status.connectMode) {
+						lib.element.content.chooseToGuanxing = function () {
+							"step 0";
+							if (player.isUnderControl()) game.modeSwapPlayer(player);
+							var cards = get.cards(num);
+							var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
+							guanxing.caption = event.getParent() && event.getParent().name && get.translation(event.getParent().name) != event.getParent().name ? "【" + get.translation(event.getParent().name) + "】" : "请按顺序排列牌";
 
-					lib.element.content.chooseToGuanxing = function () {
-						"step 0";
-						if (player.isUnderControl()) game.modeSwapPlayer(player);
-						var cards = get.cards(num);
-						var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
-						guanxing.caption = event.getParent() && event.getParent().name && get.translation(event.getParent().name) != event.getParent().name ? "【" + get.translation(event.getParent().name) + "】" : "请按顺序排列牌";
+							game.broadcast(
+								function (player, cards, callback) {
+									if (!window.decadeUI) return;
+									var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
+									guanxing.caption = "观星";
+									guanxing.callback = callback;
+									game.log(guanxing.callback);
+								},
+								player,
+								cards,
+								guanxing.callback
+							);
 
-						game.broadcast(
-							function (player, cards, callback) {
-								if (!window.decadeUI) return;
-								var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
-								guanxing.caption = "观星";
-								guanxing.callback = callback;
-								game.log(guanxing.callback);
-							},
-							player,
-							cards,
-							guanxing.callback
-						);
+							if (event.isOnline()) {
+								event.player.send(function () {
+									if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
+								}, event.player);
 
-						if (event.isOnline()) {
-							event.player.send(function () {
-								if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
-							}, event.player);
-
-							event.player.wait();
-							decadeUI.game.wait();
-						} else if (!(typeof event.isMine == "function" && event.isMine())) {
-							const processAI =
-								event.processAI ||
-								function (list) {
-									let cards = list[0][1],
-										player = _status.event.player,
-										target = _status.currentPhase || player,
-										name = _status.event.getTrigger()?.name,
-										countWuxie = current => {
-											let num = current.getKnownCards(player, card => {
-												return get.name(card, current) === "wuxie";
-											});
-											if (num && current !== player) return num;
-											let skills = current.getSkills("invisible").concat(lib.skill.global);
-											game.expandSkills(skills);
-											for (let i = 0; i < skills.length; i++) {
-												let ifo = get.info(skills[i]);
-												if (!ifo) continue;
-												if (ifo.viewAs && typeof ifo.viewAs != "function" && ifo.viewAs.name == "wuxie") {
-													if (!ifo.viewAsFilter || ifo.viewAsFilter(current)) {
-														num++;
-														break;
-													}
-												} else {
-													let hiddenCard = ifo.hiddenCard;
-													if (typeof hiddenCard == "function" && hiddenCard(current, "wuxie")) {
-														num++;
-														break;
-													}
-												}
-											}
-											return num;
-										},
-										top = [];
-									switch (name) {
-										case "phaseJieshu":
-											target = target.next;
-										case "phaseZhunbei":
-											let att = get.sgn(get.attitude(player, target)),
-												judges = target.getCards("j"),
-												needs = 0,
-												wuxie = countWuxie(target);
-											for (let i = Math.min(cards.length, judges.length) - 1; i >= 0; i--) {
-												let j = judges[i],
-													cardj = j.viewAs
-														? {
-																name: j.viewAs,
-																cards: j.cards || [j],
-														  }
-														: j;
-												if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
-													wuxie--;
-													continue;
-												}
-												let judge = get.judge(j);
-												cards.sort((a, b) => {
-													return (judge(b) - judge(a)) * att;
+								event.player.wait();
+								decadeUI.game.wait();
+							} else if (!(typeof event.isMine == "function" && event.isMine())) {
+								const processAI =
+									event.processAI ||
+									function (list) {
+										let cards = list[0][1],
+											player = _status.event.player,
+											target = _status.currentPhase || player,
+											name = _status.event.getTrigger()?.name,
+											countWuxie = current => {
+												let num = current.getKnownCards(player, card => {
+													return get.name(card, current) === "wuxie";
 												});
-												if (judge(cards[0]) * att < 0) {
-													needs++;
-													continue;
-												} else {
+												if (num && current !== player) return num;
+												let skills = current.getSkills("invisible").concat(lib.skill.global);
+												game.expandSkills(skills);
+												for (let i = 0; i < skills.length; i++) {
+													let ifo = get.info(skills[i]);
+													if (!ifo) continue;
+													if (ifo.viewAs && typeof ifo.viewAs != "function" && ifo.viewAs.name == "wuxie") {
+														if (!ifo.viewAsFilter || ifo.viewAsFilter(current)) {
+															num++;
+															break;
+														}
+													} else {
+														let hiddenCard = ifo.hiddenCard;
+														if (typeof hiddenCard == "function" && hiddenCard(current, "wuxie")) {
+															num++;
+															break;
+														}
+													}
+												}
+												return num;
+											},
+											top = [];
+										switch (name) {
+											case "phaseJieshu":
+												target = target.next;
+											case "phaseZhunbei":
+												let att = get.sgn(get.attitude(player, target)),
+													judges = target.getCards("j"),
+													needs = 0,
+													wuxie = countWuxie(target);
+												for (let i = Math.min(cards.length, judges.length) - 1; i >= 0; i--) {
+													let j = judges[i],
+														cardj = j.viewAs
+															? {
+																	name: j.viewAs,
+																	cards: j.cards || [j],
+															  }
+															: j;
+													if (wuxie > 0 && get.effect(target, j, target, target) < 0) {
+														wuxie--;
+														continue;
+													}
+													let judge = get.judge(j);
+													cards.sort((a, b) => {
+														return (judge(b) - judge(a)) * att;
+													});
+													if (judge(cards[0]) * att < 0) {
+														needs++;
+														continue;
+													} else {
+														top.unshift(cards.shift());
+													}
+												}
+												if (needs > 0 && needs >= judges.length) {
+													return [top, cards];
+												}
+												cards.sort((a, b) => {
+													return (get.value(b, target) - get.value(a, target)) * att;
+												});
+												while (needs--) {
 													top.unshift(cards.shift());
 												}
-											}
-											if (needs > 0 && needs >= judges.length) {
+												while (cards.length) {
+													if (get.value(cards[0], target) > 6 == att > 0) top.push(cards.shift());
+													else break;
+												}
 												return [top, cards];
-											}
-											cards.sort((a, b) => {
-												return (get.value(b, target) - get.value(a, target)) * att;
-											});
-											while (needs--) {
-												top.unshift(cards.shift());
-											}
-											while (cards.length) {
-												if (get.value(cards[0], target) > 6 == att > 0) top.push(cards.shift());
-												else break;
-											}
-											return [top, cards];
-										default:
-											cards.sort((a, b) => {
-												return get.value(b, target) - get.value(a, target);
-											});
-											while (cards.length) {
-												if (get.value(cards[0], target) > 6) top.push(cards.shift());
-												else break;
-											}
-											return [top, cards];
-									}
-								};
-							var [cards, cheats] = processAI([[" ", guanxing.cards[0].slice()]]),
-								time = 500;
-							for (var i = 0; i < cheats.length; i++) {
-								setTimeout(
-									function (card, index, finished) {
-										guanxing.move(card, index, 0);
-										if (finished) guanxing.finishTime(1000);
-									},
-									time,
-									cheats[i],
-									i,
-									i >= cheats.length - 1 && cards.length == 0
-								);
-								time += 500;
-							}
+											default:
+												cards.sort((a, b) => {
+													return get.value(b, target) - get.value(a, target);
+												});
+												while (cards.length) {
+													if (get.value(cards[0], target) > 6) top.push(cards.shift());
+													else break;
+												}
+												return [top, cards];
+										}
+									};
+								var [cards, cheats] = processAI([[" ", guanxing.cards[0].slice()]]),
+									time = 500;
+								for (var i = 0; i < cheats.length; i++) {
+									setTimeout(
+										function (card, index, finished) {
+											guanxing.move(card, index, 0);
+											if (finished) guanxing.finishTime(1000);
+										},
+										time,
+										cheats[i],
+										i,
+										i >= cheats.length - 1 && cards.length == 0
+									);
+									time += 500;
+								}
 
-							for (var i = 0; i < cards.length; i++) {
-								setTimeout(
-									function (card, index, finished) {
-										guanxing.move(card, index, 1);
-										if (finished) guanxing.finishTime(1000);
-									},
-									time,
-									cards[i],
-									i,
-									i >= cards.length - 1
-								);
-								time += 500;
+								for (var i = 0; i < cards.length; i++) {
+									setTimeout(
+										function (card, index, finished) {
+											guanxing.move(card, index, 1);
+											if (finished) guanxing.finishTime(1000);
+										},
+										time,
+										cards[i],
+										i,
+										i >= cards.length - 1
+									);
+									time += 500;
+								}
 							}
-						}
-						"step 1";
-						var [top, bottom] = [event.cards1, event.cards2];
-						event.result = {
-							bool: true,
-							moved: [top, bottom],
+							"step 1";
+							var [top, bottom] = [event.cards1, event.cards2];
+							event.result = {
+								bool: true,
+								moved: [top, bottom],
+							};
+							game.addCardKnower(top, player);
+							game.addCardKnower(bottom, player);
+							player.popup(get.cnNumber(event.num1) + "上" + get.cnNumber(event.num2) + "下");
+							game.logv(player, "将" + get.cnNumber(event.num1) + "张牌置于牌堆顶，" + get.cnNumber(event.num2) + "张牌置于牌堆底");
+							game.updateRoundNumber();
 						};
-						game.addCardKnower(top, player);
-						game.addCardKnower(bottom, player);
-						player.popup(get.cnNumber(event.num1) + "上" + get.cnNumber(event.num2) + "下");
-						game.logv(player, "将" + get.cnNumber(event.num1) + "张牌置于牌堆顶，" + get.cnNumber(event.num2) + "张牌置于牌堆底");
-						game.updateRoundNumber();
-					};
-
+					}
 					lib.element.player.setIdentity = function (identity) {
 						if (!identity) identity = this.identity;
 
@@ -5015,7 +4679,7 @@ export default async function () {
 								var image = new Image();
 								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
 								this._finalGroup = group;
-								image.onerror = () => {
+								const create = () => {
 									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
 									else {
 										const name = get.translation(this._finalGroup),
@@ -5024,7 +4688,11 @@ export default async function () {
 										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
 									}
 								};
-								this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
+								image.onerror = () => {
+									create();
+								};
+								if (decadeUI.config.newDecadeStyle != "onlineUI") this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
+								else create();
 								image.src = url;
 							},
 						},
@@ -5073,13 +4741,15 @@ export default async function () {
 
 							if (typeof num == "number") {
 								node.popupNumber = num;
-								if (num == Infinity) {
-									num = "+∞";
-								} else if (num == -Infinity) {
-									num = "-∞";
-								} else if (num > 0) {
-									num = "+" + num;
-								}
+								if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI") {
+									if (num == Infinity) {
+										num = "+∞";
+									} else if (num == -Infinity) {
+										num = "-∞";
+									} else if (num > 0) {
+										num = "+" + num;
+									}
+								} else num = "";
 							} else {
 								node.popupNumber = null;
 							}
@@ -6313,6 +5983,217 @@ export default async function () {
 					if (cardsuit) snnode.$suit.innerHTML = get.translation(cardsuit);
 					else snnode.$suit.innerHTML = "◈";
 					card.dataset.tempsn = cardsuit;
+				},
+
+				tryAddPlayerCardUseTag(card, player, event) {
+					if (!card || !player || !event) return;
+					var tagNode = card.querySelector(".used-info");
+					if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
+					card.$usedtag = tagNode;
+					if (event.blameEvent) event = event.blameEvent;
+					let tagText;
+					const playername = get.slimName(player?.name);
+					let border = get.groupnature(get.bordergroup(player?.name));
+					let eventInfo = `<span style="font-weight:700"><span data-nature=${border}><span style="letter-spacing:0.1em">${playername}</span></span><br/><span style="color:#FFD700">`;
+					switch (event.name) {
+						case "useCard":
+						case "respond":
+							tagText = eventInfo + (event.name === "useCard" ? "使用" : "打出") + "</span>";
+							const cardname = event.card.name,
+								cardnature = get.nature(event.card);
+							if (lib.config.cardtempname != "off" && (card.name != cardname || !get.is.sameNature(cardnature, card.nature, true))) {
+								if (lib.config.extension_十周年UI_showTemp) {
+									if (!card._tempName) card._tempName = ui.create.div(".temp-name", card);
+									var tempname = "";
+									var tempname2 = get.translation(cardname);
+									if (cardnature) {
+										card._tempName.dataset.nature = cardnature;
+										if (cardname == "sha") {
+											tempname2 = get.translation(cardnature) + tempname2;
+										}
+									}
+									tempname += tempname2;
+									card._tempName.innerHTML = tempname;
+									card._tempName.tempname = tempname;
+								} else {
+									var node = ui.create.cardTempName(event.card, card);
+									var cardtempnameConfig = lib.config.cardtempname;
+									if (cardtempnameConfig !== "default") node.classList.remove("vertical");
+								}
+							}
+							const cardnumber = get.number(event.card),
+								cardsuit = get.suit(event.card);
+							if (card.dataset.views != 1 && event.card.cards && event.card.cards.length == 1 && (card.number != cardnumber || card.suit != cardsuit)) {
+								dui.cardTempSuitNum(card, cardsuit, cardnumber);
+							}
+							if (duicfg.cardUseEffect && event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
+								var name = event.card.name,
+									nature = event.card.nature;
+
+								switch (name) {
+									case "effect_caochuanjiejian":
+										decadeUI.animation.cap.playSpineTo(card, "effect_caochuanjiejian");
+										break;
+									case "sha":
+										switch (nature) {
+											case "thunder":
+												decadeUI.animation.cap.playSpineTo(card, "effect_leisha");
+												break;
+											case "fire":
+												decadeUI.animation.cap.playSpineTo(card, "effect_huosha");
+												break;
+											default:
+												if (get.color(card) == "red") {
+													decadeUI.animation.cap.playSpineTo(card, "effect_hongsha");
+												} else {
+													decadeUI.animation.cap.playSpineTo(card, "effect_heisha");
+												}
+												break;
+										}
+										break;
+									case "shan":
+										decadeUI.animation.cap.playSpineTo(card, "effect_shan");
+										break;
+									case "tao":
+										decadeUI.animation.cap.playSpineTo(card, "effect_tao", {
+											scale: 0.9,
+										});
+										break;
+									case "tiesuo":
+										decadeUI.animation.cap.playSpineTo(card, "effect_tiesuolianhuan", {
+											scale: 0.9,
+										});
+										break;
+									case "jiu":
+										decadeUI.animation.cap.playSpineTo(card, "effect_jiu", {
+											y: [-30, 0.5],
+										});
+										break;
+									case "kaihua":
+										decadeUI.animation.cap.playSpineTo(card, "effect_shushangkaihua");
+										break;
+									case "wuzhong":
+										decadeUI.animation.cap.playSpineTo(card, "effect_wuzhongshengyou");
+										break;
+									case "wuxie":
+										decadeUI.animation.cap.playSpineTo(card, "effect_wuxiekeji", {
+											y: [10, 0.5],
+											scale: 0.9,
+										});
+										break;
+									case "juedou":
+										decadeUI.animation.cap.playSpineTo(card, "SF_eff_jiangling_juedou", {
+											x: [10, 0.4],
+											scale: 1,
+										});
+										break;
+									case "nanman":
+										decadeUI.animation.cap.playSpineTo(card, "effect_nanmanruqin", {
+											scale: 0.45,
+										});
+										break;
+									case "wanjian":
+										decadeUI.animation.cap.playSpineTo(card, "effect_wanjianqifa", {
+											scale: 0.78,
+										});
+										break;
+									case "wugu":
+										decadeUI.animation.cap.playSpineTo(card, "effect_wugufengdeng", {
+											y: [10, 0.5],
+										});
+										break;
+									case "taoyuan":
+										decadeUI.animation.cap.playSpineTo(card, "SF_kapai_eff_taoyuanjieyi", {
+											y: [10, 0.5],
+										});
+										break;
+									case "shunshou":
+										decadeUI.animation.cap.playSpineTo(card, "effect_shunshouqianyang");
+										break;
+									case "huogong":
+										decadeUI.animation.cap.playSpineTo(card, "effect_huogong", {
+											x: [8, 0.5],
+											scale: 0.5,
+										});
+										break;
+									case "guohe":
+										decadeUI.animation.cap.playSpineTo(card, "effect_guohechaiqiao", {
+											y: [10, 0.5],
+										});
+										break;
+									case "yuanjiao":
+										decadeUI.animation.cap.playSpineTo(card, "effect_yuanjiaojingong");
+										break;
+									case "zhibi":
+										decadeUI.animation.cap.playSpineTo(card, "effect_zhijizhibi");
+										break;
+									case "zhulu_card":
+										decadeUI.animation.cap.playSpineTo(card, "effect_zhulutianxia");
+										break;
+								}
+							}
+							break;
+						case "judge":
+							tagText = event.judgestr + "的判定牌";
+							event.addMessageHook("judgeResult", function () {
+								var event = this;
+								var card = event.result.card.clone;
+								var apcard = event.apcard;
+								var tagText = "";
+								var tagNode = card.querySelector(".used-info");
+								if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
+								if (event.result.suit != get.suit(card) || event.result.number != get.number(card)) {
+									dui.cardTempSuitNum(card, event.result.suit, event.result.number);
+								}
+								var action;
+								var judgeValue;
+								var getEffect = event.judge2;
+								if (getEffect) {
+									judgeValue = getEffect(event.result);
+								} else {
+									judgeValue = decadeUI.get.judgeEffect(event.judgestr, event.result.judge);
+								}
+								if (typeof judgeValue == "boolean") {
+									judgeValue = judgeValue ? 1 : -1;
+								} else {
+									judgeValue = event.result.judge;
+								}
+								if (judgeValue >= 0) {
+									action = "play4";
+									tagText = "判定生效";
+								} else {
+									action = "play5";
+									tagText = "判定失效";
+								}
+								if (apcard && apcard._ap) apcard._ap.stopSpineAll();
+								if (apcard && apcard._ap && apcard == card) {
+									apcard._ap.playSpine({
+										name: "effect_panding",
+										action: action,
+									});
+								} else {
+									decadeUI.animation.cap.playSpineTo(card, {
+										name: "effect_panding",
+										action: action,
+									});
+								}
+								event.apcard = undefined;
+								tagNode.innerHTML = get.translation(event.judgestr) + tagText;
+							});
+							if (duicfg.cardUseEffect) {
+								decadeUI.animation.cap.playSpineTo(card, {
+									name: "effect_panding",
+									action: "play",
+									loop: true,
+								});
+								event.apcard = card;
+							}
+							break;
+						default:
+							tagText = get.cardsetion(player);
+							break;
+					}
+					tagNode.innerHTML = tagText;
 				},
 
 				getRandom(min, max) {
@@ -9336,6 +9217,7 @@ export default async function () {
 					this.css(decadeUIPath + "extension.css");
 					this.css(decadeUIPath + "decadeLayout.css");
 					this.css(decadeUIPath + "card.css");
+					this.css(decadeUIPath + "meihua.css");
 					// 当且仅当初次载入时，newDecadeStyle == void 0
 					if (lib.config.extension_十周年UI_newDecadeStyle != void 0) {
 						this.css(decadeUIPath + "player" + parseFloat(["on", "off", "othersOn", "othersOff", "onlineUI", "babysha"].indexOf(lib.config.extension_十周年UI_newDecadeStyle) + 1) + ".css");
@@ -9368,6 +9250,7 @@ export default async function () {
 					this.js(decadeUIPath + "content.js");
 					this.js(decadeUIPath + "effect.js");
 					this.js(decadeUIPath + "meihua.js");
+					//this.js(decadeUIPath + "cardtuozhuai.js");
 					this.js(decadeUIPath + "animation.js");
 					this.js(decadeUIPath + "dynamicSkin.js");
 
@@ -10987,18 +10870,31 @@ export default async function () {
 		help: {},
 		config: {
 			FL0: {
-				name: "<img style=width:240px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/line.png>",
+				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
+				//name: "<img style=width:240px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/line.png>",
 				intro: "",
 				init: true,
 				clear: true,
+				onclick: function () {
+					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
+				},
 			},
 			eruda: {
-				name: "调试助手(开发用)",
+				name: "调试助手",
 				init: false,
 			},
+			kapaituozhuai: {
+				name: "卡牌拖拽",
+				init: false,
+				intro: "开启后手牌可以任意拖拽牌序，自动重启",
+				onclick(bool) {
+					game.saveConfig("extension_十周年UI_kapaituozhuai", bool);
+					setTimeout(() => game.reload(), 100);
+				},
+			},
 			newDecadeStyle: {
-				name: '<b><font color="#FF0000">边框样式/界面布局',
-				intro: '<b><font color="#FF0000">切换武将边框样式和界面布局，初始为十周年样式，根据个人喜好自行切换，选择不同的设置后游戏会自动重启以生效新的设置',
+				name: "切换样式",
+				intro: "切换武将边框样式和界面布局，初始为十周年样式，根据个人喜好自行切换，选择不同的设置后游戏会自动重启以生效新的设置",
 				init: "off",
 				item: {
 					on: "十周年",
@@ -11023,7 +10919,7 @@ export default async function () {
 				},
 			},
 			rightLayout: {
-				name: '<b><font color="#E600FD">左右布局',
+				name: "左右布局",
 				init: "on",
 				intro: "切换完以后自动重启游戏，手杀十周年一将之后的样式不再维护",
 				item: {
@@ -11042,18 +10938,22 @@ export default async function () {
 				},
 			},
 			FL120: {
-				name: "<img style=width:240px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/line.png>",
+				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
 				intro: "",
 				init: true,
 				clear: true,
+				onclick: function () {
+					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
+				},
 			},
 			cardPrettify: {
-				name: "卡牌美化(需重启)",
+				name: "卡牌美化",
 				init: "webp",
 				item: {
 					off: "关闭",
-					webp: "WEBP素材",
-					png: "PNG 素材",
+					jpg: "online",
+					webp: "彩色卡牌",
+					png: "原十周年",
 				},
 			},
 			//菜单美化
@@ -11085,67 +10985,7 @@ export default async function () {
 				item: {
 					off: "关闭",
 					skin_xiaosha_default: "小杀",
-					skin_chengzhu_城主边框: "城主边框(自行调参数)",
-					skin_caojinyu_惊鸿: "曹金玉-惊鸿倩影-1",
-					skin_caojinyu_倩影: "曹金玉-惊鸿倩影-2",
-					skin_wangrong_云裳花容: "王蓉-云裳花容",
-					skin_baosanniang_漫花剑俏: "鲍三娘-漫花剑俏",
-					skin_baosanniang_舞剑铸缘: "鲍三娘-舞剑铸缘",
-					skin_caiwenji_才颜双绝: "蔡文姬-才颜双绝",
-					skin_caojie_凤历迎春: "曹　节-凤历迎春",
-					skin_caojie_战场绝版: "曹　节-战场绝版",
-					skin_caoying_巾帼花舞: "曹　婴-巾帼花舞",
-					skin_daqiao_清萧清丽: "大　乔-清萧清丽",
-					skin_daqiao_衣垂绿川: "大　乔-衣垂绿川",
-					skin_daqiao_战场绝版: "大　乔-战场绝版",
-					skin_daqiaoxiaoqiao_战场绝版: "大乔小乔-战场绝版",
-					skin_diaochan_玉婵仙子: "貂　蝉-玉婵仙子",
-					skin_diaochan_战场绝版: "貂　蝉-战场绝版",
-					skin_dongbai_娇俏伶俐: "董　白-娇俏伶俐",
-					skin_fuhuanghou_万福千灯: "伏皇后-万福千灯",
-					skin_fanyufeng_斟酒入情: "樊玉凤-斟酒入情",
-					skin_guozhao_雍容尊雅: "郭　照-雍容尊雅",
-					skin_huaman_花俏蛮娇: "花　鬘-花俏蛮娇",
-					skin_huaman_经典形象: "花　鬘-经典形象",
-					skin_hetaihou_鸩毒除患: "何太后-鸩毒除患",
-					skin_hetaihou_蛇蝎为心: "何太后-蛇蝎为心",
-					skin_hetaihou_耀紫迷幻: "何太后-耀紫迷幻",
-					skin_lukang_毁堰破晋: "陆　抗-毁堰破晋",
-					skin_luxun_谋定天下: "陆　逊-谋定天下",
-					skin_luxunlvmeng_清雨踏春: "陆逊吕蒙-清雨踏春",
-					skin_mayunlu_战场绝版: "马云騄-战场绝版",
-					skin_sundengzhoufei_鹊星夕情: "孙登周妃-鹊星夕情",
-					skin_sunluban_宵靥谜君: "孙鲁班-宵靥谜君",
-					skin_sunluyu_娇俏伶俐: "孙鲁育-娇俏伶俐",
-					skin_shuxiangxiang_花好月圆: "蜀香香-花好月圆",
-					skin_shuxiangxiang_花曳心牵: "蜀香香-花曳心牵",
-					skin_wangrong_云裳花容: "王　荣-云裳花容",
-					skin_wangyi_绝色异彩: "王　异-绝色异彩",
-					skin_wangyi_战场绝版: "王　异-战场绝版",
-					skin_wolongzhuge_隆中陇亩: "卧龙诸葛-隆中陇亩",
-					skin_wuxian_锦运福绵: "吴　苋-锦运福绵",
-					skin_wuxian_金玉满堂: "吴　苋-金玉满堂",
-					skin_xiahoushi_端华夏莲: "夏侯氏-端华夏莲",
-					skin_xiahoushi_战场绝版: "夏侯氏-战场绝版",
-					skin_xiaoqiao_花好月圆: "小　乔-花好月圆",
-					skin_xiaoqiao_采莲江南: "小　乔-采莲江南",
-					skin_xinxianying_英装素果: "辛宪英-英装素果",
-					skin_xushi_拈花思君: "徐　氏-拈花思君",
-					skin_xushi_为夫弑敌: "徐　氏-为夫弑敌",
-					skin_zhangchangpu_钟桂香蒲: "张昌蒲-钟桂香蒲",
-					skin_zhangchunhua_花好月圆: "张春华-花好月圆",
-					skin_zhangchunhua_战场绝版: "张春华-战场绝版",
-					skin_zhoufei_晴空暖鸢: "周　妃-晴空暖鸢",
-					skin_zhangqiying_逐鹿天下: "张琪瑛-逐鹿天下",
-					skin_zhangqiying_岁稔年丰: "张琪瑛-岁稔年丰",
-					skin_zhenji_才颜双绝: "甄　姬-才颜双绝",
-					skin_zhenji_洛神御水: "甄　姬-洛神御水",
-					skin_zhugeguo_兰荷艾莲: "诸葛果-兰荷艾莲",
-					skin_zhugeguo_仙池起舞: "诸葛果-仙池起舞",
-					skin_zhugeguo_英装素果: "诸葛果-英装素果",
-					skin_zhugeliang_空城退敌: "诸葛亮-空城退敌",
-					skin_zhouyi_剑舞浏漓: "周　夷-剑舞浏漓",
-					skin_zhangxingcai_凯旋星花: "张星彩-凯旋星花",
+					skin_chengzhu_城主边框: "城主边框",
 				},
 				update() {
 					if (!window.decadeUI) return;
@@ -11184,23 +11024,23 @@ export default async function () {
 				},
 			},
 			dynamicSkin_dieAfter: {
-				name: "阵亡保留动皮",
+				name: "保留动皮",
 				intro: "阵亡后依旧显示动态皮肤",
 				init: true,
 			},
 			cardAlternateNameVisible: {
-				name: "牌名辅助显示",
+				name: "牌名辅助",
 				init: false,
 				update() {
 					if (window.decadeUI) ui.window.dataset.cardAlternateNameVisible = lib.config["extension_十周年UI_cardAlternateNameVisible"] ? "on" : "off";
 				},
 			},
 			campIdentityImageMode: {
-				name: "势力身份美化",
+				name: "身份美化",
 				init: true,
 			},
 			playerKillEffect: {
-				name: "玩家击杀特效",
+				name: "击杀特效",
 				init: true,
 				onclick(value) {
 					game.saveConfig("extension_十周年UI_playerKillEffect", value);
@@ -11208,11 +11048,11 @@ export default async function () {
 				},
 			},
 			gameAnimationEffect: {
-				name: "游戏动画特效",
+				name: "动画特效",
 				init: true,
 			},
 			playerDieEffect: {
-				name: "玩家阵亡特效",
+				name: "阵亡特效",
 				init: true,
 				onclick(value) {
 					game.saveConfig("extension_十周年UI_playerDieEffect", value);
@@ -11220,7 +11060,7 @@ export default async function () {
 				},
 			},
 			cardUseEffect: {
-				name: "卡牌使用特效",
+				name: "卡牌特效",
 				init: true,
 				onclick(value) {
 					game.saveConfig("extension_十周年UI_cardUseEffect", value);
@@ -11236,7 +11076,7 @@ export default async function () {
 			// 	},
 			// },
 			showTemp: {
-				name: "视为卡牌显示",
+				name: "卡牌显示",
 				init: false,
 				intro: "开启此选项后，视为卡牌显示将会替换为十周年UI内置替换显示",
 				onclick(bool) {
@@ -11285,9 +11125,24 @@ export default async function () {
 					}
 				},
 			},
+			wujiangbeijing: {
+				name: "武将背景",
+				init: false,
+				intro: "开启后，单双将和国战模式将用设置好的武将背景",
+			},
+			shiliyouhua: {
+				name: "官方势力",
+				init: false,
+				intro: "开启后，非魏蜀吴群晋势力的角色将会重新选择势力",
+			},
+			shouqikamh: {
+				name: "手气卡美化",
+				init: false,
+				intro: "开启后，手气卡锁定五次",
+			},
 			aloneEquip: {
-				name: '<b><font color="#99FF75">单独装备栏',
-				intro: '<b><font color="#99FF75">切换玩家装备栏为单独装备栏或非单独装备栏，初始为单独装备栏，根据个人喜好调整',
+				name: "单独装备栏",
+				intro: "切换玩家装备栏为单独装备栏或非单独装备栏，初始为单独装备栏，根据个人喜好调整",
 				init: true,
 				update() {
 					const config = lib.config["extension_十周年UI_aloneEquip"];
@@ -11310,18 +11165,8 @@ export default async function () {
 					}
 				},
 			},
-			wujiangbeijing: {
-				name: "武将背景",
-				init: false,
-				intro: "开启后，单双将和国战模式将用设置好的武将背景",
-			},
-			shiliyouhua: {
-				name: "官方势力",
-				init: false,
-				intro: "开启后，非魏蜀吴群晋势力的角色将会重新选择势力",
-			},
 			outcropSkin: {
-				name: "露头皮肤(需对应素材)",
+				name: "露头样式",
 				init: "off",
 				item: {
 					shizhounian: "十周年露头",
@@ -11333,7 +11178,7 @@ export default async function () {
 				},
 			},
 			borderLevel: {
-				name: "玩家边框等阶",
+				name: "等阶边框",
 				init: "five",
 				item: {
 					one: "一阶",
@@ -11346,22 +11191,28 @@ export default async function () {
 					if (window.decadeUI) ui.arena.dataset.borderLevel = lib.config["extension_十周年UI_borderLevel"];
 				},
 			},
-			gainSkillsVisible: {
-				name: "获得技能显示",
-				init: "on",
+			longLevel: {
+				name: "等阶龙头",
+				init: "eight",
 				item: {
-					on: "显示",
-					off: "不显示",
-					othersOn: "显示他人",
+					eight: "关闭",
+					one: "银龙",
+					two: "金龙",
+					three: "玉龙",
+					five: "炎龙",
+					sex: "随机",
+					seven: "评级",
+					ten: "OL等阶框·评级",
+					eleven: "OL等阶框·随机",
 				},
 				update() {
-					if (window.decadeUI) ui.arena.dataset.gainSkillsVisible = lib.config["extension_十周年UI_gainSkillsVisible"];
+					if (window.decadeUI) ui.arena.dataset.longLevel = lib.config["extension_十周年UI_longLevel"];
 				},
 			},
 			foldCardMinWidth: {
-				name: "折叠手牌最小宽度",
-				intro: "设置当手牌过多时，折叠手牌露出部分的最小宽度（默认值为81）",
-				init: "81",
+				name: "手牌折叠",
+				intro: "设置当手牌过多时，折叠手牌露出部分的最小宽度（默认值为9）",
+				init: "9",
 				item: {
 					9: "9",
 					18: "18",
@@ -11380,7 +11231,7 @@ export default async function () {
 				},
 			},
 			playerMarkStyle: {
-				name: "人物标记样式",
+				name: "标记样式",
 				init: "decade",
 				item: {
 					red: "红灯笼",
@@ -11392,8 +11243,8 @@ export default async function () {
 				},
 			},
 			shadowStyle: {
-				name: '<b><font color="#FF9000">特效切换(新手杀有效)',
-				intro: '<b><font color="#FF9000">可根据个人喜好切换局内阴影动态特效与人物弹出文字的样式，目前只有新手杀样式可用',
+				name: "特效风格",
+				intro: "可根据个人喜好切换局内阴影动态特效与人物弹出文字的样式，目前只有新手杀样式可用",
 				init: "on",
 				item: {
 					on: "原样式",
@@ -11403,28 +11254,21 @@ export default async function () {
 					if (window.decadeUI) ui.arena.dataset.shadowStyle = lib.config["extension_十周年UI_shadowStyle"];
 				},
 			},
-			longLevel: {
-				name: '<b><font color="#FF0FF0">龙头框等阶',
-				init: "eight",
+			gainSkillsVisible: {
+				name: "获得技能显示",
+				init: "on",
 				item: {
-					one: "银龙",
-					two: "金龙",
-					three: "玉龙",
-					four: "冰龙",
-					five: "炎龙",
-					sex: "随机",
-					seven: "评级",
-					eight: "关闭",
-					ten: "OL等阶露头框·评级",
-					eleven: "OL等阶露头框·随机",
+					on: "显示",
+					off: "不显示",
+					othersOn: "显示他人",
 				},
 				update() {
-					if (window.decadeUI) ui.arena.dataset.longLevel = lib.config["extension_十周年UI_longLevel"];
+					if (window.decadeUI) ui.arena.dataset.gainSkillsVisible = lib.config["extension_十周年UI_gainSkillsVisible"];
 				},
 			},
 			loadingStyle: {
-				name: '<b><font color="#FF6020">更换光标+loading框',
-				intro: '<b><font color="#FF6020">可以更换局内选项框以及光标',
+				name: "更换光标+loading框",
+				intro: "可以更换局内选项框以及光标",
 				init: "on",
 				item: {
 					off: "关闭",
@@ -11432,6 +11276,7 @@ export default async function () {
 					On: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog1.png);background-size: 100% 100%;"></div>',
 					othersOn: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog3.png);background-size: 100% 100%;"></div>',
 					othersOff: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog4.png);background-size: 100% 100%;"></div>',
+					onlineUI: '<div style="width:60px;height:40px;position:relative;background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/dialog5.png);background-size: 100% 100%;"></div>',
 				},
 				update() {
 					if (window.decadeUI) ui.arena.dataset.loadingStyle = lib.config["extension_十周年UI_loadingStyle"];
@@ -11439,10 +11284,13 @@ export default async function () {
 			},
 			//手杀UI
 			FL1: {
-				name: "<img style=width:240px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/line.png>",
+				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
 				intro: "",
 				init: true,
 				clear: true,
+				onclick: function () {
+					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
+				},
 			},
 			/*进度条说明*/
 			JDTSM: {
@@ -11538,10 +11386,13 @@ export default async function () {
 				},
 			},
 			FL2: {
-				name: "<img style=width:240px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/line.png>",
+				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
 				intro: "",
 				init: true,
 				clear: true,
+				onclick: function () {
+					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
+				},
 			},
 			/*阶段提示说明*/
 			JDTSSM: {
@@ -11567,7 +11418,7 @@ export default async function () {
 				name: "阶段提示",
 			},
 			JDTSYangshi: {
-				name: "阶段提示样式",
+				name: "阶段提示",
 				init: "1",
 				intro: "切换阶段提示样式，可根据个人喜好切换",
 				item: {
@@ -11576,10 +11427,13 @@ export default async function () {
 				},
 			},
 			FL3: {
-				name: "<img style=width:240px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/line.png>",
+				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
 				intro: "",
 				init: true,
 				clear: true,
+				onclick: function () {
+					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
+				},
 			},
 			/*狗托播报说明*/
 			GTBBSM: {
@@ -11605,7 +11459,7 @@ export default async function () {
 				name: "狗托播报",
 			},
 			GTBBYangshi: {
-				name: "播报样式(需重启)",
+				name: "播报样式",
 				init: "on",
 				intro: "切换狗托播报样式",
 				item: {
@@ -11623,7 +11477,7 @@ export default async function () {
 				},
 			},
 			GTBBTime: {
-				name: "时间间隔(重启生效)",
+				name: "时间间隔",
 				init: "60000",
 				intro: "更改狗托播报出现的时间间隔，可根据个人喜好调整频率",
 				item: {
@@ -11635,13 +11489,16 @@ export default async function () {
 			},
 			/*其它美化*/
 			FL4: {
-				name: "<img style=width:240px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/line.png>",
+				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
 				intro: "",
 				init: true,
 				clear: true,
+				onclick: function () {
+					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
+				},
 			},
 			XPJ: {
-				name: "小配件（十周年）",
+				name: "小配件",
 				init: "off",
 				intro: "十周年样式下，选择切换左下角小配件",
 				item: {
@@ -11676,10 +11533,13 @@ export default async function () {
 			},
 			//手杀UI
 			FL5: {
-				name: "<img style=width:240px src=" + lib.assetURL + "extension/十周年UI/shoushaUI/line.png>",
+				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
 				intro: "",
 				init: true,
 				clear: true,
+				onclick: function () {
+					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
+				},
 			},
 		},
 		package: (() => {
@@ -11705,17 +11565,9 @@ export default async function () {
 			pack.intro = (pack => {
 				let log = [
 					`魔改十周年UI ${pack.version}`,
-					"最低适配：v1.10.17.1",
-					"新增样式Online&欢乐三国杀",
-					"手杀一将十周年后的样式左手布局不再更新",
-					"删除小乔涩涩图片，优化动皮露头显示",
-					"添加全选按钮，修复手杀样式自动整理",
-					"choosetocomparemultiple函数适配",
-					"整合柳下跖的OL样式露头随机框",
-					"整合小爱莉、U等提供的武将详情界面",
-					"整合U、凌梦、@19950219、小爱莉的UI细节调整",
-					"整合lonely patients、萌新转型中提供的$throw函数适配",
-					"武将信息和技能特效优先读取立绘，路径为本体image/lihui",
+					"最低适配：v1.10.17.3",
+					"bugfix",
+					"局内UI显示调整",
 				];
 				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);

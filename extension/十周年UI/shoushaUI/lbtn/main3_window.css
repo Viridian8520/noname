@@ -11,16 +11,16 @@
 	z-index: 3;
 }
 
-#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#mebg,
-#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#me {
+#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #mebg,
+#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #me {
 	left: 40px !important;
 }
 
-.lbtn-controls~#me #handcards1 {
+.lbtn-controls ~ #me #handcards1 {
 	--lessw: 40px;
 }
 
-.lbtn-controls>div {
+.lbtn-controls > div {
 	display: block;
 	position: relative;
 }
@@ -41,7 +41,7 @@
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
-.buttonyjcm>.controls {
+.buttonyjcm > .controls {
 	--w: 56px;
 	--h: calc(var(--w) * 55 / 71);
 	width: var(--w);
@@ -124,7 +124,7 @@
 	padding: 0;
 }
 
-.control>div {
+.control > div {
 	background-image: url("./images/uibutton/btnnnor.png");
 	background-size: 100% 100%;
 	line-height: var(--h);
@@ -137,20 +137,20 @@
 	text-align: center;
 	margin-top: 0px !important;
 	margin-bottom: -15px !important;
-	color: #2F4F4F;
-	-webkit-text-stroke: 0.4px #803B02;
-	font-family: 'yuanli';
+	color: #2f4f4f;
+	-webkit-text-stroke: 0.4px #803b02;
+	font-family: "yuanli";
 	font-size: 20px;
 }
 
 /*无懈按钮位置*/
-#arena>#dui-controls>.control.stayleft {
+#arena > #dui-controls > .control.stayleft {
 	left: calc(50% - 420px) !important;
 	margin-bottom: 5px !important;
 	order: 3;
 }
 
-.control>div.primary2 {
+.control > div.primary2 {
 	/*取消按钮*/
 	bottom: 1.8px;
 	color: #f5d79e;
@@ -171,7 +171,7 @@
 	transition: none;
 }
 
-.control>div.primary {
+.control > div.primary {
 	/*确认按钮*/
 	color: #f5d79e;
 	font-family: "yuanli";
@@ -190,17 +190,17 @@
 	background-image: url("./images/uibutton/new_btnn.png");
 }
 
-.control>div.disabled:not([data-type="endButton"]) {
+.control > div.disabled:not([data-type="endButton"]) {
 	background-size: 100% 100%;
 }
 
-.control>div.disabled:not([data-type="endButton"]) {
+.control > div.disabled:not([data-type="endButton"]) {
 	/*-webkit-filter: grayscale(100%);*/
 	filter: grayscale(100%);
 	/*-webkit-filter: brightness(100%);*/
 }
 
-.lbtn-confirm[data-skill]>[data-type="skill2"] {
+.lbtn-confirm[data-skill] > [data-type="skill2"] {
 	display: none;
 }
 
@@ -214,7 +214,7 @@
 	z-index: 1;
 }
 
-.handcardNumber>.cardPicture {
+.handcardNumber > .cardPicture {
 	left: 110px;
 	bottom: 10px;
 	--w: 100px;
@@ -229,7 +229,7 @@
 }
 
 /*手牌数参数*/
-.handcardNumber>.cardNumber {
+.handcardNumber > .cardNumber {
 	left: 115px;
 	bottom: 30px;
 	height: 8px;
@@ -250,7 +250,7 @@
 	text-shadow: #b4a993 0.2px 0.2px 0.2px, #b4a993 0.2px -0.2px 0.2px, #b4a993 -0.2px 0.2px 0.2px, #b4a993 -0.2px -0.2px 0.2px;
 }
 
-.cardRoundNumber>.cardPileNumber {
+.cardRoundNumber > .cardPileNumber {
 	left: 20px;
 	top: -15px;
 	--w: 65px;
@@ -264,7 +264,7 @@
 	z-index: 2;
 }
 
-.cardRoundNumber>.cardPileNumber>span {
+.cardRoundNumber > .cardPileNumber > span {
 	left: 12px;
 	/*牌堆数右移，越大越靠右*/
 	top: 6px;
@@ -277,8 +277,8 @@
 	font-size: 18px;
 }
 
-.cardRoundNumber>.roundNumber,
-.cardRoundNumber>.time {
+.cardRoundNumber > .roundNumber,
+.cardRoundNumber > .time {
 	/*游戏时间*/
 	left: 32px;
 	/*牌堆数/时间右移，越大越靠右*/
@@ -291,7 +291,7 @@
 	z-index: 3;
 }
 
-.cardRoundNumber>.time {
+.cardRoundNumber > .time {
 	/*游戏时间*/
 	top: 48px;
 	/*高度*/
@@ -302,7 +302,7 @@
 
 /*托管中图片（）*/
 
-#autonode>div:last-child {
+#autonode > div:last-child {
 	z-index: 10;
 	margin-bottom: -75px !important;
 	left: calc(50% - 440px);
@@ -632,7 +632,7 @@
 	z-index: 1;
 }
 
-.handcardNumber1>.cardPicture {
+.handcardNumber1 > .cardPicture {
 	left: 130px;
 	bottom: -6px;
 	--w: 130px;
@@ -648,7 +648,7 @@
 }
 
 /*手牌数参数*/
-.handcardNumber1>.cardNumber {
+.handcardNumber1 > .cardNumber {
 	left: 160px;
 	bottom: 18px;
 	height: 8px;

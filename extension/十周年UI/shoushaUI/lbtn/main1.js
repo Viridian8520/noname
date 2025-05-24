@@ -64,7 +64,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (nei > 0) str += '<font color="#9581c4">' + get.translation("nei") + "</font> x " + nei;
 		}
 
-		str += "<br>" + get.translation(game.me.identity + "_win_option");
+		str += "<br>" + (game.me?.identity ? lib.translate[game.me.identity + "_win_option"] ?? "" : "");
 
 		/*尽量保持字体大小，行高一致，不然会产生偏移*/
 		identityShow.innerHTML = '<span style="font-family:shousha; font-size: 17.0px;font-weight:500;text-align: right; line-height: 20px; color: #C1AD92;text-shadow:none;">' + str + "</span>"; /*图层1*/
@@ -91,7 +91,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 		}
 	};
-	
+
 	//标记下，以后出问题改监听
 	lib.skill._SPZLX = {
 		trigger: { player: ["gainAfter", "loseAfter"] },
@@ -100,33 +100,33 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		forced: true,
 		charlotte: true,
 		priority: Infinity,
-		filter: function(event, player) {
-		    return window.paixuxx == false && player == game.me && !player.hasSkillTag("noSortCard");
+		filter: function (event, player) {
+			return window.paixuxx == false && player == game.me && !player.hasSkillTag("noSortCard");
 		},
-		content: function() {
-		    var cards = player.getCards("hs");
-		    if (cards.length <= 1) return;
-		    cards.sort((a, b) => {
-		        // 位置排序
-		        var p1 = get.position(a);
-		        var p2 = get.position(b);
-		        if (p1 != p2) return p1 == "h" ? 1 : -1;
-		        // 卡牌排序
-		        if (a.name != b.name) return lib.sort.card(b.name, a.name);
-		        if (a.suit != b.suit) return lib.suit.indexOf(b.suit) - lib.suit.indexOf(a.suit);
-		        if (a.number != b.number) return b.number - a.number;
-		        if (a.nature != b.nature) return b.nature - a.nature;
-		        return parseInt(b.cardid) - parseInt(a.cardid);
-		    });
-		    if (window.dui && dui.queueNextFrameTick) {
-		        cards.forEach(card => player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild));
-		        dui.queueNextFrameTick(dui.layoutHand, dui);
-		    } else {
-		        game.addVideo('lose', player, [get.cardsInfo(cards), [], []]);
-		        cards.forEach(card => card.goto(ui.special));
-		        player.directgain(cards, false);
-		    }
-		}
+		content: function () {
+			var cards = player.getCards("hs");
+			if (cards.length <= 1) return;
+			cards.sort((a, b) => {
+				// 位置排序
+				var p1 = get.position(a);
+				var p2 = get.position(b);
+				if (p1 != p2) return p1 == "h" ? 1 : -1;
+				// 卡牌排序
+				if (a.name != b.name) return lib.sort.card(b.name, a.name);
+				if (a.suit != b.suit) return lib.suit.indexOf(b.suit) - lib.suit.indexOf(a.suit);
+				if (a.number != b.number) return b.number - a.number;
+				if (a.nature != b.nature) return b.nature - a.nature;
+				return parseInt(b.cardid) - parseInt(a.cardid);
+			});
+			if (window.dui && dui.queueNextFrameTick) {
+				cards.forEach(card => player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild));
+				dui.queueNextFrameTick(dui.layoutHand, dui);
+			} else {
+				game.addVideo("lose", player, [get.cardsInfo(cards), [], []]);
+				cards.forEach(card => card.goto(ui.special));
+				player.directgain(cards, false);
+			}
+		},
 	};
 
 	lib.arenaReady.push(function () {
@@ -186,21 +186,22 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 					break;
 				case "versus":
-					if (get.config("versus_mode") == "standard") {
+					const config = get.config("versus_mode");
+					if (config == "standard") {
 						return;
 					}
-					if (get.config("versus_mode") == "two") {
+					if (config == "two" || config == "three") {
 						translate = {
 							undefined: get.config("replace_character_two") ? "抢先击败敌人<br>所有上场角色" : "&nbsp;&nbsp;&nbsp;协同队友<br>击败所有敌人",
 						};
 					}
-					if (get.config("versus_mode") == "jiange") {
+					if (config == "jiange") {
 						translate = {
 							wei: "&nbsp;&nbsp;击败所有<br>蜀势力角色",
 							shu: "&nbsp;&nbsp;击败所有<br>魏势力角色",
 						};
 					}
-					if (get.config("versus_mode") == "siguo") {
+					if (config == "siguo") {
 						for (var i = 0; i < lib.group.length; i++) {
 							translate[lib.group[i]] = "获得龙船或击败<br>非" + get.translation(lib.group[i]) + "势力角色";
 						}
@@ -347,7 +348,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			return !["chess", "tafang"].includes(get.mode());
 		},
 		content(next) {
-			(lib.skill._uicardupdate = {
+			lib.skill._uicardupdate = {
 				trigger: { player: "phaseJieshuBegin" },
 				forced: true,
 				unique: true,
@@ -363,7 +364,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				content() {
 					if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
 				},
-			});
+			};
 		},
 		precontent() {
 			Object.assign(game.videoContent, {
@@ -375,7 +376,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 				updateCardRoundTime(opts) {
 					if (!ui.cardRoundTime) return;
-					ui.cardRoundTime.node.roundNumber.innerHTML = "<span>第" + game.roundNumber + "轮</span>";
+					var roundNumber = Math.max(1, game.roundNumber || 1);
+					ui.cardRoundTime.node.roundNumber.innerHTML = "<span>第" + roundNumber + "轮</span>";
 					ui.cardRoundTime.setNumberAnimation(opts.cardNumber);
 				},
 				updateCardnumber(opts) {
@@ -535,6 +537,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 
 						item.addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
+							if (_status.event?.skill === "_recasting") return;
 							e.stopPropagation();
 							ui.click.skill(this.link);
 						});
@@ -645,8 +648,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 				node.updateRoundCard = function () {
 					var cardNumber = ui.cardPile.childNodes.length || 0;
-					var roundNumber = game.roundNumber || 0;
-					this.node.roundNumber.innerHTML = "<span>第" + game.roundNumber + "轮</span>";
+					var roundNumber = Math.max(1, game.roundNumber || 1);
+					this.node.roundNumber.innerHTML = "<span>第" + roundNumber + "轮</span>";
 					this.setNumberAnimation(cardNumber);
 					this.show();
 					game.addVideo("updateCardRoundTime", null, {

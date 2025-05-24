@@ -23,18 +23,18 @@
 	margin-left: 5px;
 	margin-right: 5px;
 	transition: color 0.5s;
-	background-image: url("image/button/selected_light.png");
+	background-image: url("image/button/square_light.png");
 	background-size: 100% 100%;
 }
 
 .menu.main > .menu-tab > div:hover {
-	background-image: url("image/button/selected_light.png");
+	background-image: url("image/button/square_light.png");
 }
 
 .menu.main > .menu-tab > div:not(.active):not(*:hover),
 .menu.main > .menu-tab > .disabled {
 	color: #ffffff;
-	background-image: url("image/button/selected.png");
+	background-image: url("image/button/square_drck.png");
 }
 
 .menu.main > .menu-content > div > .left.pane > div {
@@ -43,27 +43,27 @@
 	margin-top: -3px;
 	margin-left: 10px;
 	transition: all 0.3s;
-	height: 20px;
+	height: 15px;
 	font-size: 22.5px;
 	font-family: "shousha";
 	color: #ffffff;
 	text-align: center;
-	padding-top: 27.5px;
+	padding-top: 20.5px;
 	line-height: 1px;
 	white-space: nowrap;
-	background-image: url("image/button/selected_light.png") !important;
+	background-image: url("image/button/square_light.png") !important;
 	background-size: 100% 100%;
 	box-shadow: none;
 }
 
 .menu.main > .menu-content > div > .left.pane > div:hover {
-	background-image: url("image/button/selected_light.png") !important;
+	background-image: url("image/button/square_light.png") !important;
 }
 
 .menu.main > .menu-content > div > .left.pane > div:not(.active):not(*:hover),
 .menu.main > .menu-content > div > .left.pane > .disabled {
 	color: #ffffff;
-	background-image: url("image/button/selected.png") !important;
+	background-image: url("image/button/square_drck.png") !important;
 }
 
 .menu.main > .menu-content > div > .left.pane > div {

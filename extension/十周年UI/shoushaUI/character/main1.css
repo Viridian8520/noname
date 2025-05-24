@@ -25,115 +25,115 @@
 	z-index: 13;
 } */
 .character-dialog {
-  --w: 700px;
-  --h: 450px;
-  --bt: calc(var(--h) * 15 / 290);
-  --bl: calc(var(--w) * 38 / 497);
-  --bb: calc(var(--h) * 17 / 290);
-  --dw: calc(var(--w) - 2 * var(--bl));
-  --dh: calc(var(--h) - var(--bt) - var(--bb));
-  width: var(--dw);
-  height: var(--dh);
-  position: absolute;
-  box-sizing: border-box;
-  padding: 10px;
-  z-index: 13;
+	--w: 700px;
+	--h: 450px;
+	--bt: calc(var(--h) * 15 / 290);
+	--bl: calc(var(--w) * 38 / 497);
+	--bb: calc(var(--h) * 17 / 290);
+	--dw: calc(var(--w) - 2 * var(--bl));
+	--dh: calc(var(--h) - var(--bt) - var(--bb));
+	width: var(--dw);
+	height: var(--dh);
+	position: absolute;
+	box-sizing: border-box;
+	padding: 10px;
+	z-index: 13;
 }
-.character-dialog>.blackBg {
-  padding: 10px 25px;
-  position: relative;
-  width: 100%;
-  height: 115px;
-  top: 0;
-  left: -25px;
-  background-color: #00000052;
-  clip-path: polygon(10px 0%,calc(100% - 10px) 0%,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);
+.character-dialog > .blackBg {
+	padding: 10px 25px;
+	position: relative;
+	width: 100%;
+	height: 115px;
+	top: 0;
+	left: -25px;
+	background-color: #00000052;
+	clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
 }
 .blackBg.two {
-  margin-top: 8px;
-  height: 218px;
+	margin-top: 8px;
+	height: 218px;
 }
 .character-dialog .basicInfo {
-  position: relative;
-  height: 30px;
-  display: block;
-  margin-left: 20px;
+	position: relative;
+	height: 30px;
+	display: block;
+	margin-left: 20px;
 }
-.character-dialog .basicInfo .mingcheng{
-  position: relative;
-  font-size: 20px;
-  color: rgb(75, 59, 48);
-  text-shadow: none;
-  font-weight: bold;
-  font-family: shousha;
-  z-index: 68;
+.character-dialog .basicInfo .mingcheng {
+	position: relative;
+	font-size: 20px;
+	color: rgb(75, 59, 48);
+	text-shadow: none;
+	font-weight: bold;
+	font-family: shousha;
+	z-index: 68;
 }
 .character-dialog .basicInfo .dengji {
-  position: relative;
-  font-size: 20px;
-  color: rgb(162 255 0);
-  text-shadow: none;
-  font-weight: normal;
-  font-family: shousha;
-  z-index: 68;
-  margin-left: 20px;
+	position: relative;
+	font-size: 20px;
+	color: rgb(162 255 0);
+	text-shadow: none;
+	font-weight: normal;
+	font-family: shousha;
+	z-index: 68;
+	margin-left: 20px;
 }
 /* 官阶 */
 .character-dialog .offical-bg {
-  position: relative;
-  height: 35px;
-  width: 280px;
-  background-image: url("./images/shousha/pub_red_bg1.png");
-  background-size: 100% 100%;
-  margin: 5px 0 8px 23px;
+	position: relative;
+	height: 35px;
+	width: 280px;
+	background-image: url("./images/shousha/pub_red_bg1.png");
+	background-size: 100% 100%;
+	margin: 5px 0 8px 23px;
 }
 .character-dialog .offical-bg .offical-icon {
-  position: absolute;
-  top: -13px;
-  left: -21px;
-  height: 60px;
-  width: 60px;
-  /* background-image: url("./images/offical_icon/offical_icon_11.png"); */
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+	position: absolute;
+	top: -13px;
+	left: -21px;
+	height: 60px;
+	width: 60px;
+	/* background-image: url("./images/offical_icon/offical_icon_11.png"); */
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 .character-dialog .offical-bg .offical-text {
-  position: absolute;
-  left: 60px;
-  height: 100%;
-  line-height: 35px;
-  font-family: 'shousha';
-  font-size: 26px;
-  color: #daff00;
+	position: absolute;
+	left: 60px;
+	height: 100%;
+	line-height: 35px;
+	font-family: "shousha";
+	font-size: 26px;
+	color: #daff00;
 }
 /* 对局信息 胜率逃率 */
 .character-dialog .fight-bg {
-  position: relative;
-  height: 35px;
-  width: 100%;
-  margin-left: 15px;
+	position: relative;
+	height: 35px;
+	width: 100%;
+	margin-left: 15px;
 }
-.character-dialog .fight-bg>.shenglv {
-  position: relative;
-  font-size: 30px;
-  font-family: 'shousha';
-  color: #eedecf;
-  margin-right: 40px;
+.character-dialog .fight-bg > .shenglv {
+	position: relative;
+	font-size: 30px;
+	font-family: "shousha";
+	color: #eedecf;
+	margin-right: 40px;
 }
 /* 查看名片 */
 .viewBusinessCard {
-  position: absolute;
-  width: 98px;
-  height: 38px;
-  top: 40%;
-  right: 8%;
-  background-image: url("./images/shousha/btn.png");
-  background-size: 100% 100%;
-  font-family: 'shousha';
-  line-height: 38px;
-  text-align: center;
-  color: #e6e6e6;
+	position: absolute;
+	width: 98px;
+	height: 38px;
+	top: 40%;
+	right: 8%;
+	background-image: url("./images/shousha/btn.png");
+	background-size: 100% 100%;
+	font-family: "shousha";
+	line-height: 38px;
+	text-align: center;
+	color: #e6e6e6;
 }
 
 .character-dialog.dialog2 {
@@ -175,32 +175,32 @@
 }
 
 .character-dialog > .blackBg.two > div.biankuang2 {
-  width: 120px;
-  height: 160px;
-  top: calc(50% - 73px);
-  left: 30px;
-  background-size: 100% 100%;
-  z-index: 68;
-  position: absolute;
+	width: 120px;
+	height: 160px;
+	top: calc(50% - 73px);
+	left: 30px;
+	background-size: 100% 100%;
+	z-index: 68;
+	position: absolute;
 }
 
 .xing {
-  position: absolute;
-  width: 15px;
-  height: 100%;
-  left: 3%;
-  bottom: 4%;
-  z-index: 99;
-  display: inline-flex;
-  flex-direction: column-reverse;
+	position: absolute;
+	width: 15px;
+	height: 100%;
+	left: 3%;
+	bottom: 4%;
+	z-index: 99;
+	display: inline-flex;
+	flex-direction: column-reverse;
 }
 .xing > .item {
-  position: relative;
-  background: url("./images/shousha/xing.png");
-  background-size: cover;
-  width: 16px;
-  height: 16px;
-  z-index: 99;
+	position: relative;
+	background: url("./images/shousha/xing.png");
+	background-size: cover;
+	width: 16px;
+	height: 16px;
+	z-index: 99;
 }
 
 .xing2 {
@@ -419,13 +419,13 @@
 }
 /*武将名字*/
 .character-dialog .biankuang2 > div.biankuangname {
-  position: absolute;
-  width: 15px;
-  left: 3%;
-  top: 14%;
-  font-size: 16px;
-  font-family: shousha;
-  z-index: 99;
+	position: absolute;
+	width: 15px;
+	left: 3%;
+	top: 14%;
+	font-size: 16px;
+	font-family: shousha;
+	z-index: 99;
 }
 
 .character-dialog > div.biankuangname2 {
@@ -460,18 +460,18 @@
 
 /*武将牌不露头*/
 .character-dialog .biankuang2 > div.left2 {
-  left: 19%;
-  top: auto;
-  bottom: 2%;
-  width: 78.5%;
-  height: 96%;
-  opacity: 1;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: top;
-  border-radius: 7px;
-  transition-property: opacity, transform;
-  z-index: 69;
+	left: 19%;
+	top: auto;
+	bottom: 2%;
+	width: 78.5%;
+	height: 96%;
+	opacity: 1;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top;
+	border-radius: 7px;
+	transition-property: opacity, transform;
+	z-index: 69;
 }
 
 .character-dialog div.right {
@@ -482,10 +482,10 @@
 	overflow: auto;
 }
 .character-dialog.single div.right {
-  left: 173px;
-  width: calc(100% - 193px);
-  height: calc(100% - 20px);
-  /* background-color: #fefefe6b; */
+	left: 173px;
+	width: calc(100% - 193px);
+	height: calc(100% - 20px);
+	/* background-color: #fefefe6b; */
 }
 .character-dialog > div.left > div {
 	top: 65%;
@@ -501,26 +501,26 @@
 	position: absolute;
 }
 .character-dialog div.right > div {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
+	position: absolute !important;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
 }
 .character-dialog div.right div {
-  position: relative;
-  /* bottom: -35%; */
+	position: relative;
+	/* bottom: -35%; */
 }
 .character-dialog div.right .xcaption {
-  width: 100%;
-  bottom: 0%;
-  color: #cbc6b3;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 10px 0;
-  font-family: 'shousha';
+	width: 100%;
+	bottom: 0%;
+	color: #cbc6b3;
+	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+	padding: 10px 0;
+	font-family: "shousha";
 }
 
 .character-dialog div.right .xskill {
@@ -529,15 +529,15 @@
 }
 
 .character-dialog div.right .xskill > div {
-  display: inline;
-  color: #52432d;
-  text-shadow: none;
-  font-size: 16px;
-  font-weight: bold;
-  font-family: 'shousha';
+	display: inline;
+	color: #52432d;
+	text-shadow: none;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: "shousha";
 }
 .character-dialog div.right .xskill > div[data-color] {
-  color: #d3c436;
+	color: #d3c436;
 }
 .character-dialog div.right .xskill > div[data-color="red"] {
 	color: #f0db1e;

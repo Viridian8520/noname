@@ -11,16 +11,16 @@
 	z-index: 3;
 }
 
-#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#mebg,
-#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#me {
+#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #mebg,
+#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #me {
 	left: 40px !important;
 }
 
-.lbtn-controls~#me #handcards1 {
+.lbtn-controls ~ #me #handcards1 {
 	--lessw: 40px;
 }
 
-.lbtn-controls>div {
+.lbtn-controls > div {
 	display: block;
 	position: relative;
 }
@@ -41,7 +41,7 @@
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
-.buttonyjcm>.controls {
+.buttonyjcm > .controls {
 	--w: 56px;
 	--h: calc(var(--w) * 55 / 71);
 	width: var(--w);
@@ -84,7 +84,7 @@
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
-	bottom:0.5%;
+	bottom: 0.5%;
 	left: auto;
 	right: 170px;
 	background-image: url("./images/uibutton/meiguihs.png");
@@ -108,7 +108,7 @@
 	padding: 0;
 }
 
-.control>div {
+.control > div {
 	background-image: url("./images/uibutton/new_btnnHS.png");
 	background-size: 100% 100%;
 	line-height: var(--h);
@@ -127,13 +127,13 @@
 }
 
 /*无懈按钮位置*/
-#arena>#dui-controls>.control.stayleft {
+#arena > #dui-controls > .control.stayleft {
 	left: calc(50% - 420px) !important;
 	margin-bottom: 5px !important;
 	order: 3;
 }
 
-.control>div.primary2 {
+.control > div.primary2 {
 	/*取消按钮*/
 	bottom: 1.8px;
 	color: #000000;
@@ -154,7 +154,7 @@
 	transition: none;
 }
 
-.control>div.primary {
+.control > div.primary {
 	/*确认按钮*/
 	color: #000000;
 	font-family: "yuanli";
@@ -173,17 +173,17 @@
 	background-image: url("./images/uibutton/new_btnnHS.png");
 }
 
-.control>div.disabled:not([data-type="endButton"]) {
+.control > div.disabled:not([data-type="endButton"]) {
 	background-size: 100% 100%;
 }
 
-.control>div.disabled:not([data-type="endButton"]) {
+.control > div.disabled:not([data-type="endButton"]) {
 	/*-webkit-filter: grayscale(100%);*/
 	filter: grayscale(100%);
 	/*-webkit-filter: brightness(100%);*/
 }
 
-.lbtn-confirm[data-skill]>[data-type="skill2"] {
+.lbtn-confirm[data-skill] > [data-type="skill2"] {
 	display: none;
 }
 
@@ -199,7 +199,7 @@
 }
 
 /*手牌数参数*/
-.handcardNumber>.cardNumber {
+.handcardNumber > .cardNumber {
 	left: -85px;
 	bottom: 18px;
 	height: 8px;
@@ -220,7 +220,7 @@
 	z-index: 3;
 }
 
-.cardRoundNumber>.cardPileNumber {
+.cardRoundNumber > .cardPileNumber {
 	top: -15px;
 	--w: 150px;
 	--h: calc(var(--w) * 148 / 557);
@@ -233,7 +233,7 @@
 	z-index: 1;
 }
 
-.cardRoundNumber>.cardPileNumber>span {
+.cardRoundNumber > .cardPileNumber > span {
 	left: 55px;
 	/*牌堆数右移，越大越靠右*/
 	top: 10px;
@@ -246,8 +246,8 @@
 	font-size: 18px;
 }
 
-.cardRoundNumber>.roundNumber,
-.cardRoundNumber>.time {
+.cardRoundNumber > .roundNumber,
+.cardRoundNumber > .time {
 	/*游戏时间*/
 	left: 15px;
 	/*牌堆数/时间右移，越大越靠右*/
@@ -260,7 +260,7 @@
 	z-index: 3;
 }
 
-.cardRoundNumber>.time {
+.cardRoundNumber > .time {
 	/*游戏时间*/
 	top: -3px;
 	/*高度*/
@@ -271,7 +271,7 @@
 
 /*托管中图片（）*/
 
-#autonode>div:last-child {
+#autonode > div:last-child {
 	z-index: 10;
 	margin-bottom: -75px !important;
 	left: calc(50% - 440px);
@@ -346,7 +346,7 @@
 	z-index: 1;
 }
 
-.handcardNumber1>.cardPicture {
+.handcardNumber1 > .cardPicture {
 	left: 130px;
 	bottom: -6px;
 	--w: 130px;
@@ -362,7 +362,7 @@
 }
 
 /*手牌数参数*/
-.handcardNumber1>.cardNumber {
+.handcardNumber1 > .cardNumber {
 	left: 160px;
 	bottom: 18px;
 	height: 8px;

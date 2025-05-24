@@ -8,7 +8,7 @@
 /*龙框美化*/
 /*龙头*/
 /*-----------------分割线-----------------*/
-.player>.long {
+.player > .long {
 	display: block;
 	--w: 60px;
 	--h: calc(var(--w) * 110 / 60);
@@ -27,33 +27,28 @@
 }
 
 /*银龙框*/
-#arena[data-long-level="one"]>.player>.long {
+#arena[data-long-level="one"] > .player > .long {
 	background-image: url("assets/image/long_silver1.png");
 }
 
 /*金龙框*/
-#arena[data-long-level="two"]>.player>.long {
+#arena[data-long-level="two"] > .player > .long {
 	background-image: url("assets/image/long_gold1.png");
 }
 
 /*玉龙框*/
-#arena[data-long-level="three"]>.player>.long {
+#arena[data-long-level="three"] > .player > .long {
 	background-image: url("assets/image/long_yu1.png");
 }
 
-/*冰龙框*/
-#arena[data-long-level="four"]>.player>.long {
-	background-image: url("assets/image/long_bing1.png");
-}
-
 /*炎龙框*/
-#arena[data-long-level="five"]>.player>.long {
+#arena[data-long-level="five"] > .player > .long {
 	background-image: url("assets/image/long_yan1.png");
 }
 
 /*龙尾巴*/
 /***********************分割线**********************/
-.player>.wei {
+.player > .wei {
 	display: block;
 	--w: 80px;
 	--h: calc(var(--w) * 40 / 80);
@@ -74,27 +69,22 @@
 }
 
 /*银龙框*/
-#arena[data-long-level="one"]>.player>.wei {
+#arena[data-long-level="one"] > .player > .wei {
 	background-image: url("assets/image/long_silver2.png");
 }
 
 /*金龙框*/
-#arena[data-long-level="two"]>.player>.wei {
+#arena[data-long-level="two"] > .player > .wei {
 	background-image: url("assets/image/long_gold2.png");
 }
 
 /*玉龙框*/
-#arena[data-long-level="three"]>.player>.wei {
+#arena[data-long-level="three"] > .player > .wei {
 	background-image: url("assets/image/long_yu2.png");
 }
 
-/*冰龙框*/
-#arena[data-long-level="four"]>.player>.wei {
-	background-image: url("assets/image/long_bing2.png");
-}
-
 /*炎龙框*/
-#arena[data-long-level="five"]>.player>.wei {
+#arena[data-long-level="five"] > .player > .wei {
 	background-image: url("assets/image/long_yan2.png");
 }
 
@@ -108,7 +98,7 @@ html {
 /* display: none; */
 /* } */
 
-body>.background {
+body > .background {
 	animation: anime-opacity 1s ease-in-out;
 }
 
@@ -188,11 +178,11 @@ body>.background {
 	right: calc(2% + 50px);
 }
 
-#arena:not(.chess).decadeUI>#mebg {
+#arena:not(.chess).decadeUI > #mebg {
 	display: none;
 }
 
-#arena.decadeUI:not(.single-handcard):not(.chess)>#autonode {
+#arena.decadeUI:not(.single-handcard):not(.chess) > #autonode {
 	display: flex !important;
 	align-items: center;
 	justify-content: center;
@@ -204,7 +194,7 @@ body>.background {
 	background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
 }
 
-#autonode>div {
+#autonode > div {
 	position: static;
 	text-shadow: 0 0 20px red;
 }
@@ -213,7 +203,7 @@ body>.background {
 	z-index: -1;
 }
 
-#window>#time {
+#window > #time {
 	left: 50px;
 	right: 50px;
 	color: rgb(250, 250, 200);
@@ -221,8 +211,8 @@ body>.background {
 	text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black;
 }
 
-#arena>.hand-wrap,
-#arena>.hand-back {
+#arena > .hand-wrap,
+#arena > .hand-back {
 	/*手牌区*/
 	/*左手布局+单独装备栏*/
 	left: 300px;
@@ -236,24 +226,24 @@ body>.background {
 	/* border: 3px solid rgb(3,4,5); /*调试用*/
 }
 
-#arena[data-right-layout="on"]>.hand-wrap,
-#arena[data-right-layout="on"]>.hand-back {
+#arena[data-right-layout="on"] > .hand-wrap,
+#arena[data-right-layout="on"] > .hand-back {
 	/*右手布局+单独装备栏*/
 	left: 230px;
 	right: 380px;
 	bottom: 0%;
 }
 
-#arena[data-alone-equip="off"][data-right-layout="off"]>.hand-wrap,
-#arena[data-alone-equip="off"][data-right-layout="off"]>.hand-back {
+#arena[data-alone-equip="off"][data-right-layout="off"] > .hand-wrap,
+#arena[data-alone-equip="off"][data-right-layout="off"] > .hand-back {
 	/*左手布局+非单独装备栏*/
 	left: 300px;
 	right: 95px;
 	bottom: 0%;
 }
 
-#arena[data-alone-equip="off"][data-right-layout="on"]>.hand-wrap,
-#arena[data-alone-equip="off"][data-right-layout="on"]>.hand-back {
+#arena[data-alone-equip="off"][data-right-layout="on"] > .hand-wrap,
+#arena[data-alone-equip="off"][data-right-layout="on"] > .hand-back {
 	/*右手布局+非单独装备栏*/
 	left: 95px;
 	right: 380px;
@@ -264,9 +254,47 @@ body>.background {
 	width: 100%;
 	height: 10%;
 }
+/*ol样式*/
+#arena > .hand-wrap,
+#arena[data-new-decade-style="onlineUI"] > .hand-back {
+	/*手牌区*/
+	/*左手布局+单独装备栏*/
+	left: 360px;
+	right: 320px;
+	/*数值越大手牌右边界区域越往左*/
+	width: auto;
+	height: 150px;
+	bottom: 0%;
+	transition: none;
+	z-index: 3;
+	/* border: 3px solid rgb(3,4,5); /*调试用*/
+}
 
+#arena[data-new-decade-style="onlineUI"][data-right-layout="on"] > .hand-wrap,
+#arena[data-right-layout="on"] > .hand-back {
+	/*右手布局+单独装备栏*/
+	left: 265px;
+	right: 410px;
+	bottom: 0%;
+}
+
+#arena[data-new-decade-style="onlineUI"][data-alone-equip="off"][data-right-layout="off"] > .hand-wrap,
+#arena[data-alone-equip="off"][data-right-layout="off"] > .hand-back {
+	/*左手布局+非单独装备栏*/
+	left: 360px;
+	right: 160px;
+	bottom: 0%;
+}
+
+#arena[data-new-decade-style="onlineUI"][data-alone-equip="off"][data-right-layout="on"] > .hand-wrap,
+#arena[data-alone-equip="off"][data-right-layout="on"] > .hand-back {
+	/*右手布局+非单独装备栏*/
+	left: 140px;
+	right: 405px;
+	bottom: 0%;
+}
 /*挑战模式小头像*/
-.hand-wrap>.fakeme.avatar {
+.hand-wrap > .fakeme.avatar {
 	left: -270px;
 	/*数值越小越左*/
 	top: auto;
@@ -278,7 +306,7 @@ body>.background {
 	background-size: cover;
 }
 
-#arena[data-right-layout="on"]>.hand-wrap>.fakeme.avatar {
+#arena[data-right-layout="on"] > .hand-wrap > .fakeme.avatar {
 	left: auto;
 	right: -300px;
 }
@@ -291,7 +319,7 @@ body>.background {
 	z-index: 3;
 }
 
-.hand-cards>.handcards {
+.hand-cards > .handcards {
 	display: inline-block;
 	padding: 0;
 	margin: 0;
@@ -302,7 +330,7 @@ body>.background {
 	transition: none;
 }
 
-.hand-cards>.handcards>.card {
+.hand-cards > .handcards > .card {
 	/*手牌边框美化*/
 	margin: 0px;
 	width: 108px;
@@ -318,16 +346,16 @@ body>.background {
 	z-index: 1;
 }
 
-.hand-cards>.handcards>.card.display-none {
+.hand-cards > .handcards > .card.display-none {
 	display: none;
 	transition: none;
 }
 
-.hand-cards>.handcards>.card.selected {
+.hand-cards > .handcards > .card.selected {
 	boder-radius: 2px;
 }
 
-.hand-cards>.handcards>.card.selectable {
+.hand-cards > .handcards > .card.selectable {
 	boder-radius: 2px;
 	cursor: pointer;
 }
@@ -343,7 +371,7 @@ body>.background {
 	background: rgba(0, 0, 0, 0.4);
 }
 
-.hand-special>.cards {
+.hand-special > .cards {
 	display: flex;
 	flex-direction: row-reverse;
 	position: relative;
@@ -354,22 +382,22 @@ body>.background {
 	zoom: 0.5;
 }
 
-.hand-special>.cards>.card {
+.hand-special > .cards > .card {
 	margin-top: 0;
 	margin-left: 0;
 	margin-right: 0;
 	transform: none !important;
 }
 
-.hand-special>.cards>.card::after {
+.hand-special > .cards > .card::after {
 	border-radius: inherit !important;
 	box-shadow: 0px -1px 2px yellow, 0px -1px 5px yellow, 0px 0px 15px yellow;
 	transition: opacity 0.5s;
 }
 
-#arena>.card,
-#arena.oblongcard:not(.chess)>.card,
-#arena.oblongcard:not(.chess) .handcards>.card {
+#arena > .card,
+#arena.oblongcard:not(.chess) > .card,
+#arena.oblongcard:not(.chess) .handcards > .card {
 	width: 108px;
 	height: 150px;
 }
@@ -405,16 +433,16 @@ body>.background {
 	box-shadow: 0 1px 2px black;
 }
 
-#arena.decadeUI.selecting:not(.video)>.dialog:not(.noselect) .buttons>.card.button:not(.selectable):not(.noclick):not(.replaceButton) {
+#arena.decadeUI.selecting:not(.video) > .dialog:not(.noselect) .buttons > .card.button:not(.selectable):not(.noclick):not(.replaceButton) {
 	opacity: 1;
 }
 
-#arena.decadeUI.selecting:not(.video)>.dialog:not(.noselect) .buttons>.card.button:not(.selected):not(.selectable)>.card-mask {
+#arena.decadeUI.selecting:not(.video) > .dialog:not(.noselect) .buttons > .card.button:not(.selected):not(.selectable) > .card-mask {
 	opacity: 1;
 }
 
-.card>.background,
-.card.button>.background {
+.card > .background,
+.card.button > .background {
 	top: auto;
 	bottom: 8%;
 	font-size: 80px;
@@ -422,11 +450,11 @@ body>.background {
 	padding-top: 0;
 }
 
-.card.mark>.background {
+.card.mark > .background {
 	line-height: 100%;
 }
 
-.card>.top-name {
+.card > .top-name {
 	left: 14px;
 	top: 10px;
 	width: calc(100% - 15px);
@@ -437,20 +465,20 @@ body>.background {
 	z-index: 1;
 }
 
-.card.decade-card>.top-name {
+.card.decade-card > .top-name {
 	display: none;
 }
 
-.card.decade-card>.image {
+.card.decade-card > .image {
 	display: none;
 	visibility: hidden !important;
 }
 
-.card>.image,
-#arena:not(.chess)>.card>.image,
-#arena:not(.chess) .handcards>.card>.image,
-#arena.oblongcard:not(.chess)>.card>.image,
-#arena.oblongcard:not(.chess) .handcards>.card>.image {
+.card > .image,
+#arena:not(.chess) > .card > .image,
+#arena:not(.chess) .handcards > .card > .image,
+#arena.oblongcard:not(.chess) > .card > .image,
+#arena.oblongcard:not(.chess) .handcards > .card > .image {
 	position: absolute;
 	width: 108px;
 	height: 108px;
@@ -461,7 +489,7 @@ body>.background {
 	background-position-x: 0;
 }
 
-.card>.suit-num {
+.card > .suit-num {
 	font-size: 25px;
 	color: black;
 	text-align: center;
@@ -477,16 +505,16 @@ body>.background {
 	-webkit-text-size-adjust: none;
 }
 
-.dui-mobile .card>.suit-num>.suit {
+.dui-mobile .card > .suit-num > .suit {
 	font-size: 16px;
 }
 
-.card[data-suit="heart"]>.suit-num,
-.card[data-suit="diamond"]>.suit-num {
+.card[data-suit="heart"] > .suit-num,
+.card[data-suit="diamond"] > .suit-num {
 	color: red;
 }
 
-.card>.range {
+.card > .range {
 	right: 5px;
 	bottom: 5px;
 	line-height: 14px;
@@ -499,11 +527,11 @@ body>.background {
 	border-radius: 2px;
 }
 
-.card>.range:empty {
+.card > .range:empty {
 	display: none;
 }
 
-.card>.range.card-tag {
+.card > .range.card-tag {
 	left: 4px;
 	top: calc(50% + 8px);
 	bottom: auto;
@@ -519,7 +547,7 @@ body>.background {
 }
 
 /* 询问无懈时界面/卡牌虚化*/
-.card>.card-mask {
+.card > .card-mask {
 	opacity: 0;
 	position: absolute;
 	left: 0;
@@ -533,10 +561,10 @@ body>.background {
 	z-index: 8;
 }
 
-.card.invalided>.card-mask,
-#arena.selecting:not(.video) .handcards>.card:not(.selectable)>.card-mask,
-#arena.thrownhighlight>.card.thrown:not(.thrownhighlight):not(.drawingcard),
-#arena.thrownhighlight>.card.thrown:not(.thrownhighlight):not(.drawingcard)>.card-mask {
+.card.invalided > .card-mask,
+#arena.selecting:not(.video) .handcards > .card:not(.selectable) > .card-mask,
+#arena.thrownhighlight > .card.thrown:not(.thrownhighlight):not(.drawingcard),
+#arena.thrownhighlight > .card.thrown:not(.thrownhighlight):not(.drawingcard) > .card-mask {
 	opacity: 1;
 }
 
@@ -562,20 +590,20 @@ body>.background {
 	right: 2%;
 }
 
-#window.leftbar>.touchinfo.left {
+#window.leftbar > .touchinfo.left {
 	left: calc(2% + 50px);
 }
 
-#window.rightbar>.touchinfo.right {
+#window.rightbar > .touchinfo.right {
 	right: calc(2% + 50px);
 }
 
-#arena>.dialog {
+#arena > .dialog {
 	z-index: 7;
 }
 
 /*界面操作按钮*/
-#arena>#dui-controls {
+#arena > #dui-controls {
 	position: absolute;
 	display: flex;
 	align-items: center;
@@ -597,21 +625,21 @@ body>.background {
 	z-index: 8;
 }
 
-#arena>#dui-controls>* {
+#arena > #dui-controls > * {
 	height: 44px;
 	font-size: 24px;
 	overflow: inherit;
 	pointer-events: auto;
 }
 
-#arena>#dui-controls.bosslist,
-#arena.choose-character>#dui-controls {
+#arena > #dui-controls.bosslist,
+#arena.choose-character > #dui-controls {
 	bottom: 20px;
 	left: -5px;
 	right: -5px;
 }
 
-#arena.dui-mobile:not(.choose-character)>#dui-controls {
+#arena.dui-mobile:not(.choose-character) > #dui-controls {
 	bottom: calc(23% + 40px);
 	left: 10px;
 	/*左边距*/
@@ -623,7 +651,7 @@ body>.background {
 	/*换行方式*/
 }
 
-#arena>#dui-controls>.control {
+#arena > #dui-controls > .control {
 	overflow: visible;
 	/*别动*/
 	flex: 0 0 auto;
@@ -641,19 +669,19 @@ body>.background {
 	cursor: pointer;
 }
 
-#arena.decadeUI.dui-mobile>#dui-controls>.control.stayleft {
+#arena.decadeUI.dui-mobile > #dui-controls > .control.stayleft {
 	position: absolute;
 	left: 120px !important;
 	order: 0;
 }
 
-#arena>#dui-controls>.control.stayleft {
+#arena > #dui-controls > .control.stayleft {
 	position: absolute;
 	left: -25px;
 	order: 0;
 }
 
-#arena>#dui-controls>.control>div {
+#arena > #dui-controls > .control > div {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -668,7 +696,7 @@ body>.background {
 	opacity: 1;
 }
 
-#arena>#dui-controls>.control>div:only-child {
+#arena > #dui-controls > .control > div:only-child {
 	position: static;
 	padding-left: 0px;
 	padding-right: 0px;
@@ -676,7 +704,7 @@ body>.background {
 	padding-bottom: 0;
 }
 
-#arena>#dui-controls>.control.combo-control {
+#arena > #dui-controls > .control.combo-control {
 	flex-direction: row;
 	padding-left: 0;
 	padding-right: 0;
@@ -684,21 +712,21 @@ body>.background {
 	background: none;
 }
 
-#arena>#dui-controls>.control:not(.disabled)>div:active,
-#arena>#dui-controls>.control:not(.disabled):not(.combo-control):active {
+#arena > #dui-controls > .control:not(.disabled) > div:active,
+#arena > #dui-controls > .control:not(.disabled):not(.combo-control):active {
 	transform: scale(0.96);
 }
 
-#arena>#dui-controls>.control.combo-control>div {
+#arena > #dui-controls > .control.combo-control > div {
 	font-size: inherit;
 }
 
 /*暂停记录栏*/
-.pausedbg>#sidebar {
+.pausedbg > #sidebar {
 	width: auto;
 }
 
-.dialog .buttons>.button.character.decadeUI,
+.dialog .buttons > .button.character.decadeUI,
 .button.character.longcharacter.decadeUI {
 	width: 90px;
 	height: 120px;
@@ -735,7 +763,7 @@ body>.background {
 	display: none;
 }
 
-.button.character>.showintro.rarity {
+.button.character > .showintro.rarity {
 	font-family: yuanli;
 	font-size: 16px;
 	bottom: -25px;
@@ -747,7 +775,7 @@ body>.background {
 	background-size: contain;
 }
 
-.button.character>.character {
+.button.character > .character {
 	display: block;
 	position: absolute;
 	width: 100%;
@@ -764,19 +792,19 @@ body>.background {
 
 /* 游戏开局前选将框露头高度调整 */
 /* 十周年露头*/
-#arena[data-outcrop-skin="shizhounian"] .button.character>.character {
+#arena[data-outcrop-skin="shizhounian"] .button.character > .character {
 	height: 128px;
 	clip-path: url(#solo-clip);
 	-webkit-clip-path: url(#solo-clip);
 }
 
 /* 手杀露头 */
-#arena[data-outcrop-skin="shousha"] .button.character>.character {
+#arena[data-outcrop-skin="shousha"] .button.character > .character {
 	height: 140px;
 	clip-path: url(#soloss-clip);
 	-webkit-clip-path: url(#soloss-clip);
 }
 
-#arena>.card>.judge-mark {
+#arena > .card > .judge-mark {
 	visibility: hidden;
 }

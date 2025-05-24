@@ -1,9 +1,9 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
-//第一页
+	//第一页
 	var plugin = {
 		name: "character",
 		filter() {
-			return !['chess', 'tafang', 'stone', 'connect'].includes(get.mode());
+			return !["chess", "tafang", "stone", "connect"].includes(get.mode());
 		},
 		content(next) {},
 		precontent() {
@@ -50,28 +50,23 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 
 				var container = ui.create.div(".popup-container.hidden", ui.window, function (e) {
-				/*	if (e.target === container) {
+					/*	if (e.target === container) {
 						container.hide();
 						game.resume2();
 					}*/
 				});
 				//底图
-						container.style.backgroundColor='RGBA(0, 0, 0, 0.85)';
+				container.style.backgroundColor = "RGBA(0, 0, 0, 0.85)";
 				var dialog = ui.create.div(".character-dialog.popped", container);
-        var blackBg1=ui.create.div(".blackBg.one", dialog);
-        var blackBg2=ui.create.div(".blackBg.two", dialog);
-        var basicInfo=ui.create.div(".basicInfo", blackBg1);
-      
+				var blackBg1 = ui.create.div(".blackBg.one", dialog);
+				var blackBg2 = ui.create.div(".blackBg.two", dialog);
+				var basicInfo = ui.create.div(".basicInfo", blackBg1);
 
 				// var xinxi = ui.create.div(".xinxi", dialog);
 				var rightPane = ui.create.div(".right", blackBg2);
 
-			
-
-		
-
-     //(暂时注释) var viewBusinessCard=ui.create.div(".viewBusinessCard","查看名片", blackBg1);
-       var viewBusinessCard=ui.create.div(".viewBusinessCard","", blackBg1);
+				//(暂时注释) var viewBusinessCard=ui.create.div(".viewBusinessCard","查看名片", blackBg1);
+				var viewBusinessCard = ui.create.div(".viewBusinessCard", "", blackBg1);
 
 				var createButton = function (name, parent) {
 					if (!name) return;
@@ -88,15 +83,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (player.classList.contains("unseen2") && player !== game.me) {
 						name2 = "unknown";
 					}
-					
 
-          //武将
+					//武将
 					if (lib.config.extension_十周年UI_ZLLT == true) {
 						var biankuang = ui.create.div(".biankuang", blackBg1);
 					} else {
 						var biankuang = ui.create.div(".biankuang2", blackBg1);
 					}
-					
+
 					//biankuang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/name5_${player.group}.png`);
 
 					if (lib.config.extension_十周年UI_ZLLT == true) {
@@ -107,94 +101,94 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
 					createButton(name, leftPane.firstChild);
 					createButton(name2, leftPane.firstChild);
-					
-		  //边框
-		  var biankuang3 = ui.create.div(".biankuang3",blackBg1);
-		  biankuang3.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/baby_${player.group}.png`);
-		  
-		   //势力
-		  var biankuang4 = ui.create.div(".biankuang4",blackBg1);
-		  biankuang4.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/babys_${player.group}.png`);	
-				
-            //通过势力判断技能框的背景颜色
-          var extensionPath = lib.assetURL + 'extension/十周年UI/shoushaUI/';
-          var group = player.group;
-          if (group != 'wei' && group != 'shu' && group != 'wu' && group != 'qun' && group != 'ye'
-            && group != 'jin' && group != 'daqin' && group != 'western' && group != 'shen' && group != 'key'&& group != 'Han'&& group != 'qin')
-            group = 'default';
-       
-            
-          //武将名	
-           var nametext='';
-          if(name && name2){
-            if(name == 'unknown') nametext+='未知';
-            else if(lib.translate[name + '_ab']) nametext+=lib.translate[name + '_ab'];
-            else nametext+=get.translation(name);
-            nametext+=' / ';
-            if(name2 == 'unknown') nametext+='未知';
-            else if(lib.translate[name2 + '_ab']) nametext+=lib.translate[name2 + '_ab'];
-            else nametext+=get.translation(name2);
-          }
-          else{
-            if(name == 'unknown') nametext+='未知';
-            else if(lib.translate[name + '_ab']) nametext+=lib.translate[name + '_ab'];
-            else nametext+=get.translation(name);
-          }
-          var namestyle = ui.create.div('.name',nametext,dialog);
-          namestyle.dataset.camp = group;
-          if(name && name2) {
-            namestyle.style.fontSize = '20px';
-            namestyle.style.letterSpacing = '1px';
-          }
-          
-     //等阶。适配最新版千幻
-          var rarity = game.getRarity(name);
-          if(!rarity) rarity = 'junk';
-          var pe = ui.create.div('.pe1',dialog);
-          var url;
-          if(lib.config['extension_千幻聆音_enable']){
-            var temp;
-            switch(game.qhly_getSkinLevel(name,game.qhly_getSkin(name),true,false)){
-              case 'xiyou': temp='rare';break;
-              case 'shishi': temp='epic';break;
-              case 'chuanshuo': temp='legend';break;
-              case 'putong': temp='common';break;
-              case 'dongtai': temp='legend';break;
-              case 'jueban': temp='unique';break;
-              case 'xianding': temp='restrictive';break;
-              default: temp='junk';
-            }
-            url = extensionPath + 'character/images/pe_' + temp + '.png';
-          }
-          else url = extensionPath + 'character/images/pe_' + rarity + '.png';
-          pe.style.backgroundImage = 'url("' + url + '")';
-   
-          
-    
-   
-          //星星
-           var xingxing = ui.create.div('.xingxing', biankuang4);
-            xingxing.
-            setBackgroundImage('extension/十周年UI/shoushaUI/character/images/baby/' + rarity +'.png');
-            
-         //吊坠配件
-           var diaozhui= ui.create.div('.diaozhui', biankuang4);
-            diaozhui.
-            setBackgroundImage('extension/十周年UI/shoushaUI/character/images/baby/diaozhui5.png');
-diaozhui.addEventListener("click", event => {
- game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3'); // 可选：播放关闭时的音频
-                container.hide();
-		    	game.resume2();
-			});
 
+					//边框
+					var biankuang3 = ui.create.div(".biankuang3", blackBg1);
+					biankuang3.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/baby_${player.group}.png`);
 
+					//势力
+					var biankuang4 = ui.create.div(".biankuang4", blackBg1);
+					biankuang4.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/baby/babys_${player.group}.png`);
+
+					//通过势力判断技能框的背景颜色
+					var extensionPath = lib.assetURL + "extension/十周年UI/shoushaUI/";
+					var group = player.group;
+					if (group != "wei" && group != "shu" && group != "wu" && group != "qun" && group != "ye" && group != "jin" && group != "daqin" && group != "western" && group != "shen" && group != "key" && group != "Han" && group != "qin") group = "default";
+
+					//武将名
+					var nametext = "";
+					if (name && name2) {
+						if (name == "unknown") nametext += "未知";
+						else if (lib.translate[name + "_ab"]) nametext += lib.translate[name + "_ab"];
+						else nametext += get.translation(name);
+						nametext += " / ";
+						if (name2 == "unknown") nametext += "未知";
+						else if (lib.translate[name2 + "_ab"]) nametext += lib.translate[name2 + "_ab"];
+						else nametext += get.translation(name2);
+					} else {
+						if (name == "unknown") nametext += "未知";
+						else if (lib.translate[name + "_ab"]) nametext += lib.translate[name + "_ab"];
+						else nametext += get.translation(name);
+					}
+					var namestyle = ui.create.div(".name", nametext, dialog);
+					namestyle.dataset.camp = group;
+					if (name && name2) {
+						namestyle.style.fontSize = "20px";
+						namestyle.style.letterSpacing = "1px";
+					}
+
+					//等阶。适配最新版千幻
+					var rarity = game.getRarity(name);
+					if (!rarity) rarity = "junk";
+					var pe = ui.create.div(".pe1", dialog);
+					var url;
+					if (lib.config["extension_千幻聆音_enable"]) {
+						var temp;
+						switch (game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false)) {
+							case "xiyou":
+								temp = "rare";
+								break;
+							case "shishi":
+								temp = "epic";
+								break;
+							case "chuanshuo":
+								temp = "legend";
+								break;
+							case "putong":
+								temp = "common";
+								break;
+							case "dongtai":
+								temp = "legend";
+								break;
+							case "jueban":
+								temp = "unique";
+								break;
+							case "xianding":
+								temp = "restrictive";
+								break;
+							default:
+								temp = "junk";
+						}
+						url = extensionPath + "character/images/pe_" + temp + ".png";
+					} else url = extensionPath + "character/images/pe_" + rarity + ".png";
+					pe.style.backgroundImage = 'url("' + url + '")';
+
+					//星星
+					var xingxing = ui.create.div(".xingxing", biankuang4);
+					xingxing.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/baby/" + rarity + ".png");
+
+					//吊坠配件
+					var diaozhui = ui.create.div(".diaozhui", biankuang4);
+					diaozhui.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/baby/diaozhui5.png");
+					diaozhui.addEventListener("click", event => {
+						game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3"); // 可选：播放关闭时的音频
+						container.hide();
+						game.resume2();
+					});
 
 					//角色名-资料页
 					name.innerText = get.translation(player.name);
 
-	
-
-			
 					var shanchang = get.config("recentCharacter");
 
 					dialog.classList.add("single");
@@ -334,13 +328,9 @@ diaozhui.addEventListener("click", event => {
 						jingji.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/" + jingjitu.randomGet() + ".png");
 						xingbie.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/" + xingbietu.randomGet() + ".png");
 					};
-					
-					
-					
-					
-					
-//技能文本
-			rightPane.innerHTML = "<div></div>";
+
+					//技能文本
+					rightPane.innerHTML = "<div></div>";
 					lib.setScroll(rightPane.firstChild);
 					var oSkills = player.getSkills(null, false, false).slice(0);
 					oSkills = oSkills.filter(function (skill) {
@@ -353,7 +343,7 @@ diaozhui.addEventListener("click", event => {
 					var allShown = player.isUnderControl() || (!game.observe && game.me && game.me.hasSkillTag("viewHandcard", null, player, true));
 					var shownHs = player.getShownCards();
 					if (shownHs.length) {
-						ui.create.div(".xcaption", player.getCards("h").some(card => !shownHs.includes(card)) ? "明置的手牌" : "手牌区域", rightPane.firstChild);
+						ui.create.div(".xcaption", player.hasCard(card => !shownHs.includes(card), "h") ? "明置的手牌" : "手牌区域", rightPane.firstChild);
 						shownHs.forEach(function (item) {
 							var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
 							card.style.zoom = "0.6";
@@ -382,8 +372,8 @@ diaozhui.addEventListener("click", event => {
 							});
 						}
 					}
-		//技能			
-			if (oSkills.length) {
+					//技能
+					if (oSkills.length) {
 						ui.create.div(".xcaption", rightPane.firstChild);
 						oSkills.forEach(function (name) {
 							if (player.forbiddenSkills[name]) {
@@ -392,16 +382,16 @@ diaozhui.addEventListener("click", event => {
 							} else if (player.hiddenSkills.includes(name)) {
 								if (lib.skill[name].preHidden && get.mode() == "guozhan") {
 									var id = name + "_idx";
-									id = ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name]  + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player) + "</span>" + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div>' + "</div>", rightPane.firstChild);
+									id = ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player) + "</span>" + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">预亮技能</div>' + "</div>", rightPane.firstChild);
 									var underlinenode = id.querySelector(".underlinenode");
 									if (_status.prehidden_skills.includes(name)) underlinenode.classList.remove("on");
 									underlinenode.link = name;
 									underlinenode.listen(ui.click.hiddenskill);
-								} else ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' +  lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player) + "</span>" + "</div>", rightPane.firstChild);
-							} else if (!player.getSkills().includes(name) || player.awakenedSkills.includes(name)) ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name]  + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player) + "</span>" + "</div>", rightPane.firstChild);
+								} else ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player) + "</span>" + "</div>", rightPane.firstChild);
+							} else if (!player.getSkills().includes(name) || player.awakenedSkills.includes(name)) ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + lib.translate[name] + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5">' + get.skillInfoTranslation(name, player) + "</span>" + "</div>", rightPane.firstChild);
 							else if (lib.skill[name].frequent || lib.skill[name].subfrequent) {
 								var id = name + "_id";
-								id = ui.create.div(".xskill", "<div data-color>" + lib.translate[name]  + "</div>" + "<div>" + get.skillInfoTranslation(name, player) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div>' + "</div>", rightPane.firstChild);
+								id = ui.create.div(".xskill", "<div data-color>" + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player) + '<br><div class="underlinenode on gray" style="position:relative;padding-left:0;padding-top:7px">自动发动</div>' + "</div>", rightPane.firstChild);
 								var underlinenode = id.querySelector(".underlinenode");
 								if (lib.skill[name].frequent) {
 									if (lib.config.autoskilllist.includes(name)) {
@@ -420,7 +410,7 @@ diaozhui.addEventListener("click", event => {
 								underlinenode.listen(ui.click.autoskill2);
 							} else if (lib.skill[name].clickable && player.isIn() && player.isUnderControl(true)) {
 								var id = name + "_idy";
-								id = ui.create.div(".xskill", "<div data-color>"  + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>' + "</div>", rightPane.firstChild);
+								id = ui.create.div(".xskill", "<div data-color>" + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>' + "</div>", rightPane.firstChild);
 								var intronode = id.querySelector(".skillbutton");
 								if (!_status.gameStarted || (lib.skill[name].clickableFilter && !lib.skill[name].clickableFilter(player))) {
 									intronode.classList.add("disabled");
@@ -434,73 +424,28 @@ diaozhui.addEventListener("click", event => {
 							} else ui.create.div(".xskill", "<div data-color>" + lib.translate[name] + "</div>" + "<div>" + get.skillInfoTranslation(name, player) + "</div>", rightPane.firstChild);
 						});
 					}
-		//装备*
-		
-					var eSkills = player.getVCards("e");
+					//装备区
+					var eSkills = player.getCards("e");
 					if (eSkills.length) {
 						ui.create.div(".xcaption", "装备区域", rightPane.firstChild);
-
-						//装备描述
 						eSkills.forEach(function (card) {
-							let str = [get.translation(card), get.translation(card.name + "_info")];
 							const cards = card.cards;
-							if (cards?.length && (cards?.length !== 1 || cards[0].name !== card.name)) str[0] += "（" + get.translation(card.cards) + "）";
-							const special = card.cards?.find(item => item.name == card.name && lib.card[item.name]?.cardPrompt);
-							if (special) str[1] = lib.card[special.name].cardPrompt(special, player);
+							let str = [get.translation(card), get.translation(card.name + "_info")];
+							if (Array.isArray(cards) && cards.length) str[0] += "（" + get.translation(card.cards) + "）";
+							if (lib.card[card.name]?.cardPrompt) str[1] = lib.card[card.name].cardPrompt(card, player);
 							ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
 						});
 					}
-			// 装备
-			/*
-var eSkills = player.getVCards("e");
-if (eSkills.length) {
-    ui.create.div(".xcaption", "装备区域", rightPane.firstChild);
-    // 装备描述
-    eSkills.forEach(function (card) {
-        // 获取卡牌名称（去掉【】及其内部内容）
-        const cardName = get.translation(card);
-        const cardNameClean = removeBracketsAndContent(cardName); // 调用清理函数
 
-        // 获取卡牌描述
-        let cardDescription = get.translation(card.name + "_info");
-
-        // 处理子卡片
-        let displayName = cardNameClean;
-        const cards = card.cards;
-        if (cards?.length && (cards?.length !== 1 || cards[0].name !== card.name)) {
-            displayName += "（" + get.translation(card.cards) + "）";
-        }
-
-        // 处理特殊装备效果
-        const special = card.cards?.find(item => item.name == card.name && lib.card[item.name]?.cardPrompt);
-        if (special) {
-            cardDescription = lib.card[special.name].cardPrompt(special, player);
-        }
-
-        // 创建显示元素
-        ui.create.div(".xskill", "<div data-color>" + displayName + "</div><div>" + cardDescription + "</div>", rightPane.firstChild);
-    });
-}
-
-// 去掉【】及其内部内容的函数
-function removeBracketsAndContent(text) {
-    // 匹配【】及其内部的所有字符（包括花色、数字、符号）
-    return text.replace(/【.*?】/g, '');
-}		*/
-
-      //判定牌
-
-
-					var judges = player.getVCards("j");
+					//判定区
+					var judges = player.getCards("j");
 					if (judges.length) {
 						ui.create.div(".xcaption", "判定区域", rightPane.firstChild);
 						judges.forEach(function (card) {
 							const cards = card.cards;
-							let str = get.translation(card);
-							if (cards?.length && (cards?.length !== 1 || cards[0].name !== card.name)) {
-								if (!lib.card[card]?.blankCard || player.isUnderControl(true)) str += "（" + get.translation(cards) + "）";
-							}
-							ui.create.div(".xskill", "<div data-color>" + str + "</div><div>" + get.translation(card.name + "_info") + "</div>", rightPane.firstChild);
+							let str = [get.translation(card), get.translation(card.name + "_info")];
+							if ((Array.isArray(cards) && cards.length && !lib.card[card]?.blankCard) || player.isUnderControl(true)) str[0] += "（" + get.translation(cards) + "）";
+							ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
 						});
 					}
 
@@ -514,5 +459,3 @@ function removeBracketsAndContent(text) {
 	};
 	return plugin;
 });
-
-           

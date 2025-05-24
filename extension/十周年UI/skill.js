@@ -49,57 +49,87 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			filter(event, player) {
 				return lib.config.extension_十周年UI_longLevel == "sex" || lib.config.extension_十周年UI_longLevel == "seven";
 			},
-			content() {
+			content: function () {
 				game.removeGlobalSkill("mx_longLevel");
 				game.players.forEach(target => {
+					let rarity;
 					if (lib.config.extension_十周年UI_longLevel == "seven") {
-						var rarity = ["silver", "gold", "yu", "bing", "yan"];
+						const rarityList = ["silver", "gold", "yu", "yan"];
 						switch (game.getRarity(player.name)) {
 							case "junk":
-								rarity = rarity[0];
+								rarity = rarityList[0];
 								break;
 							case "common":
-								rarity = rarity[1];
+								rarity = rarityList[1];
 								break;
 							case "rare":
-								rarity = rarity[2];
+								rarity = rarityList[2];
 								break;
 							case "epic":
-								rarity = rarity[3];
+								rarity = rarityList[3];
 								break;
 							case "legend":
-								rarity = rarity[4];
+								rarity = rarityList[4];
 								break;
 							default:
 								break;
 						}
 					}
 					if (lib.config.extension_十周年UI_longLevel == "sex") {
-						var rarity = ["silver", "gold", "yu", "bing", "yan"].randomGet();
+						const rarityList = ["gold", "yu", "yan"];
+						rarity = rarityList[Math.floor(Math.random() * rarityList.length)];
 					}
-					var longtou = document.createElement("img");
-					longtou.src = decadeUIPath + "/assets/image/long_" + rarity + "1.png";
-					longtou.style.cssText = "pointer-events:none";
-					longtou.style.position = "absolute";
-					longtou.style.display = "block";
-					longtou.style.top = "-24px";
-					longtou.style.right = "-18px";
-					longtou.style.height = "110";
-					longtou.style.width = "60px";
-					longtou.style.zIndex = "63";
-					target.appendChild(longtou);
+					let longtou;
+					let longwei;
+					if (rarity === "yan") {
+						const wholeYanDragon = document.createElement("img");
+						wholeYanDragon.src = decadeUIPath + "/assets/image/long1_yan.png";
+						wholeYanDragon.style.cssText = "pointer-events:none";
+						wholeYanDragon.style.position = "absolute";
+						wholeYanDragon.style.display = "block";
+						wholeYanDragon.style.top = "-88px";
+						wholeYanDragon.style.left = "-23px";
+						wholeYanDragon.style.height = "213%";
+						wholeYanDragon.style.width = "160%";
+						wholeYanDragon.style.zIndex = "98";
+						target.appendChild(wholeYanDragon);
+					} else if (rarity === "yu") {
+						const wholeYuDragon = document.createElement("img");
+						wholeYuDragon.src = decadeUIPath + "/assets/image/long1_yu.png";
+						wholeYuDragon.style.cssText = "pointer-events:none";
+						wholeYuDragon.style.position = "absolute";
+						wholeYuDragon.style.display = "block";
+						wholeYuDragon.style.top = "-40px";
+						wholeYuDragon.style.left = "-25px";
+						wholeYuDragon.style.height = "139%";
+						wholeYuDragon.style.width = "156%";
+						wholeYuDragon.style.zIndex = "85";
+						target.appendChild(wholeYuDragon);
+					} else {
+						longtou = document.createElement("img");
+						longtou.src = decadeUIPath + "/assets/image/long_" + rarity + "1.png";
+						longtou.style.cssText = "pointer-events:none";
+						longtou.style.position = "absolute";
+						longtou.style.display = "block";
+						longtou.style.top = "-36px";
+						longtou.style.right = "-26px";
+						longtou.style.height = "133px";
+						longtou.style.width = "80px";
+						longtou.style.zIndex = "80";
+						target.appendChild(longtou);
 
-					var longwei = document.createElement("img");
-					longwei.src = decadeUIPath + "/assets/image/long_" + rarity + "2.png";
-					longwei.style.cssText = "pointer-events:none";
-					longwei.style.position = "absolute";
-					longwei.style.display = "block";
-					longwei.style.bottom = "-10px";
-					longwei.style.right = "-9px";
-					longwei.style.height = "40";
-					longwei.style.width = "80px";
-					longwei.style.zIndex = "99";
-					target.appendChild(longwei);
+						longwei = document.createElement("img");
+						longwei.src = decadeUIPath + "/assets/image/long_" + rarity + "2.png";
+						longwei.style.cssText = "pointer-events:none";
+						longwei.style.position = "absolute";
+						longwei.style.display = "block";
+						longwei.style.bottom = "-10px";
+						longwei.style.right = "-13px";
+						longwei.style.height = "40px";
+						longwei.style.width = "92px";
+						longwei.style.zIndex = "99";
+						target.appendChild(longwei);
+					}
 				});
 			},
 		},
@@ -1411,7 +1441,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							if (eff < -7) return (Math.random() + Math.pow(-(eff + 7) / 8, 2)) / Math.sqrt(evt.betrayers.length + 1) + (player.hp - 3) * 0.05 + Math.max(0, 4 - evt.player.hp) * 0.05 - (player.hp == 1 && !get.tag(card, "damage") ? 0.2 : 0);
 							return Math.pow((get.value(card, evt.player, "raw") - 4) / (eff == 0 ? 3.1 : 10), 2) / Math.sqrt(evt.betrayers.length || 1) + (player.hp - 3) * 0.05 + Math.max(0, 4 - evt.player.hp) * 0.05;
 						}
-						if (evt.player.getStorage("old_guhuo_cheated").contains(card.name + card.nature)) return Math.random() + 0.3;
+						if (evt.player.getStorage("old_guhuo_cheated").includes(card.name + card.nature)) return Math.random() + 0.3;
 					}
 					return Math.random();
 				});

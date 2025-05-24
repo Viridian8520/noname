@@ -51,13 +51,57 @@
 /*-----------------分割线-----------------*/
 
 /*新样式*/
-#arena[data-shadow-style="off"]>.player::before {
+#arena[data-shadow-style="off"] > .player::before {
 	left: -55px;
 	top: -40px;
 	width: 228px;
 	height: 228px;
 	opacity: 0;
-	background-image: url("assets/image/sprites_shadow_green.png");
+	background-image: url("assets/image/sprites_shadow_orange.png");
+	background-repeat: no-repeat;
+	animation-name: kf-sprites-glow;
+	animation-duration: 0s;
+	animation-delay: 0s;
+	animation-iteration-count: infinite;
+	animation-fill-mode: forwards;
+	animation-timing-function: steps(1);
+	pointer-events: none;
+	box-shadow: none;
+	transition: opacity 0s linear;
+}
+
+#arena[data-shadow-style="off"] > .player.selectable.selected.target:before,
+#arena[data-shadow-style="off"] > .player.selected:not(.target):before {
+	animation-duration: 0.9s;
+	background-image: url("assets/image/sprites_shadow_orange.png");
+	opacity: 1;
+	z-index: 79;
+}
+#arena[data-shadow-style="off"] > .player.glow_phase:not(.selectable)::before {
+	animation-duration: 0.9s;
+	background-image: url("assets/image/sprites_shadow_green1.png");
+	opacity: 1;
+	z-index: 75;
+}
+
+#arena[data-shadow-style="off"] > .player.selectable:not(.selected):not(.target)::before {
+	animation-duration: 0.9s;
+	background-image: url("assets/image/sprites_shadow_lvse.png");
+	opacity: 1;
+	z-index: 79;
+	top: -38.4px;
+	left: -55px;
+}
+
+#arena[data-shadow-style="off"] > .player::after,
+#arena[data-shadow-style="off"] > .player.selected::after,
+#arena[data-shadow-style="off"] > .player.selectable::after {
+	left: -55px;
+	top: -40px;
+	width: 228px;
+	height: 228px;
+	opacity: 0;
+	background-image: url("assets/image/sprites_shadow_lvse.png");
 	background-repeat: no-repeat;
 	animation-name: kf-sprites-glow;
 	animation-duration: 0s;
@@ -70,15 +114,7 @@
 	transition: opacity 0.1s linear;
 }
 
-#arena[data-shadow-style="off"]>.player.selected:not(.target):before,
-#arena[data-shadow-style="off"]>.player.glow_phase:not(.selectable)::before {
-	animation-duration: 0.9s;
-	background-image: url("assets/image/sprites_shadow_green.png");
-	opacity: 1;
-	z-index: 89;
-}
-
-#arena[data-shadow-style="off"]>.player.selectable:not(.selected):not(.target)::before {
+#arena[data-shadow-style="off"] > .player.selectable:not(.selected):not(.target):not(*[data-position="0"])::before {
 	animation-duration: 0.9s;
 	background-image: url("assets/image/sprites_shadow_red.png");
 	opacity: 1;
@@ -87,15 +123,15 @@
 	left: -55px;
 }
 
-#arena[data-shadow-style="off"]>.player::after,
-#arena[data-shadow-style="off"]>.player.selected::after,
-#arena[data-shadow-style="off"]>.player.selectable::after {
+#arena[data-shadow-style="off"] > .player:not(*[data-position="0"])::after,
+#arena[data-shadow-style="off"] > .player.selected:not(*[data-position="0"])::after,
+#arena[data-shadow-style="off"] > .player.selectable:not(*[data-position="0"])::after {
 	left: -55px;
 	top: -40px;
 	width: 228px;
 	height: 228px;
 	opacity: 0;
-	background-image: url("assets/image/sprites_shadow_green.png");
+	background-image: url("assets/image/sprites_shadow_red.png");
 	background-repeat: no-repeat;
 	animation-name: kf-sprites-glow;
 	animation-duration: 0s;
@@ -107,16 +143,10 @@
 	box-shadow: none;
 	transition: opacity 0.1s linear;
 }
-
-#arena[data-shadow-style="off"]>.player.target:not(.glow_phase):not(.selectable):not(.selected)::after {
-	animation-duration: 0.9s;
-	opacity: 1;
-}
-
 /*-----------------分割线-----------------*/
 
 /*原样式*/
-#arena[data-shadow-style="on"]>.player::before {
+#arena[data-shadow-style="on"] > .player::before {
 	left: -56px;
 	top: -42px;
 	width: 223px;
@@ -135,21 +165,21 @@
 	transition: opacity 0.1s linear;
 }
 
-#arena[data-shadow-style="on"]>.player.selected:not(.target):before,
-#arena[data-shadow-style="on"]>.player.glow_phase:not(.selectable):not(*[data-position="0"])::before {
+#arena[data-shadow-style="on"] > .player.selected:not(.target):before,
+#arena[data-shadow-style="on"] > .player.glow_phase:not(.selectable):not(*[data-position="0"])::before {
 	animation-duration: 0.9s;
 	background-image: url("assets/image/sprites_glow_orange.png");
 	opacity: 1;
 }
 
-#arena[data-shadow-style="on"]>.player.selectable:not(.selected):not(.target)::before {
+#arena[data-shadow-style="on"] > .player.selectable:not(.selected):not(.target)::before {
 	animation-duration: 0.9s;
 	opacity: 1;
 }
 
-#arena[data-shadow-style="on"]>.player::after,
-#arena[data-shadow-style="on"]>.player.selected::after,
-#arena[data-shadow-style="on"]>.player.selectable::after {
+#arena[data-shadow-style="on"] > .player::after,
+#arena[data-shadow-style="on"] > .player.selected::after,
+#arena[data-shadow-style="on"] > .player.selectable::after {
 	left: -56px;
 	top: -42px;
 	width: 223px;
@@ -168,18 +198,18 @@
 	transition: opacity 0.1s linear;
 }
 
-#arena[data-shadow-style="on"]>.player.target:not(.glow_phase):not(.selectable):not(.selected)::after {
+#arena[data-shadow-style="on"] > .player.target:not(.glow_phase):not(.selectable):not(.selected)::after {
 	animation-duration: 0.9s;
 	opacity: 1;
 }
 
 /*-----------------分割线-----------------*/
 
-#arena>.player {
+#arena > .player {
 	z-index: 4;
 }
 
-.player>.mask {
+.player > .mask {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -193,19 +223,19 @@
 	z-index: 66;
 }
 
-.player.un-selectable:not(.selectable)>.mask {
+.player.un-selectable:not(.selectable) > .mask {
 	opacity: 1;
 	transition: opacity 0.3s linear;
 }
 
-#arena:not(.fewplayer)>.player:not(.minskin),
-#arena:not(.fewplayer):not(*[data-player_height=""])>.player:not(.minskin) {
+#arena:not(.fewplayer) > .player:not(.minskin),
+#arena:not(.fewplayer):not(*[data-player_height=""]) > .player:not(.minskin) {
 	height: 171.5px !important;
 	width: 128px !important;
 }
 
 /*玩家锁链*/
-.player>.chain {
+.player > .chain {
 	top: 30%;
 	left: -15px;
 	width: 158px;
@@ -219,41 +249,41 @@
 	z-index: 86;
 }
 
-.player.linked2>.chain {
+.player.linked2 > .chain {
 	visibility: visible;
 	background-position-x: center;
 }
 
 /*隐藏玩家手牌显示以及降低玩家血量标记位置—咸鱼大佬的代码*/
 /*需要配合扩展手杀ui使用，如果不开启手杀ui，需要把以下两段代码注释掉*/
-.player[data-position="0"]>.hp-wrap {
+.player[data-position="0"] > .hp-wrap {
 	bottom: -6px;
 }
 
-.player[data-position="0"]>.card-count {
+.player[data-position="0"] > .card-count {
 	visibility: hidden;
 }
 
 /*主玩家位置*/
 .player[data-position="0"],
-#arena>.player[data-position="0"],
-#arena>.player[data-position="0"]:not(.minskin),
-#arena:not(*[data-player_height=""])>.player[data-position="0"],
-#arena:not(*[data-player_height=""])>.player[data-position="0"]:not(.miniskin) {
+#arena > .player[data-position="0"],
+#arena > .player[data-position="0"]:not(.minskin),
+#arena:not(*[data-player_height=""]) > .player[data-position="0"],
+#arena:not(*[data-player_height=""]) > .player[data-position="0"]:not(.miniskin) {
 	left: 25px;
 	top: auto;
 	right: auto;
 	bottom: 1%;
 }
 
-#arena[data-right-layout="on"]>.player[data-position="0"],
-#arena[data-right-layout="on"]>.player[data-position="0"]:not(.miniskin) {
+#arena[data-right-layout="on"] > .player[data-position="0"],
+#arena[data-right-layout="on"] > .player[data-position="0"]:not(.miniskin) {
 	left: auto;
 	right: 25px;
 }
 
 /*玩家姓名阵营*/
-.player>.camp-wrap {
+.player > .camp-wrap {
 	display: block;
 	left: -19px;
 	top: -9px;
@@ -264,16 +294,16 @@
 	pointer-events: none;
 }
 
-.player.connect>div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).camp-wrap {
+.player.connect > div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).camp-wrap {
 	display: block !important;
 }
 
 /*新增*/
-.player.connect>div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).primary-avatar {
+.player.connect > div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).primary-avatar {
 	display: block !important;
 }
 
-.player>.camp-wrap div {
+.player > .camp-wrap div {
 	transition: none;
 }
 
@@ -285,57 +315,57 @@
 }
 */
 
-.player.unseen>.camp-wrap>.camp-back {
+.player.unseen > .camp-wrap > .camp-back {
 	background: linear-gradient(to bottom, rgb(92, 35, 22), rgb(50, 27, 26));
 }
 
-.player>.camp-wrap[data-camp="wei"]>.camp-back {
+.player > .camp-wrap[data-camp="wei"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(45, 103, 153), rgb(19, 45, 78));
 }
 
-.player>.camp-wrap[data-camp="shu"]>.camp-back {
+.player > .camp-wrap[data-camp="shu"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(153, 28, 34), rgb(57, 12, 17));
 }
 
-.player>.camp-wrap[data-camp="wu"]>.camp-back {
+.player > .camp-wrap[data-camp="wu"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(29, 114, 29), rgb(34, 42, 27));
 }
 
-.player>.camp-wrap[data-camp="qun"]>.camp-back {
+.player > .camp-wrap[data-camp="qun"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(154, 148, 122), rgb(74, 72, 57));
 }
 
-.player>.camp-wrap[data-camp="shen"]>.camp-back {
+.player > .camp-wrap[data-camp="shen"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(97, 87, 15), rgb(65, 50, 9), rgb(67, 52, 9));
 }
 
-.player>.camp-wrap[data-camp="shen2"]>.camp-back {
+.player > .camp-wrap[data-camp="shen2"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(112, 52, 126), rgb(52, 18, 55));
 }
 
-.player>.camp-wrap[data-camp="ye"]>.camp-back {
+.player > .camp-wrap[data-camp="ye"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(112, 52, 126), rgb(52, 18, 55));
 }
 
-.player>.camp-wrap[data-camp="key"]>.camp-back {
+.player > .camp-wrap[data-camp="key"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(147, 132, 183), rgb(130, 120, 160), rgb(120, 115, 154));
 }
 
-.player>.camp-wrap[data-camp="western"]>.camp-back {
+.player > .camp-wrap[data-camp="western"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(93, 44, 105), rgb(54, 18, 58));
 }
 
-.player>.camp-wrap[data-camp="jin"]>.camp-back {
+.player > .camp-wrap[data-camp="jin"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(112, 52, 126), rgb(52, 18, 55));
 }
 
-.player>.camp-wrap[data-camp="daqin"]>.camp-back {
+.player > .camp-wrap[data-camp="daqin"] > .camp-back {
 	background: linear-gradient(to bottom, rgb(100, 100, 100), rgb(0, 0, 0));
 }
 
-.player>.camp-wrap>.avatar-name,
-.player>.camp-wrap>.avatar-name-default,
-#arena>.player:not(.minskin)>.name.name {
+.player > .camp-wrap > .avatar-name,
+.player > .camp-wrap > .avatar-name-default,
+#arena > .player:not(.minskin) > .name.name {
 	top: 30px;
 	left: 29px;
 	transform: translateX(-50%);
@@ -348,14 +378,14 @@
 }
 
 /*隐匿状态“主将”显示*/
-.player>.camp-wrap>.avatar-name-default>.camp-back {
+.player > .camp-wrap > .avatar-name-default > .camp-back {
 	left: 21px !important;
 	top: 30px !important;
 	font-family: "shousha" !important;
 	line-height: 14px;
 }
 
-.player>.camp-wrap>.camp-back {
+.player > .camp-wrap > .camp-back {
 	/*武将图层，原版十周年武将名背后颜色图层*/
 	display: flex;
 	align-items: flex-start;
@@ -379,24 +409,24 @@
 	-webkit-writing-mode: vertical-rl;
 }
 
-.player.unseen>.camp-wrap>.avatar-name,
-.player:not(.unseen)>.camp-wrap>.avatar-name-default,
-.player:not(.unseen2)>.camp-wrap>.avatar2-name-default {
+.player.unseen > .camp-wrap > .avatar-name,
+.player:not(.unseen) > .camp-wrap > .avatar-name-default,
+.player:not(.unseen2) > .camp-wrap > .avatar2-name-default {
 	visibility: hidden;
 }
 
-.player>.unseen_show>.primary-avatar,
-.player>.unseen2_show>.deputy-avatar {
+.player > .unseen_show > .primary-avatar,
+.player > .unseen2_show > .deputy-avatar {
 	opacity: 0;
 }
 
-#arena:not(.observe) .player:not([data-position="0"]).unseen_show>.primary-avatar,
-#arena:not(.observe) .player:not([data-position="0"]).unseen2_show>.deputy-avatar {
+#arena:not(.observe) .player:not([data-position="0"]).unseen_show > .primary-avatar,
+#arena:not(.observe) .player:not([data-position="0"]).unseen2_show > .deputy-avatar {
 	opacity: 1 !important;
 	background-image: url("../../image/character/hidden_image.jpg") !important;
 }
 
-.player>.camp-wrap>.camp-name {
+.player > .camp-wrap > .camp-name {
 	/*势力图片，手杀样式已修改*/
 	font-family: shousha;
 	font-display: swap;
@@ -416,33 +446,33 @@
 	transition: none;
 }
 
-.player>.camp-wrap[data-camp="wei"]>.camp-name {
+.player > .camp-wrap[data-camp="wei"] > .camp-name {
 	text-shadow: 0 0 5px rgb(50, 50, 255), 0 0 10px rgb(120, 120, 255), 0 0 15px rgb(100, 100, 255);
 }
 
-.player>.camp-wrap[data-camp="shu"]>.camp-name {
+.player > .camp-wrap[data-camp="shu"] > .camp-name {
 	text-shadow: 0 0 5px rgb(255, 100, 100), 0 0 10px rgb(255, 50, 50), 0 0 15px rgb(255, 50, 50);
 }
 
-.player>.camp-wrap[data-camp="wu"]>.camp-name {
+.player > .camp-wrap[data-camp="wu"] > .camp-name {
 	text-shadow: 0 0 5px rgb(100, 233, 100), 0 0 10px rgb(50, 255, 50), 0 0 15px rgb(50, 255, 50);
 }
 
-.player>.camp-wrap[data-camp="qun"]>.camp-name {
+.player > .camp-wrap[data-camp="qun"] > .camp-name {
 	text-shadow: 0 0 5px rgb(170, 170, 170), 0 0 10px rgb(118, 118, 118), 0 0 15px rgb(118, 118, 118);
 }
 
-.player>.camp-wrap[data-camp="shen"]>.camp-name {
+.player > .camp-wrap[data-camp="shen"] > .camp-name {
 	text-shadow: 0 0 5px rgb(255, 200, 0), 0 0 10px rgb(255, 200, 0), 0 0 15px rgb(255, 200, 0);
 }
 
-.player>.camp-wrap>.camp-name {
+.player > .camp-wrap > .camp-name {
 	text-shadow: 0 0 5px #e0ea33, 0 0 15px #e0ea33, 0 0 25px #e0ea33;
 }
 
 /*副将名*/
-.player>.name.name2,
-#arena>.player:not(.minskin)>.name.name2 {
+.player > .name.name2,
+#arena > .player:not(.minskin) > .name.name2 {
 	display: flex;
 	align-items: flex-start;
 	align-content: center;
@@ -464,17 +494,17 @@
 	z-index: 89;
 }
 
-.player>.name.name2:empty,
-#arena>.player:not(.minskin)>.name.name2:empty {
+.player > .name.name2:empty,
+#arena > .player:not(.minskin) > .name.name2:empty {
 	display: none;
 }
 
-.player.fullskin.fullskin2>.name.name2:empty::before {
+.player.fullskin.fullskin2 > .name.name2:empty::before {
 	content: "副将";
 }
 
 /*联机名称显示*/
-.player>.nameol {
+.player > .nameol {
 	top: 5px;
 	font-size: 16px;
 	font-family: "shousha";
@@ -485,7 +515,7 @@
 }
 
 /*玩家血量显示*/
-.player>.hp-wrap {
+.player > .hp-wrap {
 	display: block;
 	right: 106.6px;
 	/*左移*/
@@ -543,59 +573,56 @@
 }
 */
 
-.player[data-max-hp="hujia"]>.hp-wrap {
+.player[data-max-hp="hujia"] > .hp-wrap {
 	height: 78px;
 }
 
-.player>.hp-wrap>.hp,
+.player > .hp-wrap > .hp,
 #arena.slim_player .player .hp,
-#window>.player:not(.minskin) .hp {
-	/*Hp>5(数值)*/
+#window > .player:not(.minskin) .hp {
+	font-family: "FZLBJW";
+	font-weight: bolder; /*加粗*/
 	display: flex;
 	left: 0;
 	right: 0;
-	width: 12px;
-	/*右移*/
-	bottom: -8px;
-	/*上移*/
-	font-size: 15px;
-	/*字体大小*/
-	line-height: 13px;
-	/*纵向间隔*/
-	flex-direction: column;
+	width: 13px; /*右移*/
+	bottom: -10px; /*上移*/
+	font-size: 17.5px; /*字体大小*/
+	line-height: 13px; /*纵向间隔*/
+	flex-direction: column; /*扣血顺序*/
 }
 
-/*
-.player>.hp-wrap>.hp.textstyle {
-	flex-direction: column;
-}
-*/
-.player>.hp-wrap>.hp.hidden {
-	opacity: 1 !important;
+.player > .hp-wrap > .hp.textstyle {
+	flex-direction: column-reverse; /*勾玉数字顺序*/
 }
 
-.player>.hp-wrap>.hp>div {
-	/*Hp<=5(勾玉)*/
+/*高体力勾玉分离*/
+.player > .hp-wrap > .hp.textstyle > div {
+	margin-bottom: 4px;
+}
+
+.player > .hp-wrap > .hp > div {
 	position: static;
 	margin-top: 1px;
-	/*纵向间隔*/
-	width: 13px;
-	/*宽度*/
-	height: 13px;
-	/*高度*/
+	width: 14px;
+	height: 14px;
 	line-height: 100%;
 	border: none;
 }
 
-.hp:not(.text):not(.actcount):not(.treasure)>.lost,
-.hp:not(.text):not(.actcount):not(.treasure)[data-condition="mid"]>div:not(.lost),
-.hp:not(.text):not(.actcount):not(.treasure)[data-condition="high"]>div:not(.lost),
-.hp:not(.text):not(.actcount):not(.treasure)[data-condition="low"]>div:not(.lost) {
+.player[data-position="0"] > .hp-wrap {
+	bottom: 0px;
+}
+
+.hp:not(.text):not(.actcount):not(.treasure) > .lost,
+.hp:not(.text):not(.actcount):not(.treasure)[data-condition="mid"] > div:not(.lost),
+.hp:not(.text):not(.actcount):not(.treasure)[data-condition="high"] > div:not(.lost),
+.hp:not(.text):not(.actcount):not(.treasure)[data-condition="low"] > div:not(.lost) {
 	transform: none !important;
 }
 
 /*武将牌显示*/
-.player>.primary-avatar {
+.player > .primary-avatar {
 	left: 22.4px;
 	top: auto;
 	bottom: 0;
@@ -609,16 +636,16 @@
 	transition-property: opacity, transform;
 }
 
-.player.fullskin2>.primary-avatar {
+.player.fullskin2 > .primary-avatar {
 	width: 41%;
 	border-radius: 8px 0 0 8px;
 }
 
-.player.bossplayer>.primary-avatar:not(.hp):not(.identity):not(.avatar):not(.framebg) {
+.player.bossplayer > .primary-avatar:not(.hp):not(.identity):not(.avatar):not(.framebg) {
 	display: block !important;
 }
 
-.player>.deputy-avatar {
+.player > .deputy-avatar {
 	left: 58.5%;
 	top: auto;
 	bottom: 0;
@@ -632,27 +659,27 @@
 	transition-property: opacity, transform;
 }
 
-.player.unseen>.primary-avatar,
-.player.unseen2>.deputy-avatar,
-.player.d-skin>.primary-avatar,
-.player.d-skin2>.deputy-avatar {
+.player.unseen > .primary-avatar,
+.player.unseen2 > .deputy-avatar,
+.player.d-skin > .primary-avatar,
+.player.d-skin2 > .deputy-avatar {
 	opacity: 0;
 }
 
-#arena:not(.observe)>.player[data-position="0"].unseen>.primary-avatar,
-#arena:not(.observe)>.player[data-position="0"].unseen2>.deputy-avatar {
+#arena:not(.observe) > .player[data-position="0"].unseen > .primary-avatar,
+#arena:not(.observe) > .player[data-position="0"].unseen2 > .deputy-avatar {
 	opacity: 0.3;
 }
 
 /*单将露头*/
-#arena[data-outcrop-skin="shizhounian"]>.player>.primary-avatar {
+#arena[data-outcrop-skin="shizhounian"] > .player > .primary-avatar {
 	height: 183px;
 	clip-path: url(#solo-clip);
 	/*新增*/
 	-webkit-clip-path: url(#solo-clip);
 }
 
-#arena[data-outcrop-skin="shousha"]>.player>.primary-avatar {
+#arena[data-outcrop-skin="shousha"] > .player > .primary-avatar {
 	height: 195px;
 	clip-path: url(#solo-clip);
 	/*新增*/
@@ -660,14 +687,14 @@
 }
 
 /*双将露头*/
-#arena[data-outcrop-skin="shizhounian"]>.player>.deputy-avatar {
+#arena[data-outcrop-skin="shizhounian"] > .player > .deputy-avatar {
 	height: 183px;
 	clip-path: url(#solo-clip);
 	/*新增*/
 	-webkit-clip-path: url(#duor-clip);
 }
 
-#arena[data-outcrop-skin="shousha"]>.player>.deputy-avatar {
+#arena[data-outcrop-skin="shousha"] > .player > .deputy-avatar {
 	height: 195px;
 	clip-path: url(#solo-clip);
 	/*新增*/
@@ -675,7 +702,7 @@
 }
 
 /*武将牌动皮显示*/
-.player>.dynamic-wrap {
+.player > .dynamic-wrap {
 	display: block;
 	position: absolute;
 	left: 22.4px;
@@ -689,7 +716,7 @@
 	z-index: 60;
 }
 
-.player>.dynamic-wrap>.animation-player {
+.player > .dynamic-wrap > .animation-player {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -703,15 +730,15 @@
 	-webkit-clip-path: inset(0 0 0 0 round 8px);
 }
 
-#arena[data-dynamic-skin-outcrop="on"]>.player>.dynamic-wrap>.animation-player {
+#arena[data-dynamic-skin-outcrop="on"] > .player > .dynamic-wrap > .animation-player {
 	clip-path: url(#dskin-clip);
 	/*新增*/
 	-webkit-clip-path: url(#dskin-clip);
 	height: 188px;
 }
 
-.player>.dynamic-wrap>.primary-bg,
-.player>.dynamic-wrap>.deputy-bg {
+.player > .dynamic-wrap > .primary-bg,
+.player > .dynamic-wrap > .deputy-bg {
 	left: 22.4px;
 	top: auto;
 	bottom: 0;
@@ -725,17 +752,17 @@
 	transition-property: opacity, transform;
 }
 
-.player>.dynamic-wrap>.deputy-bg {
+.player > .dynamic-wrap > .deputy-bg {
 	left: 40.5%;
 }
 
-.player.d-skin>.dynamic-wrap>.primary-bg,
-.player.d-skin2>.dynamic-wrap>.deputy-bg {
+.player.d-skin > .dynamic-wrap > .primary-bg,
+.player.d-skin2 > .dynamic-wrap > .deputy-bg {
 	opacity: 1;
 }
 
-#arena:not(.observe)>.player[data-position="0"].unseen.d-skin>.dynamic-wrap>.primary-bg,
-#arena:not(.observe)>.player[data-position="0"].unseen2.d-skin2>.dynamic-wrap>.deputy-bg {
+#arena:not(.observe) > .player[data-position="0"].unseen.d-skin > .dynamic-wrap > .primary-bg,
+#arena:not(.observe) > .player[data-position="0"].unseen2.d-skin2 > .dynamic-wrap > .deputy-bg {
 	opacity: 0.3;
 }
 
@@ -744,7 +771,7 @@
 }
 
 /*行动*/
-.player>.primary-avatar>.action {
+.player > .primary-avatar > .action {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -757,7 +784,7 @@
 }
 
 /*玩家标记显示-灯笼*/
-.player>.dui-marks {
+.player > .dui-marks {
 	display: flex;
 	flex-direction: column;
 	left: auto;
@@ -770,7 +797,7 @@
 	transition-property: opacity, transform, background;
 }
 
-.player>.dui-marks>.mark {
+.player > .dui-marks > .mark {
 	display: flex;
 	align-items: center;
 	align-content: center;
@@ -790,12 +817,12 @@
 	animation: open 0.5s;
 }
 
-.player>.dui-marks>.mark:before,
-.player>.dui-marks>.mark:after {
+.player > .dui-marks > .mark:before,
+.player > .dui-marks > .mark:after {
 	display: none;
 }
 
-.player>.dui-marks>.mark>.mark-text {
+.player > .dui-marks > .mark > .mark-text {
 	display: flex;
 	align-items: center;
 	align-content: center;
@@ -818,12 +845,12 @@
 	animation: swing 1.5s alternate infinite ease-in-out;
 }
 
-.player>.dui-marks>.mark>.mark-text.small-text {
+.player > .dui-marks > .mark > .mark-text.small-text {
 	font-size: 14px;
 	line-height: 11px;
 }
 
-.player>.dui-marks>.mark>.mark-text::before {
+.player > .dui-marks > .mark > .mark-text::before {
 	content: "";
 	display: block;
 	position: absolute;
@@ -836,7 +863,7 @@
 	box-sizing: border-box;
 }
 
-.player>.dui-marks>.mark>.mark-count {
+.player > .dui-marks > .mark > .mark-count {
 	position: absolute;
 	left: auto;
 	top: -2px;
@@ -854,92 +881,154 @@
 	box-shadow: 0 0 1px black inset;
 }
 
-.player>.dui-marks>.mark>.image {
+.player > .dui-marks > .mark > .image {
 	display: none;
 }
 
-#arena[data-player-mark-style="red"]>.player>.dui-marks>.mark>.mark-text {
+#arena[data-player-mark-style="red"] > .player > .dui-marks > .mark > .mark-text {
 	color: yellow;
 	text-shadow: 0 0 1px black, 0 0 1px black;
 	box-shadow: 0 0 1px yellow;
 	background-image: radial-gradient(rgb(100, 255, 100), rgb(255, 120, 0), rgb(255, 0, 0));
 }
 
-#arena[data-player-mark-style="red"]>.player>.dui-marks>.mark>.mark-count {
+#arena[data-player-mark-style="red"] > .player > .dui-marks > .mark > .mark-count {
 	color: #c86400;
 	background: #ffdc00;
 }
 
 /*玩家标记显示-新样式*/
-#arena[data-player-mark-style="decade"]>.player>.dui-marks {
-	left: auto;
-	top: 30px;
-	right: -13px;
-	width: auto;
-	max-width: 80px;
-}
-
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark {
-	display: flex;
-	width: 45px;
-	height: 20px;
-	white-space: nowrap;
-	background-image: url("assets/image/player_mark1.png");
-	animation: fade-in 0.5s;
-	margin-bottom: 1px;
-	/*标记纵向间隔*/
-}
-
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark>.mark-text {
-	/*标记文本*/
+#arena[data-player-mark-style="decade"] > .player > .dui-marks {
 	display: inline;
-	position: static;
-	border-radius: 0;
-	width: auto;
+	left: calc(22.6px + 0.5px); /*20px，纯阴影23px*/
+	top: auto;
+	bottom: 69px;
+	line-height: 20px; /*换行间距*/
 	height: auto;
-	line-height: 18px;
-	/*换行间距*/
-	font-size: 14px;
-	/*字体大小*/
-	font-family: "xinwei" !important;
-	/*字体样式*/
-	color: white;
+	width: calc(103px + 10px); /*原图108px，高清图105px，纯阴影不带border104.3*/
+	z-index: 100 !important;
+	flex-direction: column;
+	flex-wrap: wrap;
+	background-image: none;
+	background-size: 100% 100%;
+	border-radius: 4px; /*原来是5px*/
+	/*用边框(这里是阴影加边线)的方式代替图片效果，可以有效避免圆角和边框粗细被拉伸改变*/
+	/*box-shadow: 0px 0px 0px 1px rgba(155,130,110,0.9);
+	border: 1px solid rgba(100,90,80,0.9);*/
+	box-shadow: none;
+	border: none;
+	/*box-shadow: 0px 0px 0.4px 1.8px rgba(155,130,110,0.9)l*/
+
+	/*border-radius: 5px;
+	border: 3px solid rgba(155,130,110,1);*/
+	/*filter: 'blur(0.5px)';减少清晰度*/
+	/*transition: all 0.3s;标记过渡*/
+	/*纯阴影版备份：
+	box-shadow: 0px 0px 0.4px 1.8px rgba(155,130,110,0.9);
+	border-radius: 5px;
+	width: 104.3px;
+	left: 23px;
+	*/
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: -1px;
+	right: 11px;
+	bottom: 0;
+	/*background-color: #FFFFFF; /* 白色覆盖层 */
+	/*opacity: 0.5; /* 调整透明度以看到下面的背景图像 */
+	z-index: -1; /* 确保覆盖层在内容之下 */
+	pointer-events: none; /* 允许鼠标点击穿透该层 */
+	background-image: url("assets/image/bg.png");
+	background-size: 100% 100%;
+	border-radius: 4px; /*原来是5px*/
+	/*用边框(这里是阴影加边线)的方式代替图片效果，可以有效避免圆角和边框粗细被拉伸改变*/
+	/*box-shadow: 0px 0px 0px 1px rgba(155,130,110,0.9);
+	border: 1px solid rgba(100,90,80,0.9);*/
+	box-shadow: 0px 0px 0px 0px rgba(140, 130, 120, 0.9), 0px 0px 0px 0px rgba(0, 0, 0, 1);
+	border: 0.8px solid rgba(100, 90, 80, 0.9);
+}
+
+/*创举，元素内容为空时执行以下css效果*/
+#arena[data-player-mark-style="decade"] > .player > .dui-marks:empty {
+	/*没有内容时去掉边框*/
+	box-shadow: none;
+	border: none;
+}
+#arena[data-player-mark-style="decade"] > .player > .dui-marks:empty::before {
+	/*没有内容时去掉边框*/
+	box-shadow: none;
+	border: none;
+}
+/*死亡隐藏标记*/
+#arena[data-player-mark-style="decade"] > .player.dead > .dui-marks {
+	display: none;
+}
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark {
+	/*标记图层看不见=文字+数字*/
+	display: inline;
+	min-width: 100px;
+	height: 23px !important;
+	white-space: pre;
+	transition: all 0s;
+	/*word-break:break-all;
+	/*box-shadow: -13px -2px 16px rgba(0,0,0,0.7), -13px 5px 16px rgba(0,0,0,0.2);border-radius:2px;*/
+	/*  text-align: left;*/
+	bottom: -2px;
+	left: 0px;
+	/*	animation: fade-in 0.5s;*/
+	/*	margin-left: 5px*/
+}
+
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark > .mark-text {
+	/*标记文字*/
+	display: inline;
+	position: relative;
+	border-radius: 1;
+	margin-left: 18px;
+	left: -16px;
+	/*margin-right: 10px;*/
+	/*line-height: 15px; /*换行间距*/
+	font-size: 17px; /*原版18px*/ /*字体大小*/
+	text-shadow: -1.3px 0px 2.2px #000, 0px -1.3px 2.2px #000, 1.3px 0px 2.2px #000, 0px 1.3px 2.2px #000;
+	font-family: "shousha" !important; /*字体样式*/
+	/*text-align: center;*/
+	margin-bottom: 0px;
+	color: rgba(240, 240, 240, 1); /*原版white纯白*/
+	font-weight: normal; /*原版bold加粗*/
 	background-image: none;
 	box-shadow: none;
 	animation: none;
 }
-
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark>.mark-text::before {
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark > .mark-text::before {
 	display: none;
 }
 
-#arena[data-player-mark-style="decade"]>.player>.dui-marks>.mark>.mark-count {
-	/*标记数量*/
+#arena[data-player-mark-style="decade"] > .player > .dui-marks > .mark > .mark-count {
 	display: inline;
 	position: static;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	width: auto;
-	height: auto;
-	line-height: 18px;
-	/*换行间距*/
-	border-radius: 0;
-	font-size: 14px;
-	/*字体大小*/
-	font-family: "xinwei" !important;
-	/*字体样式*/
-	font-weight: inherit;
-	color: white;
-	text-shadow: none;
+	line-height: 18px; /*换行间距*/
+	border-radius: 1;
+	text-align: center;
+	font-size: 17px; /*原版18px*/ /*字体大小*/
+	font-family: "shousha" !important; /*字体样式*/
+	text-shadow: -1.3px 0px 2.2px #000, 0px -1.3px 2.2px #000, 1.3px 0px 2.2px #000, 0px 1.3px 2.2px #000;
+	font-weight: normal; /*原版bold加粗*/
+	/*	white-space:normal;*/
+	color: rgba(240, 240, 240, 1); /*原版white纯白*/
+	margin-left: -13px;
 	background: none;
 	box-shadow: none;
 }
 
-.mark-container.marks>.mark {
-	overflow: visible;
+.mark-container.marks > .mark {
+	white-space: pre;
 }
 
-.mark-container.marks>.mark>.mark-text {
+.mark-container.marks > .mark > .mark-text {
 	display: flex;
 	position: absolute;
 	justify-content: center;
@@ -952,18 +1041,18 @@
 	font-size: 20px;
 }
 
-.mark-container.marks>.mark>.mark-count {
+.mark-container.marks > .mark > .mark-count {
 	display: block;
 	position: absolute;
 	right: -5px;
 	width: 15px;
 	background: white;
-	border-radius: 4px;
+	border-radius: 1px;
 }
 
 /*玩家判断标记显示*/
-.player>.judges,
-#arena>.player:not(.minskin)>.judges {
+.player > .judges,
+#arena > .player:not(.minskin) > .judges {
 	display: flex;
 	justify-content: flex-end;
 	left: auto;
@@ -976,14 +1065,14 @@
 	z-index: 88;
 }
 
-.player[data-position="0"]>.judges,
-#arena>.player[data-position="0"]:not(.minskin)>.judges {
+.player[data-position="0"] > .judges,
+#arena > .player[data-position="0"]:not(.minskin) > .judges {
 	top: -24px;
 	bottom: auto;
 }
 
-.player>.judges>.card,
-#window:not(.nopointer) .player .judges>.card {
+.player > .judges > .card,
+#window:not(.nopointer) .player .judges > .card {
 	position: static;
 	left: auto;
 	top: auto;
@@ -999,18 +1088,18 @@
 	overflow: visible;
 }
 
-.player>.judges>.card>.image {
+.player > .judges > .card > .image {
 	display: none;
 }
 
-.player>.judges>.card>.judge-mark {
+.player > .judges > .card > .judge-mark {
 	display: block;
 	position: relative;
 	width: 100%;
 	height: 100%;
 }
 
-.player>.judges>.card>.judge-mark>.back {
+.player > .judges > .card > .judge-mark > .back {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -1025,7 +1114,7 @@
 	z-index: -1;
 }
 
-.player>.judges>.card>.judge-mark>.back::before {
+.player > .judges > .card > .judge-mark > .back::before {
 	display: block;
 	position: absolute;
 	content: "";
@@ -1039,11 +1128,11 @@
 	z-index: -1;
 }
 
-.player>.judges>.card>.judge-mark>div:not(.back) .player>.judges>.card>.judge-mark>div:not(.judge) {
+.player > .judges > .card > .judge-mark > div:not(.back) .player > .judges > .card > .judge-mark > div:not(.judge) {
 	display: none;
 }
 
-.player>.judges>.card>.judge-mark>.judge {
+.player > .judges > .card > .judge-mark > .judge {
 	display: flex;
 	align-items: center;
 	align-content: center;
@@ -1060,14 +1149,14 @@
 	text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0, 0 0 8px #000;
 }
 
-.player>.judges>.card>.background,
-.judges>.card.fakejudge.fullskin>.background,
-.judges>.card.fakejudge.fullborder>.background {
+.player > .judges > .card > .background,
+.judges > .card.fakejudge.fullskin > .background,
+.judges > .card.fakejudge.fullborder > .background {
 	display: none !important;
 }
 
 /*玩家号位显示*/
-.player>.seat {
+.player > .seat {
 	display: block;
 	position: absolute;
 	bottom: -16px;
@@ -1085,16 +1174,16 @@
 	pointer-events: none;
 }
 
-.player[data-position="0"]>.seat {
+.player[data-position="0"] > .seat {
 	bottom: -10px;
 }
 
-.player>.name_seat {
+.player > .name_seat {
 	display: none !important;
 }
 
 /*玩家手牌数显示*/
-.player>.card-count {
+.player > .card-count {
 	position: absolute;
 	top: auto;
 	right: auto;
@@ -1119,7 +1208,7 @@
 	transition: transform, opacity;
 }
 
-.player>.card-count::before {
+.player > .card-count::before {
 	content: attr(data-text);
 	position: absolute;
 	left: 0;
@@ -1133,35 +1222,35 @@
 }
 
 /*玩家身份标记*/
-.player>.identity,
-#arena>.player:not(.minskin)>.identity {
+.player > .identity,
+#arena > .player:not(.minskin) > .identity {
 	left: auto;
-	top: -8px;
-	right: -8px;
-	width: 35px;
-	height: 35px;
+	top: -14px;
+	right: -11px;
+	width: 43px;
+	height: 47px;
 	line-height: 31px;
 	font-size: 31px;
-	background-size: 100% 100%;
+	background-size: 80% 80%;
 	background-repeat: no-repeat;
 	background-position: center;
-	z-index: 89;
+	z-index: 99;
 	transform: none;
 	transition: none;
 }
 
-.player>.identity[data-color="rYe"] {
+.player > .identity[data-color="rYe"] {
 	text-shadow: rgba(255, 120, 0, 1) 0 0 2px, rgba(255, 120, 0, 1) 0 0 5px, rgba(255, 120, 0, 1) 0 0 10px, rgba(255, 120, 0, 1) 0 0 10px, rgba(255, 120, 0, 1) 0 0 20px, rgba(255, 120, 0, 1) 0 0 20px, black 0 0 1px;
 }
 
-.player>.identity[data-color="bYe"],
-.player.opposite-camp>.identity {
+.player > .identity[data-color="bYe"],
+.player.opposite-camp > .identity {
 	text-shadow: 0 0 1px black, 0 0 5px blue, 0 0 10px rgb(100, 100, 250), 0 0 20px rgb(100, 100, 250), 0 0 20px white;
 }
 
-.player>.identity>div:first-child {
+.player > .identity > div:first-child {
 	position: absolute;
-	left: 25px;
+	left: 0;
 	top: 0;
 	width: 100%;
 	height: 100%;
@@ -1172,8 +1261,8 @@
 	background-position: center;
 }
 
-.player>.identity.guozhan-mode,
-#arena>.player:not(.minskin)>.identity.guozhan-mode {
+.player > .identity.guozhan-mode,
+#arena > .player:not(.minskin) > .identity.guozhan-mode {
 	left: -20px;
 	top: -9px;
 	width: 37px;
@@ -1183,7 +1272,7 @@
 /*人物弹出文字*/
 /*新样式*/
 /*代码来自Empty city*/
-#arena[data-shadow-style="off"]>.player>.damage {
+#arena[data-shadow-style="off"] > .player > .damage {
 	width: 100%;
 	transition: none;
 	color: transparent;
@@ -1191,16 +1280,29 @@
 	text-align: center;
 	white-space: nowrap;
 	font-weight: 500;
-	-webkit-text-stroke: 0.7px #3e362a;
+	-webkit-text-stroke: 0.7px rgba(38, 37, 34, 0.5);
 	text-shadow: none;
 	background: linear-gradient(180deg, #f5df88 16%, #ab8d35 60%);
-	/*-webkit-background-clip: text;*/
+	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
-	font-size: 28.5px;
-	z-index: 91;
+	font-size: 24px;
+	z-index: 999;
+	display: flex;
+	justify-content: center;
 }
 
-#arena[data-shadow-style="off"]>.player>.damage::before {
+#arena[data-shadow-style="off"] > .player > .damage > .damage-child {
+	-webkit-text-stroke: 4.5px #102030;
+	opacity: 0.5;
+}
+#arena[data-shadow-style="off"] > .player > .damage > .damage-child2 {
+	z-index: 1;
+	background-image: -webkit-linear-gradient(bottom, #c7a746 58%, #f0d775 22%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+#arena[data-shadow-style="off"] > .player > .damage::before {
 	content: attr(data-text);
 	position: absolute;
 	left: 0;
@@ -1211,14 +1313,14 @@
 }
 
 /*原样式*/
-#arena[data-shadow-style="on"]>.player>.damage {
+#arena[data-shadow-style="on"] > .player > .damage {
 	width: 100%;
 	text-shadow: none;
 	transition: none;
 	z-index: 91;
 }
 
-#arena[data-shadow-style="on"]>.player>.damage::before {
+#arena[data-shadow-style="on"] > .player > .damage::before {
 	content: attr(data-text);
 	position: absolute;
 	left: 0;
@@ -1249,7 +1351,7 @@
 /* } */
 
 /*联机用牌时限*/
-.player>.timerbar {
+.player > .timerbar {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -1259,13 +1361,13 @@
 	z-index: 88;
 }
 
-.player[data-position="0"]>.timerbar {
+.player[data-position="0"] > .timerbar {
 	top: -15px;
 	bottom: auto;
 }
 
-.player>.timerbar>div,
-#arena .timerbar>div {
+.player > .timerbar > div,
+#arena .timerbar > div {
 	position: absolute;
 	left: calc(50% - 50px);
 	top: auto !important;
@@ -1274,13 +1376,13 @@
 	height: 5px;
 }
 
-.player>.timerbar>div:first-child {
+.player > .timerbar > div:first-child {
 	box-shadow: 0 0 4px yellow;
 	background: rgb(100, 0, 0);
 }
 
 /*联机游戏等待中*/
-.player.connect>.gaming {
+.player.connect > .gaming {
 	display: block;
 	position: absolute;
 	left: 0;
@@ -1300,14 +1402,14 @@
 	-webkit-filter: none;
 }
 
-.player.dead>div {
+.player.dead > div {
 	filter: grayscale(1);
 	/*新增*/
 	-webkit-filter: grayscale(1);
 }
 
 /*玩家死亡文字*/
-.player>.died-identity {
+.player > .died-identity {
 	display: flex;
 	align-items: center;
 	align-content: center;
@@ -1331,11 +1433,11 @@
 	opacity: 0;
 }
 
-.player.opposite-camp>.died-identity {
+.player.opposite-camp > .died-identity {
 	color: rgb(50, 50, 210);
 }
 
-.player.dead>.died-identity {
+.player.dead > .died-identity {
 	filter: none;
 	-webkit-filter: none;
 	animation: fade-in 0.5s forwards;
@@ -1345,7 +1447,7 @@
 }
 
 /*玩家获得的技能显示*/
-.player>.gain-skill {
+.player > .gain-skill {
 	position: absolute;
 	left: 22.7px;
 	right: 15px;
@@ -1368,40 +1470,40 @@
 	z-index: 87;
 }
 
-#arena.decadeUI[data-gain-skills-visible="off"]>.player>.gain-skill,
-#arena.decadeUI[data-gain-skills-visible="othersOn"]>.player[data-position="0"]>.gain-skill {
+#arena.decadeUI[data-gain-skills-visible="off"] > .player > .gain-skill,
+#arena.decadeUI[data-gain-skills-visible="othersOn"] > .player[data-position="0"] > .gain-skill {
 	display: none;
 }
 
 /*角色翻面背景*/
-.player>.turned-over {
+.player > .turned-over {
 	position: absolute;
 	left: 0;
 	top: 0;
 	width: 100%;
 	height: 100%;
 	opacity: 0;
-	background-image: url("assets/image/turn_over_mask.png");
+	background-image: url("assets/image/turn_over_mask_shousha.png");
 	background-size: cover;
 	pointer-events: none;
 	z-index: 62;
 }
 
-.player.turnedover>.turned-over {
+.player.turnedover > .turned-over {
 	opacity: 0.8;
 }
 
-.turnedover>div {
+.turnedover > div {
 	opacity: initial;
 }
 
 /*角色边框*/
-.player>.framebg {
+.player > .framebg {
 	z-index: 63;
 }
 
 /*身份标记框*/
-.player>.identity-mark-box {
+.player > .identity-mark-box {
 	display: flex;
 	position: absolute;
 	justify-content: center;
@@ -1413,7 +1515,7 @@
 	z-index: 99;
 }
 
-.player>.identity-mark-box>.identity-mark-item {
+.player > .identity-mark-box > .identity-mark-item {
 	position: static;
 	width: auto;
 	height: auto;
@@ -1433,12 +1535,12 @@
 	transition: opacity, background, transform 0.3s;
 }
 
-.player>.identity-mark-box>.identity-mark-item:active {
+.player > .identity-mark-box > .identity-mark-item:active {
 	transform: scale(0.9);
 }
 
 /*说话泡泡框*/
-.player>.chat-bubble {
+.player > .chat-bubble {
 	left: 0;
 	top: 20px;
 	width: 100%;
@@ -1471,4 +1573,9 @@
 .player .tipContainer {
 	width: 83% !important;
 	right: 0;
+}
+
+/*玩家喝酒效果*/
+.player .playerjiu {
+	background: linear-gradient(to bottom, rgba(255, 0, 0, 0) 25%, rgba(255, 0, 0, 0.4) 50%, rgb(255, 0, 0.8) 150%);
 }

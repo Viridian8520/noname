@@ -1,11 +1,11 @@
 "use strict";
 var duilib;
-(function(duilib) {
-	duilib.throttle = function(func, timeout, context) {
+(function (duilib) {
+	duilib.throttle = function (func, timeout, context) {
 		var args;
 		var timer;
 		var previous;
-		return function() {
+		return function () {
 			if (timer) clearTimeout(timer);
 
 			if (previous == null) previous = performance.now();
@@ -17,7 +17,7 @@ var duilib;
 				previous = null;
 				func.apply(context, args);
 			} else {
-				timer = setTimeout(function() {
+				timer = setTimeout(function () {
 					timer = null;
 					previous = null;
 					func.apply(context, args);
@@ -26,10 +26,10 @@ var duilib;
 		};
 	};
 
-	duilib.observeSize = (function() {
+	duilib.observeSize = (function () {
 		if (!self.ResizeObserver) return null;
 
-		var observer = new ResizeObserver(function(entries) {
+		var observer = new ResizeObserver(function (entries) {
 			var rect;
 			var callback;
 			for (var i = 0; i < entries.length; i++) {
@@ -39,14 +39,14 @@ var duilib;
 				rect = entries[i].contentRect;
 				callback({
 					width: rect.width,
-					height: rect.height
+					height: rect.height,
 				});
 			}
 		});
 
 		observer.observeId = 0;
 		observer.callbacks = {};
-		return function(target, callback) {
+		return function (target, callback) {
 			var obs = observer;
 			target.observeId = obs.observeId++;
 			obs.observe(target);
@@ -54,48 +54,48 @@ var duilib;
 		};
 	})();
 
-	duilib.lerp = function(min, max, fraction) {
+	duilib.lerp = function (min, max, fraction) {
 		return (max - min) * fraction + min;
 	};
 
-	(duilib.ease = function(fraction) {
+	(duilib.ease = function (fraction) {
 		if (!duilib.b3ease) duilib.b3ease = new duilib.CubicBezierEase(0.25, 0.1, 0.25, 1);
 		return duilib.b3ease.ease(fraction);
 	}),
-	(duilib.CubicBezierEase = (function() {
-		function CubicBezierEase(p1x, p1y, p2x, p2y) {
-			this.cX = 3 * p1x;
-			this.bX = 3 * (p2x - p1x) - this.cX;
-			this.aX = 1 - this.cX - this.bX;
+		(duilib.CubicBezierEase = (function () {
+			function CubicBezierEase(p1x, p1y, p2x, p2y) {
+				this.cX = 3 * p1x;
+				this.bX = 3 * (p2x - p1x) - this.cX;
+				this.aX = 1 - this.cX - this.bX;
 
-			this.cY = 3 * p1y;
-			this.bY = 3 * (p2y - p1y) - this.cY;
-			this.aY = 1 - this.cY - this.bY;
-		}
+				this.cY = 3 * p1y;
+				this.bY = 3 * (p2y - p1y) - this.cY;
+				this.aY = 1 - this.cY - this.bY;
+			}
 
-		CubicBezierEase.prototype.getX = function(t) {
-			return t * (this.cX + t * (this.bX + t * this.aX));
-		};
+			CubicBezierEase.prototype.getX = function (t) {
+				return t * (this.cX + t * (this.bX + t * this.aX));
+			};
 
-		CubicBezierEase.prototype.getXDerivative = function(t) {
-			return this.cX + t * (2 * this.bX + 3 * this.aX * t);
-		};
+			CubicBezierEase.prototype.getXDerivative = function (t) {
+				return this.cX + t * (2 * this.bX + 3 * this.aX * t);
+			};
 
-		CubicBezierEase.prototype.ease = function(x) {
-			var prev,
-				t = x;
-			do {
-				prev = t;
-				t = t - (this.getX(t) - x) / this.getXDerivative(t);
-			} while (Math.abs(t - prev) > 1e-4);
+			CubicBezierEase.prototype.ease = function (x) {
+				var prev,
+					t = x;
+				do {
+					prev = t;
+					t = t - (this.getX(t) - x) / this.getXDerivative(t);
+				} while (Math.abs(t - prev) > 1e-4);
 
-			return t * (this.cY + t * (this.bY + t * this.aY));
-		};
+				return t * (this.cY + t * (this.bY + t * this.aY));
+			};
 
-		return CubicBezierEase;
-	})());
+			return CubicBezierEase;
+		})());
 
-	duilib.TimeStep = (function() {
+	duilib.TimeStep = (function () {
 		function TimeStep(initParam) {
 			this.start = initParam.start;
 			this.current = initParam.start;
@@ -106,7 +106,7 @@ var duilib;
 			this.completed = false;
 		}
 
-		TimeStep.prototype.update = function(delta) {
+		TimeStep.prototype.update = function (delta) {
 			this.time += delta;
 			this.percent = duilib.ease(Math.min(this.time / this.duration, 1));
 
@@ -127,8 +127,7 @@ var duilib;
 			}
 
 			if (isArray) {
-				this.current = [duilib.lerp(start[0], end[0], this.percent), duilib.lerp(start[1], end[
-					1], this.percent)];
+				this.current = [duilib.lerp(start[0], end[0], this.percent), duilib.lerp(start[1], end[1], this.percent)];
 			} else {
 				this.current = duilib.lerp(start[0], end[0], this.percent);
 			}
@@ -139,7 +138,7 @@ var duilib;
 		return TimeStep;
 	})();
 
-	duilib.APNode = (function() {
+	duilib.APNode = (function () {
 		function APNode(initParam) {
 			if (initParam == undefined) initParam = {};
 			this.id = undefined; // 内部属性，不可更改
@@ -178,17 +177,16 @@ var duilib;
 			this.flipY = initParam.flipY;
 		}
 
-		APNode.prototype.fadeTo = function(opacity, duration) {
+		APNode.prototype.fadeTo = function (opacity, duration) {
 			if (opacity != undefined) {
-				this.updateTimeStep("opacity", this.opacity == undefined ? 1 : this.opacity, opacity,
-					duration);
+				this.updateTimeStep("opacity", this.opacity == undefined ? 1 : this.opacity, opacity, duration);
 				this.opacity = opacity;
 			}
 
 			return this;
 		};
 
-		APNode.prototype.moveTo = function(x, y, duration) {
+		APNode.prototype.moveTo = function (x, y, duration) {
 			if (x != undefined) {
 				this.updateTimeStep("x", this.x == undefined ? [0, 0.5] : this.x, x, duration);
 				this.x = x;
@@ -202,7 +200,7 @@ var duilib;
 			return this;
 		};
 
-		APNode.prototype.scaleTo = function(scale, duration) {
+		APNode.prototype.scaleTo = function (scale, duration) {
 			if (scale != undefined) {
 				this.updateTimeStep("scale", this.scale == undefined ? 1 : this.scale, scale, duration);
 				this.scale = scale;
@@ -211,7 +209,7 @@ var duilib;
 			return this;
 		};
 
-		APNode.prototype.rotateTo = function(angle, duration) {
+		APNode.prototype.rotateTo = function (angle, duration) {
 			if (angle != undefined) {
 				this.updateTimeStep("angle", this.angle == undefined ? 0 : this.angle, angle, duration);
 				this.angle = angle;
@@ -220,7 +218,7 @@ var duilib;
 			return this;
 		};
 
-		APNode.prototype.update = function(e) {
+		APNode.prototype.update = function (e) {
 			function calc(value, refer, dpr) {
 				if (Array.isArray(value)) {
 					return value[0] * dpr + value[1] * refer;
@@ -237,7 +235,7 @@ var duilib;
 			/* taffy分界线 */
 			var referSize = {
 				width: e.canvas.width,
-				height: e.canvas.height
+				height: e.canvas.height,
 			};
 			var domNode = this.referNode instanceof HTMLElement ? this.referNode : undefined;
 			if (domNode) {
@@ -255,18 +253,12 @@ var duilib;
 						for (var element of parentElements.reverse()) {
 							zoom *= parseFloat(window.getComputedStyle(element).zoom);
 						}
-						var {
-							x,
-							y,
-							width,
-							height
-						} = rect;
+						var { x, y, width, height } = rect;
 						rect = new DOMRect(x / zoom, y / zoom, width / zoom, height / zoom);
 					}
 					this.referBounds = {
 						x: rect.left,
-						y: decadeUI.get.bodySize().height * (useNewDpr ? window.documentZoom : 1) -
-							rect.bottom,
+						y: decadeUI.get.bodySize().height * (useNewDpr ? window.documentZoom : 1) - rect.bottom,
 						width: rect.width,
 						height: rect.height,
 					};
@@ -296,10 +288,8 @@ var duilib;
 				renderY = calc(this.y, referSize.height, dpr);
 			}
 
-			if (this.width != undefined) renderScaleX = calc(this.width, referSize.width, dpr) /
-				skeletonSize.x;
-			if (this.height != undefined) renderScaleY = calc(this.height, referSize.height, dpr) /
-				skeletonSize.y;
+			if (this.width != undefined) renderScaleX = calc(this.width, referSize.width, dpr) / skeletonSize.x;
+			if (this.height != undefined) renderScaleY = calc(this.height, referSize.height, dpr) / skeletonSize.y;
 
 			if (domNode) {
 				if (renderX == undefined) {
@@ -344,8 +334,7 @@ var duilib;
 				renderScale *= Math.min(renderScaleX, renderScaleY);
 			} else {
 				// taffy: 注释animation.js原版代码
-				// renderScale *= dpr * (useNewDpr ? parseFloat(window.getComputedStyle(document.body)
-				//   .zoom) : 1);
+				// renderScale *= dpr * (useNewDpr ? parseFloat(window.getComputedStyle(document.body).zoom) : 1);
 				/* taffy分界线 */
 				// taffy: 修复document is not define问题
 				renderScale *= dpr * (useNewDpr ? parseFloat(window.documentZoom) : 1);
@@ -391,10 +380,9 @@ var duilib;
 			if (this.onupdate) this.onupdate();
 		};
 
-		APNode.prototype.setAction = function(action, transtion) {
+		APNode.prototype.setAction = function (action, transtion) {
 			if (this.skeleton && this.skeleton.node == this) {
-				if (this.skeleton.data.findAnimation(action) == null) return console.error(
-					"setAction: 未找到对应骨骼动作");
+				if (this.skeleton.data.findAnimation(action) == null) return console.error("setAction: 未找到对应骨骼动作");
 				transtion = transtion == undefined ? 0.5 : transtion / 1000;
 				var entry = this.skeleton.state.setAnimation(0, action, this.loop);
 				entry.mixDuration = transtion;
@@ -403,7 +391,7 @@ var duilib;
 			}
 		};
 
-		APNode.prototype.resetAction = function(transtion) {
+		APNode.prototype.resetAction = function (transtion) {
 			if (this.skeleton && this.skeleton.node == this) {
 				transtion = transtion == undefined ? 0.5 : transtion / 1000;
 				var entry = this.skeleton.state.setAnimation(0, this.skeleton.defaultAction, this.loop);
@@ -413,7 +401,7 @@ var duilib;
 			}
 		};
 
-		APNode.prototype.complete = function() {
+		APNode.prototype.complete = function () {
 			if (!this.oncomplete) return;
 
 			if (typeof this.oncomplete == "string") {
@@ -431,7 +419,7 @@ var duilib;
 			if (typeof this.oncomplete == "function") this.oncomplete();
 		};
 
-		APNode.prototype.updateTimeStep = function(key, start, end, duration) {
+		APNode.prototype.updateTimeStep = function (key, start, end, duration) {
 			if (duration == undefined || duration == 0) return;
 
 			var timestep = this.timestepMap[key];
@@ -456,7 +444,7 @@ var duilib;
 		return APNode;
 	})();
 
-	duilib.AnimationPlayer = (function() {
+	duilib.AnimationPlayer = (function () {
 		function AnimationPlayer(pathPrefix, parentNode, elementId) {
 			if (!window.spine) return console.error("spine 未定义.");
 
@@ -472,7 +460,7 @@ var duilib;
 			}
 
 			var config = {
-				alpha: true
+				alpha: true,
 			};
 			var gl = canvas.getContext("webgl2", config);
 			if (gl == undefined) {
@@ -492,7 +480,7 @@ var duilib;
 				};
 			} else {
 				this.spine = {
-					assets: {}
+					assets: {},
 				};
 				console.error("当前设备不支持 WebGL.");
 			}
@@ -536,7 +524,7 @@ var duilib;
 				this.canvas.height = canvas.clientHeight;
 			}
 
-			this.check = function() {
+			this.check = function () {
 				if (!this.gl) {
 					function empty() {}
 					var key;
@@ -557,7 +545,7 @@ var duilib;
 			this.check();
 		}
 
-		AnimationPlayer.prototype.createTextureRegion = function(image, name) {
+		AnimationPlayer.prototype.createTextureRegion = function (image, name) {
 			var page = new spine.TextureAtlasPage();
 			page.name = name;
 			page.uWrap = spine.TextureWrap.ClampToEdge;
@@ -593,11 +581,11 @@ var duilib;
 			return region;
 		};
 
-		AnimationPlayer.prototype.hasSpine = function(filename) {
+		AnimationPlayer.prototype.hasSpine = function (filename) {
 			return this.spine.assets[filename] != undefined;
 		};
 
-		AnimationPlayer.prototype.loadSpine = function(filename, skelType, onload, onerror) {
+		AnimationPlayer.prototype.loadSpine = function (filename, skelType, onload, onerror) {
 			skelType = skelType == undefined ? "skel" : skelType.toLowerCase();
 			var thisAnim = this;
 			var reader = {
@@ -657,8 +645,7 @@ var duilib;
 						} else if (!imageName) {
 							imageName = line;
 							_this.toLoad++;
-							thisAnim.spine.assetManager.loadTexture(prefix + imageName, _this
-								.onload, _this.onerror);
+							thisAnim.spine.assetManager.loadTexture(prefix + imageName, _this.onload, _this.onerror);
 						} else {
 							continue;
 						}
@@ -671,20 +658,18 @@ var duilib;
 			if (skelType == "json") {
 				thisAnim.spine.assetManager.loadText(filename + ".json", reader.onload, reader.onerror);
 			} else {
-				thisAnim.spine.assetManager.loadBinary(filename + ".skel", reader.onload, reader
-					.onerror);
+				thisAnim.spine.assetManager.loadBinary(filename + ".skel", reader.onload, reader.onerror);
 			}
 
-			thisAnim.spine.assetManager.loadText(filename + ".atlas", reader.ontextLoad, reader
-			.onerror);
+			thisAnim.spine.assetManager.loadText(filename + ".atlas", reader.ontextLoad, reader.onerror);
 		};
 
-		AnimationPlayer.prototype.prepSpine = function(filename, autoLoad) {
+		AnimationPlayer.prototype.prepSpine = function (filename, autoLoad) {
 			var _this = this;
 			var spineAssets = _this.spine.assets;
 			if (!spineAssets[filename]) {
 				if (autoLoad) {
-					_this.loadSpine(filename, "skel", function() {
+					_this.loadSpine(filename, "skel", function () {
 						_this.prepSpine(filename);
 					});
 					return "loading";
@@ -710,7 +695,7 @@ var duilib;
 					if (a > b) prefix = filename.substring(0, a + 1);
 					else prefix = filename.substring(0, b + 1);
 				}
-				var atlas = new spine.TextureAtlas(manager.get(filename + ".atlas"), function(path) {
+				var atlas = new spine.TextureAtlas(manager.get(filename + ".atlas"), function (path) {
 					return manager.get(prefix + path);
 				});
 
@@ -762,14 +747,14 @@ var duilib;
 			return skeleton;
 		};
 
-		AnimationPlayer.prototype.playSpine = function(sprite, position) {
+		AnimationPlayer.prototype.playSpine = function (sprite, position) {
 			if (self.duicfg && !self.duicfg.gameAnimationEffect) return;
 			if (sprite == undefined) return console.error("playSpine: parameter undefined");
-			if (typeof sprite == "string") sprite = {
-				name: sprite
-			};
-			if (!this.hasSpine(sprite.name)) return console.error("playSpine: [" + sprite.name +
-				"] 骨骼没有加载");
+			if (typeof sprite == "string")
+				sprite = {
+					name: sprite,
+				};
+			if (!this.hasSpine(sprite.name)) return console.error("playSpine: [" + sprite.name + "] 骨骼没有加载");
 
 			var skeletons = this.spine.skeletons;
 			var skeleton;
@@ -807,8 +792,7 @@ var duilib;
 				sprite.referFollow = position.follow;
 			}
 
-			var entry = skeleton.state.setAnimation(0, sprite.action ? sprite.action : skeleton
-				.defaultAction, sprite.loop);
+			var entry = skeleton.state.setAnimation(0, sprite.action ? sprite.action : skeleton.defaultAction, sprite.loop);
 			entry.mixDuration = 0;
 			if (this.requestId == undefined) {
 				this.running = true;
@@ -820,7 +804,7 @@ var duilib;
 			return sprite;
 		};
 
-		AnimationPlayer.prototype.loopSpine = function(sprite, position) {
+		AnimationPlayer.prototype.loopSpine = function (sprite, position) {
 			if (typeof sprite == "string") {
 				sprite = {
 					name: sprite,
@@ -833,7 +817,7 @@ var duilib;
 			return this.playSpine(sprite, position);
 		};
 
-		AnimationPlayer.prototype.stopSpine = function(sprite) {
+		AnimationPlayer.prototype.stopSpine = function (sprite) {
 			var nodes = this.nodes;
 			var id = sprite.id == undefined ? sprite : sprite.id;
 
@@ -851,7 +835,7 @@ var duilib;
 			return null;
 		};
 
-		AnimationPlayer.prototype.stopSpineAll = function() {
+		AnimationPlayer.prototype.stopSpineAll = function () {
 			var sprite;
 			var nodes = this.nodes;
 			for (var i = 0; i < nodes.length; i++) {
@@ -863,9 +847,8 @@ var duilib;
 			}
 		};
 
-		AnimationPlayer.prototype.getSpineActions = function(filename) {
-			if (!this.hasSpine(filename)) return console.error("getSpineActions: [" + filename +
-				"] 骨骼没有加载");
+		AnimationPlayer.prototype.getSpineActions = function (filename) {
+			if (!this.hasSpine(filename)) return console.error("getSpineActions: [" + filename + "] 骨骼没有加载");
 
 			var skeleton;
 			var skeletons = this.spine.skeletons;
@@ -878,21 +861,20 @@ var duilib;
 			if (skeleton == undefined) skeleton = this.prepSpine(filename);
 			var actions = skeleton.data.animations;
 			var result = new Array(actions.length);
-			for (var i = 0; i < actions.length; i++) result[i] = {
-				name: actions[i].name,
-				duration: actions[i].duration
-			};
+			for (var i = 0; i < actions.length; i++)
+				result[i] = {
+					name: actions[i].name,
+					duration: actions[i].duration,
+				};
 			return result;
 		};
 
-		AnimationPlayer.prototype.getSpineBounds = function(filename) {
-			if (!this.hasSpine(filename)) return console.error("getSpineBounds: [" + filename +
-				"] 骨骼没有加载");
+		AnimationPlayer.prototype.getSpineBounds = function (filename) {
+			if (!this.hasSpine(filename)) return console.error("getSpineBounds: [" + filename + "] 骨骼没有加载");
 
 			if (!this.resized) {
 				var dpr = 1;
-				if (this.dprAdaptive == true) dpr = Math.max(window.devicePixelRatio * (window
-					.documentZoom ? window.documentZoom : 1), 1);
+				if (this.dprAdaptive == true) dpr = Math.max(window.devicePixelRatio * (window.documentZoom ? window.documentZoom : 1), 1);
 
 				canvas.elementHeight = canvas.clientHeight;
 				canvas.elementWidth = canvas.clientWidth;
@@ -912,14 +894,13 @@ var duilib;
 			return skeleton.bounds;
 		};
 
-		AnimationPlayer.prototype.render = function(timestamp) {
+		AnimationPlayer.prototype.render = function (timestamp) {
 			var canvas = this.canvas;
 			var offscreen = this.offscreen;
 			var dpr = 1;
 			if (this.dprAdaptive) {
 				if (offscreen) dpr = this.dpr != undefined ? this.dpr : 1;
-				else dpr = Math.max(window.devicePixelRatio * (window.documentZoom ? window
-					.documentZoom : 1), 1);
+				else dpr = Math.max(window.devicePixelRatio * (window.documentZoom ? window.documentZoom : 1), 1);
 			}
 			var delta = timestamp - (this.frameTime == undefined ? timestamp : this.frameTime);
 			this.frameTime = timestamp;
@@ -1040,22 +1021,21 @@ var duilib;
 		return AnimationPlayer;
 	})();
 
-	duilib.AnimationPlayerPool = (function() {
+	duilib.AnimationPlayerPool = (function () {
 		function AnimationPlayerPool(size, pathPrefix, thisName) {
 			if (!self.spine) return console.error("spine 未定义.");
 
 			this.name = thisName;
 			this.animations = new Array(size ? size : 1);
-			for (var i = 0; i < this.animations.length; i++) this.animations[i] = new duilib
-				.AnimationPlayer(pathPrefix);
+			for (var i = 0; i < this.animations.length; i++) this.animations[i] = new duilib.AnimationPlayer(pathPrefix);
 		}
 
-		AnimationPlayerPool.prototype.loadSpine = function(filename, skelType, onload, onerror) {
+		AnimationPlayerPool.prototype.loadSpine = function (filename, skelType, onload, onerror) {
 			var thisAnim = this;
 			thisAnim.animations[0].loadSpine(
 				filename,
 				skelType,
-				function() {
+				function () {
 					var ap;
 					var aps = thisAnim.animations;
 
@@ -1067,7 +1047,7 @@ var duilib;
 							});
 						} else {
 							setTimeout(
-								function(ap, name) {
+								function (ap, name) {
 									ap.prepSpine(name, true);
 								},
 								50,
@@ -1083,7 +1063,7 @@ var duilib;
 			);
 		};
 
-		AnimationPlayerPool.prototype.playSpineTo = function(element, animation, position) {
+		AnimationPlayerPool.prototype.playSpineTo = function (element, animation, position) {
 			var animations = this.animations;
 			if (position && position.parent) {
 				position.parent = undefined;
@@ -1113,7 +1093,7 @@ var duilib;
 
 	duilib.BUILT_ID = 0;
 	duilib.DynamicWorkers = new Array(2);
-	duilib.DynamicPlayer = (function() {
+	duilib.DynamicPlayer = (function () {
 		function DynamicPlayer(pathPrefix) {
 			this.id = duilib.BUILT_ID++;
 			this.dpr = 1;
@@ -1140,7 +1120,7 @@ var duilib;
 					duilib.observeSize(
 						this.canvas,
 						duilib.throttle(
-							function(newSize) {
+							function (newSize) {
 								this.height = Math.round(newSize.height);
 								this.width = Math.round(newSize.width);
 								this.update();
@@ -1151,7 +1131,8 @@ var duilib;
 					);
 
 					var canvas = this.canvas.transferControlToOffscreen();
-					workers[i].postMessage({
+					workers[i].postMessage(
+						{
 							message: "CREATE",
 							id: this.id,
 							canvas: canvas,
@@ -1172,7 +1153,7 @@ var duilib;
 				this.renderer = renderer;
 				dui.bodySensor.addListener(
 					duilib.throttle(
-						function() {
+						function () {
 							this.renderer.resized = false;
 						},
 						100,
@@ -1183,24 +1164,25 @@ var duilib;
 			}
 		}
 
-		DynamicPlayer.prototype.play = function(sprite) {
-			var sprite = typeof sprite == "string" ? {
-				name: sprite
-			} : sprite;
+		DynamicPlayer.prototype.play = function (sprite) {
+			var sprite =
+				typeof sprite == "string"
+					? {
+							name: sprite,
+					  }
+					: sprite;
 			sprite.id = this.BUILT_ID++;
 			sprite.loop = true;
 
 			if (this.offscreen) {
 				if (!this.initialized) {
 					this.initialized = true;
-					this.dpr = Math.max(window.devicePixelRatio * (window.documentZoom ? window
-						.documentZoom : 1), 1);
+					this.dpr = Math.max(window.devicePixelRatio * (window.documentZoom ? window.documentZoom : 1), 1);
 					this.height = this.canvas.clientHeight;
 					this.width = this.canvas.clientWidth;
 				}
 
-				if (typeof sprite.oncomplete == "function") sprite.oncomplete = sprite.oncomplete
-					.toString();
+				if (typeof sprite.oncomplete == "function") sprite.oncomplete = sprite.oncomplete.toString();
 
 				this.renderer.postMessage({
 					message: "PLAY",
@@ -1218,7 +1200,7 @@ var duilib;
 				dynamic.useMipMaps = this.useMipMaps;
 				dynamic.dprAdaptive = this.dprAdaptive;
 				dynamic.outcropMask = this.outcropMask;
-				var run = function() {
+				var run = function () {
 					var t = dynamic.playSpine(sprite);
 					t.opacity = 0;
 					t.fadeTo(1, 600);
@@ -1234,7 +1216,7 @@ var duilib;
 			return sprite;
 		};
 
-		DynamicPlayer.prototype.stop = function(sprite) {
+		DynamicPlayer.prototype.stop = function (sprite) {
 			if (this.offscreen) {
 				this.renderer.postMessage({
 					message: "STOP",
@@ -1247,7 +1229,7 @@ var duilib;
 			this.renderer.stopSpine(sprite);
 		};
 
-		DynamicPlayer.prototype.stopAll = function() {
+		DynamicPlayer.prototype.stopAll = function () {
 			if (this.offscreen) {
 				this.renderer.postMessage({
 					message: "STOPALL",
@@ -1259,7 +1241,7 @@ var duilib;
 			this.renderer.stopSpineAll();
 		};
 
-		DynamicPlayer.prototype.update = function(force) {
+		DynamicPlayer.prototype.update = function (force) {
 			if (!this.offscreen) {
 				this.renderer.resized = false;
 				this.renderer.useMipMaps = this.useMipMaps;
@@ -1268,8 +1250,7 @@ var duilib;
 				return;
 			}
 
-			this.dpr = Math.max(window.devicePixelRatio * (window.documentZoom ? window.documentZoom :
-				1), 1);
+			this.dpr = Math.max(window.devicePixelRatio * (window.documentZoom ? window.documentZoom : 1), 1);
 			if (force === false) return;
 
 			this.renderer.postMessage({
@@ -1308,9 +1289,9 @@ var duilib;
 				return [
 					"chrome",
 					...window.process.versions.chrome
-					.split(".")
-					.slice(0, 3)
-					.map(item => parseInt(item)),
+						.split(".")
+						.slice(0, 3)
+						.map(item => parseInt(item)),
 				];
 			}
 		}
@@ -1318,9 +1299,7 @@ var duilib;
 		if (typeof navigator.userAgentData != "undefined") {
 			var userAgentData = navigator.userAgentData;
 			if (userAgentData.brands && userAgentData.brands.length) {
-				var brand = userAgentData.brands.find(({
-					brand
-				}) => {
+				var brand = userAgentData.brands.find(({ brand }) => {
 					var str = brand.toLowerCase();
 					return str.includes("chrome") || str.includes("chromium");
 				});
@@ -1352,257 +1331,253 @@ var duilib;
 	}
 
 	var info = getInfo();
-	var useNewDpr = (info[0] == (caesarCipher("Fkurplxp", -3).slice(0, Math.floor(114514 / Math.pow(10, 2)) % 10) +
-		"e").toLowerCase() && info[1] >= 114514 - 114386) || (info[0] == ((caesarCipher("Iluh", -3) + "." +
-			caesarCipher("zlq", -3)).slice(0, Math.floor(114514 / Math.pow(10, 0)) % 10) + "fox")
-	.toLowerCase() && info[1] >= 20 + 6 + 49 + 51);
+	var useNewDpr = (info[0] == (caesarCipher("Fkurplxp", -3).slice(0, Math.floor(114514 / Math.pow(10, 2)) % 10) + "e").toLowerCase() && info[1] >= 114514 - 114386) || (info[0] == ((caesarCipher("Iluh", -3) + "." + caesarCipher("zlq", -3)).slice(0, Math.floor(114514 / Math.pow(10, 0)) % 10) + "fox").toLowerCase() && info[1] >= 20 + 6 + 49 + 51);
 })(duilib || (duilib = {}));
 
 var decadeModule;
 if (decadeModule)
-	decadeModule.import(function(lib, game, ui, get, ai, _status) {
-		decadeUI.animation = (function() {
-			var animation = new decadeUI.AnimationPlayer(decadeUIPath + "assets/animation/", document.body,
-				"decadeUI-canvas");
-			decadeUI.bodySensor.addListener(function() {
+	decadeModule.import(function (lib, game, ui, get, ai, _status) {
+		decadeUI.animation = (function () {
+			var animation = new decadeUI.AnimationPlayer(decadeUIPath + "assets/animation/", document.body, "decadeUI-canvas");
+			decadeUI.bodySensor.addListener(function () {
 				animation.resized = false;
 			}, true);
-			animation.cap = new decadeUI.AnimationPlayerPool(4, decadeUIPath + "assets/animation/",
-				"decadeUI.animation");
+			animation.cap = new decadeUI.AnimationPlayerPool(4, decadeUIPath + "assets/animation/", "decadeUI.animation");
 
-			var fileList = [{
-					name: "effect_youxikaishi"
+			var fileList = [
+				{
+					name: "effect_youxikaishi",
 				},
 				{
-					name: "effect_youxikaishi_shousha"
+					name: "effect_youxikaishi_shousha",
 				},
 				{
-					name: "effect_baguazhen"
+					name: "effect_baguazhen",
 				},
 				{
-					name: "effect_baiyinshizi"
+					name: "effect_baiyinshizi",
 				},
 				{
-					name: "effect_cixiongshuanggujian"
+					name: "effect_cixiongshuanggujian",
 				},
 				{
-					name: "effect_fangtianhuaji"
+					name: "effect_fangtianhuaji",
 				},
 				{
-					name: "effect_guanshifu"
+					name: "effect_guanshifu",
 				},
 				{
-					name: "effect_gudingdao"
+					name: "effect_gudingdao",
 				},
 				{
-					name: "effect_hanbingjian"
+					name: "effect_hanbingjian",
 				},
 				{
-					name: "effect_qilingong"
+					name: "effect_qilingong",
 				},
 				{
-					name: "effect_qinggangjian"
+					name: "effect_qinggangjian",
 				},
 				{
-					name: "effect_qinglongyanyuedao"
+					name: "effect_qinglongyanyuedao",
 				},
 				{
-					name: "effect_renwangdun"
+					name: "effect_renwangdun",
 				},
 				{
-					name: "effect_shoujidonghua"
+					name: "effect_shoujidonghua",
 				},
 				{
-					name: "effect_tengjiafangyu"
+					name: "effect_tengjiafangyu",
 				},
 				{
-					name: "effect_tengjiaranshao"
+					name: "effect_tengjiaranshao",
 				},
 				{
-					name: "effect_zhangbashemao"
+					name: "effect_zhangbashemao",
 				},
 				{
-					name: "effect_zhiliao"
+					name: "effect_zhiliao",
 				},
 				{
-					name: "effect_zhugeliannu"
+					name: "effect_zhugeliannu",
 				},
 				{
-					name: "effect_zhuqueyushan"
+					name: "effect_zhuqueyushan",
 				},
 				{
-					name: "effect_jinhe"
+					name: "effect_jinhe",
 				},
 				{
-					name: "effect_numa"
+					name: "effect_numa",
 				},
 				{
-					name: "effect_nvzhuang"
+					name: "effect_nvzhuang",
 				},
 				{
-					name: "effect_wufengjian"
+					name: "effect_wufengjian",
 				},
 				{
-					name: "effect_yajiaoqiang"
+					name: "effect_yajiaoqiang",
 				},
 				{
-					name: "effect_yinfengjia"
+					name: "effect_yinfengjia",
 				},
 				{
-					name: "effect_zheji"
+					name: "effect_zheji",
 				},
 				{
-					name: "effect_jisha1"
+					name: "effect_jisha1",
 				},
 				{
-					name: "effect_zhenwang"
+					name: "effect_zhenwang",
 				},
 				{
-					name: "effect_lebusishu"
+					name: "effect_lebusishu",
 				},
 				{
-					name: "effect_bingliangcunduan"
+					name: "effect_bingliangcunduan",
 				},
 				{
-					name: "effect_nanmanruqin"
+					name: "effect_nanmanruqin",
 				},
 				{
-					name: "effect_taoyuanjieyi"
+					name: "effect_taoyuanjieyi",
 				},
 				{
-					name: "effect_shandian"
+					name: "effect_shandian",
 				},
 				{
-					name: "effect_wanjianqifa_full"
+					name: "effect_wanjianqifa_full",
 				},
 				{
-					name: "RWJGD_xiao"
+					name: "RWJGD_xiao",
 				},
 				{
-					name: "XRJXN_xiao"
+					name: "XRJXN_xiao",
 				},
 				{
-					name: "XTBGZ_xiao"
+					name: "XTBGZ_xiao",
 				},
 				{
-					name: "ZYSZK_xiao"
+					name: "ZYSZK_xiao",
 				},
 				{
-					name: "TYBLJ"
+					name: "TYBLJ",
 				},
 				{
-					name: "SSHW_TX_chongyingshenfu"
+					name: "SSHW_TX_chongyingshenfu",
 				},
 				{
-					name: "SSHW_TX_lingbaoxianhu"
+					name: "SSHW_TX_lingbaoxianhu",
 				},
 				{
-					name: "SSHW_TX_taijifuchen"
+					name: "SSHW_TX_taijifuchen",
 				},
 				{
 					name: "effect_xianding",
-					fileType: "json"
+					fileType: "json",
 				},
 				{
 					name: "effect_caochuanjiejian",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_guohechaiqiao",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_leisha",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_heisha",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_huosha",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_hongsha",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_huogong",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_panding",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_shan",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_tao",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_tiesuolianhuan",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_jiu",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_shunshouqianyang",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_shushangkaihua",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_wanjianqifa",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_wuzhongshengyou",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_wuxiekeji",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_wugufengdeng",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_yuanjiaojingong",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_zhijizhibi",
-					follow: true
+					follow: true,
 				},
 				{
 					name: "effect_zhulutianxia",
-					follow: true
+					follow: true,
 				},
 			];
 
 			var fileNameList = fileList.concat();
 
-			var read = function() {
+			var read = function () {
 				if (fileNameList.length) {
 					var file = fileNameList.shift();
 					if (file.follow) {
 						//	这个是专门播放追踪卡牌的动画，调用方式 decadeUI.animation.cap.playSpineTo(element, animation, position);
 						//	建议非追踪对象的特效不要滥用，因为每次导入1个骨骼会生成4个预制骨骼，资源占用较多
-						animation.cap.loadSpine(file.name, file.fileType, function() {
+						animation.cap.loadSpine(file.name, file.fileType, function () {
 							read();
 						});
 					} else {
 						//	这个是专门播放全屏位置的动画
-						animation.loadSpine(file.name, file.fileType, function() {
+						animation.loadSpine(file.name, file.fileType, function () {
 							read();
 							animation.prepSpine(this.name);
 						});
@@ -1612,7 +1587,7 @@ if (decadeModule)
 			read();
 			read();
 
-			var skillAnimation = (function() {
+			var skillAnimation = (function () {
 				var defines = {
 					skill: {
 						rw_bagua_skill: {
@@ -1773,7 +1748,7 @@ if (decadeModule)
 						numa: {
 							skill: "numa",
 							name: "effect_numa",
-							scale: 0.4
+							scale: 0.4,
 						},
 						nvzhuang: {
 							skill: "nvzhuang",
@@ -1798,12 +1773,12 @@ if (decadeModule)
 						zheji: {
 							skill: "zheji",
 							name: "effect_zheji",
-							scale: 0.35
+							scale: 0.35,
 						},
 						lebu: {
 							skill: "lebu",
 							name: "effect_lebusishu",
-							scale: 0.7
+							scale: 0.7,
 						},
 						bingliang: {
 							skill: "bingliang",
@@ -1830,12 +1805,12 @@ if (decadeModule)
 						},
 						taoyuan: {
 							card: "taoyuan",
-							name: "effect_taoyuanjieyi"
+							name: "effect_taoyuanjieyi",
 						},
 					},
 				};
 
-				var cardAnimate = function(card) {
+				var cardAnimate = function (card) {
 					var anim = defines.card[card.name];
 					if (!anim) return console.error("cardAnimate:" + card.name);
 					animation.playSpine(anim.name, {
@@ -1849,7 +1824,7 @@ if (decadeModule)
 					lib.animate.card[defines.card[key].card] = cardAnimate;
 				}
 
-				var skillAnimate = function(name) {
+				var skillAnimate = function (name) {
 					var anim = defines.skill[name];
 					if (!anim) return console.error("skillAnimate:" + name);
 					animation.playSpine(anim.name, {
@@ -1870,7 +1845,7 @@ if (decadeModule)
 							onEquip() {
 								if (
 									player.sex == "male" &&
-									player.countCards("he", function(cardx) {
+									player.countCards("he", function (cardx) {
 										return cardx != card;
 									})
 								) {
@@ -1878,7 +1853,7 @@ if (decadeModule)
 									player
 										.chooseToDiscard(
 											true,
-											function(card) {
+											function (card) {
 												return card != _status.event.card;
 											},
 											"he"
@@ -1894,10 +1869,9 @@ if (decadeModule)
 								if (evt.getlx === false) evt = evt.getParent();
 								evt.after.push(next);
 								next.player = player;
-								next.setContent(function() {
+								next.setContent(function () {
 									if (player.countCards("he")) {
-										lib.animate.skill["nvzhuang"].call(player,
-											"nvzhuang");
+										lib.animate.skill["nvzhuang"].call(player, "nvzhuang");
 										player.chooseToDiscard(true, "he");
 									}
 								});
@@ -1927,8 +1901,7 @@ if (decadeModule)
 									if (get.is.changban()) {
 										player.addTempSkill("bingliang_changban");
 									} else {
-										lib.animate.skill["bingliang"].call(player,
-										"bingliang");
+										lib.animate.skill["bingliang"].call(player, "bingliang");
 										player.skip("phaseDraw");
 									}
 								}
@@ -1959,10 +1932,9 @@ if (decadeModule)
 			return animation;
 		})();
 
-		decadeUI.backgroundAnimation = (function() {
-			var animation = new decadeUI.AnimationPlayer(decadeUIPath + "assets/dynamic/", document.body,
-				"decadeUI-canvas-background");
-			decadeUI.bodySensor.addListener(function() {
+		decadeUI.backgroundAnimation = (function () {
+			var animation = new decadeUI.AnimationPlayer(decadeUIPath + "assets/dynamic/", document.body, "decadeUI-canvas-background");
+			decadeUI.bodySensor.addListener(function () {
 				animation.resized = false;
 			}, true);
 
@@ -1984,12 +1956,6 @@ if (decadeModule)
 						y: [17, 0.15],
 						height: [0, 0.5],
 					},
-					/*动态边框: {//这部分别管
-		  name: 'skin_chengzhu_ChengZhuBianKuang',
-		  x: [12, 0.893],
-		  y: [16, 0.15],
-		  height: [0, 0.53],
-		},*/
 				},
 				skin_caojinyu: {
 					惊鸿: {
@@ -2426,10 +2392,9 @@ if (decadeModule)
 			};
 
 			animation.stop = animation.stopSpineAll;
-			animation.play = function(name, skin) {
+			animation.play = function (name, skin) {
 				var definedAssets = this.definedAssets;
-				if (definedAssets[name] == void 0 || definedAssets[name][skin] == void 0) return console
-					.log("没有预定义[asset:" + name + ", skin:" + skin + "]的动态背景.");
+				if (definedAssets[name] == void 0 || definedAssets[name][skin] == void 0) return console.log("没有预定义[asset:" + name + ", skin:" + skin + "]的动态背景.");
 
 				if (this.current && this.current.name == name) return;
 
@@ -2437,7 +2402,7 @@ if (decadeModule)
 				var playAsset = definedAssets[name][skin];
 				if (!this.hasSpine(playAsset.name)) {
 					var _this = this;
-					_this.loadSpine(playAsset.name, "skel", function() {
+					_this.loadSpine(playAsset.name, "skel", function () {
 						if (_this.current && _this.current.name == playAsset.name) return;
 						_this.current = _this.loopSpine(playAsset);
 					});

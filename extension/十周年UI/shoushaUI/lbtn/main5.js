@@ -1,39 +1,36 @@
-app.import(function(lib, game, ui, get, ai, _status, app) {
-	lib.arenaReady.push(function() {
+app.import(function (lib, game, ui, get, ai, _status, app) {
+	lib.arenaReady.push(function () {
 		//更新轮次
 		var originUpdateRoundNumber = game.updateRoundNumber;
-		game.updateRoundNumber = function() {
+		game.updateRoundNumber = function () {
 			originUpdateRoundNumber.apply(this, arguments);
 			if (ui.cardRoundTime) ui.cardRoundTime.updateRoundCard();
 		};
 
 		var head = ui.create.node("ismg");
 		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png";
-		head.style.cssText =
-			"display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-1";
+		head.style.cssText = "display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-1";
 		document.body.appendChild(head);
 
 		var head = ui.create.node("img");
 		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/new_buttonhs3.png";
-		head.style.cssText =
-			"display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: 13%;left: 53px;right: auto;background-color: transparent;z-index:1";
-		head.onclick = function() {
+		head.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: 13%;left: 53px;right: auto;background-color: transparent;z-index:1";
+		head.onclick = function () {
 			head.style.transform = "scale(0.95)";
 		};
 		document.body.appendChild(head);
 
 		var head = ui.create.node("div");
-		head.style.cssText =
-			"display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: 13%;left: 53px;right: auto;background-color: transparent;z-index:1";
-		head.onclick = function() {
+		head.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: 13%;left: 53px;right: auto;background-color: transparent;z-index:1";
+		head.onclick = function () {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 
-				if (!ui.click.configMenu) return;
-				game.closePopped();
-				game.pause2();
-				ui.click.configMenu();
-				ui.system1.classList.remove("shown");
-				ui.system2.classList.remove("shown");
+			if (!ui.click.configMenu) return;
+			game.closePopped();
+			game.pause2();
+			ui.click.configMenu();
+			ui.system1.classList.remove("shown");
+			ui.system2.classList.remove("shown");
 		};
 		document.body.appendChild(head);
 
@@ -41,26 +38,23 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/zhenglihs.png";
 		//左手整理手牌按钮位置
 		if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-			head.style.cssText =
-				"display: block;--w: 100px;--h: calc(var(--w) * 81/347);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 31px);left: calc(100% - 350px);background-color: transparent;z-index:2";
+			head.style.cssText = "display: block;--w: 100px;--h: calc(var(--w) * 81/347);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 31px);left: calc(100% - 350px);background-color: transparent;z-index:2";
 		} else {
-			head.style.cssText =
-				"display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 33px);right: calc(100% - 367.2px);background-color: transparent;z-index:2;";
+			head.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 33px);right: calc(100% - 367.2px);background-color: transparent;z-index:2;";
 		}
-		head.onclick = function() {
+		head.onclick = function () {
 			//head.onclick=ui.click.sortCard;
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
 			var cards = game.me.getCards("hs");
-			var sort2 = function(b, a) {
+			var sort2 = function (b, a) {
 				if (a.name != b.name) return lib.sort.card(a.name, b.name);
 				else if (a.suit != b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
 				else return a.number - b.number;
 			};
 			if (cards.length > 1) {
 				cards.sort(sort2);
-				cards.forEach(function(i, j) {
-					game.me.node.handcards1.insertBefore(cards[j], game.me.node.handcards1
-						.firstChild);
+				cards.forEach(function (i, j) {
+					game.me.node.handcards1.insertBefore(cards[j], game.me.node.handcards1.firstChild);
 				});
 				dui.queueNextFrameTick(dui.layoutHand, dui);
 			}
@@ -70,12 +64,12 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 	var plugin = {
 		name: "lbtn",
 		filter() {
-			return !["chess", "tafang"].contains(get.mode());
+			return !["chess", "tafang"].includes(get.mode());
 		},
 		content(next) {
 			lib.skill._uicardupdate = {
 				trigger: {
-					player: "phaseJieshuBegin"
+					player: "phaseJieshuBegin",
 				},
 				forced: true,
 				unique: true,
@@ -103,8 +97,8 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 				},
 				updateCardRoundTime(opts) {
 					if (!ui.cardRoundTime) return;
-					ui.cardRoundTime.node.roundNumber.innerHTML = "<span>第" + game.roundNumber +
-						"轮</span>";
+					var roundNumber = Math.max(1, game.roundNumber || 1);
+					ui.cardRoundTime.node.roundNumber.innerHTML = "<span>第" + roundNumber + "轮</span>";
 					ui.cardRoundTime.setNumberAnimation(opts.cardNumber);
 				},
 				updateCardnumber(opts) {
@@ -114,14 +108,14 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 			});
 			app.reWriteFunction(ui.create, {
 				me: [
-					function() {
+					function () {
 						plugin.create.control();
 					},
 					null,
 				],
 				arena: [
 					null,
-					function() {
+					function () {
 						if (ui.time3) {
 							clearInterval(ui.time3.interval);
 							ui.time3.delete();
@@ -133,7 +127,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 				],
 				cards: [
 					null,
-					function() {
+					function () {
 						if (ui.cardRoundTime) {
 							ui.cardRoundTime.updateRoundCard();
 						}
@@ -143,7 +137,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 			app.reWriteFunction(lib.configMenu.appearence.config, {
 				update: [
 					null,
-					function(res, config, map) {
+					function (res, config, map) {
 						map.control_style.hide();
 						map.custom_button.hide();
 						map.custom_button_system_top.hide();
@@ -155,7 +149,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 				],
 			});
 
-			ui.create.confirm = function(str, func) {
+			ui.create.confirm = function (str, func) {
 				var confirm = ui.confirm;
 				if (!confirm) {
 					confirm = ui.confirm = plugin.create.confirm();
@@ -201,32 +195,29 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 				confirm.custom = plugin.click.confirm;
 				app.reWriteFunction(confirm, {
 					close: [
-						function() {
+						function () {
 							this.classList.add("closing");
 						},
 					],
 				});
 				for (var k in confirm.node) {
 					confirm.node[k].classList.add("disabled");
-					confirm.node[k].removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui
-						.click.control);
-					confirm.node[k].addEventListener(lib.config.touchscreen ? "touchend" : "click",
-						function(e) {
-							e.stopPropagation();
-							if (this.classList.contains("disabled")) {
-								if (this.link === "cancel" && this.dataset.type === "endButton" &&
-									_status.event.endButton) {
-									_status.event.endButton.custom();
-									ui.confirm.close();
-									//  ui.updatec();
-								}
-								return;
+					confirm.node[k].removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
+					confirm.node[k].addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
+						e.stopPropagation();
+						if (this.classList.contains("disabled")) {
+							if (this.link === "cancel" && this.dataset.type === "endButton" && _status.event.endButton) {
+								_status.event.endButton.custom();
+								ui.confirm.close();
+								//  ui.updatec();
 							}
+							return;
+						}
 
-							if (this.parentNode.custom) {
-								this.parentNode.custom(this.link, this);
-							}
-						});
+						if (this.parentNode.custom) {
+							this.parentNode.custom(this.link, this);
+						}
+					});
 				}
 
 				if (ui.skills2 && ui.skills2.skills.length) {
@@ -236,7 +227,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 						var item = document.createElement("div");
 						item.link = skills[i];
 						item.innerHTML = get.translation(skills[i]);
-						item.addEventListener(lib.config.touchscreen ? "touchend" : "click", function(e) {
+						item.addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
 							e.stopPropagation();
 							ui.click.skill(this.link);
 						});
@@ -248,17 +239,17 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 					}
 				}
 
-				confirm.update = function() {
+				confirm.update = function () {
 					if (confirm.skills2) {
 						if (_status.event.skill && _status.event.skill !== confirm.dataset.skill) {
 							confirm.dataset.skill = _status.event.skill;
-							confirm.skills2.forEach(function(item) {
+							confirm.skills2.forEach(function (item) {
 								item.remove();
 							});
 							ui.updatec();
 						} else if (!_status.event.skill && confirm.dataset.skill) {
 							delete confirm.dataset.skill;
-							confirm.skills2.forEach(function(item) {
+							confirm.skills2.forEach(function (item) {
 								confirm.insertBefore(item, confirm.firstChild);
 							});
 							ui.updatec();
@@ -311,7 +302,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 					};
 				}
 				//结束
-				node.updateCardnumber = function() {
+				node.updateCardnumber = function () {
 					if (!game.me) return;
 
 					var cardNumber2 = game.me.countCards("h") || 0;
@@ -319,10 +310,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 					var numbercolor = "white";
 					if (cardNumber2 > cardNumber) numbercolor = "red";
 					if (cardNumber == Infinity) cardNumber = "∞";
-					this.node.cardNumber.innerHTML = "<span>" + "<font color=" + numbercolor + " > " +
-						cardNumber2 + "</font>" +
-						'<sp style="font-size:20px; font-family:yuanli; color:#FFFCF5;">' + " / " +
-						"</sp>" + cardNumber + "</span>"; /*手牌数参数*/
+					this.node.cardNumber.innerHTML = "<span>" + "<font color=" + numbercolor + " > " + cardNumber2 + "</font>" + '<sp style="font-size:20px; font-family:yuanli; color:#FFFCF5;">' + " / " + "</sp>" + cardNumber + "</span>"; /*手牌数参数*/
 					//      this.setNumberAnimation(cardNumber);
 					this.show();
 
@@ -330,7 +318,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 						cardNumber: cardNumber,
 					});
 				};
-				node.node.cardNumber.interval = setInterval(function() {
+				node.node.cardNumber.interval = setInterval(function () {
 					ui.handcardNumber.updateCardnumber();
 				}, 1000);
 				//    game.addVideo('createCardRoundTime');
@@ -345,10 +333,10 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 					time: ui.create.div(".time", node),
 				};
 
-				node.updateRoundCard = function() {
+				node.updateRoundCard = function () {
 					var cardNumber = ui.cardPile.childNodes.length || 0;
-					var roundNumber = game.roundNumber || 0;
-					this.node.roundNumber.innerHTML = "<span>" + game.roundNumber + "轮</span>";
+					var roundNumber = Math.max(1, game.roundNumber || 1);
+					this.node.roundNumber.innerHTML = "<span>" + roundNumber + "轮</span>";
 					this.setNumberAnimation(cardNumber);
 					this.show();
 					game.addVideo("updateCardRoundTime", null, {
@@ -357,7 +345,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 					});
 				};
 
-				node.setNumberAnimation = function(num, step) {
+				node.setNumberAnimation = function (num, step) {
 					var item = this.node.cardPileNumber;
 					clearTimeout(item.interval);
 					if (!item._num) {
@@ -370,7 +358,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 							else item._num++;
 							item.innerHTML = "<span>" + item._num + "</span>";
 							if (item._num !== num) {
-								item.interval = setTimeout(function() {
+								item.interval = setTimeout(function () {
 									node.setNumberAnimation(num, step);
 								}, step);
 							}
@@ -378,10 +366,9 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 					}
 				};
 
-
 				ui.time4 = node.node.time;
 				ui.time4.starttime = get.utc();
-				ui.time4.interval = setInterval(function() {
+				ui.time4.interval = setInterval(function () {
 					var num = Math.round((get.utc() - ui.time4.starttime) / 1000);
 					if (num >= 3600) {
 						var num1 = Math.floor(num / 3600);
@@ -416,9 +403,7 @@ app.import(function(lib, game, ui, get, ai, _status, app) {
 		click: {
 			huanfu() {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/huanfu.mp3");
-				window.zyile_charactercard ? window.zyile_charactercard(player, false) : ui.click
-					.charactercard(game.me.name, game.zhu, lib.config.mode == "mode_guozhan" ? "guozhan" :
-						true);
+				window.zyile_charactercard ? window.zyile_charactercard(player, false) : ui.click.charactercard(game.me.name, game.zhu, lib.config.mode == "mode_guozhan" ? "guozhan" : true);
 			},
 			confirm(link, target) {
 				if (link === "ok") {

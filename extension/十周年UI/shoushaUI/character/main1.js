@@ -58,30 +58,30 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 				});
 				var dialog = ui.create.div(".character-dialog.popped", container);
-        var blackBg1=ui.create.div(".blackBg.one", dialog);
-        var blackBg2=ui.create.div(".blackBg.two", dialog);
-        var basicInfo=ui.create.div(".basicInfo", blackBg1);
-        //官阶
-        var officalMap={
-          offical_icon_1:'士兵',
-          offical_icon_2:'十夫长',
-          offical_icon_3:'百夫长',
-          offical_icon_4:'千夫长',
-          offical_icon_5:'校尉',
-          offical_icon_6:'先锋',
-          offical_icon_7:'中军将军',
-          offical_icon_8:'领军将军',
-          offical_icon_9:'骠骑将军',
-          offical_icon_10:'大将军',
-          offical_icon_11:'大元帅',
-        }
-        var officalbg=ui.create.div(".offical-bg", blackBg1);
-        var officalIcon=ui.create.div(".offical-icon", officalbg);
-        var randomOffical=Object.keys(officalMap).randomGet();
-        officalIcon.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/${randomOffical}.png`);
-        var officalText=ui.create.div(".offical-text",officalMap[randomOffical], officalbg);
+				var blackBg1 = ui.create.div(".blackBg.one", dialog);
+				var blackBg2 = ui.create.div(".blackBg.two", dialog);
+				var basicInfo = ui.create.div(".basicInfo", blackBg1);
+				//官阶
+				var officalMap = {
+					offical_icon_1: "士兵",
+					offical_icon_2: "十夫长",
+					offical_icon_3: "百夫长",
+					offical_icon_4: "千夫长",
+					offical_icon_5: "校尉",
+					offical_icon_6: "先锋",
+					offical_icon_7: "中军将军",
+					offical_icon_8: "领军将军",
+					offical_icon_9: "骠骑将军",
+					offical_icon_10: "大将军",
+					offical_icon_11: "大元帅",
+				};
+				var officalbg = ui.create.div(".offical-bg", blackBg1);
+				var officalIcon = ui.create.div(".offical-icon", officalbg);
+				var randomOffical = Object.keys(officalMap).randomGet();
+				officalIcon.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/shousha/${randomOffical}.png`);
+				var officalText = ui.create.div(".offical-text", officalMap[randomOffical], officalbg);
 
-        var fightbg=ui.create.div(".fight-bg", blackBg1);
+				var fightbg = ui.create.div(".fight-bg", blackBg1);
 
 				// var xinxi = ui.create.div(".xinxi", dialog);
 				var rightPane = ui.create.div(".right", blackBg2);
@@ -96,7 +96,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				//逃率
 				var taolv = ui.create.div(".shenglv", fightbg);
 
-        var viewBusinessCard=ui.create.div(".viewBusinessCard","查看名片", blackBg1);
+				var viewBusinessCard = ui.create.div(".viewBusinessCard", "查看名片", blackBg1);
 
 				var createButton = function (name, parent) {
 					if (!name) return;
@@ -115,7 +115,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 
 					//var url = extensionPath + 'character/images/name2_' + value + '.png';
-          //武将
+					//武将
 					if (lib.config.extension_十周年UI_ZLLT == true) {
 						var biankuang = ui.create.div(".biankuang", blackBg2);
 					} else {
@@ -131,8 +131,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
 					createButton(name, leftPane.firstChild);
 					createButton(name2, leftPane.firstChild);
-          var biankuangname = ui.create.div(".biankuangname", biankuang);
-          var xing = ui.create.div(".xing", biankuang);
+					var biankuangname = ui.create.div(".biankuangname", biankuang);
+					var xing = ui.create.div(".xing", biankuang);
 
 					var num = 1,
 						rarity = game.getRarity(player.name);
@@ -162,13 +162,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					// mingcheng.style.cssText = "display: block;position: absolute;top: -15px;right: 423px;font-size:20px;color:#4B3B30;text-shadow:none;font-weight:bold;font-family: 'FZLBJW';z-index:68";
 
 					//角色等级
-					dengji.innerText= "Lv："+Math.floor(Math.random() * (200 - 1 + 1) + 1);
+					dengji.innerText = "Lv：" + Math.floor(Math.random() * (200 - 1 + 1) + 1);
 					//dengji.style.cssText = "display: block;position: absolute;top: -13px;right: 325px;font-size:21px;font-family:'shousha';color: white; !important; z-index:68";
 
-					shenglv.innerHTML = `<span style="font-size: 20px;">胜率：</span>`+(num = Math.floor(Math.random() * (99 - 0 + 1) + 0)) + "." + (num = Math.floor(Math.random() * (99 - 0 + 1) + 0)) + "%";
+					shenglv.innerHTML = `<span style="font-size: 20px;">胜率：</span>` + (num = Math.floor(Math.random() * (99 - 0 + 1) + 0)) + "." + (num = Math.floor(Math.random() * (99 - 0 + 1) + 0)) + "%";
 					//shenglv.style.cssText = "display: block;position: absolute;top: 68px;right: 383px;font-size:28px;font-family:'shousha';color: white; webkit-text-stroke:0.5px black !important; z-index:68";
 
-					taolv.innerHTML = `<span style="font-size: 20px;">逃率：</span>`+(num = Math.floor(Math.random() * (99 - 0 + 1) + 0)) + "." + (num = Math.floor(Math.random() * (99 - 0 + 1) + 0)) + "%";
+					taolv.innerHTML = `<span style="font-size: 20px;">逃率：</span>` + (num = Math.floor(Math.random() * (99 - 0 + 1) + 0)) + "." + (num = Math.floor(Math.random() * (99 - 0 + 1) + 0)) + "%";
 					//taolv.style.cssText = "display: block;position: absolute;top: 68px;right: 170px;font-size:28px;font-family:'shousha';color: white; webkit-text-stroke:0.5px black !important; z-index:68";
 
 					var shanchang = get.config("recentCharacter");
@@ -289,39 +289,38 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 											].randomGet(1))
 								  )
 						);
-						var gonghui = ui.create.div(".gonghui", bigdialog, get.translation((innerText = "(" + (num = ["无名杀会员", "手机三国杀会员", "三国杀ol会员", "三国杀十周年会员", "怒焰三国杀会员", "欢乐三国杀会员", "阵面对决会员"]).randomGet(1) + ")")));
-						var xianhua = ui.create.div(".xianhua", bigdialog, get.translation((innerText = "鲜花" + (num = Math.floor(Math.random() * (999 - 1 + 1) + 1)))));
-						var jidan = ui.create.div(".jidan", bigdialog, get.translation((innerText = "鸡蛋" + (num = Math.floor(Math.random() * (999 - 1 + 1) + 1)))));
-						var fenxiang = ui.create.div(".fenxiang", bigdialog, get.translation((innerText = "分享")));
-						var zhanshi = ui.create.div(".zhanshi", bigdialog, get.translation((innerText = "展示(诏令－1)")));
+						ui.create.div(".gonghui", bigdialog, get.translation((innerText = "(" + (num = ["无名杀会员", "手机三国杀会员", "三国杀ol会员", "三国杀十周年会员", "怒焰三国杀会员", "欢乐三国杀会员", "阵面对决会员"]).randomGet(1) + ")")));
+						ui.create.div(".xianhua", bigdialog, get.translation((innerText = "鲜花" + (num = Math.floor(Math.random() * (999 - 1 + 1) + 1)))));
+						ui.create.div(".jidan", bigdialog, get.translation((innerText = "鸡蛋" + (num = Math.floor(Math.random() * (999 - 1 + 1) + 1)))));
+						ui.create.div(".fenxiang", bigdialog, get.translation((innerText = "分享")));
+						ui.create.div(".zhanshi", bigdialog, get.translation((innerText = "展示(诏令－1)")));
 
 						//var shanchang = get.config('recentCharacter');
-					/*	var shanchang = ["sp_diaochan", "sp_zhaoyun", "sp_sunshangxiang", "sp_caoren", "sp_jiangwei", "sp_machao", "sp_caiwenji", "jsp_guanyu", "jsp_huangyueying", "sp_pangde", "sp_jiaxu", "yuanshu", "sp_zhangliao", "sp_ol_zhanghe", "wulan", "leitong", "huaman", "wangshuang", "wenyang", "re_liuzan", "caobuxing", "re_maliang", "xin_baosanniang", "re_xinxianying", "dongxie", "guozhao", "fanyufeng", "ruanyu", "liangxing", "re_dongzhao", "yangwan", "re_panshu", "dufuren", "zhouyi", "lvlingqi", "re_kanze", "caojinyu", "caocao", "simayi", "xiahoudun", "zhangliao", "xuzhu", "guojia", "zhenji", "liubei", "guanyu", "zhangfei", "zhugeliang", "zhaoyun", "machao", "huangyueying", "sunquan", "ganning", "lvmeng", "huanggai", "zhouyu", "daqiao", "luxun", "sunshangxiang", "huatuo", "lvbu", "diaochan"];*/
+						/*	var shanchang = ["sp_diaochan", "sp_zhaoyun", "sp_sunshangxiang", "sp_caoren", "sp_jiangwei", "sp_machao", "sp_caiwenji", "jsp_guanyu", "jsp_huangyueying", "sp_pangde", "sp_jiaxu", "yuanshu", "sp_zhangliao", "sp_ol_zhanghe", "wulan", "leitong", "huaman", "wangshuang", "wenyang", "re_liuzan", "caobuxing", "re_maliang", "xin_baosanniang", "re_xinxianying", "dongxie", "guozhao", "fanyufeng", "ruanyu", "liangxing", "re_dongzhao", "yangwan", "re_panshu", "dufuren", "zhouyi", "lvlingqi", "re_kanze", "caojinyu", "caocao", "simayi", "xiahoudun", "zhangliao", "xuzhu", "guojia", "zhenji", "liubei", "guanyu", "zhangfei", "zhugeliang", "zhaoyun", "machao", "huangyueying", "sunquan", "ganning", "lvmeng", "huanggai", "zhouyu", "daqiao", "luxun", "sunshangxiang", "huatuo", "lvbu", "diaochan"];*/
 						var list = [];
-            			for (i in lib.character) {
-            				if (!lib.filter.characterDisabled(i)) {
-            					list.push(i);
-            				}
-            			}
-            			var choose = [];
-            			_status.characterlist = list;
-            			event.filterChoice = function (name1, name2) {
-            				var info1 = lib.character[name1];
-            				var info2 = lib.character[name2];
-            				if (!info1 || !info2) return;
-            				var num = 0;
-            				if (info1[0] == info2[0]) num++;
-            				if (get.infoMaxHp(info1[2]) == get.infoMaxHp(info2[2])) num++;
-            				if (info1[3].length == info2[3].length) num++;
-            				return num > 1;
-            			};
-            			let shanchang=list.randomGets(4);
-            			const elements = [shanchang1, shanchang2, shanchang3, shanchang4];
-                        for (let i = 0; i < elements.length; i++) {
-                            const element = elements[i];
-                            const value = shanchang[i % shanchang.length]; // 确保 shanchang 数组不会越界
-                            element.setBackground(value, 'character');
-                        };
+						for (i in lib.character) {
+							if (!lib.filter.characterDisabled(i)) {
+								list.push(i);
+							}
+						}
+						_status.characterlist = list;
+						event.filterChoice = function (name1, name2) {
+							var info1 = lib.character[name1];
+							var info2 = lib.character[name2];
+							if (!info1 || !info2) return;
+							var num = 0;
+							if (info1[0] == info2[0]) num++;
+							if (get.infoMaxHp(info1[2]) == get.infoMaxHp(info2[2])) num++;
+							if (info1[3].length == info2[3].length) num++;
+							return num > 1;
+						};
+						let shanchang = list.randomGets(4);
+						const elements = [shanchang1, shanchang2, shanchang3, shanchang4];
+						for (let i = 0; i < elements.length; i++) {
+							const element = elements[i];
+							const value = shanchang[i % shanchang.length]; // 确保 shanchang 数组不会越界
+							element.setBackground(value, "character");
+						}
 						var jingjitu = ["jingji1", "jingji2", "jingji3", "jingji4"];
 						var xingbietu = ["xingbie1", "xingbie2"];
 						/*shanchang1.setBackgroundImage("image/character/" + shanchang.randomGet() + ".jpg");
@@ -348,7 +347,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var allShown = player.isUnderControl() || (!game.observe && game.me && game.me.hasSkillTag("viewHandcard", null, player, true));
 					var shownHs = player.getShownCards();
 					if (shownHs.length) {
-						ui.create.div(".xcaption", player.getCards("h").some(card => !shownHs.includes(card)) ? "明置的手牌" : "手牌区域", rightPane.firstChild);
+						ui.create.div(".xcaption", player.hasCard(card => !shownHs.includes(card), "h") ? "明置的手牌" : "手牌区域", rightPane.firstChild);
 						shownHs.forEach(function (item) {
 							var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
 							card.style.zoom = "0.6";
@@ -430,30 +429,26 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						});
 					}
 
-					var eSkills = player.getVCards("e");
+					var eSkills = player.getCards("e");
 					if (eSkills.length) {
 						ui.create.div(".xcaption", "装备区域", rightPane.firstChild);
 						eSkills.forEach(function (card) {
+							const cards = card.cards;
 							let str = [get.translation(card), get.translation(card.name + "_info")];
-							if (card.cards?.length) str[0] += "（" + get.translation(card.cards) + "）";
-							const special = card.cards?.find(item => item.name == card.name && lib.card[item.name]?.cardPrompt);
-							if (special) str[1] = lib.card[special.name].cardPrompt(special, player);
+							if (Array.isArray(cards) && cards.length) str[0] += "（" + get.translation(card.cards) + "）";
+							if (lib.card[card.name]?.cardPrompt) str[1] = lib.card[card.name].cardPrompt(card, player);
 							ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
 						});
 					}
 
-					var judges = player.getVCards("j");
+					var judges = player.getCards("j");
 					if (judges.length) {
 						ui.create.div(".xcaption", "判定区域", rightPane.firstChild);
 						judges.forEach(function (card) {
 							const cards = card.cards;
-							let str = get.translation(card);
-							if (!cards?.length || cards?.length !== 1 || cards[0].name !== card.name) {
-								if (!lib.card[card]?.blankCard || player.isUnderControl(true)) {
-									if (cards?.length) str += "（" + get.translation(cards) + "）";
-								}
-							}
-							ui.create.div(".xskill", "<div data-color>" + str + "</div><div>" + get.translation(card.name + "_info") + "</div>", rightPane.firstChild);
+							let str = [get.translation(card), get.translation(card.name + "_info")];
+							if ((Array.isArray(cards) && cards.length && !lib.card[card]?.blankCard) || player.isUnderControl(true)) str[0] += "（" + get.translation(cards) + "）";
+							ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
 						});
 					}
 

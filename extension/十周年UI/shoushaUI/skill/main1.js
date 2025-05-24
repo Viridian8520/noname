@@ -64,7 +64,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 					for (var i = 0; i < skills.length; i++) {
 						var info = get.info(skills[i]);
-						if (info && info.nopop) skills.splice(i--, 1);
+						if (info && info.nopop && !skills[i].startsWith("olhedao_tianshu_")) skills.splice(i--, 1);
 					}
 
 					var iSkills = player.invisibleSkills.slice(0);

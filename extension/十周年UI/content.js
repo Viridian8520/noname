@@ -2,11 +2,40 @@
 decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	decadeUI.content = {
 		chooseGuanXing(player, cards1, movable1, cards2, movable2, infohide) {
-			if (get.itemtype(player) != "player") throw player;
-			if (!cards1 && !cards2) throw arguments;
-
+			if (!player || get.itemtype(player) != "player") {
+				console.error("Invalid player parameter");
+				return;
+			}
+			if (!cards1 && !cards2) {
+				console.error("No cards provided");
+				return;
+			}
 			var guanXing = decadeUI.dialog.create("confirm-box guan-xing");
-
+			var playButtonAudio = function () {
+				game.playAudio("../extension/十周年UI/audio/gxbtn");
+			};
+			var hideBtn = ui.create.div(".closeDialog", document.body, function () {
+				playButtonAudio(); // 添加音效
+				if (guanXing.classList.contains("active")) {
+					guanXing.classList.remove("active");
+					guanXing.style.transform = "scale(1)";
+					hideBtn.style.backgroundImage = 'url("' + lib.assetURL + 'extension/十周年UI/assets/image/yincangck.png")';
+				} else {
+					guanXing.classList.add("active");
+					guanXing.style.transform = "scale(0)";
+					hideBtn.style.backgroundImage = 'url("' + lib.assetURL + 'extension/十周年UI/assets/image/xianshick.png")';
+				}
+			});
+			hideBtn.style.cssText = `
+			    background-image: url("${lib.assetURL}extension/十周年UI/assets/image/yincangck.png");
+			    background-size: 100% 100%;
+			    height: 4%;
+			    width: 7%;
+			    z-index: 114514;
+			    left: 10%;
+			    right: auto;
+			    top: 75%;
+			`;
 			var properties = {
 				caption: undefined,
 				tip: undefined,
@@ -22,6 +51,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				orderCardsList: [[], []],
 				finishing: undefined,
 				finished: undefined,
+				originalLongpressInfo: lib.config.longpress_info,
 				finishTime(time) {
 					if (this.finishing || this.finished) return;
 					if (typeof time != "number") throw time;
@@ -39,6 +69,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					if (this.finishing || this.finished) return;
 					this.finishing = true;
 					if (this.callback) this.confirmed = this.callback.call(this);
+					var hideBtn = document.querySelector(".closeDialog");
+					if (hideBtn && hideBtn.parentNode) {
+						document.body.removeChild(hideBtn);
+					}
+
+					// 恢复原始longpress_info设置
+					lib.config.longpress_info = this.originalLongpressInfo;
 
 					cards = guanXing.cards[0];
 					if (cards.length) {
@@ -52,7 +89,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							if (!this.callback) ui.cardPile.insertBefore(cards[i], ui.cardPile.firstChild);
 						}
 					}
-
 					cards = guanXing.cards[1];
 					for (var i = 0; i < cards.length; i++) {
 						cards[i].removeEventListener("click", guanXing._click);
@@ -69,7 +105,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					_status.event.num1 = this.cards[0].length;
 					_status.event.num2 = this.cards[1].length;
 					if (_status.event.result) _status.event.result.bool = this.confirmed === true;
-					else _status.event.result = { bool: this.confirmed === true };
+					else
+						_status.event.result = {
+							bool: this.confirmed === true,
+						};
 
 					game.broadcastAll(function () {
 						if (!window.decadeUI && decadeUI.eventDialog) return;
@@ -263,31 +302,15 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					if (this.finishing || this.finished) return;
 					switch (this.objectType) {
 						case "content":
-							if (guanXing.selected) {
-								var y = (this.offsetHeight * decadeUI.zooms.body * decadeUI.zooms.card) / 2 - (guanXing.cards[0].contains(guanXing.selected) ? 12 : -12);
-								var index = e.layerY < y ? 0 : 1;
-								if (!guanXing.cards[index].contains(guanXing.selected)) {
-									guanXing.switch(guanXing.selected);
-								}
-							}
-
 							guanXing.selected = null;
 							break;
 
 						case "card":
-							if (guanXing.selected == null) {
-								guanXing.selected = this;
-								break;
-							}
-
-							if (guanXing.selected != this) {
-								guanXing.swap(guanXing.selected, this);
-							} else if (guanXing.doubleSwitch) {
-								guanXing.switch(this);
-							}
-
+							// 直接切换卡牌位置，无需选中
+							guanXing.switch(this);
 							guanXing.selected = null;
 							break;
+
 						case "button ok":
 							if (guanXing.classList.contains("ok-disable")) return;
 							guanXing.confirmed = true;
@@ -302,6 +325,66 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 
 					e.stopPropagation();
 				},
+				_dragStart(e) {
+					if (this.finishing || this.finished) return;
+					if (game.me != player) return;
+
+					this.draggedCard = e.target;
+					this.draggedCard.classList.add("dragging");
+					e.dataTransfer.effectAllowed = "move";
+					e.dataTransfer.setData("text/plain", e.target.cardid);
+				},
+				_dragOver(e) {
+					e.preventDefault();
+					e.dataTransfer.dropEffect = "move";
+				},
+				_dragEnter(e) {
+					e.preventDefault();
+					if (e.target.classList.contains("card")) {
+						e.target.classList.add("drag-over");
+					}
+				},
+				_dragLeave(e) {
+					if (e.target.classList.contains("card")) {
+						e.target.classList.remove("drag-over");
+					}
+				},
+				_drop(e) {
+					e.preventDefault();
+					if (this.finishing || this.finished) return;
+					if (game.me != player) return;
+
+					const draggedCard = this.draggedCard;
+					const targetCard = e.target;
+
+					if (draggedCard) {
+						if (targetCard?.classList.contains("card") && draggedCard !== targetCard) {
+							this.swap(draggedCard, targetCard);
+						} else {
+							const fromIndex = this.getCardArrayIndex(draggedCard);
+							const toIndex = fromIndex === 0 ? 1 : 0;
+							if (this.cards[toIndex].length < this.movables[toIndex]) {
+								this.cards[fromIndex].remove(draggedCard);
+								this.cards[toIndex].push(draggedCard);
+								this.update();
+								this.onMoved();
+							}
+						}
+
+						draggedCard.classList.remove("dragging");
+						if (targetCard?.classList.contains("card")) targetCard.classList.remove("drag-over");
+						this.draggedCard = null;
+					}
+				},
+				_dragEnd(e) {
+					if (this.draggedCard) {
+						this.draggedCard.classList.remove("dragging");
+					}
+					document.querySelectorAll(".card.drag-over").forEach(card => {
+						card.classList.remove("drag-over");
+					});
+					this.draggedCard = null;
+				},
 				_selected: undefined,
 				_caption: decadeUI.dialog.create("caption", guanXing),
 				_content: decadeUI.dialog.create("content buttons", guanXing),
@@ -311,11 +394,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				_infohide: undefined,
 				_callback: undefined,
 			};
-
 			for (var key in properties) {
 				guanXing[key] = properties[key];
 			}
-
 			Object.defineProperties(guanXing, {
 				selected: {
 					configurable: true,
@@ -415,10 +496,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					},
 				},
 			});
-
 			var content = guanXing._content;
 			guanXing.addEventListener("click", guanXing._click, false);
-
 			if (game.me == player) {
 				content.objectType = "content";
 				content.addEventListener("click", guanXing._click, false);
@@ -426,37 +505,38 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				button.innerHTML = "确认";
 				button.objectType = "button ok";
 				button.addEventListener("click", guanXing._click, false);
+			} else {
+				guanXing.addEventListener("remove", function () {
+					if (hideBtn && hideBtn.parentNode) {
+						document.body.removeChild(hideBtn);
+					}
+					// 恢复原始longpress_info设置
+					lib.config.longpress_info = this.originalLongpressInfo;
+				});
 			}
-
 			var size = decadeUI.getHandCardSize();
 			var height = 0;
-
 			if (cards1) {
 				guanXing.cards[0] = cards1;
 				guanXing.movables[0] = Math.max(cards1.length, guanXing.movables[0]);
 			}
-
 			if (cards2) {
 				guanXing.cards[1] = cards2;
 				guanXing.movables[1] = Math.max(cards2.length, guanXing.movables[1]);
 			}
-
 			if (guanXing.movables[0] > 0) {
 				height = size.height;
 				guanXing._header1 = decadeUI.dialog.create("header", guanXing._content);
 				guanXing._header1.style.top = "0";
 				guanXing._header1.innerHTML = "牌堆顶";
 			}
-
 			if (guanXing.movables[1] > 0) {
 				height += height + (height > 0 ? 10 : 0);
 				guanXing._header2 = decadeUI.dialog.create("header", guanXing._content);
 				guanXing._header2.style.bottom = "0";
 				guanXing._header2.innerHTML = "牌堆底";
 			}
-
 			content.style.height = height + "px";
-
 			var cards;
 			for (var i = 0; i < guanXing.cards.length; i++) {
 				cards = guanXing.cards[i];
@@ -465,6 +545,11 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						cards[j].objectType = "card";
 						cards[j].removeEventListener("click", ui.click.intro);
 						cards[j].addEventListener("click", guanXing._click, false);
+
+						// 添加拖拽事件监听器
+						cards[j].setAttribute("draggable", "true");
+						cards[j].addEventListener("dragstart", guanXing._dragStart.bind(guanXing));
+						cards[j].addEventListener("dragend", guanXing._dragEnd.bind(guanXing));
 					}
 
 					cards[j].rawCssText = cards[j].style.cssText;
@@ -473,14 +558,53 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				}
 			}
 
+			// 为content添加拖拽事件监听器
+			content.addEventListener("dragover", guanXing._dragOver.bind(guanXing));
+			content.addEventListener("dragenter", guanXing._dragEnter.bind(guanXing));
+			content.addEventListener("dragleave", guanXing._dragLeave.bind(guanXing));
+			content.addEventListener("drop", guanXing._drop.bind(guanXing));
+
 			decadeUI.game.wait();
 			guanXing.infohide = infohide == null ? (game.me == player ? false : true) : infohide;
 			guanXing.caption = get.translation(player) + "正在发动【观星】";
-			guanXing.tip = "点击2张牌交换位置；点击1张牌再点击上方或下方移动到另一方";
+			guanXing.tip = "单击卡牌可直接在牌堆顶和牌堆底之间切换位置，也可以拖拽卡牌交换位置";
+
+			// 禁用longpress_info
+			lib.config.longpress_info = false;
+
+			// 添加拖拽相关的CSS样式
+			var style = document.createElement("style");
+			style.textContent = `
+				.card.dragging {
+					opacity: 0.5;
+					cursor: move;
+				}
+				.card.drag-over {
+					border: 2px dashed #ff0;
+					box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+				}
+				.card {
+					cursor: pointer;
+				}
+				.card:hover {
+					transform: translateY(-5px);
+				}
+			`;
+			document.head.appendChild(style);
+
 			guanXing.update();
 			ui.arena.appendChild(guanXing);
-
 			decadeUI.eventDialog = guanXing;
+
+			// 添加remove事件监听器来恢复longpress_info设置
+			guanXing.addEventListener("remove", function () {
+				if (hideBtn && hideBtn.parentNode) {
+					document.body.removeChild(hideBtn);
+				}
+				// 恢复原始longpress_info设置
+				lib.config.longpress_info = guanXing.originalLongpressInfo;
+			});
+
 			return guanXing;
 		},
 	};
