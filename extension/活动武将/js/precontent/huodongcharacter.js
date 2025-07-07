@@ -39,11 +39,11 @@ const packs = function () {
             lz_huangquan: ['male', 'wei', 3, ['lzdianhu', 'xinfu_jianji'], ['character:xf_huangquan', 'doublegroup:wei:shu', 'die:xf_huangquan']],
             bilibili_adong: ['male', 'qun', 4, ['jueman', 'oljianman'], ['die:ahuinan', 'die:dongtuna', 'name:null|null']],
             old_zuoci: ['male', 'qun', 3, ['gz_huashen', 'gz_xinsheng']],
-            bilibili_shengxunyu: ['male', 'key', 4, ['bilibili_hehu', 'bilibili_jinyan', 'bilibili_yutai'], ['clan:宿舍群', 'clan:肘击群', 'name:熏|鱼']],
-            bilibili_Firewin: ['male', 'key', 4, ['jsrgfeiyang', 'jsrgbahu', 'bilibili_tixiang'], ['clan:宿舍群', 'clan:肘击群', 'clan:活动群', 'name:火|赢']],
+            bilibili_shengxunyu: ['male', 'key', 4, ['bilibili_hehu', 'bilibili_jinyan', 'bilibili_yutai'], ['clan:宿舍群|肘击群', 'name:熏|鱼']],
+            bilibili_Firewin: ['male', 'key', 4, ['jsrgfeiyang', 'jsrgbahu', 'bilibili_tixiang'], ['clan:宿舍群|肘击群|活动群', 'name:火|赢']],
             bilibili_jinglingqiu: ['male', 'key', '3/4', ['bilibili_tiyi', 'bilibili_zili'], ['clan:活动群', 'name:精灵|球']],
-            bilibili_suixingsifeng: ['female', 'key', 4, ['bilibili_liaoxing', 'bilibili_daili', 'bilibili_chouhua', 'bilibili_duoyang'], ['clan:肘家军', 'clan:宿舍群', 'clan:肘击群', 'clan:活动群', 'name:萌新|转型中']],
-            bilibili_Emptycity: ['male', 'key', 4, ['bilibili_zhiyou', 'bilibili_guanli'], ['clan:活动群', 'clan:Thunder群', 'name:空|城']],
+            bilibili_suixingsifeng: ['female', 'key', 4, ['bilibili_liaoxing', 'bilibili_daili', 'bilibili_chouhua', 'bilibili_duoyang'], ['clan:肘家军|宿舍群|肘击群|活动群', 'name:萌新|转型中']],
+            bilibili_Emptycity: ['male', 'key', 4, ['bilibili_zhiyou', 'bilibili_guanli'], ['clan:活动群|Thunder群', 'name:空|城']],
             bilibili_thunderlei: ['male', 'key', '2/4/3', ['bilibili_Thunder', 'bilibili_qianxi'], ['clan:Thunder群', 'name:雷|null']],
             bilibili_zhengxuan: ['male', 'qun', 3, ['bilibili_zhengjing'], ['character:zhengxuan', 'die:zhengxuan']],
             bilibili_lonelypatients: ['male', 'key', 4, ['bilibili_meihua', 'bilibili_gongyou'], ['clan:活动群', 'name:独孤|null']],
@@ -51,13 +51,13 @@ const packs = function () {
             bilibili_shen_guojia: ['male', 'wei', '9/9/5', ['stianyi', 'resghuishi', 'bilibili_huishi'], ['doublegroup:shen:wei:wu', 'die:shen_guojia']],
             bilibili_re_xusheng: ['male', 'wu', 4, ['bilibili_pojun', 'kuangcai', 'bilibili_baodao'], ['die:re_xusheng']],
             bilibili_xushao: ['male', 'qun', '1/6', ['bilibili_pingjian'], ['ext:活动武将/image/character/old_xushao.jpg', 'InitFilter:noZhuHp']],
-            bilibili_ningjingzhiyuan: ['male', 'key', 4, ['bilibili_liaoxing', 'bilibili_xiezhi', 'bilibili_fazhou'], ['clan:肘家军', 'clan:宿舍群', 'clan:肘击群', 'clan:活动群', 'name:闹动|导近']],
-            bilibili_xizhicaikobe: ['male', 'key', 4, ['bilibili_biexiao', 'bilibili_xingshi', 'bilibili_zhangcai'], ['doublegroup:wei:shu:wu:qun:jin', 'clan:肘家军', 'clan:肘击群', 'clan:活动群', 'name:戏|子宓']],
-            bilibili_yanjing: ['male', 'key', 3, ['bilibili_dongxi', 'bilibili_mingcha', 'bilibili_huiyan'], ['clan:宿舍群', 'clan:肘击群', 'clan:活动群', 'name:tooenough|眼睛']],
+            bilibili_ningjingzhiyuan: ['male', 'key', 4, ['bilibili_liaoxing', 'bilibili_xiezhi', 'bilibili_fazhou'], ['clan:肘家军|宿舍群|肘击群|活动群', 'name:闹动|导近']],
+            bilibili_xizhicaikobe: ['male', 'key', 4, ['bilibili_biexiao', 'bilibili_xingshi', 'bilibili_zhangcai'], ['doublegroup:wei:shu:wu:qun:jin', 'clan:肘家军|肘击群|活动群', 'name:戏|子宓']],
+            bilibili_yanjing: ['male', 'key', 3, ['bilibili_dongxi', 'bilibili_mingcha', 'bilibili_huiyan'], ['clan:宿舍群|肘击群|活动群', 'name:tooenough|眼睛']],
             bilibili_caifuren: ['female', 'qun', 3, ['bilibili_kuilei'], ["name:蔡|null"]],
             bilibili_nanhualaoxian: ['male', 'qun', 4, ['bilibili_qingshu', 'olshoushu', 'olhedao'], ['die:ol_nanhualaoxian', 'name:庄|周']],
-            bilibili_xiaoyaoruyun: ['female', 'key', 4, ['bilibili_chuandu', 'bilibili_huaikui', 'bilibili_xyduoyang'], ['clan:宿舍群', 'clan:肘击群', 'clan:活动群', 'name:鹿都|智川介']],
-            bilibili_shuijiaobuboli: ['female', 'key', '3/4', ['bilibili_qicai', 'bilibili_jizhi', 'bilibili_fengliang', 'bilibili_guiyin'], ['clan:宿舍群', 'clan:活动群', 'name:黄|月英']],
+            bilibili_xiaoyaoruyun: ['female', 'key', 4, ['bilibili_chuandu', 'bilibili_huaikui', 'bilibili_xyduoyang'], ['clan:宿舍群|肘击群|活动群', 'name:鹿都|智川介']],
+            bilibili_shuijiaobuboli: ['female', 'key', '3/4', ['bilibili_qicai', 'bilibili_jizhi', 'bilibili_fengliang', 'bilibili_guiyin'], ['clan:宿舍群|活动群', 'name:黄|月英']],
             bilibili_kuailiangkuaiyue: ['male', 'qun', 4, ['bilibili_chouhua'], ['character:kuailiangkuaiyue']],
             //千里走单骑
             DJ_caiyang: ['male', 'qun', 1, ['yinka', 'zhuixi'], ['character:caiyang']],
@@ -148,7 +148,11 @@ const packs = function () {
                 notarget: true,
                 content() {
                     var evt2 = event.getParent(3)._trigger;
-                    evt2.neutralize();
+                    if (evt2.name == "phaseJudge") {
+                        evt2.untrigger("currentOnly");
+                        evt2.cancelled = true;
+                    }
+                    else evt2.neutralize();
                     var cardx = event.getParent().respondTo;
                     if (cardx && cardx[1] && cardx[1].cards && cardx[1].cards.filterInD('od').length) player.gain(cardx[1].cards.filterInD('od'), 'gain2', 'log');
                 },
@@ -5138,10 +5142,7 @@ const packs = function () {
                 },
             },
             old_fenchai: {
-                group: ['old_fenchai_audio', 'old_fenchai_give'],
-                global: 'old_fenchai_global',
                 audio: 'clanfenchai',
-                inherit: 'clanfenchai',
                 init(player, skill) {
                     if (player.getStorage(skill).length > 0) return;
                     const history = player.getHistory('useSkill', evt => {
@@ -5152,33 +5153,41 @@ const packs = function () {
                         return targets?.some(i => player.differentSexFrom(i));
                     });
                     if (history.length) {
-                        const evt = history[0], targets = evt.targets;
+                        const { targets } = history[0];
                         player.markAuto(skill, targets.filter(i => player.differentSexFrom(i)));
                     }
                 },
+                trigger: { player: ['logSkillBegin', 'useSkill'] },
                 filter(event, player) {
                     if (event.type != 'player') return false;
-                    const targets = event.targets;
+                    const { targets } = event;
                     if (!targets?.length) return false;
                     const info = get.info(get.sourceSkillFor(event));
                     if (!info || info.charlotte) return false;
                     if (player.getStorage('old_fenchai').length) return false;
                     return targets.filter(i => player.differentSexFrom(i)).length > 0;
                 },
-                content() {
+                forced: true,
+                silent: true,
+                async content(event, trigger, player) {
                     player.markAuto(event.name, trigger.targets.filter(i => player.differentSexFrom(i)));
                 },
+                onremove: true,
+                marktext: '钗',
+                intro: { content: (storage, player) => '对象：' + get.translation(storage) },
+                group: ['old_fenchai_audio', 'old_fenchai_give'],
+                global: 'old_fenchai_global',
                 subSkill: {
                     audio: {
                         audio: 'clanfenchai',
                         trigger: { global: 'judge' },
                         filter(event, player) {
-                            return event.player == player || lib.skill.old_fenchai.getTargets(player).includes(event.player);
+                            return event.player == player || player.getStorage('old_fenchai').includes(event.player);
                         },
                         forced: true,
                         locked: false,
                         logTarget: 'player',
-                        content() { },
+                        async content(event, trigger, player) { },
                     },
                     global: {
                         mod: {
@@ -5198,18 +5207,18 @@ const packs = function () {
                         direct: true,
                         skillAnimation: true,
                         animationColor: 'water',
-                        content() {
-                            'step 0'
-                            trigger.player.chooseCard('he', [0, Math.ceil(trigger.player.countCards('h'))], get.prompt('old_fenchai'), '交给' + get.translation(player) + '至多' + get.cnNumber() + '张牌').set('ai', function (card) {
-                                if (_status.event.goon) return get.value(card);
+                        async content(event, trigger, player) {
+                            const { player: target } = trigger;
+                            const num = Math.ceil(target.countCards('h'));
+                            const { result } = await target.chooseCard('he', [0, num], get.prompt('old_fenchai'), '交给' + get.translation(player) + '至多' + get.cnNumber(num) + '张牌').set('ai', card => {
+                                if (get.event('goon')) return get.value(card);
                                 return -1;
-                            }).set('goon', get.attitude(trigger.player, player) > 0).set('forceDie', true);
-                            'step 1'
-                            if (result.bool) {
+                            }).set('goon', get.attitude(target, player) > 0).set('forceDie', true);
+                            if (result?.bool && result?.cards?.length) {
                                 player.logSkill(event.name);
-                                trigger.player.line(player);
-                                game.log(player, '收到了来自', trigger.player, '的呼唤');
-                                player.gain(result.cards, trigger.player, 'giveAuto').set('forceDie', true);
+                                target.line(player);
+                                game.log(player, '收到了来自', target, '的呼唤');
+                                await player.gain(result.cards, target, 'giveAuto').set('forceDie', true);
                             }
                         },
                     }
@@ -5396,36 +5405,29 @@ const packs = function () {
                 direct: true,
                 async content(event, trigger, player) {
                     const target = trigger.player;
-                    let choices = [], choiceList = ['将一张手牌当作【杀】对其使用', '将一张手牌当作【过河拆桥】对其使用'];
-                    if (player.hasCard(card => {
-                        return game.checkMod(card, player, 'unchanged', 'cardEnabled2', player) !== false && player.canUse(get.autoViewAs({ name: 'sha' }, [card]), target, false);
-                    }, 'hs')) choices.push('选项一');
-                    else choiceList[0] = '<span style="opacity:0.5">' + choiceList[0] + '</span>';
-                    if (player.hasCard(card => {
-                        return game.checkMod(card, player, 'unchanged', 'cardEnabled2', player) !== false && player.canUse(get.autoViewAs({ name: 'juedou' }, [card]), target, false);
-                    }, 'hs')) choices.push('选项二');
-                    else choiceList[1] = '<span style="opacity:0.5">' + choiceList[1] + '</span>';
-                    choices.push('cancel2');
-                    const { result: { control } } = await player.chooseControl(choices).set('choiceList', choiceList)
-                        .set('prompt', get.prompt('bolzhuhai', target)).set('ai', () => {
-                            const player = get.event('player'), target = get.event('target'), choices = get.event('controls');
-                            let eff1 = 0, eff2 = 0;
-                            if (choices.includes('选项一')) eff1 = get.effect(target, { name: 'sha' }, player, player);
-                            if (choices.includes('选项二')) eff2 = get.effect(target, { name: 'guohe' }, player, player);
-                            if (eff1 > 0 && ((player.hasSkill('xsqianxin') || player.hasSkill('fh_qianxin')) && player.isDamaged() || eff1 > eff2)) return '选项一';
-                            if (eff2 > 0) return '选项二';
-                            return 'cancel2';
-                        }).set('target', target);
-                    if (control != 'cancel2') {
-                        const name = (control == '选项一' ? 'sha' : 'guohe');
-                        const { result: { bool, cards } } = await player.chooseCard('hs', true, (card, player) => {
+                    const list = [['基本', '', 'sha'], ['锦囊', '', 'guohe']];
+                    let result = await player.chooseButton([`诛害：请选择要对${get.translation(target)}使用的牌`, [list, 'vcard']]).set('filterButton', button => {
+                        const player = get.player();
+                        return player.hasCard(card => player.hasUseTarget(get.autoViewAs({ name: button.link[2] }, [card]), false, false), 'hs');
+                    }).set('ai', button => {
+                        const { player, target } = get.event();
+                        const name = button.link[2];
+                        let eff1 = get.effect(target, { name: 'sha' }, player, player), eff2 = get.effect(target, { name: 'sha' }, player, player);
+                        if (name == 'sha' && eff1 > 0 && ((player.hasSkill('xsqianxin') || player.hasSkill('fh_qianxin')) && player.isDamaged() || eff1 > eff2)) return 1;
+                        if (name == 'guohe' && eff2 > 0) return 1;
+                        return 0
+                    }).set('target', target).forResult();
+                    if (result?.bool && result?.links?.length) {
+                        const name = result.links[0][2];
+                        result = await player.chooseCard('hs', (card, player) => {
                             if (!game.checkMod(card, player, 'unchanged', 'cardEnabled2', player)) return false;
-                            return player.canUse(get.autoViewAs({ name: get.event('namex') }, [card]), get.event('target'), false);
-                        }, '将一张手牌当作【' + get.translation(name) + '】对' + get.translation(target) + '使用').set('ai', card => {
-                            const player = get.event('player'), target = get.event('target');
-                            return get.effect(target, get.autoViewAs({ name: get.event('namex') }, [card]), player, player) / Math.max(1, get.value(card));
-                        }).set('namex', name).set('target', target);
-                        if (bool) player.useCard({ name: name }, cards, 'bolzhuhai', target, false);
+                            const { namex, target } = get.event();
+                            return player.canUse(get.autoViewAs({ name: namex }, [card]), target, false);
+                        }, '诛害：你可以将一张手牌当作【' + get.translation(name) + '】对' + get.translation(target) + '使用').set('ai', card => {
+                            const { player, target, namex } = get.event();
+                            return get.effect(target, get.autoViewAs({ name: namex }, [card]), player, player) / Math.max(1, get.value(card));
+                        }).set('namex', name).set('target', target).forResult();
+                        if (result?.bool && result?.cards?.length) await player.useCard({ name: name }, result.cards, 'bolzhuhai', target, false);
                     }
                 },
             },
@@ -9034,9 +9036,11 @@ const packs = function () {
                         },
                         forced: true,
                         popup: false,
-                        content() {
-                            const next = player.chooseToUse(true);
+                        async content(event, trigger, player) {
+                            if (!player.hasCard(card => player.hasUseTarget(get.autoViewAs({ name: 'sha' }, [card]), true), 'hes')) return;
+                            const next = player.chooseToUse();
                             next.set('openskilldialog', '###吴起兵法###将一张牌当作【杀】使用');
+                            next.set('forced', true);
                             next.set('norestore', true);
                             next.set('addCount', false);
                             next.set('_backupevent', 'bol_wuqibingfa_backup');
@@ -9045,6 +9049,7 @@ const packs = function () {
                                 replace: { window() { } }
                             });
                             next.backup('bol_wuqibingfa_backup');
+                            await next;
                         },
                     },
                     backup: {
@@ -10502,9 +10507,9 @@ const packs = function () {
                     return game.filterPlayer(target => {
                         if (target === player) return false;
                         if (!player.storage.old_jinghua && target.isHealthy()) return false;
-                        const cards = event.getg(target);
-                        if (!cards.length || event.giver === player) return true;
-                        return event.getl && event.getl(player)?.cards2?.some(card => cards.includes(card));
+                        const cards = event.getg?.(target);
+                        if (!cards?.length || event.giver === player) return true;
+                        return event.getl?.(player)?.cards2?.some(card => cards?.includes(card));
                     }).sortBySeat();
                 },
                 logTarget: (event, player, triggername, target) => target,
@@ -10526,7 +10531,7 @@ const packs = function () {
                         },
                         filter(event, player) {
                             if (player.countCards('h') || player.storage.old_jinghua) return false;
-                            return event.getl(player)?.hs?.length > 0;
+                            return event.getl?.(player)?.hs?.length > 0;
                         },
                         skillAnimation: true,
                         animationColor: 'wood',
@@ -10593,7 +10598,12 @@ const packs = function () {
                         if (!lib.skill[skill]) break;
                     }
                     game.broadcastAll((skill, from, to) => {
-                        lib.skill[skill] = { nopop: true, olhedao: true, charlotte: true, onremove: true, ...from.effect, ...to.effect };
+                        const { filter: filterFrom, ...otherFrom } = from.effect;
+                        const { filter: filterTo, ...otherTo } = to.effect;
+                        lib.skill[skill] = { nopop: true, olhedao: true, charlotte: true, onremove: true, ...otherFrom, ...otherTo };
+                        lib.skill[skill].filter = function (...args) {
+                            return (filterFrom ? filterFrom(...args) : true) && (filterTo ? filterTo(...args) : true);
+                        };
                         lib.skill[skill].init = (player, skill) => (player.storage[skill] = player.storage[skill] || [0, skill]);
                         lib.skill[skill].intro = {
                             markcount: (storage = [0]) => storage[0],
@@ -11535,7 +11545,7 @@ const packs = function () {
             bilibili_pingjian: '评鉴',
             bilibili_pingjian_info: '持恒技，锁定技。游戏开始时，或当你的随从武将牌阵亡后，你减1点体力上限，从随机每个势力的各随机两张武将牌中选择一张武将牌作为随从武将牌，然后你将武将牌替换为此随从。（随从武将牌初始2血2上限4手牌，每个势力的武将牌每局游戏只能选择一次）',
             bfake_shen_jiaxu: '蝶设神贾诩',
-            bfake_shen_jiaxu_prefix: '蝶设神',
+            bfake_shen_jiaxu_prefix: '蝶设|神',
             boljiandai: '缄殆',
             boljiandai_info: '锁定技，你的武将牌始终背面朝下。',
             boljiandai_info_guozhan: '锁定技，你的武将牌始终叠置。',
@@ -11553,7 +11563,7 @@ const packs = function () {
             bolxiongsuan: '凶算',
             bolxiongsuan_info: '限定技，出牌阶段，你可以弃置一张手牌并对一名与你势力相同的角色造成1点伤害，然后摸三张牌。若该角色有已发动的限定技，你选择其中一个限定技并于此回合结束时复原之。',
             bfake_shen_zhangfei: '蝶设神张飞',
-            bfake_shen_zhangfei_prefix: '蝶设神',
+            bfake_shen_zhangfei_prefix: '蝶设|神',
             bolbaohe: '暴喝',
             bolbaohe_info: '锁定技。①你的锦囊牌均视为无次数限制的无属性【杀】。②你使用牌造成的伤害改为此牌对应的所有实体牌的牌名字数之和。',
             bolrenhai: '人骇',
@@ -11561,7 +11571,7 @@ const packs = function () {
             boltiandong: '天动',
             boltiandong_info: '锁定技，准备阶段，你令场上所有拥有因〖人骇〗获得技能的角色失去因〖人骇〗获得的技能，然后你随机获得牌堆中X张点数最大的牌（X为你本次移去的技能数），然后你选择一项：①将武将牌翻面；②复原〖人骇〗。',
             bfake_shen_zhangjiao: '蝶设神张角',
-            bfake_shen_zhangjiao_prefix: '蝶设神',
+            bfake_shen_zhangjiao_prefix: '蝶设|神',
             bolyifu: '蚁附',
             bolyifu_info: '转换技。①一名角色可以将一张基本牌当作{天，【闪电】；地，【随机应变】；人，【铁索连环】}使用。②当你成为〖蚁附①〗转化的牌的目标后，你摸一张牌。',
             boltianjie: '天劫',
@@ -11696,9 +11706,6 @@ const packs = function () {
         color: '#ff6a6a',
         nature: 'MXpink',
         showName: '蝶',
-    });
-    lib.namePrefix.set('蝶设神', {
-        getSpan: (prefix, name) => `${get.prefixSpan('蝶设')}${get.prefixSpan('神')}`,
     });
     lib.config.all.characters.push('huodongcharacter');
     lib.config.all.sgscharacters.push('huodongcharacter');
