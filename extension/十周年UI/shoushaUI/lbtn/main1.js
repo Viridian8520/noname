@@ -4,38 +4,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		var identityShowx = game.ui_identityShowx; /*图层2 在图层1下面*/
 		var str = "";
 		if (lib.config.mode == "guozhan" || (lib.config.mode == "versus" && get.config("versus_mode") == "siguo") || (lib.config.mode == "versus" && get.config("versus_mode") == "jiange")) {
-			var unknown = game.countPlayer(function (current) {
-				return current.identity == "unknown";
+			const identities = [
+				{ key: "unknown", color: "#FFFFDE" },
+				{ key: "wei", color: "#0075FF" },
+				{ key: "shu", color: "#ff0000" },
+				{ key: "wu", color: "#00ff00" },
+				{ key: "qun", color: "#ffff00" },
+				{ key: "jin", color: "#9e00ff" },
+				{ key: "ye", color: "#9e00ff" },
+				{ key: "key", color: "#9e00ff" },
+			];
+			identities.forEach(({ key, color }) => {
+				const count = game.countPlayer(current => current.identity === key);
+				if (count > 0) str += `<font color="${color}">${get.translation(key)}</font> x ${count}  `;
 			});
-			var wei = game.countPlayer(function (current) {
-				return current.identity == "wei";
-			});
-			var shu = game.countPlayer(function (current) {
-				return current.identity == "shu";
-			});
-			var wu = game.countPlayer(function (current) {
-				return current.identity == "wu";
-			});
-			var qun = game.countPlayer(function (current) {
-				return current.identity == "qun";
-			});
-			var jin = game.countPlayer(function (current) {
-				return current.identity == "jin";
-			});
-			var ye = game.countPlayer(function (current) {
-				return current.identity == "ye";
-			});
-			var key = game.countPlayer(function (current) {
-				return current.identity == "key";
-			});
-			if (unknown > 0) str += '<font color="#FFFFDE">' + get.translation("unknown") + "</font> x " + unknown + "  ";
-			if (wei > 0) str += '<font color="#0075FF">' + get.translation("wei") + "</font> x " + wei + "  ";
-			if (shu > 0) str += '<font color="#ff0000">' + get.translation("shu") + "</font> x " + shu + "  ";
-			if (wu > 0) str += '<font color="#00ff00">' + get.translation("wu") + "</font> x " + wu + "  ";
-			if (qun > 0) str += '<font color="#ffff00">' + get.translation("qun") + "</font> x " + qun + "  ";
-			if (jin > 0) str += '<font color="#9e00ff">' + get.translation("jin") + "</font> x " + jin + "  ";
-			if (ye > 0) str += '<font color="#9e00ff">' + get.translation("ye") + "</font> x " + ye + "  ";
-			if (key > 0) str += '<font color="#9e00ff">' + get.translation("key") + "</font> x " + key + "  ";
 		} else if (lib.config.mode == "versus" && get.config("versus_mode") == "two") {
 			var enemy = game.countPlayer(function (current) {
 				return current.isEnemyOf(game.me);
@@ -92,26 +74,103 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 	};
 
-	//标记下，以后出问题改监听
-	lib.skill._SPZLX = {
-		trigger: { player: ["gainAfter", "loseAfter"] },
-		fixed: true,
-		popup: false,
-		forced: true,
-		charlotte: true,
-		priority: Infinity,
-		filter: function (event, player) {
-			return window.paixuxx == false && player == game.me && !player.hasSkillTag("noSortCard");
-		},
-		content: function () {
-			var cards = player.getCards("hs");
-			if (cards.length <= 1) return;
-			cards.sort((a, b) => {
-				// 位置排序
+	// 重写手牌自动整理逻辑，改为监听模式
+	lib.arenaReady.push(function () {
+		// 手牌自动整理监听器
+		var originalGain = game.gain;
+		game.gain = function (player, cards, from, to, reason, skill, log, noAnimation, noLog, noEvent, noGain, noLose, noDeprive, noVideo, noUpdate, noSort, noUpdateControl) {
+			var result = originalGain.apply(this, arguments);
+
+			// 检查是否需要自动整理手牌
+			if (window.paixuxx == false && player == game.me && !player.hasSkillTag("noSortCard") && (to == "h" || to == "hs") && cards && cards.length > 1) {
+				// 延迟执行整理，确保卡牌已经添加到手牌中
+				setTimeout(function () {
+					if (player && player.getCards && player.getCards("hs").length > 1) {
+						var handCards = player.getCards("hs");
+						handCards.sort((a, b) => {
+							// 位置排序
+							var p1 = get.position(a);
+							var p2 = get.position(b);
+							if (p1 != p2) return p1 == "h" ? 1 : -1;
+							// 卡牌排序
+							if (a.name != b.name) return lib.sort.card(b.name, a.name);
+							if (a.suit != b.suit) return lib.suit.indexOf(b.suit) - lib.suit.indexOf(a.suit);
+							if (a.number != b.number) return b.number - a.number;
+							if (a.nature != b.nature) return b.nature - a.nature;
+							return parseInt(b.cardid) - parseInt(a.cardid);
+						});
+
+						if (window.dui && dui.queueNextFrameTick) {
+							handCards.forEach(card => player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild));
+							dui.queueNextFrameTick(dui.layoutHand, dui);
+						} else {
+							game.addVideo("lose", player, [get.cardsInfo(handCards), [], []]);
+							handCards.forEach(card => card.goto(ui.special));
+							player.directgain(handCards, false);
+						}
+					}
+				}, 10);
+			}
+
+			return result;
+		};
+
+		// 监听失去手牌事件
+		var originalLose = game.lose;
+		game.lose = function (player, cards, from, to, reason, skill, log, noAnimation, noLog, noEvent, noGain, noLose, noDeprive, noVideo, noUpdate, noSort, noUpdateControl) {
+			var result = originalLose.apply(this, arguments);
+
+			// 检查是否需要自动整理手牌
+			if (window.paixuxx == false && player == game.me && !player.hasSkillTag("noSortCard") && (from == "h" || from == "hs") && player.getCards && player.getCards("hs").length > 1) {
+				// 延迟执行整理，确保卡牌已经从手牌中移除
+				setTimeout(function () {
+					if (player && player.getCards && player.getCards("hs").length > 1) {
+						var handCards = player.getCards("hs");
+						handCards.sort((a, b) => {
+							// 位置排序
+							var p1 = get.position(a);
+							var p2 = get.position(b);
+							if (p1 != p2) return p1 == "h" ? 1 : -1;
+							// 卡牌排序
+							if (a.name != b.name) return lib.sort.card(b.name, a.name);
+							if (a.suit != b.suit) return lib.suit.indexOf(b.suit) - lib.suit.indexOf(a.suit);
+							if (a.number != b.number) return b.number - a.number;
+							if (a.nature != b.nature) return b.nature - a.nature;
+							return parseInt(b.cardid) - parseInt(a.cardid);
+						});
+
+						if (window.dui && dui.queueNextFrameTick) {
+							handCards.forEach(card => player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild));
+							dui.queueNextFrameTick(dui.layoutHand, dui);
+						} else {
+							game.addVideo("lose", player, [get.cardsInfo(handCards), [], []]);
+							handCards.forEach(card => card.goto(ui.special));
+							player.directgain(handCards, false);
+						}
+					}
+				}, 10);
+			}
+
+			return result;
+		};
+	});
+
+	// 手牌区DOM变化自动整理
+	lib.arenaReady.push(function () {
+		var observer;
+		function autoSortHandcards() {
+			var player = game.me;
+			if (!player || !player.node || !player.node.handcards1) return;
+			if (window.paixuxx !== false) return;
+			if (player.hasSkillTag && player.hasSkillTag("noSortCard")) return;
+			var cards = player.getCards && player.getCards("hs");
+			if (!cards || cards.length <= 1) return;
+			// 整理前断开监听，防止死循环
+			if (observer) observer.disconnect();
+			cards.sort(function (a, b) {
 				var p1 = get.position(a);
 				var p2 = get.position(b);
 				if (p1 != p2) return p1 == "h" ? 1 : -1;
-				// 卡牌排序
 				if (a.name != b.name) return lib.sort.card(b.name, a.name);
 				if (a.suit != b.suit) return lib.suit.indexOf(b.suit) - lib.suit.indexOf(a.suit);
 				if (a.number != b.number) return b.number - a.number;
@@ -119,15 +178,35 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				return parseInt(b.cardid) - parseInt(a.cardid);
 			});
 			if (window.dui && dui.queueNextFrameTick) {
-				cards.forEach(card => player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild));
+				cards.forEach(function (card) {
+					player.node.handcards1.insertBefore(card, player.node.handcards1.firstChild);
+				});
 				dui.queueNextFrameTick(dui.layoutHand, dui);
 			} else {
 				game.addVideo("lose", player, [get.cardsInfo(cards), [], []]);
-				cards.forEach(card => card.goto(ui.special));
+				cards.forEach(function (card) {
+					card.goto(ui.special);
+				});
 				player.directgain(cards, false);
 			}
-		},
-	};
+			// 整理后恢复监听
+			if (observer && player.node && player.node.handcards1) {
+				observer.observe(player.node.handcards1, { childList: true, subtree: false });
+			}
+		}
+		// 只监听自己的手牌区
+		observer = new MutationObserver(function (mutationsList, observerInstance) {
+			autoSortHandcards();
+		});
+		var tryObserve = function () {
+			if (game.me && game.me.node && game.me.node.handcards1) {
+				observer.observe(game.me.node.handcards1, { childList: true, subtree: false });
+			} else {
+				setTimeout(tryObserve, 500);
+			}
+		};
+		tryObserve();
+	});
 
 	lib.arenaReady.push(function () {
 		//更新轮次
@@ -230,7 +309,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				lib.translate[i + "_win_option"] = translate[i];
 			}
 			game.ui_identityShow_init();
-			setInterval(function () {
+			setInterval(() => {
 				game.ui_identityShow_update();
 			}, 1000);
 		}
@@ -549,6 +628,26 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 
 				confirm.update = function () {
+					//鹿鹿修改 限定技专属按钮开始
+					var skisxdj = function () {
+						if (_status.event?.skill && get.info(_status.event.skill)?.limited && _status.event.player == game.me) {
+							return true;
+						}
+						if (_status.event?.getParent(2)?.skill && get.info(_status.event.getParent(2).skill)?.limited && _status.event.getParent(2).player == game.me) {
+							return true;
+						}
+						if (_status.event?.getParent()?.skill && get.info(_status.event.getParent().skill)?.limited && _status.event.getParent().player == game.me) {
+							return true;
+						}
+						return false;
+					};
+					if (skisxdj() == true && !confirm.node.ok.classList.contains("xiandingji")) {
+						confirm.node.ok.classList.add("xiandingji");
+					}
+					if (skisxdj() != true && confirm.node.ok.classList.contains("xiandingji")) {
+						confirm.node.ok.classList.remove("xiandingji");
+					}
+					//鹿鹿修改 限定技专属按钮结束
 					if (confirm.skills2) {
 						if (_status.event.skill && _status.event.skill !== confirm.dataset.skill) {
 							confirm.dataset.skill = _status.event.skill;
@@ -629,7 +728,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						cardNumber: cardNumber,
 					});
 				};
-				node.node.cardNumber.interval = setInterval(function () {
+				node.node.cardNumber.interval = setInterval(() => {
 					ui.handcardNumber.updateCardnumber();
 				}, 1000);
 				//    game.addVideo('createCardRoundTime');
@@ -671,7 +770,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							else item._num++;
 							item.innerHTML = "<span>" + item._num + "</span>";
 							if (item._num !== num) {
-								item.interval = setTimeout(function () {
+								item.interval = setTimeout(() => {
 									node.setNumberAnimation(num, step);
 								}, step);
 							}
@@ -681,7 +780,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 				ui.time4 = node.node.time;
 				ui.time4.starttime = get.utc();
-				ui.time4.interval = setInterval(function () {
+				ui.time4.interval = setInterval(() => {
 					var num = Math.round((get.utc() - ui.time4.starttime) / 1000);
 					if (num >= 3600) {
 						var num1 = Math.floor(num / 3600);

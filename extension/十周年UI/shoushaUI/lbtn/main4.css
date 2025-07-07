@@ -1,25 +1,29 @@
 /*------出牌记录------*/
-#arena.chess > #arenalog {
+#arena.chess>#arenalog {
 	display: none !important;
 	font-family: "FZLBJW" !important;
 	background: none;
 }
-#arena.observe .handcards > .card > div {
+
+#arena.observe .handcards>.card>div {
 	opacity: 0 !important;
 	font-family: "FZLBJW" !important;
 	background: none;
 }
-#arena.hide_name .player > .name:not(.name_seat),
-#arena.hide_name .player > .name2,
-#arena.hide_name > .dialog .button.character > .name {
+
+#arena.hide_name .player>.name:not(.name_seat),
+#arena.hide_name .player>.name2,
+#arena.hide_name>.dialog .button.character>.name {
 	display: none !important;
 	font-family: "FZLBJW" !important;
 	background: none;
 }
+
 /*记录栏主体*/
 #arenalog {
 	width: calc(50% - 230px);
-	height: calc(100% - 452px); /*100消了四层。*/
+	height: calc(100% - 452px);
+	/*100消了四层。*/
 	left: calc(50% + 60px);
 	top: 234px;
 	overflow: hidden;
@@ -28,63 +32,80 @@
 	pointer-events: none;
 	text-align: center;
 }
+
 #arenalog.withdialog {
 	opacity: 0.5;
 }
-#arena:not(.oldlayout) > #arenalog[data-position="center"] {
+
+#arena:not(.oldlayout)>#arenalog[data-position="center"] {
 	left: calc(25% + 105px);
 }
-#arena:not(.oldlayout) > #arenalog[data-position="left"] {
+
+#arena:not(.oldlayout)>#arenalog[data-position="left"] {
 	left: 150px;
 }
-#arena.oldlayout > #arenalog {
+
+#arena.oldlayout>#arenalog {
 	top: 160px;
 	width: calc(50% - 280px);
 	height: calc(100% - 355px);
 }
-#arena.oldlayout > #arenalog[data-position="center"] {
+
+#arena.oldlayout>#arenalog[data-position="center"] {
 	left: calc(25% + 150px);
 }
-#arena.oldlayout > #arenalog[data-position="left"] {
+
+#arena.oldlayout>#arenalog[data-position="left"] {
 	left: 240px;
 }
+
 /*-------文本颜色------*/
 .firetext {
 	color: rgb(255, 119, 63);
 }
+
 .yellowtext {
 	color: #bd9927;
 }
+
 .bluetext {
 	color: #bd9927;
 }
+
 .greentext {
 	color: #bd9927;
 }
+
 .icetext {
 	color: rgb(59, 98, 115);
 }
+
 .thundertext,
 .controlthundertext {
 	color: rgb(117, 186, 255);
 }
+
 .kamitext {
 	color: rgb(90, 118, 99);
 }
+
 .whitetext .thundertext {
 	color: #b9b7bc;
 }
+
 .poisontext {
 	color: rgb(104, 221, 127);
 }
+
 .browntext {
 	color: rgb(195, 161, 223);
 }
+
 .legendtext {
 	color: rgb(233, 131, 255);
 }
 
-#arenalog > div {
+#arenalog>div {
 	position: relative;
 	display: block;
 	width: calc(100% - 23px);
@@ -99,7 +120,8 @@
 	/*background-image: url("info.png");*/
 	background-size: 100% 100%;
 }
-#window:not(.low_performance) #arena #arenalog > div {
+
+#window:not(.low_performance) #arena #arenalog>div {
 	animation: game_start 0.5s;
 	-webkit-animation: game_start 0.5s;
 }
@@ -114,7 +136,8 @@
 	height: 100%;
 	width: 55%;
 }
-.bigbgjilu > .content {
+
+.bigbgjilu>.content {
 	/*左侧信息栏*/
 	left: 0%;
 	top: 7%;
@@ -125,7 +148,8 @@
 	overflow: auto;
 	z-index: 7;
 }
-.bigbgjilu > .content > .namebg {
+
+.bigbgjilu>.content>.namebg {
 	/*信息背景*/
 	width: auto;
 	height: 9.4%;
@@ -138,7 +162,8 @@
 	left: 35%;
 	z-index: 7;
 }
-.bigbgjilu > .content > .namebg > .jiluanniu {
+
+.bigbgjilu>.content>.namebg>.jiluanniu {
 	/*每个人名字前面的按钮*/
 	background-image: url("./images/OL_line/jilu/kuang.png");
 	background-size: 100% 100%;
@@ -152,7 +177,8 @@
 	cursor: pointer;
 	z-index: 8;
 }
-.bigbgjilu > .content > .namebg > .jiluanniu > .gou {
+
+.bigbgjilu>.content>.namebg>.jiluanniu>.gou {
 	/*按钮点击后的效果*/
 	background-image: url("./images/OL_line/jilu/gou.png");
 	background-size: 100% 100%;
@@ -161,14 +187,16 @@
 	transform: translateY(-5px);
 	z-index: 7;
 }
-.bigbgjilu > .content > .namebg > .namebgbg {
+
+.bigbgjilu>.content>.namebg>.namebgbg {
 	/*名字的底*/
 	left: 48px;
 	width: 45%;
 	display: flex;
 	justify-content: center;
 }
-.bigbgjilu > .content > .namebg > .namebgbg > .name {
+
+.bigbgjilu>.content>.namebg>.namebgbg>.name {
 	font-size: 18px;
 	font-family: "shousha";
 	color: rgb(197, 139, 73);
@@ -178,7 +206,7 @@
 	font-weight: 600;
 }
 
-.bigbgjilu > .content > .namebg > .namebgbg::before {
+.bigbgjilu>.content>.namebg>.namebgbg::before {
 	/*下划线*/
 	content: "";
 	background-image: url("./images/OL_line/jilu/jianfeng.png");
@@ -190,14 +218,16 @@
 	left: 3px;
 	z-index: 6;
 }
-.pausedbg > .resumedbg {
+
+.pausedbg>.resumedbg {
 	left: 0 !important;
 	top: 0 !important;
 	width: 100%;
 	height: 100%;
 	z-index: 5;
 }
-.pausedbg > .historybg {
+
+.pausedbg>.historybg {
 	/*右侧信息栏*/
 	transition: all 0.2s linear;
 	display: flex;
@@ -207,6 +237,7 @@
 	left: 22%;
 	z-index: 6;
 }
+
 #sidebar {
 	left: 0;
 	top: 0;
@@ -221,32 +252,38 @@
 	line-height: 19px;
 	font-weight: 500;
 }
-#sidebar > div {
+
+#sidebar>div {
 	font-family: "shousha";
 }
+
 /* 卡牌名称 */
-#sidebar > div > .yellowtext {
+#sidebar>div>.yellowtext {
 	color: rgb(217, 194, 153);
 	letter-spacing: 4px;
 	font-weight: 500;
 }
+
 /* 武将名称 */
-#sidebar > div > .bluetext {
+#sidebar>div>.bluetext {
 	color: rgb(220, 170, 50);
 	font-weight: 600;
 }
+
 /* 技能名称 */
-#sidebar > div > .greentext {
+#sidebar>div>.greentext {
 	color: rgb(193, 181, 24);
 	letter-spacing: 4px;
 	font-weight: 600;
 }
+
 /* 弃牌堆卡牌名称 */
-#sidebar3 > div {
+#sidebar3>div {
 	color: rgb(217, 194, 153);
 	letter-spacing: 4px;
 	font-weight: 500;
 }
+
 .identityShow {
 	/* 身份任务 */
 	top: 5px;
@@ -256,6 +293,7 @@
 	border-radius: 3px;
 	width: 120px;
 }
+
 .jiluButton {
 	/* 记录按钮 */
 	display: block;
@@ -270,6 +308,7 @@
 	z-index: 5;
 	left: -5px;
 }
+
 .bgdialog {
 	/*切换背景的背景图*/
 	position: absolute;
@@ -281,6 +320,7 @@
 	top: 50%;
 	transform: translate(-50%, -50%);
 }
+
 .backgroundsbg {
 	/*背景背景*/
 	width: 100%;
@@ -290,6 +330,7 @@
 	overflow-x: hidden;
 	overflow-y: auto;
 }
+
 .backgrounds {
 	/*每一个背景图*/
 	background-size: 100% 100%;
@@ -304,6 +345,7 @@
 	margin-bottom: 1%;
 	border-radius: 6px;
 }
+
 .buttontext {
 	/* 每一个背景图的文字 */
 	position: absolute;
@@ -318,6 +360,7 @@
 	text-shadow: none;
 	font-size: 25px;
 }
+
 .bgback {
 	/*背景返回按钮*/
 	width: 80px;
@@ -329,6 +372,7 @@
 	z-index: 100;
 	position: absolute;
 }
+
 .bgxuanzhong {
 	/*背景的选中效果*/
 	background: url("./images/OL_line/bg/gou.png");
@@ -339,6 +383,7 @@
 	top: 40%;
 	transform: translate(-50%, -50%);
 }
+
 /*左侧的三个按钮*/
 .leftbuttons,
 .rightbuttons {
@@ -348,14 +393,17 @@
 	max-height: 205px;
 	overflow: auto;
 }
+
 .leftbuttons {
 	/*右手布局*/
 	left: 75px;
 }
+
 .rightbuttons {
 	/*左手布局*/
 	right: 80px;
 }
+
 .anniubutton {
 	/*单独按钮*/
 	width: 100%;
@@ -374,6 +422,7 @@
 	font-family: "shousha";
 	text-shadow: none;
 }
+
 .caidanbutton {
 	/*菜单按钮*/
 	background-image: url("./images/OL_line/uibutton/caidan.png");
@@ -387,6 +436,7 @@
 	background-color: transparent;
 	z-index: 1;
 }
+
 .caidanopen {
 	/*菜单展开底框*/
 	width: 47px;
@@ -401,6 +451,7 @@
 	border-radius: 4px;
 	overflow: auto;
 }
+
 .controls {
 	/*菜单的每个操作按钮*/
 	width: 95%;
@@ -422,6 +473,7 @@
 	text-align: center;
 	text-shadow: none;
 }
+
 .giftbg {
 	/* 礼物选择 */
 	width: 35%;
@@ -433,6 +485,7 @@
 	border-radius: 4px;
 	border: 1px solid #ae8e7d;
 }
+
 .giftbgtext {
 	/*下面文字*/
 	bottom: 5%;
@@ -442,12 +495,14 @@
 	color: #efdbb6;
 	font-family: "shousha";
 }
+
 .giftes {
 	/*所有礼物的位置*/
 	width: 100%;
 	height: 70%;
 	top: 10%;
 }
+
 .gift {
 	/*每个礼物*/
 	width: 19%;
@@ -456,6 +511,7 @@
 	position: relative;
 	margin-left: 4.55%;
 }
+
 .giftname {
 	/*礼物名字*/
 	bottom: -30%;
@@ -465,6 +521,7 @@
 	color: #efdbb6;
 	font-family: "shousha";
 }
+
 .giftcost {
 	/*礼物消耗*/
 	bottom: -55%;
@@ -474,6 +531,7 @@
 	color: #efdbb6;
 	font-family: "shousha";
 }
+
 .giftcost::before {
 	content: "";
 	background-image: url("./images/OL_line/gift/hua.png");
@@ -485,6 +543,7 @@
 	margin-right: 3px;
 	vertical-align: middle;
 }
+
 .giftbg2 {
 	/*弹药底图*/
 	width: 25%;
@@ -496,6 +555,7 @@
 	border-radius: 4px;
 	border: 1px solid #aa8f3a;
 }
+
 .gift2 {
 	/*弹药图*/
 	width: 25%;
@@ -506,9 +566,11 @@
 	top: 40%;
 	transform: translate(-50%, -50%);
 }
+
 .giftgive {
 	/*送礼物元素，放在玩家上面，位置跟大小在js里*/
 }
+
 .talkbg {
 	/*聊天背景*/
 	background-image: url("./images/OL_line/talk/talkbg.png");
@@ -518,6 +580,7 @@
 	left: 0%;
 	top: 0%;
 }
+
 .typechanges {
 	/*左侧聊天切换按钮*/
 	top: 6%;
@@ -525,6 +588,7 @@
 	width: 10%;
 	left: 24%;
 }
+
 .typechange {
 	/*每个按钮*/
 	background-image: url("./images/OL_line/talk/btnn1.png");
@@ -558,6 +622,7 @@
 	font-size: 23px;
 	font-family: "shousha";
 }
+
 .talkrightbg {
 	/*聊天右侧信息*/
 	width: 63%;
@@ -566,6 +631,7 @@
 	right: 1.5%;
 	overflow: auto;
 }
+
 .talkquick {
 	/*快捷信息*/
 	color: #efdbb6;
@@ -577,6 +643,7 @@
 	display: block;
 	text-align: center;
 }
+
 .talkquick::before {
 	/*下划线*/
 	content: "";
@@ -589,12 +656,14 @@
 	left: 3px;
 	z-index: 6;
 }
+
 .emotionbg {
 	/*表情背景*/
 	background-size: 100% 100%;
 	height: 100%;
 	width: 25%;
 }
+
 .talkhistory {
 	/*消息记录*/
 	color: #efdbb6;
@@ -604,6 +673,7 @@
 	font-size: 21px;
 	display: block;
 }
+
 .talkhistory::before {
 	/*上划线*/
 	content: "";
@@ -616,6 +686,7 @@
 	left: 3px;
 	z-index: 6;
 }
+
 .dazi {
 	/*打字按键*/
 	background-image: url("./images/OL_line/talk/btnn2.png");
@@ -632,6 +703,7 @@
 	height: 10%;
 	position: absolute;
 }
+
 .huanfubutton {
 	/*换肤按钮*/
 	background-image: url("images/OL_line/uibutton/huanfu.png");
@@ -641,6 +713,7 @@
 	right: 80px;
 	bottom: 200px;
 }
+
 /*-----------------------------*/
 
 .lbtn-confirm:not(.closing).removing {
@@ -656,7 +729,7 @@
 	padding: 0;
 }
 
-.control > div {
+.control>div {
 	background-image: url("./images/OL_line/uibutton/new_btnnOL.png");
 	background-size: 100% 100%;
 	line-height: var(--h);
@@ -677,13 +750,13 @@
 }
 
 /*无懈按钮位置*/
-#arena > #dui-controls > .control.stayleft {
+#arena>#dui-controls>.control.stayleft {
 	left: calc(50% - 420px) !important;
 	margin-bottom: 5px !important;
 	order: 3;
 }
 
-.control > div.primary2 {
+.control>div.primary2 {
 	/*取消按钮*/
 	bottom: 1.8px;
 	color: #ceb193;
@@ -706,7 +779,7 @@
 	letter-spacing: 2px;
 }
 
-.control > div.primary {
+.control>div.primary {
 	/*确认按钮*/
 	color: #ceb193;
 	font-family: "FZLBJW";
@@ -727,17 +800,17 @@
 	letter-spacing: 2px;
 }
 
-.control > div.disabled:not([data-type="endButton"]) {
+.control>div.disabled:not([data-type="endButton"]) {
 	background-size: 100% 100%;
 }
 
-.control > div.disabled:not([data-type="endButton"]) {
+.control>div.disabled:not([data-type="endButton"]) {
 	/*-webkit-filter: grayscale(100%);*/
 	filter: grayscale(100%);
 	/*-webkit-filter: brightness(100%);*/
 }
 
-.lbtn-confirm[data-skill] > [data-type="skill2"] {
+.lbtn-confirm[data-skill]>[data-type="skill2"] {
 	display: none;
 }
 
@@ -753,7 +826,7 @@
 }
 
 /*手牌数参数*/
-.handcardNumber > .cardNumber {
+.handcardNumber>.cardNumber {
 	display: none !important;
 	/* 完全隐藏元素 */
 }
@@ -767,7 +840,7 @@
 	z-index: 3;
 }
 
-.cardRoundNumber > .cardPileNumber {
+.cardRoundNumber>.cardPileNumber {
 	left: 10px;
 	top: -15px;
 	--w: 90px;
@@ -781,7 +854,7 @@
 	z-index: 1;
 }
 
-.cardRoundNumber > .cardPileNumber > span {
+.cardRoundNumber>.cardPileNumber>span {
 	left: 12px;
 	/*牌堆数右移，越大越靠右*/
 	top: 35px;
@@ -795,8 +868,8 @@
 	font-size: 16px;
 }
 
-.cardRoundNumber > .roundNumber,
-.cardRoundNumber > .time {
+.cardRoundNumber>.roundNumber,
+.cardRoundNumber>.time {
 	/*游戏时间*/
 	left: 20px;
 	/*牌堆数/时间右移，越大越靠右*/
@@ -811,24 +884,26 @@
 	z-index: 3;
 }
 
-.cardRoundNumber > .time {
+.cardRoundNumber>.time {
 	/*游戏时间*/
 	top: 45px;
 	/* 使用flex布局，使子元素水平居中，即使它们的宽度不同 */
 	display: flex;
-	justify-content: center; /* 水平居中 */
+	justify-content: center;
+	/* 水平居中 */
 	font-size: 16px;
 	font-family: "shousha";
 	color: #b08463;
 	/* 设置最小宽度，确保即使没有小时数，元素的总宽度也是一致的 */
-	min-width: 70px; /* 根据实际需要调整这个值 */
+	min-width: 70px;
+	/* 根据实际需要调整这个值 */
 	/* 如果需要，你也可以设置一个固定的宽度 */
 	/* width: 80px; */
 }
 
 /*托管中图片（）*/
 
-#autonode > div:last-child {
+#autonode>div:last-child {
 	z-index: 10;
 	margin-bottom: -75px !important;
 	left: calc(50% - 440px);

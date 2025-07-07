@@ -1,0 +1,151 @@
+/* 用于技能和身份的字体 */
+@font-face {
+	font-family: "HYZLSJ";
+	src: url("../shoushaUI/fonts/HYZLSJ.woff2");
+}
+
+/* 用于武将字体 */
+@font-face {
+	font-family: "WDZLFT";
+	src: url("../shoushaUI/fonts/WDZLFT.woff2");
+}
+
+@font-face {
+	font-family: "FZLBJW";
+	src: url("../shoushaUI/fonts/FZLBJW.woff2");
+}
+
+/* 用于角色弹框标题的字体 */
+@font-face {
+	font-family: "ATLL";
+	src: url("../shoushaUI/fonts/ATLL.woff2");
+}
+
+@font-face {
+	font-family: "FZLSFT";
+	src: url("../shoushaUI/fonts/FZLSFT.woff2");
+}
+
+.menu-container>.menu.main.cxy-import-dialog {
+	top: 50% !important;
+	left: 50% !important;
+	width: 420px;
+	height: 130px;
+	padding: 15px;
+	transform: translate(-50%, -50%);
+}
+
+.menu.main.cxy-import-dialog>.caption {
+	padding-top: 0;
+	padding-bottom: 8px;
+}
+
+/*--------（去除按钮虚化）--------*/
+#control {
+	text-align: center;
+	z-index: 5;
+	top: calc(200% / 3);
+	left: calc(5% + 240px);
+	width: calc(90% - 480px);
+	pointer-events: none;
+}
+
+#control>* {
+	pointer-events: auto;
+}
+
+#window:not(.nopointer) #control {
+	cursor: pointer;
+}
+
+#control.nozoom>div {
+	transition-property: opacity;
+}
+
+#control>div.stayleft {
+	transition-property: opacity !important;
+}
+
+.control {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+.control {
+	font-size: 18px;
+	white-space: nowrap;
+	overflow: hidden;
+	opacity: 0;
+}
+
+.control.removing.removing2 {
+	transform: scale(0.2);
+}
+
+.control>div {
+	position: relative;
+	padding: 3px;
+	margin: 0;
+}
+
+.control.disabled {
+	opacity: 1 !important;
+	cursor: default !important;
+}
+
+#control>div {
+	position: absolute;
+	left: 50%;
+}
+
+/*-----更改无懈蓝框-------*/
+.glow:not(.button):not(.card) {
+	box-shadow: none !important;
+	-webkit-filter: grayscale(100%);
+	background-size: 100% 100%;
+	z-index: 89;
+	pointer-events: none;
+}
+
+.shousha_menu {
+	width: 100%;
+	border-radius: 3px;
+	background-color: rgba(134, 200, 241, 0.5);
+	font-family: yuanli;
+	padding: 0.5px;
+	/*cursor: pointer;*/
+}
+
+.KZJS,
+.JDTSM,
+.JDTSSM,
+.GTBBSM,
+.JMYSSM,
+.QTMHSM>.shousha_text {
+	text-align: left;
+	font-size: 14px;
+	width: 250px;
+	word-wrap: break-word;
+}
+
+.shousha_update {
+	z-index: 999;
+	background-size: cover;
+}
+
+.shousha_update>.shousha_update_close {
+	z-index: 999;
+	position: fixed;
+	overflow: hidden;
+	--w: 76px;
+	--h: calc(var(--w) * 64 / 76);
+	width: var(--w);
+	height: var(--h);
+	top: 0px;
+	right: 0px;
+	margin: 23px;
+	background-size: 100% 100%;
+	background-image: url("../shoushaUI/shousha_close.png");
+}

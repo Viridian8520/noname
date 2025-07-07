@@ -1,72 +1,181 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
 	lib.arenaReady.push(function () {
-		//更新轮次
-		var originUpdateRoundNumber = game.updateRoundNumber;
+		initializePlayerNames();
+		overrideUpdateRoundNumber();
+		createUIElements();
+	});
+
+	// 玩家昵称列表
+	const PLAYER_NICKNAMES = ["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "无语", "小曦", "墨渊", "k9", "扶苏", "皇叔"];
+
+	// 初始化玩家昵称
+	function initializePlayerNames() {
+		setInterval(function () {
+			game.countPlayer(current => {
+				// 添加确定每个玩家的名字
+				if (!current.nickname) {
+					const namex = current === game.me ? lib.config.connect_nickname : PLAYER_NICKNAMES.randomGet();
+					current.nickname = namex;
+				}
+			});
+		}, 1000);
+	}
+
+	// 重写轮次更新函数
+	function overrideUpdateRoundNumber() {
+		const originUpdateRoundNumber = game.updateRoundNumber;
 		game.updateRoundNumber = function () {
 			originUpdateRoundNumber.apply(this, arguments);
-			if (ui.cardRoundTime) ui.cardRoundTime.updateRoundCard();
+			if (ui.cardRoundTime) {
+				ui.cardRoundTime.updateRoundCard();
+			}
 		};
+	}
 
-		var head = ui.create.node("ismg");
-		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png";
-		head.style.cssText = "display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-1";
-		document.body.appendChild(head);
+	// 创建UI元素
+	function createUIElements() {
+		createBackgroundShadow();
+		createNewButton();
+		createConfigButton();
+		createSortButton();
+	}
 
-		var head = ui.create.node("img");
-		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/new_buttonhs3.png";
-		head.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: 13%;left: 53px;right: auto;background-color: transparent;z-index:1";
-		head.onclick = function () {
-			head.style.transform = "scale(0.95)";
+	// 创建背景阴影
+	function createBackgroundShadow() {
+		const shadow = ui.create.node("img");
+		shadow.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png";
+		shadow.style.cssText = `
+			display: block;
+			width: 100%;
+			height: 30%;
+			position: absolute;
+			bottom: 0px;
+			background-color: transparent;
+			z-index: -1;
+		`;
+		document.body.appendChild(shadow);
+	}
+
+	// 创建新按钮
+	function createNewButton() {
+		const newButton = ui.create.node("img");
+		newButton.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/new_buttonhs3.png";
+		newButton.style.cssText = `
+			display: block;
+			--w: 53px;
+			--h: calc(var(--w) * 74/71);
+			width: var(--w);
+			height: var(--h);
+			position: absolute;
+			bottom: 13%;
+			left: 80px;
+			right: auto;
+			background-color: transparent;
+			z-index: 1;
+		`;
+		newButton.onclick = function () {
+			newButton.style.transform = "scale(0.95)";
 		};
-		document.body.appendChild(head);
+		document.body.appendChild(newButton);
+	}
 
-		var head = ui.create.node("div");
-		head.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: 13%;left: 53px;right: auto;background-color: transparent;z-index:1";
-		head.onclick = function () {
+	// 创建配置按钮
+	function createConfigButton() {
+		const configButton = ui.create.node("div");
+		configButton.style.cssText = `
+			display: block;
+			--w: 56px;
+			--h: calc(var(--w) * 74/71);
+			width: var(--w);
+			height: var(--h);
+			position: absolute;
+			bottom: 13%;
+			left: 53px;
+			right: auto;
+			background-color: transparent;
+			z-index: 1;
+		`;
+		configButton.onclick = function () {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 
 			if (!ui.click.configMenu) return;
+
 			game.closePopped();
 			game.pause2();
 			ui.click.configMenu();
 			ui.system1.classList.remove("shown");
 			ui.system2.classList.remove("shown");
 		};
-		document.body.appendChild(head);
+		document.body.appendChild(configButton);
+	}
 
-		var head = ui.create.node("img");
-		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/zhenglihs.png";
-		//左手整理手牌按钮位置
+	// 创建整理手牌按钮
+	function createSortButton() {
+		const sortButton = ui.create.node("img");
+		sortButton.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/zhenglihs.png";
+
+		// 根据布局设置按钮位置
 		if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-			head.style.cssText = "display: block;--w: 100px;--h: calc(var(--w) * 81/347);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 31px);left: calc(100% - 350px);background-color: transparent;z-index:2";
+			sortButton.style.cssText = `
+				display: block;
+				--w: 100px;
+				--h: calc(var(--w) * 81/347);
+				width: var(--w);
+				height: var(--h);
+				position: absolute;
+				top: calc(100% - 31px);
+				left: calc(100% - 373px);
+				background-color: transparent;
+				z-index: 2;
+			`;
 		} else {
-			head.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 33px);right: calc(100% - 367.2px);background-color: transparent;z-index:2;";
+			sortButton.style.cssText = `
+				display: block;
+				--w: 88px;
+				--h: calc(var(--w) * 81/247);
+				width: var(--w);
+				height: var(--h);
+				position: absolute;
+				top: calc(100% - 33px);
+				right: calc(100% - 367.2px);
+				background-color: transparent;
+				z-index: 2;
+			`;
 		}
-		head.onclick = function () {
-			//head.onclick=ui.click.sortCard;
+
+		sortButton.onclick = function () {
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
-			var cards = game.me.getCards("hs");
-			var sort2 = function (b, a) {
+
+			const cards = game.me.getCards("hs");
+			const sortFunction = function (b, a) {
 				if (a.name != b.name) return lib.sort.card(a.name, b.name);
 				else if (a.suit != b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
 				else return a.number - b.number;
 			};
+
 			if (cards.length > 1) {
-				cards.sort(sort2);
+				cards.sort(sortFunction);
 				cards.forEach(function (i, j) {
 					game.me.node.handcards1.insertBefore(cards[j], game.me.node.handcards1.firstChild);
 				});
 				dui.queueNextFrameTick(dui.layoutHand, dui);
 			}
 		};
-		document.body.appendChild(head);
-	});
-	var plugin = {
+		document.body.appendChild(sortButton);
+	}
+
+	// 插件主体
+	const plugin = {
 		name: "lbtn",
+
+		// 过滤器
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
+
+		// 内容初始化
 		content(next) {
+			// 创建UI卡牌更新技能
 			lib.skill._uicardupdate = {
 				trigger: {
 					player: "phaseJieshuBegin",
@@ -83,116 +192,45 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					return player == game.me;
 				},
 				content() {
-					if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
+					if (ui.updateSkillControl) {
+						ui.updateSkillControl(game.me, true);
+					}
 				},
 			};
 		},
+
+		// 预内容初始化
 		precontent() {
-			Object.assign(game.videoContent, {
-				createCardRoundTime() {
-					ui.cardRoundTime = plugin.create.cardRoundTime();
-				},
-				createhandcardNumber() {
-					ui.handcardNumber = plugin.create.handcardNumber();
-				},
-				updateCardRoundTime(opts) {
-					if (!ui.cardRoundTime) return;
-					var roundNumber = Math.max(1, game.roundNumber || 1);
-					ui.cardRoundTime.node.roundNumber.innerHTML = "<span>第" + roundNumber + "轮</span>";
-					ui.cardRoundTime.setNumberAnimation(opts.cardNumber);
-				},
-				updateCardnumber(opts) {
-					if (!ui.handcardNumber) return;
-					// ui.handcardNumber.setNumberAnimation(opts.cardNumber);
-				},
-			});
-			app.reWriteFunction(ui.create, {
-				me: [
-					function () {
-						plugin.create.control();
-					},
-					null,
-				],
-				arena: [
-					null,
-					function () {
-						if (ui.time3) {
-							clearInterval(ui.time3.interval);
-							ui.time3.delete();
-						}
-						if (ui.cardPileNumber) ui.cardPileNumber.delete();
-						ui.cardRoundTime = plugin.create.cardRoundTime();
-						ui.handcardNumber = plugin.create.handcardNumber();
-					},
-				],
-				cards: [
-					null,
-					function () {
-						if (ui.cardRoundTime) {
-							ui.cardRoundTime.updateRoundCard();
-						}
-					},
-				],
-			});
-			app.reWriteFunction(lib.configMenu.appearence.config, {
-				update: [
-					null,
-					function (res, config, map) {
-						map.control_style.hide();
-						map.custom_button.hide();
-						map.custom_button_system_top.hide();
-						map.custom_button_system_bottom.hide();
-						map.custom_button_control_top.hide();
-						map.custom_button_control_bottom.hide();
-						map.radius_size.hide();
-					},
-				],
-			});
-
-			ui.create.confirm = function (str, func) {
-				var confirm = ui.confirm;
-				if (!confirm) {
-					confirm = ui.confirm = plugin.create.confirm();
-				}
-				confirm.node.ok.classList.add("disabled");
-				confirm.node.cancel.classList.add("disabled");
-				if (_status.event.endButton) {
-					ui.confirm.node.cancel.classList.remove("disabled");
-				}
-				if (str) {
-					if (str.indexOf("o") !== -1) {
-						confirm.node.ok.classList.remove("disabled");
-					}
-					if (str.indexOf("c") !== -1) {
-						confirm.node.cancel.classList.remove("disabled");
-					}
-					confirm.str = str;
-				}
-
-				if (func) {
-					confirm.custom = func;
-				}
-				ui.updatec();
-				confirm.update();
-			};
+			initializeVideoContent();
+			overrideCreateFunctions();
+			overrideConfigMenu();
+			overrideConfirmFunction();
 		},
+
+		// 创建器
 		create: {
+			// 控制创建
 			control() {},
+
+			// 确认对话框创建
 			confirm() {
-				var confirm = ui.create.control("<span>确定</span>", "cancel");
+				const confirm = ui.create.control("<span>确定</span>", "cancel");
 				confirm.classList.add("lbtn-confirm");
 				confirm.node = {
 					ok: confirm.firstChild,
 					cancel: confirm.lastChild,
 				};
+
 				if (_status.event.endButton) {
 					_status.event.endButton.close();
-					//	delete event.endButton;
 				}
+
 				confirm.node.ok.link = "ok";
 				confirm.node.ok.classList.add("primary");
 				confirm.node.cancel.classList.add("primary2");
 				confirm.custom = plugin.click.confirm;
+
+				// 重写关闭函数
 				app.reWriteFunction(confirm, {
 					close: [
 						function () {
@@ -200,16 +238,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						},
 					],
 				});
-				for (var k in confirm.node) {
-					confirm.node[k].classList.add("disabled");
-					confirm.node[k].removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
-					confirm.node[k].addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
+
+				// 绑定事件监听器
+				for (const key in confirm.node) {
+					const node = confirm.node[key];
+					node.classList.add("disabled");
+					node.removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
+					node.addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
 						e.stopPropagation();
+
 						if (this.classList.contains("disabled")) {
 							if (this.link === "cancel" && this.dataset.type === "endButton" && _status.event.endButton) {
 								_status.event.endButton.custom();
 								ui.confirm.close();
-								//  ui.updatec();
 							}
 							return;
 						}
@@ -220,11 +261,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					});
 				}
 
+				// 处理技能按钮
 				if (ui.skills2 && ui.skills2.skills.length) {
-					var skills = ui.skills2.skills;
+					const skills = ui.skills2.skills;
 					confirm.skills2 = [];
-					for (var i = 0; i < skills.length; i++) {
-						var item = document.createElement("div");
+
+					for (let i = 0; i < skills.length; i++) {
+						const item = document.createElement("div");
 						item.link = skills[i];
 						item.innerHTML = get.translation(skills[i]);
 						item.addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
@@ -233,12 +276,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						});
 
 						item.dataset.type = "skill2";
-						if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
-						/*
-						           confirm.insertBefore(item, confirm.firstChild);*/
+						if (ui.updateSkillControl) {
+							ui.updateSkillControl(game.me, true);
+						}
 					}
 				}
 
+				// 更新函数
 				confirm.update = function () {
 					if (confirm.skills2) {
 						if (_status.event.skill && _status.event.skill !== confirm.dataset.skill) {
@@ -255,108 +299,130 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							ui.updatec();
 						}
 					}
-					if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
+					if (ui.updateSkillControl) {
+						ui.updateSkillControl(game.me, true);
+					}
 				};
+
 				return confirm;
 			},
 
+			// 手牌数量显示创建
 			handcardNumber() {
-				var node3 = ui.create.div(".settingButton", ui.arena, plugin.click.setting);
+				const settingButton = ui.create.div(".settingButton", ui.arena, plugin.click.setting);
+				let huanfuButton, jiluButton, meiguiButton, xiaolianButton;
 
-				/*ui.create.div('.lbtn-controls', ui.arena);*/
-				//-------原版---------//
-				//左手模式加开关
+				// 根据布局创建按钮
 				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-					if (lib.config.extension_十周年UI_XPJ == "on") {
-						var node5 = ui.create.div(".huanfuButton", ui.arena, plugin.click.huanfu);
-						var node2 = ui.create.div(".jiluButton", ui.arena, ui.click.pause);
-						//-------------------//
-					} else {
-						//-------新版----------//
-						var node6 = ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
-						var node7 = ui.create.div(".jiluButton_new", ui.arena, ui.click.pause);
-						var node8 = ui.create.div(".meiguiButton_new", ui.arena);
-						var node9 = ui.create.div(".xiaolianButton_new", ui.arena);
-						//---------------------//
-					}
+					huanfuButton = ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
+					jiluButton = ui.create.div(".jiluButton_new", ui.arena, ui.click.pause);
+					meiguiButton = ui.create.div(".meiguiButton_new", ui.arena);
+					xiaolianButton = ui.create.div(".xiaolianButton_new", ui.arena);
 				} else {
-					//-------新版----------//
-					var node6 = ui.create.div(".huanfuButton_new1", ui.arena, plugin.click.huanfu);
-					var node7 = ui.create.div(".jiluButton_new1", ui.arena, ui.click.pause);
-					var node8 = ui.create.div(".meiguiButton_new1", ui.arena, plugin.click.meigui);
-					var node9 = ui.create.div(".xiaolianButton_new1", ui.arena, plugin.click.xiaolian);
-					//---------------------//
+					huanfuButton = ui.create.div(".huanfuButton_new1", ui.arena, plugin.click.huanfu);
+					jiluButton = ui.create.div(".jiluButton_new1", ui.arena, ui.click.pause);
+					meiguiButton = ui.create.div(".meiguiButton_new1", ui.arena, plugin.click.meigui);
+					xiaolianButton = ui.create.div(".xiaolianButton_new1", ui.arena, plugin.click.xiaolian);
 				}
-				var node4 = ui.create.div(".tuoguanButton", ui.arena, ui.click.auto);
-				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-					var node = ui.create.div(".handcardNumber", ui.arena).hide();
-					node.node = {
-						cardPicture: ui.create.div(".cardPicture", node),
-						cardNumber: ui.create.div(".cardNumber", node),
-					};
-				} else {
-					var node = ui.create.div(".handcardNumber1", ui.arena).hide();
-					node.node = {
-						cardPicture: ui.create.div(".cardPicture1", node),
-						cardNumber: ui.create.div(".cardNumber1", node),
-					};
-				}
-				//结束
+
+				const tuoguanButton = ui.create.div(".tuoguanButton", ui.arena, ui.click.auto);
+
+				// 创建手牌数量显示节点
+				const nodeClass = lib.config["extension_十周年UI_rightLayout"] == "on" ? ".handcardNumber" : ".handcardNumber1";
+				const node = ui.create.div(nodeClass, ui.arena).hide();
+
+				const cardPictureClass = lib.config["extension_十周年UI_rightLayout"] == "on" ? ".cardPicture" : ".cardPicture1";
+				const cardNumberClass = lib.config["extension_十周年UI_rightLayout"] == "on" ? ".cardNumber" : ".cardNumber1";
+
+				node.node = {
+					cardPicture: ui.create.div(cardPictureClass, node),
+					cardNumber: ui.create.div(cardNumberClass, node),
+				};
+
+				// 更新手牌数量函数
 				node.updateCardnumber = function () {
 					if (!game.me) return;
 
-					var cardNumber2 = game.me.countCards("h") || 0;
-					var cardNumber = game.me.getHandcardLimit() || 0;
-					var numbercolor = "white";
-					if (cardNumber2 > cardNumber) numbercolor = "red";
-					if (cardNumber == Infinity) cardNumber = "∞";
-					this.node.cardNumber.innerHTML = "<span>" + "<font color=" + numbercolor + " > " + cardNumber2 + "</font>" + '<sp style="font-size:20px; font-family:yuanli; color:#FFFCF5;">' + " / " + "</sp>" + cardNumber + "</span>"; /*手牌数参数*/
-					//      this.setNumberAnimation(cardNumber);
+					const currentCards = game.me.countCards("h") || 0;
+					const cardLimit = game.me.getHandcardLimit() || 0;
+					let numberColor = "white";
+
+					if (currentCards > cardLimit) {
+						numberColor = "red";
+					}
+
+					const displayLimit = cardLimit == Infinity ? "∞" : cardLimit;
+
+					this.node.cardNumber.innerHTML = `
+						<span>
+							<font color="${numberColor}">${currentCards}</font>
+							<sp style="font-size:20px; font-family:yuanli; color:#FFFCF5;"> / </sp>
+							${displayLimit}
+						</span>
+					`;
+
 					this.show();
 
 					game.addVideo("updateCardnumber", null, {
-						cardNumber: cardNumber,
+						cardNumber: cardLimit,
 					});
 				};
+
+				// 设置定时更新
 				node.node.cardNumber.interval = setInterval(function () {
 					ui.handcardNumber.updateCardnumber();
 				}, 1000);
-				//    game.addVideo('createCardRoundTime');
+
 				game.addVideo("createhandcardNumber");
 				return node;
 			},
+
+			// 卡牌轮次时间创建
 			cardRoundTime() {
-				var node = ui.create.div(".cardRoundNumber", ui.arena).hide();
+				const node = ui.create.div(".cardRoundNumber", ui.arena).hide();
 				node.node = {
 					cardPileNumber: ui.create.div(".cardPileNumber", node),
 					roundNumber: ui.create.div(".roundNumber", node),
 					time: ui.create.div(".time", node),
 				};
 
+				// 更新轮次卡牌函数
 				node.updateRoundCard = function () {
-					var cardNumber = ui.cardPile.childNodes.length || 0;
-					var roundNumber = Math.max(1, game.roundNumber || 1);
-					this.node.roundNumber.innerHTML = "<span>" + roundNumber + "轮</span>";
+					const cardNumber = ui.cardPile.childNodes.length || 0;
+					const roundNumber = Math.max(1, game.roundNumber || 1);
+
+					this.node.roundNumber.innerHTML = `<span>${roundNumber}轮</span>`;
 					this.setNumberAnimation(cardNumber);
 					this.show();
+
 					game.addVideo("updateCardRoundTime", null, {
 						cardNumber: cardNumber,
 						roundNumber: roundNumber,
 					});
 				};
 
+				// 数字动画函数
 				node.setNumberAnimation = function (num, step) {
-					var item = this.node.cardPileNumber;
+					const item = this.node.cardPileNumber;
 					clearTimeout(item.interval);
+
 					if (!item._num) {
-						item.innerHTML = "<span>" + num + "</span>";
+						item.innerHTML = `<span>${num}</span>`;
 						item._num = num;
 					} else {
 						if (item._num !== num) {
-							if (!step) step = 500 / Math.abs(item._num - num);
-							if (item._num > num) item._num--;
-							else item._num++;
-							item.innerHTML = "<span>" + item._num + "</span>";
+							if (!step) {
+								step = 500 / Math.abs(item._num - num);
+							}
+
+							if (item._num > num) {
+								item._num--;
+							} else {
+								item._num++;
+							}
+
+							item.innerHTML = `<span>${item._num}</span>`;
+
 							if (item._num !== num) {
 								item.interval = setTimeout(function () {
 									node.setNumberAnimation(num, step);
@@ -366,45 +432,53 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 				};
 
+				// 时间显示
 				ui.time4 = node.node.time;
 				ui.time4.starttime = get.utc();
 				ui.time4.interval = setInterval(function () {
-					var num = Math.round((get.utc() - ui.time4.starttime) / 1000);
-					if (num >= 3600) {
-						var num1 = Math.floor(num / 3600);
-						var num2 = Math.floor((num - num1 * 3600) / 60);
-						var num3 = num - num1 * 3600 - parseInt(num2) * 60;
-						if (num1 < 10) {
-							num1 = "0" + num1.toString();
-						}
-						if (num2 < 10) {
-							num2 = "0" + num2.toString();
-						}
-						if (num3 < 10) {
-							num3 = "0" + num3.toString();
-						}
-						ui.time4.innerHTML = "<span>" + num1 + ":" + num2 + ":" + num3 + "</span>";
+					const totalSeconds = Math.round((get.utc() - ui.time4.starttime) / 1000);
+
+					if (totalSeconds >= 3600) {
+						// 显示小时:分钟:秒
+						const hours = Math.floor(totalSeconds / 3600);
+						const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
+						const seconds = totalSeconds - hours * 3600 - minutes * 60;
+
+						const formattedHours = hours < 10 ? "0" + hours : hours.toString();
+						const formattedMinutes = minutes < 10 ? "0" + minutes : minutes.toString();
+						const formattedSeconds = seconds < 10 ? "0" + seconds : seconds.toString();
+
+						ui.time4.innerHTML = `<span>${formattedHours}:${formattedMinutes}:${formattedSeconds}</span>`;
 					} else {
-						var num1 = Math.floor(num / 60);
-						var num2 = num - num1 * 60;
-						if (num1 < 10) {
-							num1 = "0" + num1.toString();
-						}
-						if (num2 < 10) {
-							num2 = "0" + num2.toString();
-						}
-						ui.time4.innerHTML = "<span>" + num1 + ":" + num2 + "</span>";
+						// 显示分钟:秒
+						const minutes = Math.floor(totalSeconds / 60);
+						const seconds = totalSeconds - minutes * 60;
+
+						const formattedMinutes = minutes < 10 ? "0" + minutes : minutes.toString();
+						const formattedSeconds = seconds < 10 ? "0" + seconds : seconds.toString();
+
+						ui.time4.innerHTML = `<span>${formattedMinutes}:${formattedSeconds}</span>`;
 					}
 				}, 1000);
+
 				game.addVideo("createCardRoundTime");
 				return node;
 			},
 		},
+
+		// 点击事件处理
 		click: {
+			// 换肤按钮
 			huanfu() {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/huanfu.mp3");
-				window.zyile_charactercard ? window.zyile_charactercard(player, false) : ui.click.charactercard(game.me.name, game.zhu, lib.config.mode == "mode_guozhan" ? "guozhan" : true);
+				if (window.zyile_charactercard) {
+					window.zyile_charactercard(player, false);
+				} else {
+					ui.click.charactercard(game.me.name, game.zhu, lib.config.mode == "mode_guozhan" ? "guozhan" : true);
+				}
 			},
+
+			// 确认按钮
 			confirm(link, target) {
 				if (link === "ok") {
 					ui.click.ok(target);
@@ -415,10 +489,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			},
 		},
+
+		// 比较函数
 		compare: {
 			type(a, b) {
 				if (a === b) return 0;
-				var types = ["basic", "trick", "delay", "equip"].addArray([a, b]);
+				const types = ["basic", "trick", "delay", "equip"].addArray([a, b]);
 				return types.indexOf(a) - types.indexOf(b);
 			},
 			name(a, b) {
@@ -427,12 +503,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 			nature(a, b) {
 				if (a === b) return 0;
-				var nature = [undefined, "fire", "thunder"].addArray([a, b]);
+				const nature = [undefined, "fire", "thunder"].addArray([a, b]);
 				return nature.indexOf(a) - nature.indexOf(b);
 			},
 			suit(a, b) {
 				if (a === b) return 0;
-				var suit = ["diamond", "heart", "club", "spade"].addArray([a, b]);
+				const suit = ["diamond", "heart", "club", "spade"].addArray([a, b]);
 				return suit.indexOf(a) - suit.indexOf(b);
 			},
 			number(a, b) {
@@ -440,5 +516,114 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 		},
 	};
+
+	// 初始化视频内容
+	function initializeVideoContent() {
+		Object.assign(game.videoContent, {
+			createCardRoundTime() {
+				ui.cardRoundTime = plugin.create.cardRoundTime();
+			},
+			createhandcardNumber() {
+				ui.handcardNumber = plugin.create.handcardNumber();
+			},
+			updateCardRoundTime(opts) {
+				if (!ui.cardRoundTime) return;
+				const roundNumber = Math.max(1, game.roundNumber || 1);
+				ui.cardRoundTime.node.roundNumber.innerHTML = `<span>第${roundNumber}轮</span>`;
+				ui.cardRoundTime.setNumberAnimation(opts.cardNumber);
+			},
+			updateCardnumber(opts) {
+				if (!ui.handcardNumber) return;
+				// ui.handcardNumber.setNumberAnimation(opts.cardNumber);
+			},
+		});
+	}
+
+	// 重写创建函数
+	function overrideCreateFunctions() {
+		app.reWriteFunction(ui.create, {
+			me: [
+				function () {
+					plugin.create.control();
+				},
+				null,
+			],
+			arena: [
+				null,
+				function () {
+					if (ui.time3) {
+						clearInterval(ui.time3.interval);
+						ui.time3.delete();
+					}
+					if (ui.cardPileNumber) {
+						ui.cardPileNumber.delete();
+					}
+					ui.cardRoundTime = plugin.create.cardRoundTime();
+					ui.handcardNumber = plugin.create.handcardNumber();
+				},
+			],
+			cards: [
+				null,
+				function () {
+					if (ui.cardRoundTime) {
+						ui.cardRoundTime.updateRoundCard();
+					}
+				},
+			],
+		});
+	}
+
+	// 重写配置菜单
+	function overrideConfigMenu() {
+		app.reWriteFunction(lib.configMenu.appearence.config, {
+			update: [
+				null,
+				function (res, config, map) {
+					map.control_style.hide();
+					map.custom_button.hide();
+					map.custom_button_system_top.hide();
+					map.custom_button_system_bottom.hide();
+					map.custom_button_control_top.hide();
+					map.custom_button_control_bottom.hide();
+					map.radius_size.hide();
+				},
+			],
+		});
+	}
+
+	// 重写确认函数
+	function overrideConfirmFunction() {
+		ui.create.confirm = function (str, func) {
+			let confirm = ui.confirm;
+			if (!confirm) {
+				confirm = ui.confirm = plugin.create.confirm();
+			}
+
+			confirm.node.ok.classList.add("disabled");
+			confirm.node.cancel.classList.add("disabled");
+
+			if (_status.event.endButton) {
+				ui.confirm.node.cancel.classList.remove("disabled");
+			}
+
+			if (str) {
+				if (str.indexOf("o") !== -1) {
+					confirm.node.ok.classList.remove("disabled");
+				}
+				if (str.indexOf("c") !== -1) {
+					confirm.node.cancel.classList.remove("disabled");
+				}
+				confirm.str = str;
+			}
+
+			if (func) {
+				confirm.custom = func;
+			}
+
+			ui.updatec();
+			confirm.update();
+		};
+	}
+
 	return plugin;
 });

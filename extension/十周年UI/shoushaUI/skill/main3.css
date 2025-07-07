@@ -1,10 +1,10 @@
 .skill-control {
 	/*技能按钮*/
-	max-width: 200px;
+	max-width: 220px;
 	/*同列技能可容纳最大宽度，建议别调*/
 	bottom: 45px;
 	/*整体上移，建议别调*/
-	right: 165px;
+	right: 200px;
 	/*技能显示右移，越小越靠右，建议别调*/
 	z-index: 6;
 }
@@ -20,13 +20,13 @@
 	font-size: 18px;
 }
 
-.skill-control > div {
+.skill-control>div {
 	display: flex;
 	flex-wrap: wrap-reverse;
 	flex-direction: row-reverse;
 }
 
-.skill-control > div::after {
+.skill-control>div::after {
 	content: "";
 	display: block;
 	clear: both;
@@ -40,7 +40,7 @@
 	/*自动向右对齐*/
 }
 
-.skill-control > .trigger > .skillitem {
+.skill-control>.trigger>.skillitem {
 	--w: 48.75px;
 	--h: 18px;
 	width: var(--w);
@@ -56,69 +56,69 @@
 	position: relative;
 	/* 定位参照 */
 	padding: 3px 7px;
-	margin: 2px 0px;
+	margin: 2px 3px;
 	color: rbg(190, 142, 99);
 	font-family: "yuanli";
 	font-size: 18px;
 	text-shadow: 0.5px 0px 0.5px #ffffff;
 }
 
-.skill-control > .enable > .skillitem {
-	margin: 2px 2px;
-	--w: 82.8px;
-	--h: 44.1px;
+.skill-control>.enable>.skillitem {
+	margin: 3px 3px;
+	--w: 70px;
+	--h: 35px;
 	width: var(--w);
 	height: var(--h);
-	line-height: 42px;
+	line-height: 37px;
 	text-align: center;
 	font-family: "xingkai";
 	font-weight: 500;
-	font-size: 27px;
+	font-size: 23px;
 	color: #f7f5e7;
-	background-image: url("./images/new_btnn1.png");
+	background-image: url("./yijiang/new_btnn1.png");
 	background-size: 100% 100%;
 }
 
-.skill-control > .enable > .xiandingji {
+.skill-control>.enable>.xiandingji {
 	/*限定技按钮*/
-	margin: 2px 2px;
-	--w: 82.8px;
-	--h: 44.1px;
+	margin: 3px 3px;
+	--w: 70px;
+	--h: 35px;
 	width: var(--w);
 	height: var(--h);
-	line-height: 42px;
+	line-height: 37px;
 	text-align: center;
 	font-family: "xingkai";
 	font-weight: 500;
 	/*å­—ç²—ç»†*/
 	color: #f7f5e7;
-	font-size: 27px;
-	background-image: url("./images/new_btnn4.png");
+	font-size: 23px;
+	background-image: url("./yijiang/new_btnn4.png");
 	background-size: 100% 100%;
 }
 
-.skill-control > .enable > .skillitem.select {
-	background-image: url("./images/new_btnn3.png");
+.skill-control>.enable>.skillitem.select {
+	background-image: url("./yijiang/new_btnn3.png");
 }
 
-.skill-control > .enable > .skillitem:not(.usable):not(.select) {
+.skill-control>.enable>.skillitem:not(.usable):not(.select) {
 	/*技能按钮不可用时变灰*/
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
 }
 
-.skill-control > .enable > .xiandingji:not(.usable):not(.select) {
+.skill-control>.enable>.xiandingji:not(.usable):not(.select) {
 	/*限定技按钮不可用时变灰*/
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(90%);
 }
 
-.skill-control > .enable > .xiandingji.select {
-	background-image: url("./images/new_btnn4.png");
+.skill-control>.enable>.xiandingji.select {
+	background-image: url("./yijiang/new_btnn4.png");
 }
 
-.skill-control > .enable > .xiandingji:not(.usable):not(.select) {
-	/*background-image: url("./images/btn5.png");*/
+.skill-control>.enable>.xiandingji:not(.usable):not(.select) {
+	/*background-image: url("./yijiang/btn5.png");*/
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
 }
@@ -126,14 +126,14 @@
 .skillMarks {
 	max-height: 80px;
 	overflow-y: auto;
-	right: -22.5px !important;
-	top: 27px !important;
-	z-index: 66 !important;
+	right: -15px !important;
+	top: 20px !important;
+	z-index: 96 !important;
 	justify-content: center;
 	align-items: center;
 }
 
-.skillMarks > .skillMarkItem {
+.skillMarks>.skillMarkItem {
 	--h: 19px;
 	width: 28.5px !important;
 	height: 28.5px !important;
@@ -150,7 +150,7 @@
 }
 
 .skillMarkItem.xiandingji {
-	background-image: url("./images/new_xiandingji.png");
+	background-image: url("./yijiang/new_xiandingji.png");
 	background-size: 100% 100%;
 	text-shadow: none;
 	--w: 30px;
@@ -166,12 +166,12 @@
 	-webkit-filter: grayscale(1);
 }
 
-.skillMarkItem + .skillMarkItem {
+.skillMarkItem+.skillMarkItem {
 	margin-top: -6.5px;
 }
 
 .skillMarkItem.juexingji {
-	background-image: url("./images/new_juexingji.png");
+	background-image: url("./yijiang/new_juexingji.png");
 	background-size: 100% 100%;
 	text-shadow: none;
 	--w: 30px;
@@ -196,18 +196,18 @@
 	background-repeat: no-repeat;
 	transform-style: preserve-3d;
 	transform: rotateY(360deg);
-	background-image: url("./images/new_mark_yang.png");
+	background-image: url("./yijiang/new_mark_yang.png");
 }
 
 .skillMarkItem.zhuanhuanji.yang {
-	background-image: url("./images/new_mark_yang.png");
+	background-image: url("./yijiang/new_mark_yang.png");
 	/*transform:rotate(1turn);*/
 	/*transform:  rotateY(360deg);*/
 	animation: fanzhuan 1.5s;
 }
 
 .skillMarkItem.zhuanhuanji.yin {
-	background-image: url("./images/new_mark_ying.png");
+	background-image: url("./yijiang/new_mark_ying.png");
 	/*transform:rotate(1turn);*/
 	/*transform:  rotateY(360deg);*/
 	animation: fanzhuan 1.5s;
@@ -228,7 +228,7 @@
 }
 
 .skillMarkItem.duty {
-	background-image: url("./images/new_mark_duty.png");
+	background-image: url("./yijiang/new_mark_duty.png");
 	background-size: contain;
 	background-repeat: no-repeat;
 }
@@ -261,24 +261,24 @@
 	/*字体大小，有用*/
 }
 
-.skill-controlzuoshou > div {
+.skill-controlzuoshou>div {
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;
 }
 
-.skill-controlzuoshou > div::after {
+.skill-controlzuoshou>div::after {
 	content: "";
 	display: block;
 	clear: both;
 }
 
-.skill-controlzuoshou > .enable {
+.skill-controlzuoshou>.enable {
 	margin: 0 0 0 0;
 }
 
 /*非主动技显示*/
-.skill-controlzuoshou > .trigger > .skillitem {
+.skill-controlzuoshou>.trigger>.skillitem {
 	text-align: center;
 	margin: 0px 5px;
 	background-color: #3a2819;
@@ -301,7 +301,7 @@
 }
 
 /*主动技显示*/
-.skill-controlzuoshou > .enable > .skillitem {
+.skill-controlzuoshou>.enable>.skillitem {
 	margin: 0px 5px;
 	--w: 75px;
 	--h: calc(var(--w) * 85 / 175);
@@ -317,24 +317,24 @@
 	justify-content: center;
 	font-family: "xingkai";
 	/*字体样式*/
-	font-size: 27px;
+	font-size: 25px;
 	/*字体大小，没用*/
-	background-image: url("./images/new_btnn1.png");
+	background-image: url("./yijiang/new_btnn1.png");
 	background-size: 100% 100%;
 	/*border: 1px solid rgb(3,4,5); /*调试用*/
 }
 
-.skill-controlzuoshou > .enable > .skillitem.select {
-	background-image: url("./images/new_btnn3.png");
+.skill-controlzuoshou>.enable>.skillitem.select {
+	background-image: url("./yijiang/new_btnn3.png");
 }
 
-.skill-controlzuoshou > .enable > .skillitem:not(.usable):not(.select) {
+.skill-controlzuoshou>.enable>.skillitem:not(.usable):not(.select) {
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
-	/*background-image: url("./images/btnn2.png");*/
+	/*background-image: url("./yijiang/btnn2.png");*/
 }
 
-.skill-controlzuoshou > .enable > .xiandingji {
+.skill-controlzuoshou>.enable>.xiandingji {
 	/*限定技按钮*/
 	margin: 0px 5px;
 	/*上下和左右距离*/
@@ -348,18 +348,18 @@
 	font-weight: 500;
 	/*å­—ç²—ç»†*/
 	color: #f7f5e7;
-	font-size: 27px;
-	background-image: url("./images/new_btnn4.png");
+	font-size: 25px;
+	background-image: url("./yijiang/new_btnn4.png");
 	background-size: 100% 100%;
 	/*border: 1px solid rgb(3,4,5);/*调试用*/
 }
 
-.skill-controlzuoshou > .enable > .xiandingji.select {
-	background-image: url("./images/new_btnn4.png");
+.skill-controlzuoshou>.enable>.xiandingji.select {
+	background-image: url("./yijiang/new_btnn4.png");
 }
 
-.skill-controlzuoshou > .enable > .xiandingji:not(.usable):not(.select) {
-	/*background-image: url("./images/btn5.png");*/
+.skill-controlzuoshou>.enable>.xiandingji:not(.usable):not(.select) {
+	/*background-image: url("./yijiang/btn5.png");*/
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
 }

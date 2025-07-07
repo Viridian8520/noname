@@ -34,36 +34,28 @@ export default async function () {
 				init() {
 					this.extensionName = decadeUIName;
 
-					var sensor = decadeUI.element.create("sensor", document.body);
+					const sensor = decadeUI.element.create("sensor", document.body);
 					sensor.id = "decadeUI-body-sensor";
 					this.bodySensor = new decadeUI.ResizeSensor(sensor);
 
-					var SVG_NS = "http://www.w3.org/2000/svg";
-					var svg = document.body.appendChild(document.createElementNS(SVG_NS, "svg"));
-					var defs = svg.appendChild(document.createElementNS(SVG_NS, "defs"));
-					var solo = defs.appendChild(document.createElementNS(SVG_NS, "clipPath"));
-					var duol = defs.appendChild(document.createElementNS(SVG_NS, "clipPath"));
-					var duor = defs.appendChild(document.createElementNS(SVG_NS, "clipPath"));
-					var dskin = defs.appendChild(document.createElementNS(SVG_NS, "clipPath"));
+					const SVG_NS = "http://www.w3.org/2000/svg";
+					const svg = document.body.appendChild(document.createElementNS(SVG_NS, "svg"));
+					const defs = svg.appendChild(document.createElementNS(SVG_NS, "defs"));
 
-					solo.id = "solo-clip";
-					duol.id = "duol-clip";
-					duor.id = "duor-clip";
-					dskin.id = "dskin-clip";
+					const clipPaths = [
+						{ id: "solo-clip", d: "M0 0 H1 Q1 0.05 0.9 0.06 Q1 0.06 1 0.11 V1 H0 V0.11 Q0 0.06 0.1 0.06 Q0 0.05 0 0 Z" },
+						{ id: "duol-clip", d: "M1 0 H0 Q0 0.06 0.15 0.06 Q0 0.06 0 0.11 V1 H1 Z" },
+						{ id: "duor-clip", d: "M0 0 H1 Q1 0.06 0.85 0.06 Q1 0.06 1 0.11 V1 H0 Z" },
+						{ id: "dskin-clip", d: "M0 0 H1 Q1 0.1 0.94 0.1 Q0.985 0.1 1 0.13 V1 H0 V0.14 Q0 0.11 0.06 0.1 Q0 0.1 0 0 Z" },
+					];
 
-					solo.setAttribute("clipPathUnits", "objectBoundingBox");
-					duol.setAttribute("clipPathUnits", "objectBoundingBox");
-					duor.setAttribute("clipPathUnits", "objectBoundingBox");
-					dskin.setAttribute("clipPathUnits", "objectBoundingBox");
-
-					var soloPath = solo.appendChild(document.createElementNS(SVG_NS, "path"));
-					var duoLPath = duol.appendChild(document.createElementNS(SVG_NS, "path"));
-					var duoRPath = duor.appendChild(document.createElementNS(SVG_NS, "path"));
-					var dskinPath = dskin.appendChild(document.createElementNS(SVG_NS, "path"));
-					soloPath.setAttribute("d", "M0 0 H1 Q1 0.05 0.9 0.06 Q1 0.06 1 0.11 V1 H0 V0.11 Q0 0.06 0.1 0.06 Q0 0.05 0 0 Z");
-					duoLPath.setAttribute("d", "M1 0 H0 Q0 0.06 0.15 0.06 Q0 0.06 0 0.11 V1 H1 Z");
-					duoRPath.setAttribute("d", "M0 0 H1 Q1 0.06 0.85 0.06 Q1 0.06 1 0.11 V1 H0 Z");
-					dskinPath.setAttribute("d", "M0 0 H1 Q1 0.1 0.94 0.1 Q0.985 0.1 1 0.13 V1 H0 V0.14 Q0 0.11 0.06 0.1 Q0 0.1 0 0 Z");
+					clipPaths.forEach(({ id, d }) => {
+						const cp = defs.appendChild(document.createElementNS(SVG_NS, "clipPath"));
+						cp.id = id;
+						cp.setAttribute("clipPathUnits", "objectBoundingBox");
+						const path = cp.appendChild(document.createElementNS(SVG_NS, "path"));
+						path.setAttribute("d", d);
+					});
 
 					document.addEventListener(
 						"click",
@@ -72,6 +64,7 @@ export default async function () {
 						},
 						true
 					);
+
 					this.initOverride();
 					return this;
 				},
@@ -104,6 +97,8 @@ export default async function () {
 						},
 						game: {
 							swapSeat: game.swapSeat,
+							addGlobalSkill: game.addGlobalSkill,
+							removeGlobalSkill: game.removeGlobalSkill,
 						},
 						lib: {
 							element: {
@@ -203,29 +198,24 @@ export default async function () {
 									base.lib.element.card.$init.apply(this, arguments);
 
 									this.node.range.innerHTML = "";
-									var tags = [];
-									if (Array.isArray(card[4])) {
-										tags.addArray(card[4]);
-									}
+									const tags = Array.isArray(card[4]) ? [...card[4]] : [];
 									if (this.cardid) {
-										if (!_status.cardtag) {
-											_status.cardtag = {};
-										}
-										for (var i in _status.cardtag) {
+										_status.cardtag = _status.cardtag || {};
+										for (const i in _status.cardtag) {
 											if (_status.cardtag[i].includes(this.cardid)) {
-												tags.add(i);
+												tags.push(i);
 											}
 										}
-										if (tags.length) {
-											var tagstr = ' <span class="cardtag">';
-											for (var i = 0; i < tags.length; i++) {
-												var tag = tags[i];
-												if (!_status.cardtag[tag]) {
-													_status.cardtag[tag] = [];
+										const uniqueTags = [...new Set(tags)];
+										if (uniqueTags.length) {
+											let tagstr = ' <span class="cardtag">';
+											uniqueTags.forEach(tag => {
+												_status.cardtag[tag] = _status.cardtag[tag] || [];
+												if (!_status.cardtag[tag].includes(this.cardid)) {
+													_status.cardtag[tag].push(this.cardid);
 												}
-												_status.cardtag[tag].add(this.cardid);
 												tagstr += lib.translate[tag + "_tag"];
-											}
+											});
 											tagstr += "</span>";
 											this.node.range.innerHTML += tagstr;
 										}
@@ -233,14 +223,15 @@ export default async function () {
 
 									const verticalName = this.$vertname;
 									this.$name.innerHTML = verticalName.innerHTML;
-									let cardNumber = this.number;
+									const cardNumber = this.number;
 									this.$suitnum.$num.innerHTML = (cardNumber !== 0 ? get.strNumber(cardNumber) : false) || cardNumber || "";
 									this.$suitnum.$suit.innerHTML = get.translation((this.dataset.suit = this.suit));
 
 									const equip = this.$equip;
 									const innerHTML = equip.innerHTML;
-									equip.$suitnum.innerHTML = innerHTML.slice(0, innerHTML.indexOf(" "));
-									equip.$name.innerHTML = innerHTML.slice(innerHTML.indexOf(" "));
+									const spaceIdx = innerHTML.indexOf(" ");
+									equip.$suitnum.innerHTML = innerHTML.slice(0, spaceIdx);
+									equip.$name.innerHTML = innerHTML.slice(spaceIdx);
 									const node = this.node;
 									const background = node.background;
 									node.judgeMark.node.judge.innerHTML = background.innerHTML;
@@ -273,27 +264,24 @@ export default async function () {
 											equip.removeChild(equip.lastChild);
 										}
 
-									var imgFormat = decadeUI.config.cardPrettify;
-									if (imgFormat != "off") {
+									const imgFormat = decadeUI.config.cardPrettify;
+									if (imgFormat !== "off") {
 										let filename = card[2];
 										this.classList.add("decade-card");
 										if (!this.classList.contains("infohidden")) {
-											//不同属性的【杀】的图片素材
-											//仅针对单一属性【杀】
-											if (Array.isArray(card) && card[2] == "sha" && card[3] && !Array.isArray(card[3])) {
-												filename += "_";
-												filename += get.natureList(card[3]).sort(lib.sort.nature).join("_");
+											if (Array.isArray(card) && card[2] === "sha" && card[3] && !Array.isArray(card[3])) {
+												filename += "_" + get.natureList(card[3]).sort(lib.sort.nature).join("_");
 											}
-											var res = dui.statics.cards;
-											var asset = res[filename];
+											const res = dui.statics.cards;
+											let asset = res[filename];
 											if (res.READ_OK) {
-												if (asset == undefined) {
+												if (asset === undefined) {
 													this.classList.remove("decade-card");
 												} else {
-													this.style.background = 'url("' + asset.url + '")';
+													this.style.background = `url("${asset.url}")`;
 												}
 											} else {
-												var url = lib.assetURL + "extension/" + decadeUIName + "/image/card/" + filename + "." + imgFormat;
+												const url = lib.assetURL + `extension/${decadeUIName}/image/card/${filename}.${imgFormat}`;
 												if (!asset) {
 													res[filename] = asset = {
 														name: filename,
@@ -302,30 +290,26 @@ export default async function () {
 														rawUrl: undefined,
 													};
 												}
-
 												if (asset.loaded !== false) {
-													if (asset.loaded == undefined) {
-														var image = new Image();
+													if (asset.loaded === undefined) {
+														const image = new Image();
 														image.onload = function () {
 															asset.loaded = true;
 															image.onload = undefined;
 														};
-
-														var card = this;
+														const cardElem = this;
 														image.onerror = function () {
 															asset.loaded = false;
 															image.onerror = undefined;
-															card.style.background = asset.rawUrl;
-															card.classList.remove("decade-card");
+															cardElem.style.background = asset.rawUrl;
+															cardElem.classList.remove("decade-card");
 														};
-
 														asset.url = url;
 														asset.rawUrl = this.style.background || this.style.backgroundImage;
 														asset.image = image;
 														image.src = url;
 													}
-
-													this.style.background = 'url("' + url + '")';
+													this.style.background = `url("${url}")`;
 												} else {
 													this.classList.remove("decade-card");
 												}
@@ -798,11 +782,6 @@ export default async function () {
 									if (!config.dynamicSkin_dieAfter) this.stopDynamic();
 									this.node.gainSkill.innerHTML = null;
 
-									if (!decadeUI.config.playerDieEffect) {
-										if (base.lib.element.player.$dieAfter) base.lib.element.player.$dieAfter.apply(this, arguments);
-										return;
-									}
-
 									if (!this.node.dieidentity) this.node.dieidentity = ui.create.div("died-identity", this);
 									this.node.dieidentity.classList.add("died-identity");
 
@@ -815,7 +794,8 @@ export default async function () {
 									// 为onlineUI样式设置单独的路径判断
 									var url;
 									if (decadeUI.config.newDecadeStyle === "onlineUI") {
-										url = decadeUIPath + "image/decoration/dead_" + identity + ".png";
+										url = decadeUIPath + "image/decorationo/dead4_" + identity + ".png";
+										that.node.dieidentity.style.left = "25px";
 									} else if (decadeUI.config.newDecadeStyle === "babysha") {
 										url = decadeUIPath + "image/decorationh/dead3_" + identity + ".png";
 									} else {
@@ -830,11 +810,11 @@ export default async function () {
 									if ((that._trueMe || that) != game.me && that != game.me && Math.random() < 0.5) {
 										if (lib.config.extension_十周年UI_newDecadeStyle == "onlineUI" || lib.config.extension_十周年UI_newDecadeStyle == "babysha") {
 											// onlineUI样式固定使用第一个路径
-											that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:0px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
+											that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:10px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
 										} else {
 											// 其他样式保持随机
 											if (goon) {
-												that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:0px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
+												that.node.dieidentity.innerHTML = '<div style="width:40.2px; height:20px; left:10px; top:-32px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_1.png);background-size: 100% 100%;"></div>';
 											} else {
 												that.node.dieidentity.innerHTML = '<div style="width:21px; height:81px; left:18px; top:-12px; position:absolute; background-image: url(' + lib.assetURL + 'extension/十周年UI/assets/image/likai_2.png);background-size: 100% 100%;"></div>';
 											}
@@ -844,6 +824,11 @@ export default async function () {
 									}
 
 									that.node.dieidentity.style.backgroundImage = 'url("' + url + '")';
+									if (decadeUI.config.newDecadeStyle === "othersOff") {
+										that.node.dieidentity.style.backgroundSize = "80% 80%";
+										that.node.dieidentity.style.left = "17px";
+										that.node.dieidentity.style.bottom = "0px";
+									}
 									image.src = url;
 									setTimeout(function () {
 										var rect = that.getBoundingClientRect();
@@ -855,7 +840,6 @@ export default async function () {
 								},
 
 								$skill(name, type, color, avatar) {
-									if (!decadeUI.config.gameAnimationEffect || !decadeUI.animation.gl) return base.lib.element.player.$skill.apply(this, arguments);
 									var _this = this;
 									if (typeof type != "string") type = "legend";
 
@@ -979,6 +963,117 @@ export default async function () {
 											}
 										}
 									}
+									//手牌可见
+									if (!this.node.showCards) {
+										const player = this;
+										function createElement(tag, opts = {}) {
+											const d = document.createElement(tag);
+											for (const key in opts) {
+												if (!Object.hasOwnProperty.call(opts, key)) continue;
+												switch (key) {
+													case "class":
+														opts[key].forEach(v => d.classList.add(v));
+														break;
+													case "id":
+														d.id = opts[key];
+														break;
+													case "innerHTML":
+													case "innerText":
+														d[key] = opts[key];
+														break;
+													case "parentNode":
+														opts[key].appendChild(d);
+														break;
+													case "listen":
+														for (const evt in opts[key]) {
+															if (typeof opts[key][evt] == "function") d[evt] = opts[key][evt];
+														}
+														break;
+													case "style":
+														for (const s in opts[key]) d.style[s] = opts[key][s];
+														break;
+													case "children":
+														opts[key].forEach(v => d.appendChild(v));
+														break;
+													case "insertBefore":
+														opts[key][0].insertBefore(d, opts[key][1]);
+														break;
+												}
+											}
+											return d;
+										}
+										player.node.showCards = createElement("div", {
+											class: ["handdisplays"],
+											parentNode: player,
+										}).hide();
+										// 自动检测武将牌位置，决定显示区域左右
+										(function adjustShowCardsPosition() {
+											const rect = player.getBoundingClientRect();
+											const winWidth = window.innerWidth || document.documentElement.clientWidth;
+											const showCards = player.node.showCards;
+											// 默认宽度，可根据实际调整
+											const offset = 10;
+											const showWidth = 120; // 预估显示区宽度
+											if (rect.left < winWidth / 2) {
+												// 靠左，显示在右侧
+												showCards.style.left = player.offsetWidth + offset + "px";
+												showCards.style.right = "";
+											} else {
+												// 靠右，显示在左侧
+												showCards.style.left = "";
+												showCards.style.right = player.offsetWidth + offset + "px";
+											}
+											showCards.style.top = "90px";
+										})();
+										player.node.showCards.onclick = function () {
+											const cards = player.getCards("h", c => get.is.shownCard(c) || player.isUnderControl(true) || game.me?.hasSkillTag("viewHandcard", null, player, true));
+											if (cards.length > 0) {
+												const Fool_popup = ui.create.div(".popup-container", ui.window);
+												const handdisplay = ui.create.dialog(get.translation(player) + "的手牌", cards);
+												handdisplay.static = true;
+												Fool_popup.addEventListener("click", () => {
+													Fool_popup.delete();
+													handdisplay.close();
+													handdisplay.delete();
+												});
+											}
+										};
+										// 边界修正
+										const _rect = player.node.showCards.getBoundingClientRect();
+										if (_rect.left <= 10 && !player.node.showCards.classList.contains("hidden")) {
+											const left = lib.config.extension_十周年UI_enable && lib.config.extension_十周年UI_newDecadeStyle == "on" ? player.offsetWidth + 10 : player.offsetWidth + 5;
+											player.node.showCards.style.left = left + "px";
+											player.node.showCards.style.top = "90px";
+										}
+										// 鼠标悬停/触摸事件
+										player.node.showCards.onmouseover = player.node.showCards.ontouchend = function (e) {
+											const cards = player.getCards("h");
+											if (!cards.length) return;
+											cards.forEach(c => {
+												c.copy()._customintro = c._customintro;
+											});
+											if (e.type == "mouseover") {
+												player.node.showCards.onmouseleave = function () {};
+											} else {
+												ui.window.addEventListener("touchend", function touch() {}, { once: true });
+											}
+										};
+										// 监听手牌区变化
+										["handcards1", "handcards2"].forEach(handcardZone => {
+											const observer = new MutationObserver(mutationsList => {
+												for (let mutation of mutationsList) {
+													if (mutation.type === "childList") {
+														const added = mutation.addedNodes.length > 0;
+														const removed = mutation.removedNodes.length > 0;
+														if (added || removed) player.decadeUI_updateShowCards();
+													}
+												}
+											});
+											observer.observe(player.node[handcardZone], { childList: true });
+										});
+									}
+									// 刷新显示
+									this.decadeUI_updateShowCards();
 									return this;
 								},
 								$uninit() {
@@ -992,6 +1087,7 @@ export default async function () {
 									campName.style.removeProperty("background-image");
 									const hujiat = this.node.hpWrap.querySelector(".hujia");
 									if (hujiat) hujiat.remove();
+									this.node.showCards?.hide();
 									base.lib.element.player.$uninit.apply(this, arguments);
 									return this;
 								},
@@ -1031,6 +1127,8 @@ export default async function () {
 									//手牌数显示修改
 									let count = this.countCards("h");
 									if (count >= 10) this.node.count.innerHTML = count;
+									//可见手牌显示刷新
+									this.decadeUI_updateShowCards();
 									return this;
 								},
 								directgain(cards, broadcast, gaintag) {
@@ -1053,11 +1151,11 @@ export default async function () {
 
 										if (gaintag) card.addGaintag(gaintag);
 
-										fragment.insertBefore(card, fragment.firstChild);
+										fragment.appendChild(card);
 									}
 
 									if (player == game.me) {
-										dui.layoutHandDraws(cards.reverse());
+										dui.layoutHandDraws(cards);
 										dui.queueNextFrameTick(dui.layoutHand, dui);
 									}
 
@@ -1621,7 +1719,7 @@ export default async function () {
 										if (a.tx == undefined && b.tx == undefined) return 0;
 										if (a.tx == undefined) return duicfg.rightLayout ? -1 : 1;
 										if (b.tx == undefined) return duicfg.rightLayout ? 1 : -1;
-										return b.tx - a.tx;
+										return a.tx - b.tx;
 									});
 									for (var i = 0; i < cards.length; i++) {
 										(function (card, i) {
@@ -1673,21 +1771,12 @@ export default async function () {
 
 									if (card.fixed) return ui.arena.appendChild(card);
 
-									var before;
-									for (var i = 0; i < ui.thrown; i++) {
-										if (ui.thrown[i].parentNode == ui.arena) {
-											before = ui.thrown[i];
-											break;
-										}
-									}
-
 									var tagNode = card.querySelector(".used-info");
 									if (tagNode == null) tagNode = card.appendChild(dui.element.create("used-info"));
 
 									card.$usedtag = tagNode;
-									ui.thrown.unshift(card);
-									if (before) ui.arena.insertBefore(before, card);
-									else ui.arena.appendChild(card);
+									ui.thrown.push(card);
+									ui.arena.appendChild(card);
 
 									dui.tryAddPlayerCardUseTag(card, this, _status.event);
 									dui.queueNextFrameTick(dui.layoutDiscard, dui);
@@ -1703,6 +1792,65 @@ export default async function () {
 										this.$throw(VCard);
 									}
 									dui.delay(451);
+								},
+								decadeUI_updateShowCards() {
+									const player = this;
+									if (!player.node.showCards) return;
+									if (player == game.me || player.isDead()) {
+										player.node.showCards.hide();
+										while (player.node.showCards.hasChildNodes()) player.node.showCards.removeChild(player.node.showCards.firstChild);
+										return;
+									}
+									const cards = player.getCards("h", c => get.is.shownCard(c) || player.isUnderControl(true) || game.me?.hasSkillTag("viewHandcard", null, player, true));
+									if (!cards.length) {
+										player.node.showCards.hide();
+										return;
+									}
+									player.node.showCards.show();
+									while (player.node.showCards.hasChildNodes()) player.node.showCards.removeChild(player.node.showCards.firstChild);
+									function createElement(tag, opts = {}) {
+										const d = document.createElement(tag);
+										for (const key in opts) {
+											if (!Object.hasOwnProperty.call(opts, key)) continue;
+											switch (key) {
+												case "class":
+													opts[key].forEach(v => d.classList.add(v));
+													break;
+												case "id":
+													d.id = opts[key];
+													break;
+												case "innerHTML":
+												case "innerText":
+													d[key] = opts[key];
+													break;
+												case "parentNode":
+													opts[key].appendChild(d);
+													break;
+												case "listen":
+													for (const evt in opts[key]) {
+														if (typeof opts[key][evt] == "function") d[evt] = opts[key][evt];
+													}
+													break;
+												case "style":
+													for (const s in opts[key]) d.style[s] = opts[key][s];
+													break;
+												case "children":
+													opts[key].forEach(v => d.appendChild(v));
+													break;
+												case "insertBefore":
+													opts[key][0].insertBefore(d, opts[key][1]);
+													break;
+											}
+										}
+										return d;
+									}
+									cards.forEach(c => {
+										createElement("div", {
+											class: ["handcard"],
+											innerHTML: lib.translate[c.name].slice(0, 2),
+											parentNode: player.node.showCards,
+										});
+									});
 								},
 							},
 							content: {
@@ -1760,7 +1908,7 @@ export default async function () {
 											gaintag.forEach(tag => card.addGaintag(tag));
 											if (event.knowers) card.addKnower(event.knowers);
 
-											fragment.insertBefore(card, fragment.firstChild);
+											fragment.appendChild(card);
 											if (_status.discarded) _status.discarded.remove(card);
 
 											for (var j = 0; j < card.vanishtag.length; j++) {
@@ -1770,7 +1918,7 @@ export default async function () {
 										var gainTo = function (cards, nodelay) {
 											cards.duiMod = event.source;
 											if (player == game.me) {
-												dui.layoutHandDraws(cards.reverse());
+												dui.layoutHandDraws(cards);
 												dui.queueNextFrameTick(dui.layoutHand, dui);
 												game.addVideo("gain12", player, [get.cardsInfo(fragment.childNodes), gaintag]);
 											}
@@ -2740,7 +2888,7 @@ export default async function () {
 								}
 								game.check();
 
-								if (lib.config.popequip && get.is.phoneLayout() && arguments[0] != "popequip" && ui.arena && ui.arena.classList.contains("selecting") && this.parentNode.classList.contains("popequip")) {
+								if (lib.config.popequip && lib.config.phonelayout && arguments[0] != "popequip" && ui.arena && ui.arena.classList.contains("selecting") && this.parentNode.classList.contains("popequip")) {
 									var rect = this.getBoundingClientRect();
 									ui.click.touchpop();
 									ui.click.intro.call(this.parentNode, {
@@ -2912,6 +3060,16 @@ export default async function () {
 							if (player1.node.seat) player1.node.seat.innerHTML = get.cnNumber(player1.seat, true);
 							player2.seat = player2.getSeatNum();
 							if (player2.node.seat) player2.node.seat.innerHTML = get.cnNumber(player2.seat, true);
+						},
+						addGlobalSkill() {
+							const result = base.game.addGlobalSkill.apply(this, arguments);
+							[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
+							return result;
+						},
+						removeGlobalSkill() {
+							const result = base.game.removeGlobalSkill.apply(this, arguments);
+							[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
+							return result;
 						},
 						addOverDialog(dialog, result) {
 							var sprite = decadeUI.backgroundAnimation.current;
@@ -3107,48 +3265,59 @@ export default async function () {
 					};
 
 					game.swapPlayer = function (player, player2) {
+						const list = [game.me, player];
 						var result = swapPlayerFunction.call(this, player, player2);
 						/*-----------------分割线-----------------*/
 						// 单独装备栏
-						if (lib.config.extension_十周年UI_aloneEquip) {
-							if (game.me && game.me != ui.equipSolts.me) {
-								ui.equipSolts.me.appendChild(ui.equipSolts.equips);
-								ui.equipSolts.me = game.me;
-								ui.equipSolts.equips = game.me.node.equips;
-								ui.equipSolts.appendChild(game.me.node.equips);
-								game.me.$syncExpand();
-							}
+						if (lib.config.extension_十周年UI_aloneEquip && game.me && game.me !== ui.equipSolts.me) {
+							ui.equipSolts.me.appendChild(ui.equipSolts.equips);
+							ui.equipSolts.me = game.me;
+							ui.equipSolts.equips = game.me.node.equips;
+							ui.equipSolts.appendChild(game.me.node.equips);
+							game.me.$syncExpand();
 						}
-
+						// 可见手牌显示
+						list.forEach(i => i.decadeUI_updateShowCards());
+						if (lib.refreshPlayerSkills) {
+							list.forEach(i => lib.refreshPlayerSkills(i));
+						}
+						if (lib.clearAllSkillDisplay) lib.clearAllSkillDisplay();
+						if (lib.refreshPlayerSkills) {
+							game.players.concat(game.dead || []).forEach(i => lib.refreshPlayerSkills(i));
+						}
 						return result;
 					};
 
 					game.swapControl = function (player) {
 						var result = swapControlFunction.call(this, player);
 						// 单独装备栏
-						if (lib.config.extension_十周年UI_aloneEquip) {
-							if (game.me && game.me != ui.equipSolts.me) {
-								ui.equipSolts.me.appendChild(ui.equipSolts.equips);
-								ui.equipSolts.me = game.me;
-								ui.equipSolts.equips = game.me.node.equips;
-								ui.equipSolts.appendChild(game.me.node.equips);
-								game.me.$syncExpand();
+						if (lib.config.extension_十周年UI_aloneEquip && game.me && game.me !== ui.equipSolts.me) {
+							ui.equipSolts.me.appendChild(ui.equipSolts.equips);
+							ui.equipSolts.me = game.me;
+							ui.equipSolts.equips = game.me.node.equips;
+							ui.equipSolts.appendChild(game.me.node.equips);
+							game.me.$syncExpand();
+						}
+						if (ui.equipSolts) {
+							if (game.me && typeof game.me.$handleEquipChange === "function") {
+								game.me.$handleEquipChange();
+							}
+							if (player && typeof player.$handleEquipChange === "function") {
+								player.$handleEquipChange();
 							}
 						}
-						if (ui.equipSolts && game.me && typeof game.me.$handleEquipChange === "function") {
-							game.me.$handleEquipChange();
+						// 可见手牌显示
+						player.decadeUI_updateShowCards();
+						if (lib.refreshPlayerSkills) {
+							lib.refreshPlayerSkills(player);
+							if (game.me) lib.refreshPlayerSkills(game.me);
 						}
-						if (ui.equipSolts && player && typeof player.$handleEquipChange === "function") {
-							player.$handleEquipChange();
+						if (lib.clearAllSkillDisplay) lib.clearAllSkillDisplay();
+						if (lib.refreshPlayerSkills) {
+							game.players.concat(game.dead || []).forEach(i => lib.refreshPlayerSkills(i));
 						}
 						return result;
 					};
-
-					// game.linexy = function(path) {
-					// 	if (!decadeUI.config.playerLineEffect) return gameLinexyFunction.apply(this,
-					// 		arguments);
-					// 	decadeUI.effect.line(path);
-					// };
 
 					ui.click.intro = function (e) {
 						if (this.classList.contains("infohidden") || _status.dragged) return;
@@ -3397,13 +3566,6 @@ export default async function () {
 
 						var equipSolts = (ui.equipSolts = decadeUI.element.create("equips-wrap"));
 						equipSolts.back = decadeUI.element.create("equips-back", equipSolts);
-						/*
-			decadeUI.element.create('icon icon-treasure', decadeUI.element.create('equip0', equipSolts.back));
-			decadeUI.element.create('icon icon-saber', decadeUI.element.create('equip1', equipSolts.back));
-			decadeUI.element.create('icon icon-shield', decadeUI.element.create('equip2', equipSolts.back));
-			decadeUI.element.create('icon icon-mount', decadeUI.element.create('equip3', equipSolts.back));
-			decadeUI.element.create('icon icon-mount', decadeUI.element.create('equip4', equipSolts.back));
-			*/
 						for (var repetition = 0; repetition < 5; repetition++) {
 							var ediv = decadeUI.element.create(null, equipSolts.back);
 							ediv.dataset.type = repetition;
@@ -3692,29 +3854,25 @@ export default async function () {
 									}
 
 									this.innerText = value;
-									if (decadeUI.config.campIdentityImageMode) {
-										this.style.visibility = "hidden";
-										var image = new Image();
-										image.node = this;
-										image.onerror = function () {
-											this.node.style.visibility = "";
-										};
+									this.style.visibility = "hidden";
+									var image = new Image();
+									image.node = this;
+									image.onerror = function () {
+										this.node.style.visibility = "";
+									};
 
-										/*-----------------分割线-----------------*/
-										// 不同样式身份标记
-										if (lib.config.extension_十周年UI_newDecadeStyle == "onlineUI") {
-											image.src = decadeUIPath + "image/decorationo/identity2_" + filename + ".png";
-										} else if (lib.config.extension_十周年UI_newDecadeStyle == "babysha") {
-											image.src = decadeUIPath + "image/decorationh/identity3_" + filename + ".png";
-										} else if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff") {
-											image.src = decadeUIPath + "image/decoration/identity_" + filename + ".png";
-										} else {
-											image.src = decadeUIPath + "image/decorations/identity2_" + filename + ".png";
-										}
-										this.parentNode.style.backgroundImage = 'url("' + image.src + '")';
-									} else {
-										this.style.visibility = "";
-									}
+									// -----------------分割线-----------------
+									// 不同样式身份标记
+									var style = lib.config.extension_十周年UI_newDecadeStyle;
+									var srcMap = {
+										onlineUI: "image/decorationo/identity2_",
+										babysha: "image/decorationh/identity3_",
+										on: "image/decoration/identity_",
+										othersOff: "image/decoration/identity_",
+									};
+									var srcPrefix = srcMap[style] || "image/decorations/identity2_";
+									image.src = decadeUIPath + srcPrefix + filename + ".png";
+									this.parentNode.style.backgroundImage = 'url("' + image.src + '")';
 								},
 							},
 						});
@@ -3781,10 +3939,6 @@ export default async function () {
 									var sender = this;
 									if (!sender.skills) sender.skills = [];
 									if (!sender.skills.includes(skill) && lib.translate[skill]) {
-										//var info = lib.skill[skill];
-										//if (!info || info.charlotte || info.sub || (info.mark && !info.limited) || (info.nopop || info.popup === false)) return;
-										//if (info.onremove && game.me != this.player.storage[skill]) return;
-
 										sender.skills.push(skill);
 										var html = "";
 										for (var i = 0; i < sender.skills.length; i++) {
@@ -3911,7 +4065,7 @@ export default async function () {
 
 						var relayout = function () {
 							ui.arena.dataset.layout = game.layout;
-							if (get.is.phoneLayout()) {
+							if (lib.config.phonelayout) {
 								ui.css.phone.href = lib.assetURL + "layout/default/phone.css";
 								ui.arena.classList.add("phone");
 							} else {
@@ -3952,24 +4106,25 @@ export default async function () {
 
 					lib.element.content.chooseToCompare = function () {
 						"step 0";
-						if (((!event.fixedResult || !event.fixedResult[player.playerid]) && player.countCards("h") == 0) || ((!event.fixedResult || !event.fixedResult[target.playerid]) && target.countCards("h") == 0)) {
-							event.result = {
-								cancelled: true,
-								bool: false,
-							};
+						if (!event.position || typeof event.position != "string") {
+							event.position = "h";
+						}
+						if (((!event.fixedResult || !event.fixedResult[player.playerid]) && player.countCards(event.position) == 0) || ((!event.fixedResult || !event.fixedResult[target.playerid]) && target.countCards(event.position) == 0)) {
+							event.result = { cancelled: true, bool: false };
 							event.finish();
 							return;
 						}
-						game.log(player, "对", target, "发起拼点");
+						game.log(player, "对", target, "发起", event.isDelay ? "延时" : "", "拼点");
 						if (!event.filterCard) event.filterCard = lib.filter.all;
 						// 更新拼点框
 						event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
+						event.compareId = `${event.compareName}_${get.id()}`;
 						event.addMessageHook("finished", function () {
-							var dialog = ui.dialogs[this.compareName];
+							var dialog = ui.dialogs[this.compareId];
 							if (dialog) dialog.close();
 						});
 						game.broadcastAll(
-							function (player, target, eventName) {
+							function (player, target, eventName, compareId) {
 								if (!window.decadeUI) return;
 								var dialog = decadeUI.create.compareDialog();
 								dialog.caption = get.translation(eventName) + "拼点";
@@ -3977,18 +4132,17 @@ export default async function () {
 								dialog.target = target;
 								dialog.open();
 								decadeUI.delay(400);
-								ui.dialogs[eventName] = dialog;
+								ui.dialogs[compareId] = dialog;
 							},
 							player,
 							target,
-							event.compareName
+							event.compareName,
+							event.compareId
 						);
 						"step 1";
-						event.list = [player, target].filter(function (current) {
-							return !event.fixedResult || !event.fixedResult[current.playerid];
-						});
+						event.list = [player, target].filter(current => !event.fixedResult?.[current.playerid]);
 						if (event.list.length) {
-							player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
+							player.chooseCardOL(event.list, "请选择拼点牌", true, event.position).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
 								var hs = target.getCards("h");
 								var event = _status.event;
 								event.player = target;
@@ -4020,7 +4174,7 @@ export default async function () {
 							var dialog = ui.dialogs[eventName];
 							dialog.$playerCard.classList.add("infohidden");
 							dialog.$playerCard.classList.add("infoflip");
-						}, event.compareName);
+						}, event.compareId);
 						if (event.list.includes(target)) {
 							let index = event.list.indexOf(target);
 							if (result[index].skill && lib.skill[result[index].skill] && lib.skill[result[index].skill].onCompare) {
@@ -4038,7 +4192,7 @@ export default async function () {
 							var dialog = ui.dialogs[eventName];
 							dialog.$playerCard.classList.add("infohidden");
 							dialog.$playerCard.classList.add("infoflip");
-						}, event.compareName);
+						}, event.compareId);
 						event.lose_list = lose_list;
 						"step 3";
 						if (event.card2.number >= 10 || event.card2.number <= 4) {
@@ -4051,7 +4205,44 @@ export default async function () {
 							}).setContent("chooseToCompareLose");
 						}
 						"step 5";
-						event.trigger("compareCardShowBefore");
+						if (event.isDelay) {
+							let cards = [];
+							for (let current of event.lose_list) {
+								current[0].$giveAuto(current[1], current[0], false);
+								cards.addArray(current[1]);
+							}
+							game.cardsGotoSpecial(cards);
+							player
+								.when({
+									global: ["dieAfter", "phaseEnd"],
+								})
+								.assign({
+									forceDie: true,
+								})
+								.filter((event, player) => {
+									return event.name == "phase" || [player, target].includes(event.player);
+								})
+								.vars({
+									cards,
+									target,
+									evt: event,
+								})
+								.then(() => {
+									if (cards.some(card => get.position(card) == "s")) {
+										game.cardsDiscard(cards);
+										evt.isDestoryed = true;
+									}
+								});
+							event.untrigger();
+							game.broadcastAll(function (eventName) {
+								if (!window.decadeUI) return;
+								var dialog = ui.dialogs[eventName];
+								if (dialog) dialog.close();
+							}, event.compareId);
+							event.finish();
+						} else {
+							event.trigger("compareCardShowBefore");
+						}
 						"step 6";
 						// 更新拼点框
 						game.broadcastAll(
@@ -4066,7 +4257,7 @@ export default async function () {
 								dialog.playerCard = playerCard.copy();
 								dialog.targetCard = targetCard.copy();
 							},
-							event.compareName,
+							event.compareId,
 							player,
 							target,
 							event.card1,
@@ -4150,7 +4341,7 @@ export default async function () {
 								);
 							},
 							str,
-							event.compareName,
+							event.compareId,
 							event.result.bool
 						);
 						decadeUI.delay(1800);
@@ -4176,7 +4367,7 @@ export default async function () {
 
 					lib.element.content.chooseToCompareMultiple = function () {
 						"step 0";
-						if ((!event.fixedResult || !event.fixedResult[player.playerid]) && player.countCards("h") == 0) {
+						if (!event.fixedResult?.[player.playerid] && !player.countCards("h")) {
 							event.result = { cancelled: true, bool: false };
 							event.finish();
 							return;
@@ -4195,12 +4386,13 @@ export default async function () {
 						if (!event.filterCard) event.filterCard = lib.filter.all;
 						// 更新拼点框
 						event.compareName = event.getParent()?.name === "trigger" ? event.name : event.getParent().name;
+						event.compareId = `${event.compareName}_${get.id()}`;
 						event.addMessageHook("finished", function () {
-							var dialog = ui.dialogs[this.compareName];
+							var dialog = ui.dialogs[this.compareId];
 							if (dialog) dialog.close();
 						});
 						game.broadcastAll(
-							function (player, target, eventName) {
+							function (player, target, eventName, compareId) {
 								if (!window.decadeUI) return;
 								var dialog = decadeUI.create.compareDialog();
 								dialog.caption = get.translation(eventName) + "拼点";
@@ -4208,19 +4400,18 @@ export default async function () {
 								dialog.target = target;
 								dialog.open();
 								decadeUI.delay(400);
-								ui.dialogs[eventName] = dialog;
+								ui.dialogs[compareId] = dialog;
 							},
 							player,
 							targets[0],
-							event.compareName
+							event.compareName,
+							event.compareId
 						);
 						"step 1";
 						event._result = [];
-						event.list = targets.filter(function (current) {
-							return !event.fixedResult || !event.fixedResult[current.playerid];
-						});
-						if (event.list.length || !event.fixedResult || !event.fixedResult[player.playerid]) {
-							if (!event.fixedResult || !event.fixedResult[player.playerid]) event.list.unshift(player);
+						event.list = targets.filter(current => !event.fixedResult?.[current.playerid]);
+						if (event.list.length || !event.fixedResult?.[player.playerid]) {
+							if (!event.fixedResult?.[player.playerid]) event.list.unshift(player);
 							player.chooseCardOL(event.list, "请选择拼点牌", true).set("filterCard", event.filterCard).set("type", "compare").set("ai", event.ai).set("source", player).aiCard = function (target) {
 								var hs = target.getCards("h");
 								var event = _status.event;
@@ -4298,7 +4489,7 @@ export default async function () {
 								var dialog = ui.dialogs[eventName];
 								dialog.playerCard = playerCard.copy();
 							},
-							event.compareName,
+							event.compareId,
 							event.card1
 						);
 						"step 5";
@@ -4320,7 +4511,7 @@ export default async function () {
 									dialog.target = target;
 									dialog.targetCard = targetCard.copy();
 								},
-								event.compareName,
+								event.compareId,
 								player,
 								event.target,
 								event.card1,
@@ -4332,7 +4523,6 @@ export default async function () {
 							// 更新拼点框
 							game.broadcastAll(function (eventName) {
 								if (!window.decadeUI) return;
-
 								var dialog = ui.dialogs[eventName];
 								dialog.close();
 								setTimeout(
@@ -4342,7 +4532,7 @@ export default async function () {
 									110,
 									dialog
 								);
-							}, event.compareName);
+							}, event.compareId);
 							event.goto(10);
 						}
 						"step 6";
@@ -4389,7 +4579,7 @@ export default async function () {
 								var dialog = ui.dialogs[eventName];
 								dialog.$playerCard.dataset.result = result ? "赢" : "没赢";
 								setTimeout(
-									function (dialog, eventName) {
+									function (dialog) {
 										dialog.hide();
 										dialog.$playerCard.dataset.result = "";
 										setTimeout(
@@ -4406,7 +4596,7 @@ export default async function () {
 								);
 							},
 							str,
-							event.compareName,
+							event.compareId,
 							result
 						);
 						decadeUI.delay(1800);
@@ -4601,7 +4791,6 @@ export default async function () {
 							game.addCardKnower(bottom, player);
 							player.popup(get.cnNumber(event.num1) + "上" + get.cnNumber(event.num2) + "下");
 							game.logv(player, "将" + get.cnNumber(event.num1) + "张牌置于牌堆顶，" + get.cnNumber(event.num2) + "张牌置于牌堆底");
-							game.updateRoundNumber();
 						};
 					}
 					lib.element.player.setIdentity = function (identity) {
@@ -4637,6 +4826,7 @@ export default async function () {
 								if (!(!info || info.nopop || !get.translation(skill + "_info") || !lib.translate[skill + "_info"])) this.node.gainSkill.gain(skill);
 							}
 						}
+						[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
 						return skill;
 					};
 
@@ -4647,6 +4837,7 @@ export default async function () {
 								this.node.gainSkill.lose(skill);
 							}
 						}
+						[...game.players, ...game.dead].forEach(i => i.decadeUI_updateShowCards());
 						return skill;
 					};
 
@@ -4666,34 +4857,46 @@ export default async function () {
 								if (!group) return;
 								this._group = group;
 								this.node.campWrap.dataset.camp = get.character(this.name)?.groupBorder || group;
-								if (!decadeUI.config.campIdentityImageMode) {
-									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
-									else {
-										const name = get.translation(this._finalGroup),
-											str = get.plainText(name);
-										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
-										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
-									}
-									return;
+								if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+								else {
+									const name = get.translation(this._finalGroup),
+										str = get.plainText(name);
+									console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
+									if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+									else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
 								}
-								var image = new Image();
-								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
-								this._finalGroup = group;
-								const create = () => {
+								// 手杀样式使用图片
+								if (decadeUI.config.newDecadeStyle == "off") {
+									var image = new Image();
+									var url = decadeUIPath + (decadeUI.config.newDecadeStyle == "off" ? "image/decorations/name2_" : "image/decoration/name_") + group + ".png";
+									this._finalGroup = group;
+									const create = () => {
+										if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
+										else {
+											const name = get.translation(this._finalGroup),
+												str = get.plainText(name);
+											console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
+											if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+											else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+										}
+									};
+									image.onerror = () => {
+										create();
+									};
+									this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
+									image.src = url;
+								} else {
+									// 其他样式直接显示文字
+									this._finalGroup = group;
 									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = "";
 									else {
 										const name = get.translation(this._finalGroup),
 											str = get.plainText(name);
+										console.log("campName node:", this.node.campWrap.node.campName, "finalGroup:", this._finalGroup, "name:", name, "str:", str);
 										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
 										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
 									}
-								};
-								image.onerror = () => {
-									create();
-								};
-								if (decadeUI.config.newDecadeStyle != "onlineUI") this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
-								else create();
-								image.src = url;
+								}
 							},
 						},
 					});
@@ -4741,7 +4944,7 @@ export default async function () {
 
 							if (typeof num == "number") {
 								node.popupNumber = num;
-								if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI") {
+								if (lib.config.extension_十周年UI_newDecadeStyle !== "onlineUI" && lib.config.extension_十周年UI_newDecadeStyle !== "othersOff" && lib.config.extension_十周年UI_newDecadeStyle !== "on") {
 									if (num == Infinity) {
 										num = "+∞";
 									} else if (num == -Infinity) {
@@ -4879,10 +5082,6 @@ export default async function () {
 								player
 							);
 						}
-					};
-
-					lib.element.player.$dieflip = function () {
-						if (!decadeUI.config.playerDieEffect && playerDieFlipFunction) playerDieFlipFunction.apply(this, arguments);
 					};
 
 					lib.element.player.$compare = function (card1, target, card2) {
@@ -5510,9 +5709,11 @@ export default async function () {
 						} else {
 							/*-----------------分割线-----------------*/
 							// 手牌折叠方式
-							// xStart += (limitW - totalW) / 2; //居中
-							// xStart += (limitW - totalW) / 1; //靠右
-							xStart += 0; //靠左
+							if (get.is && typeof get.is.phoneLayout === "function" && lib.config.phonelayout) {
+								xStart += 0; // 触屏模式靠左
+							} else if (lib.config.extension_十周年UI_newDecadeStyle == "on") {
+								xStart += (limitW - totalW) / 1.7;
+							}
 						}
 
 						var card;
@@ -6026,7 +6227,7 @@ export default async function () {
 							if (card.dataset.views != 1 && event.card.cards && event.card.cards.length == 1 && (card.number != cardnumber || card.suit != cardsuit)) {
 								dui.cardTempSuitNum(card, cardsuit, cardnumber);
 							}
-							if (duicfg.cardUseEffect && event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
+							if (event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
 								var name = event.card.name,
 									nature = event.card.nature;
 
@@ -6180,14 +6381,12 @@ export default async function () {
 								event.apcard = undefined;
 								tagNode.innerHTML = get.translation(event.judgestr) + tagText;
 							});
-							if (duicfg.cardUseEffect) {
-								decadeUI.animation.cap.playSpineTo(card, {
-									name: "effect_panding",
-									action: "play",
-									loop: true,
-								});
-								event.apcard = card;
-							}
+							decadeUI.animation.cap.playSpineTo(card, {
+								name: "effect_panding",
+								action: "play",
+								loop: true,
+							});
+							event.apcard = card;
 							break;
 						default:
 							tagText = get.cardsetion(player);
@@ -6220,11 +6419,18 @@ export default async function () {
 
 					return Math.floor(Math.random() * (max + 1 - min)) + min + diff;
 				},
+				//自用卡牌大小，检测联机昵称
 				getCardBestScale(size) {
 					if (!(size && size.height)) size = decadeUI.getHandCardSize();
 
 					var bodySize = decadeUI.get.bodySize();
-					return Math.min((bodySize.height * (decadeUI.isMobile() ? 0.23 : 0.18)) / size.height, 1);
+					var scaleFactor = 0.18;
+					if (decadeUI.isMobile()) {
+						scaleFactor = 0.23;
+					} else if (game.me && get.connectNickname() === "点点") {
+						scaleFactor = 0.22;
+					}
+					return Math.min((bodySize.height * scaleFactor) / size.height, 1);
 				},
 				getHandCardSize(canUseDefault) {
 					var style = decadeUI.sheet.getStyle(".media_defined > .card");
@@ -7248,49 +7454,46 @@ export default async function () {
 				originchangeZhuanhuanji.apply(this, arguments);
 				if (!get.is.zhuanhuanji(skill, this)) return;
 				var mark = this.node.xSkillMarks.querySelector('[data-id="' + skill + '"]');
-				var num = this.countMark(skill);
-				var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/images/" + skill + "_yang.png";
+				var url = lib.assetURL + "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
 
-				function ImageIsExist(url) {
-					let xmlHttp = new XMLHttpRequest();
-					xmlHttp.open("Get", url, false);
-					xmlHttp.send();
-					if (xmlHttp.status === 404) return false;
-					else return true;
+				function imageExists(url) {
+					var xhr = new XMLHttpRequest();
+					xhr.open("GET", url, false);
+					xhr.send();
+					return xhr.status !== 404;
 				}
+
 				try {
-					var a = ImageIsExist(url);
-					if (a) mark.dk = true;
+					if (mark) mark.dk = imageExists(url);
 				} catch (err) {
 					if (mark) mark.dk = false;
 				}
-				if (mark) {
-					if (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff" || lib.config.extension_十周年UI_newDecadeStyle == "onlineUI" || lib.config.extension_十周年UI_newDecadeStyle == "babysha") {
-						if (mark.classList.contains("yin")) {
-							mark.classList.remove("yin");
-							mark.classList.toggle("yang");
-						} else {
-							if (mark.classList.contains("yang")) mark.classList.remove("yang");
-							mark.classList.toggle("yin");
-						}
+
+				if (!mark) return;
+
+				var style = lib.config.extension_十周年UI_newDecadeStyle;
+				var yangUrl = "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_yang.png";
+				var yingUrl = "extension/十周年UI/shoushaUI/skill/shousha/" + skill + "_ying.png";
+				var defaultYangUrl = "extension/十周年UI/shoushaUI/skill/shousha/ditu_yang.png";
+				var defaultYingUrl = "extension/十周年UI/shoushaUI/skill/shousha/ditu_ying.png";
+
+				if (style == "on" || style == "othersOff" || style == "onlineUI" || style == "babysha") {
+					if (mark.classList.contains("yin")) {
+						mark.classList.remove("yin");
+						mark.classList.add("yang");
 					} else {
-						if (mark.dd == true) {
-							this.yingSkill(skill);
-							mark.dd = false;
-							if (mark.dk) {
-								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/" + skill + "_yang.png");
-							} else {
-								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/ditu_yang.png");
-							}
-						} else {
-							this.yangSkill(skill);
-							mark.dd = true;
-							if (mark.dk) {
-								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/" + skill + "_ying.png");
-							} else {
-								mark.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/ditu_ying.png");
-							}
-						}
+						mark.classList.remove("yang");
+						mark.classList.add("yin");
+					}
+				} else {
+					if (mark.dd === true) {
+						this.yingSkill(skill);
+						mark.dd = false;
+						mark.setBackgroundImage(mark.dk ? yangUrl : defaultYangUrl);
+					} else {
+						this.yangSkill(skill);
+						mark.dd = true;
+						mark.setBackgroundImage(mark.dk ? yingUrl : defaultYingUrl);
 					}
 				}
 			};
@@ -7521,7 +7724,7 @@ export default async function () {
 							for (var i = 0; i < list.length; i++) {
 								list[i].childNodes[0].classList.add("choice"); /*添加类名*/
 								//--------背水-----//
-								if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
+								if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff" && lib.config.extension_十周年UI_newDecadeStyle != "babysha" && lib.config.extension_十周年UI_newDecadeStyle != "onlineUI") {
 									/*list[i].childNodes[0].setBackgroundImage('extension/无名补丁/image/beishui.png');*/
 									list[i].childNodes[0].setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/beishui.png");
 									list[i].childNodes[0].innerText = "背水";
@@ -7569,6 +7772,66 @@ export default async function () {
 				}
 				event.resume();
 			};
+			// ========== 工具函数统一挂载 ==========
+			if (!lib.removeFirstByClass) {
+				lib.removeFirstByClass = function (parent, className) {
+					var el = parent.getElementsByClassName(className);
+					if (el[0]) el[0].parentNode.removeChild(el[0]);
+				};
+			}
+			if (!lib.createTipImg) {
+				lib.createTipImg = function (className, src, style) {
+					var img = document.createElement("img");
+					img.classList.add("tipshow", className);
+					img.src = src;
+					img.style.cssText = style;
+					return img;
+				};
+			}
+
+			// ========== 思考提示技能模板 ==========
+			function createThinkSkill({ card, tipClass, img, style }) {
+				return {
+					trigger: { player: ["useCardBegin", "respondBegin"] },
+					silent: true,
+					forced: true,
+					charlotte: true,
+					filter(event, player) {
+						if (!event.card) return false;
+						var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
+						return cname == card && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+					},
+					content() {
+						lib.removeFirstByClass(player, "tipskill");
+						if (player.getElementsByClassName(tipClass).length <= 0) {
+							player.appendChild(lib.createTipImg(tipClass, lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/" + img, style));
+						}
+					},
+				};
+			}
+
+			// ========== 清除提示技能模板 ==========
+			function createClearSkill({ tipClass }) {
+				return {
+					trigger: { global: ["useCardEnd", "respondEnd", "dieBegin", "phaseBegin", "phaseEnd"] },
+					silent: true,
+					forced: true,
+					charlotte: true,
+					filter(event, player) {
+						event.respondix = 0;
+						for (var i = 0; i < game.players.length; i++) {
+							if (game.players[i].getElementsByClassName(tipClass)[0]) event.respondix++;
+						}
+						return event.respondix > 0;
+					},
+					content() {
+						for (var i = 0; i < game.players.length; i++) {
+							lib.removeFirstByClass(game.players[i], tipClass);
+						}
+					},
+				};
+			}
+
 			//-------------AI进度条-----------//
 			if (get.mode() != "connect") {
 				lib.onover.push(function (bool) {
@@ -7582,15 +7845,14 @@ export default async function () {
 						player: ["phaseZhunbeiBegin", "phaseBegin", "phaseJudgeBegin", "phaseDrawBegin", "useCardAfter", "phaseDiscardBegin", "useSkillBefore", "loseAfter"],
 					},
 					filter(event, player) {
-						if (document.querySelector("#jindutiaoAI") && lib.config.extension_十周年UI_jindutiaoaiUpdata == false) return false;
+						if (document.querySelector("#jindutiaoAI") == false) return false;
 						return player != game.me && _status.currentPhase == player;
 					},
 					forced: true,
 					silent: true,
 					charlotte: true,
 					content() {
-						var ab = player.getElementsByClassName("timePhase");
-						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+						lib.removeFirstByClass(player, "timePhase");
 						game.JindutiaoAIplayer();
 						window.boxContentAI.classList.add("timePhase");
 						player.appendChild(window.boxContentAI);
@@ -7615,8 +7877,7 @@ export default async function () {
 								if (document.getElementById("jindutiaoAI")) {
 									document.getElementById("jindutiaoAI").remove();
 								}
-								var ab = player.getElementsByClassName("timePhase");
-								if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+								lib.removeFirstByClass(player, "timePhase");
 							},
 						},
 					},
@@ -7630,12 +7891,11 @@ export default async function () {
 					forced: true,
 					charlotte: true,
 					filter(event, player) {
-						if (document.querySelector("#jindutiaoAI") && lib.config.extension_十周年UI_jindutiaoaiUpdata == false) return false;
+						if (document.querySelector("#jindutiaoAI") == false) return false;
 						return _status.currentPhase != player && player != game.me;
 					},
 					content() {
-						var ab = player.getElementsByClassName("timeai");
-						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+						lib.removeFirstByClass(player, "timeai");
 						game.JindutiaoAIplayer();
 						window.boxContentAI.classList.add("timeai");
 						player.appendChild(window.boxContentAI);
@@ -7656,8 +7916,7 @@ export default async function () {
 									clearInterval(window.timerai);
 									delete window.timerai;
 								}
-								var ab = player.getElementsByClassName("timeai");
-								if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+								lib.removeFirstByClass(player, "timeai");
 							},
 						},
 					},
@@ -7732,8 +7991,7 @@ export default async function () {
 							charlotte: true,
 							content() {
 								for (var i = 0; i < game.players.length; i++) {
-									var ab = game.players[i].getElementsByClassName("timeai");
-									if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+									lib.removeFirstByClass(game.players[i], "timeai");
 								}
 							},
 						},
@@ -7807,8 +8065,7 @@ export default async function () {
 							charlotte: true,
 							content() {
 								for (var i = 0; i < game.players.length; i++) {
-									var ab = game.players[i].getElementsByClassName("timeai");
-									if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+									lib.removeFirstByClass(game.players[i], "timeai");
 								}
 							},
 						},
@@ -7828,13 +8085,157 @@ export default async function () {
 						priority: -1,
 						charlotte: true,
 						content() {
-							var ab = player.getElementsByClassName("timeai");
-							if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+							lib.removeFirstByClass(player, "timeai");
 						},
 					},
 				};
 			}
-			//-------出牌中提示(手杀/十周年)---------//
+
+			// ========== 思考提示技能静态注册 ==========
+			lib.skill._chupaiE = {
+				trigger: { player: ["useCardBegin", "respondBegin"] },
+				silent: true,
+				forced: true,
+				charlotte: true,
+				filter(event, player) {
+					if (!event.card) return false;
+					var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
+					return cname == "shan" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+				},
+				content() {
+					lib.removeFirstByClass(player, "tipskill");
+					if (player.getElementsByClassName("playertipshan").length <= 0) {
+						player.appendChild(lib.createTipImg("playertipshan", lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipshan.png", "display:block;position:absolute;z-index:91;--w:133px;--h:calc(var(--w)*50/431);width:var(--w);height:var(--h);bottom:-22px;"));
+					}
+				},
+			};
+			lib.skill._chupaiG = {
+				trigger: { player: ["useCardBegin", "respondBegin"] },
+				silent: true,
+				forced: true,
+				charlotte: true,
+				filter(event, player) {
+					if (!event.card) return false;
+					var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
+					return cname == "sha" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+				},
+				content() {
+					lib.removeFirstByClass(player, "tipskill");
+					if (player.getElementsByClassName("playertipsha").length <= 0) {
+						player.appendChild(lib.createTipImg("playertipsha", lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipsha.png", "display:block;position:absolute;z-index:91;--w:133px;--h:calc(var(--w)*50/431);width:var(--w);height:var(--h);bottom:-22px;"));
+					}
+				},
+			};
+			lib.skill._chupaiM = {
+				trigger: { player: ["useCardBegin", "respondBegin"] },
+				silent: true,
+				forced: true,
+				charlotte: true,
+				filter(event, player) {
+					if (!event.card) return false;
+					var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
+					return cname == "tao" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+				},
+				content() {
+					lib.removeFirstByClass(player, "tipskill");
+					if (player.getElementsByClassName("playertiptao").length <= 0) {
+						player.appendChild(lib.createTipImg("playertiptao", lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tiptao.png", "display:block;position:absolute;z-index:91;--w:133px;--h:calc(var(--w)*50/431);width:var(--w);height:var(--h);bottom:-22px;"));
+					}
+				},
+			};
+			lib.skill._chupaiO = {
+				trigger: { player: ["useCardBegin", "respondBegin"] },
+				silent: true,
+				forced: true,
+				charlotte: true,
+				filter(event, player) {
+					if (!event.card) return false;
+					var cname = event.card.name || (event.card.viewAs ? event.card.viewAs : undefined);
+					return cname == "jiu" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
+				},
+				content() {
+					lib.removeFirstByClass(player, "tipskill");
+					if (player.getElementsByClassName("playertipjiu").length <= 0) {
+						player.appendChild(lib.createTipImg("playertipjiu", lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipjiu.png", "display:block;position:absolute;z-index:91;--w:133px;--h:calc(var(--w)*50/431);width:var(--w);height:var(--h);bottom:-22px;"));
+					}
+				},
+			};
+
+			// ========== 清除提示技能静态注册 ==========
+			lib.skill._chupaiF = {
+				trigger: { global: ["useCardEnd", "respondEnd", "dieBegin", "phaseBegin", "phaseEnd"] },
+				silent: true,
+				forced: true,
+				charlotte: true,
+				filter(event, player) {
+					event.respondix = 0;
+					for (var i = 0; i < game.players.length; i++) {
+						if (game.players[i].getElementsByClassName("playertipshan")[0]) event.respondix++;
+					}
+					return event.respondix > 0;
+				},
+				content() {
+					for (var i = 0; i < game.players.length; i++) {
+						lib.removeFirstByClass(game.players[i], "playertipshan");
+					}
+				},
+			};
+			lib.skill._chupaiH = {
+				trigger: { global: ["useCardEnd", "respondEnd", "dieBegin", "phaseBegin", "phaseEnd"] },
+				silent: true,
+				forced: true,
+				charlotte: true,
+				filter(event, player) {
+					event.respondix = 0;
+					for (var i = 0; i < game.players.length; i++) {
+						if (game.players[i].getElementsByClassName("playertipsha")[0]) event.respondix++;
+					}
+					return event.respondix > 0;
+				},
+				content() {
+					for (var i = 0; i < game.players.length; i++) {
+						lib.removeFirstByClass(game.players[i], "playertipsha");
+					}
+				},
+			};
+			lib.skill._chupaiN = {
+				trigger: { global: ["useCardEnd", "respondEnd", "dieBegin", "phaseBegin", "phaseEnd"] },
+				silent: true,
+				forced: true,
+				charlotte: true,
+				filter(event, player) {
+					event.respondix = 0;
+					for (var i = 0; i < game.players.length; i++) {
+						if (game.players[i].getElementsByClassName("playertiptao")[0]) event.respondix++;
+					}
+					return event.respondix > 0;
+				},
+				content() {
+					for (var i = 0; i < game.players.length; i++) {
+						lib.removeFirstByClass(game.players[i], "playertiptao");
+					}
+				},
+			};
+			lib.skill._chupaiP = {
+				trigger: { global: ["useCardEnd", "respondEnd", "dieBegin", "phaseBegin", "phaseEnd"] },
+				silent: true,
+				forced: true,
+				charlotte: true,
+				filter(event, player) {
+					event.respondix = 0;
+					for (var i = 0; i < game.players.length; i++) {
+						if (game.players[i].getElementsByClassName("playertipjiu")[0]) event.respondix++;
+					}
+					return event.respondix > 0;
+				},
+				content() {
+					for (var i = 0; i < game.players.length; i++) {
+						lib.removeFirstByClass(game.players[i], "playertipjiu");
+					}
+				},
+			};
+
+			//--------------------其他特殊技能--------------------//
 			lib.skill._chupaiA = {
 				trigger: {
 					player: ["phaseUseBegin", "useCardEnd", "loseEnd"],
@@ -7847,20 +8248,16 @@ export default async function () {
 					return player != game.me && _status.currentPhase == player && player.isPhaseUsing() && a.length <= 0;
 				},
 				content() {
-					var tipss = player.getElementsByClassName("tipskill");
-					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
-
+					lib.removeFirstByClass(player, "tipskill");
 					var a = player.getElementsByClassName("playertip");
 					if (a.length <= 0) {
 						var tipAB = document.createElement("img");
-						tipAB.classList.add("tipshow"); //设置统一类名
+						tipAB.classList.add("tipshow", "playertip");
 						if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
 							tipAB.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tip.png";
-							tipAB.classList.add("playertip");
 							tipAB.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 						} else {
 							tipAB.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/phasetip.png";
-							tipAB.classList.add("playertip");
 							tipAB.style.cssText = "display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
 						}
 						player.appendChild(tipAB);
@@ -7885,12 +8282,10 @@ export default async function () {
 				},
 				content() {
 					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("playertip");
-						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+						lib.removeFirstByClass(game.players[i], "playertip");
 					}
 				},
 			};
-			//----弃牌提示-----//
 			lib.skill._chupaiC = {
 				trigger: {
 					player: "phaseDiscardBegin",
@@ -7902,19 +8297,16 @@ export default async function () {
 					return player != game.me;
 				},
 				content() {
-					var tipss = player.getElementsByClassName("tipskill");
-					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
+					lib.removeFirstByClass(player, "tipskill");
 					var a = player.getElementsByClassName("playertipQP");
 					if (a.length <= 0) {
 						var tipCD = document.createElement("img");
-						tipCD.classList.add("tipshow"); //设置统一类名
+						tipCD.classList.add("tipshow", "playertipQP");
 						if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
 							tipCD.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipQP.png";
-							tipCD.classList.add("playertipQP");
 							tipCD.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
 						} else {
 							tipCD.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/discardtip.png";
-							tipCD.classList.add("playertipQP");
 							tipCD.style.cssText = "display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
 						}
 						player.appendChild(tipCD);
@@ -7938,346 +8330,11 @@ export default async function () {
 				},
 				content() {
 					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("playertipQP");
-						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+						lib.removeFirstByClass(game.players[i], "playertipQP");
 					}
 				},
 			};
-			//-----闪思考----//
-			lib.skill._chupaiE = {
-				trigger: {
-					player: ["useCardBegin", "respondBegin"],
-				},
-				silent: true,
-				forced: true,
-				charlotte: true,
-				filter(event, player) {
-					// if(!player.countCards('h','shan')) return false;
-					return event.card.name == "shan" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
-				},
-				content() {
-					var tipss = player.getElementsByClassName("tipskill");
-					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
-					var d = player.getElementsByClassName("playertipshan");
-					if (d.length <= 0) {
-						var tipEF = document.createElement("img");
-						tipEF.classList.add("tipshow"); //设置统一类名
-						tipEF.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipshan.png";
-						tipEF.classList.add("playertipshan");
-						tipEF.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
-						player.appendChild(tipEF);
-					}
-				},
-			};
-			lib.skill._chupaiF = {
-				trigger: {
-					global: ["useCardEnd", "respondEnd", "dieBegin", "phaseBegin", "phaseEnd"],
-				},
-				silent: true,
-				forced: true,
-				charlotte: true,
-				filter(event, player) {
-					event.respondix = 0;
-					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("playertipshan");
-						if (ab[0]) event.respondix++;
-					}
-					return event.respondix > 0;
-				},
-				content() {
-					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("playertipshan");
-						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
-					}
-				},
-			};
-			//-----杀思考----//
-			lib.skill._chupaiG = {
-				trigger: {
-					player: ["useCardBegin", "respondBegin"],
-				},
-				silent: true,
-				forced: true,
-				charlotte: true,
-				filter(event, player) {
-					// if(!player.countCards('h','sha')) return false;
-					return event.card.name == "sha" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
-				},
-				content() {
-					var tipss = player.getElementsByClassName("tipskill");
-					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
-					var e = player.getElementsByClassName("playertipsha");
-					if (e.length <= 0) {
-						var tipGH = document.createElement("img");
-						tipGH.classList.add("tipshow"); //设置统一类名
-						tipGH.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipsha.png";
-						tipGH.classList.add("playertipsha");
-						tipGH.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
-
-						player.appendChild(tipGH);
-					}
-				},
-			};
-			lib.skill._chupaiH = {
-				trigger: {
-					global: ["useCardEnd", "respondEnd", "dieBegin", "phaseBegin", "phaseEnd"],
-				},
-				forced: true,
-				silent: true,
-				charlotte: true,
-				filter(event, player) {
-					event.respondix = 0;
-					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("playertipsha");
-						if (ab[0]) event.respondix++;
-					}
-					return event.respondix > 0;
-				},
-				content() {
-					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("playertipsha");
-						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
-					}
-				},
-			};
-			//-----桃思考----//
-			lib.skill._chupaiM = {
-				trigger: {
-					player: ["useCardBegin", "respondBegin"],
-				},
-				silent: true,
-				forced: true,
-				charlotte: true,
-				filter(event, player) {
-					// if(!player.countCards('h','sha')) return false;
-					return event.card.name == "tao" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
-				},
-				content() {
-					var tipss = player.getElementsByClassName("tipskill");
-					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
-					var k = player.getElementsByClassName("playertiptao");
-					if (k.length <= 0) {
-						var tipMN = document.createElement("img");
-						tipMN.classList.add("tipshow"); //设置统一类名
-						tipMN.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tiptao.png";
-						tipMN.classList.add("playertiptao");
-						tipMN.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
-
-						player.appendChild(tipMN);
-					}
-				},
-			};
-			lib.skill._chupaiN = {
-				trigger: {
-					global: ["useCardEnd", "respondEnd", "dieBegin", "phaseBegin", "phaseEnd"],
-				},
-				forced: true,
-				silent: true,
-				charlotte: true,
-				filter(event, player) {
-					event.respondix = 0;
-					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("playertiptao");
-						if (ab[0]) event.respondix++;
-					}
-					return event.respondix > 0;
-				},
-				content() {
-					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("playertiptao");
-						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
-					}
-				},
-			};
-			//-----酒思考----//
-			lib.skill._chupaiO = {
-				trigger: {
-					player: ["useCardBegin", "respondBegin"],
-				},
-				forced: true,
-				charlotte: true,
-				silent: true,
-				filter(event, player) {
-					// if(!player.countCards('h','sha')) return false;
-					return event.card.name == "jiu" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
-				},
-				content() {
-					var tipss = player.getElementsByClassName("tipskill");
-					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
-					var n = player.getElementsByClassName("playertipjiu");
-					if (n.length <= 0) {
-						var tipOP = document.createElement("img");
-						tipOP.classList.add("tipshow"); //设置统一类名
-						tipOP.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipjiu.png";
-						tipOP.classList.add("playertipjiu");
-						tipOP.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
-
-						player.appendChild(tipOP);
-					}
-				},
-			};
-			lib.skill._chupaiP = {
-				trigger: {
-					global: ["useCardEnd", "respondEnd", "dieBegin", "phaseBegin", "phaseEnd"],
-				},
-				forced: true,
-				charlotte: true,
-				silent: true,
-				filter(event, player) {
-					event.respondix = 0;
-					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("playertipjiu");
-						if (ab[0]) event.respondix++;
-					}
-					return event.respondix > 0;
-				},
-				content() {
-					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("playertipjiu");
-						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
-					}
-				},
-			};
-			//----无懈思考----//
-			lib.skill._chupaiI = {
-				trigger: {
-					player: ["useCardBegin", "respondBegin", "phaseJudge"],
-				},
-				forced: true,
-				charlotte: true,
-				silent: true,
-				filter(event, player) {
-					if (event.card.storage && event.card.storage.nowuxie) return false;
-					var card = event.card;
-					if (event.name == "phaseJudge" && card.viewAs)
-						card = {
-							name: card.viewAs,
-						};
-					var info = get.info(card);
-					if (info.wuxieable === false) return false;
-
-					return event.card.name == "wuxie" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
-				},
-				content() {
-					var tipss = player.getElementsByClassName("tipskill");
-					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
-					var g = player.getElementsByClassName("playertipwuxie");
-					if (g.length <= 0) {
-						var tipIJ = document.createElement("img");
-						tipIJ.classList.add("tipshow"); //设置统一类名
-						tipIJ.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipwuxie.png";
-						tipIJ.classList.add("playertipwuxie");
-						tipIJ.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
-
-						player.appendChild(tipIJ);
-					}
-				},
-			};
-			lib.skill._chupaiJ = {
-				trigger: {
-					player: ["useCardEnd", "respondEnd", "dieBegin", "phaseEnd"],
-				},
-				forced: true,
-				silent: true,
-				charlotte: true,
-				filter(event, player) {
-					var h = event.player.getElementsByClassName("playertipwuxie");
-					return h.length > 0 && player != game.me && _status.currentPhase != player;
-				},
-				content() {
-					var h = trigger.player.getElementsByClassName("playertipwuxie");
-					h[0].parentNode.removeChild(h[0]);
-				},
-			};
-			lib.skill._chupaiK = {
-				trigger: {
-					player: ["phaseJudgeBegin", "phaseDrawBegin"],
-				},
-				forced: true,
-				silent: true,
-				charlotte: true,
-				filter(event, player) {
-					return player != game.me;
-				},
-				content() {
-					var tipss = player.getElementsByClassName("tipskill");
-					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
-					var l = player.getElementsByClassName("playertipplay");
-					if (l.length <= 0) {
-						var tipKL = document.createElement("img");
-						tipKL.classList.add("tipshow"); //设置统一类名
-						if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
-							tipKL.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/tipplay.png";
-							tipKL.classList.add("playertipplay");
-							tipKL.style.cssText = "display:block;position:absolute;z-index:91;--w: 133px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-22px;";
-						} else {
-							tipKL.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/thinktip.png";
-							tipKL.classList.add("playertipplay");
-							tipKL.style.cssText = "display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
-						}
-						player.appendChild(tipKL);
-					}
-				},
-			};
-			lib.skill._chupaiL = {
-				trigger: {
-					player: ["phaseJudgeEnd", "phaseDrawEnd", "phaseEnd", "dieBegin"],
-				},
-				forced: true,
-				charlotte: true,
-				silent: true,
-				filter(event, player) {
-					var m = event.player.getElementsByClassName("playertipplay");
-					return m.length > 0 && player != game.me;
-				},
-				content() {
-					var m = trigger.player.getElementsByClassName("playertipplay");
-					m[0].parentNode.removeChild(m[0]);
-				},
-			};
-			//-----思考中十周年----//
-			lib.skill._chupaiMX = {
-				trigger: {
-					player: ["useCardBegin", "respondBegin"],
-				},
-				forced: true,
-				silent: true,
-				charlotte: true,
-				filter(event, player) {
-					return _status.currentPhase != player && player != game.me && (lib.config.extension_十周年UI_newDecadeStyle == "on" || lib.config.extension_十周年UI_newDecadeStyle == "othersOff");
-				},
-				content() {
-					var tipss = player.getElementsByClassName("tipskill");
-					if (tipss[0]) tipss[0].parentNode.removeChild(tipss[0]);
-					var d = player.getElementsByClassName("playertipthink");
-					if (d.length <= 0) {
-						var tipMNX = document.createElement("img");
-						tipMNX.classList.add("tipshow"); //设置统一类名
-						tipMNX.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/shoushatip/thinktip.png";
-						tipMNX.classList.add("playertipthink");
-						tipMNX.style.cssText = "display:block;position:absolute;z-index:92;--w: 129px;--h: calc(var(--w) * 50/431);width: var(--w);height: var(--h);bottom:-9.2px;transform:scale(1.2);";
-
-						player.appendChild(tipMNX);
-					}
-				},
-			};
-			lib.skill._chupaiNX = {
-				trigger: {
-					player: ["useCardEnd", "respondEnd", "dieBegin"],
-				},
-				forced: true,
-				silent: true,
-				charlotte: true,
-				filter(event, player) {
-					var e = event.player.getElementsByClassName("playertipthink");
-					return e.length > 0 && player != game.me && _status.currentPhase != player;
-				},
-				content() {
-					var e = trigger.player.getElementsByClassName("playertipthink");
-					e[0].parentNode.removeChild(e[0]);
-				},
-			};
-			//-------技能提示条（容错清除）-------//
+			// 技能提示条（容错清除）
 			lib.skill._skilltip_closeB = {
 				trigger: {
 					global: ["phaseUseEnd", "dieBegin", "dying", "phaseBegin", "useCardAfter", "loseAfter", "phaseEnd"],
@@ -8296,18 +8353,17 @@ export default async function () {
 				},
 				content() {
 					for (var i = 0; i < game.players.length; i++) {
-						var ab = game.players[i].getElementsByClassName("tipskill");
-						if (ab[0]) ab[0].parentNode.removeChild(ab[0]);
+						lib.removeFirstByClass(game.players[i], "tipskill");
 					}
 				},
 			};
 			//狗托播报
 			if (config.GTBB) {
-				var txcsanm = {};
-				var gddf = function () {
-					var player = "玩家";
-					var my = lib.config.connect_nickname;
-					var suiji = [
+				var gtbbUI = {};
+				function showGTBB() {
+					var playerLabel = "玩家";
+					var nickname = lib.config.connect_nickname;
+					var randomNames = [
 						"氪金抽66",
 						"卡宝真可爱",
 						"蒸蒸日上",
@@ -8420,16 +8476,20 @@ export default async function () {
 						"敢于劈瓜的关羽",
 						"暮暮子",
 						"潜龙在渊",
-					].randomGet();
-					var name = [suiji, my].randomGet();
-					var v = ["通过", "使用", "开启"].randomGet();
-					var story = ["周年", "五一", "踏青", "牛年", "开黑", "冬至", "春分", "鼠年", "盛典", "魏魂", "群魂", "蜀魂", "吴魂", "猪年", "圣诞", "国庆", "狗年", "金秋", "奇珍", "元旦", "小雪", "冬日", "招募", "梦之回廊", "虎年", "新春", "七夕", "大雪", "端午", "武将", "中秋", "庆典"].randomGet();
-					var box = ["盒子", "宝盒", "礼包", "福袋", "礼盒", "庆典", "盛典"].randomGet();
-					var a = "获得了";
+					];
+					var suiji = randomNames.randomGet();
+					var name = [suiji, nickname].randomGet();
+					var action = ["通过", "使用", "开启"].randomGet();
+					var stories = ["周年", "五一", "踏青", "牛年", "开黑", "冬至", "春分", "鼠年", "盛典", "魏魂", "群魂", "蜀魂", "吴魂", "猪年", "圣诞", "国庆", "狗年", "金秋", "奇珍", "元旦", "小雪", "冬日", "招募", "梦之回廊", "虎年", "新春", "七夕", "大雪", "端午", "武将", "中秋", "庆典"];
+					var story = stories.randomGet();
+					var boxTypes = ["盒子", "宝盒", "礼包", "福袋", "礼盒", "庆典", "盛典"];
+					var box = boxTypes.randomGet();
+					var getText = "获得了";
 					//皮肤
-					var pifu = ["界钟会×1", "王朗×1", "马钧×1", "司马昭×1", "司马师×1", "王平×1", "诸葛瞻×1", "张星彩×1", "董允×1", "关索×1", "骆统×1", "周处*1", "界步练师*1", "界朱然*1", "贺齐*1", "苏飞*1", "公孙康×1", "杨彪×1", "刘璋×1", "张仲景×1", "司马徽×1", "曹婴×1", "徐荣×1", "史诗宝珠*66", "史诗宝珠*33", "麒麟生角·魏延*1", "史诗宝珠*10", "刘焉×1", "孙寒华×1", "戏志才×1", "界曹真×1", "曹婴×1", "王粲×1", "界于禁×1", "郝昭×1", "界黄忠×1", "鲍三娘×1", "周群×1", "赵襄×1", "马云禄×1", "孙皓×1", "留赞×1", "吴景×1", "界徐盛×1", "许攸×1", "杜预×1", "界李儒×1", "张让×1", "麹义×1", "司马徽×1", "界左慈×1", "鲍三娘×1", "界徐盛×1", "南华老仙×1", "韩旭の大饼*100", "神郭嘉×1", "吴景×1", "周处×1", "杜预×1", "司马师×1", "羊微瑜×1", "神曹操×1"].randomGet();
+					var skins = ["界钟会×1", "王朗×1", "马钧×1", "司马昭×1", "司马师×1", "王平×1", "诸葛瞻×1", "张星彩×1", "董允×1", "关索×1", "骆统×1", "周处*1", "界步练师*1", "界朱然*1", "贺齐*1", "苏飞*1", "公孙康×1", "杨彪×1", "刘璋×1", "张仲景×1", "司马徽×1", "曹婴×1", "徐荣×1", "史诗宝珠*66", "史诗宝珠*33", "麒麟生角·魏延*1", "史诗宝珠*10", "刘焉×1", "孙寒华×1", "戏志才×1", "界曹真×1", "曹婴×1", "王粲×1", "界于禁×1", "郝昭×1", "界黄忠×1", "鲍三娘×1", "周群×1", "赵襄×1", "马云禄×1", "孙皓×1", "留赞×1", "吴景×1", "界徐盛×1", "许攸×1", "杜预×1", "界李儒×1", "张让×1", "麹义×1", "司马徽×1", "界左慈×1", "鲍三娘×1", "界徐盛×1", "南华老仙×1", "韩旭の大饼*100", "神郭嘉×1", "吴景×1", "周处×1", "杜预×1", "司马师×1", "羊微瑜×1", "神曹操×1"];
+					var skin = skins.randomGet();
 					//武将
-					var wujiang = [
+					var generals = [
 						"谋定天下·陆逊*1（动+静）",
 						"龙困于渊·刘协（动+静）*1",
 						"星花柔矛·张星彩*1（动+静）",
@@ -8486,10 +8546,12 @@ export default async function () {
 						"星流霆击·孙尚香（动+静）*1",
 						"锋芒毕露·曹婴*1（动+静）",
 						"长衫の天牢令*100",
-					].randomGet();
-					//更改对应播报颜色
-					var gold = ['<font color="#56e4fa">' + pifu + "</font>", '<font color="#f3c20f">' + wujiang + "</font>"].randomGet();
-					var d = [",大家快恭喜TA吧！", ",大家快恭喜TA吧。无名杀是一款非盈利游戏(づ ●─● )づ", ",祝你新的一年天天开心，万事如意"].randomGet();
+					];
+					var general = generals.randomGet();
+					//奖励颜色
+					var reward = ['<font color="#56e4fa">' + skin + "</font>", '<font color="#f3c20f">' + general + "</font>"].randomGet();
+					var tailMsgs = [",大家快恭喜TA吧！", ",大家快恭喜TA吧。无名杀是一款非盈利游戏(づ ●─● )づ", ",祝你新的一年天天开心，万事如意"];
+					var tail = tailMsgs.randomGet();
 					/*定义部分属性--默认手杀*/
 					var fontset = "FZLBJW"; /*字体*/
 					var colorA = "#efe8dc"; /*颜色a*/
@@ -8499,595 +8561,42 @@ export default async function () {
 						colorA = "#86CC5B";
 						colorB = "#B3E1EC";
 					}
-					txcsanm.div.show();
+					gtbbUI.div.show();
 					setTimeout(function () {
-						txcsanm.div.hide();
+						gtbbUI.div.hide();
 					}, 15500);
-					txcsanm.div2.innerHTML = '<marquee direction="left" behavior="scroll" scrollamount=9.8" loop="1" width="100%" height="50" align="absmiddle" >' + "<font  face=" + fontset + ">" + player + "<font color=" + colorA + ">" + "<b>" + name + "</b>" + "</font>" + v + "<font color=" + colorB + ">" + "<b>" + story + box + "</b>" + "</font>" + a + "<b>" + gold + "</b>" + d + "</font>" + "</marquee>";
-				};
+					gtbbUI.div2.innerHTML = '<marquee direction="left" behavior="scroll" scrollamount="9.8" loop="1" width="100%" height="50" align="absmiddle">' + '<font face="' + fontset + '">' + playerLabel + '<font color="' + colorA + '"><b>' + name + "</b></font>" + action + '<font color="' + colorB + '"><b>' + story + box + "</b></font>" + getText + "<b>" + reward + "</b>" + tail + "</font></marquee>";
+				}
 
-				txcsanm.div = ui.create.div("");
-				txcsanm.div2 = ui.create.div("", txcsanm.div);
+				gtbbUI.div = ui.create.div("");
+				gtbbUI.div2 = ui.create.div("", gtbbUI.div);
 				/*----------手杀样式-------*/
 				if (config.GTBBYangshi == "on") {
-					txcsanm.div.style.cssText = "pointer-events:none;width:100%;height:25px;font-size:23px;z-index:6;";
-					txcsanm.div2.style.cssText = "pointer-events:none;background:rgba(0,0,0,0.5);width:100%;height:27px;";
+					gtbbUI.div.style.cssText = "pointer-events:none;width:100%;height:25px;font-size:23px;z-index:6;";
+					gtbbUI.div2.style.cssText = "pointer-events:none;background:rgba(0,0,0,0.5);width:100%;height:27px;";
 					/*------------------------*/
 				} else {
 					/*-------十周年样式-------*/
-					txcsanm.div.style.cssText = "pointer-events:none;width:56%;height:35px;font-size:18px;z-index:20;background-size:100% 100%;background-repeat:no-repeat;left:50%;top:15%;transform:translateX(-50%);";
-					txcsanm.div.style["background-image"] = "url(" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/goutuo.png";
-					txcsanm.div2.style.cssText = "pointer-events:none;width:85.5%;height:35px;left:8%;line-height:35px;";
+					gtbbUI.div.style.cssText = "pointer-events:none;width:56%;height:35px;font-size:18px;z-index:20;background-size:100% 100%;background-repeat:no-repeat;left:50%;top:15%;transform:translateX(-50%);";
+					gtbbUI.div.style["background-image"] = "url(" + lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/goutuo.png";
+					gtbbUI.div2.style.cssText = "pointer-events:none;width:85.5%;height:35px;left:8%;line-height:35px;";
 					/*------------------------*/
 				}
 
 				var id = setInterval(function () {
-					if (!txcsanm.div.parentNode && ui.window) {
-						ui.window.appendChild(txcsanm.div);
+					if (!gtbbUI.div.parentNode && ui.window) {
+						ui.window.appendChild(gtbbUI.div);
 						clearInterval(id);
-						gddf();
-						setInterval(gddf, parseFloat(lib.config["extension_十周年UI_GTBBTime"]));
+						showGTBB();
+						setInterval(showGTBB, parseFloat(lib.config["extension_十周年UI_GTBBTime"]));
 					}
 				}, 5000);
 			}
-			//阶段提示
-			if (lib.config.extension_十周年UI_JDTS) {
-				//游戏结束消失
-				lib.onover.push(function (bool) {
-					game.as_removeImage();
-				});
-				//等待响应
-				lib.skill._jd_ddxyA = {
-					trigger: {
-						player: ["chooseToRespondBegin"],
-					},
-					silent: true,
-					direct: true,
-					filter(event, player) {
-						return player == game.me && _status.auto == false;
-					},
-					content() {
-						trigger._jd_ddxy = true;
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [10, 58, 7, 6], 10);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [3, 58, 7, 6], 10);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.png", [18, 65, 8, 4.4], 10);
-						}
-					},
-				};
-				//成为杀的目标开始
-				lib.skill._jd_ddxyB = {
-					trigger: {
-						target: "shaBegin",
-					},
-					silent: true,
-					filter(event, player) {
-						return game.me == event.target;
-					},
-					charlotte: true,
-					forced: true,
-					content() {
-						trigger._jd_ddxy = true;
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.png", [18, 65, 8, 4.4], true);
-						}
-					},
-				};
-				lib.skill._jd_ddxyC = {
-					trigger: {
-						player: ["useCardToBegin", "phaseJudge"],
-					},
-					silent: true,
-					filter(event, player) {
-						if (event.card.storage && event.card.storage.nowuxie) return false;
-						var card = event.card;
-						var info = get.info(card);
-						if (info.wuxieable === false) return false;
-						if (event.name != "phaseJudge") {
-							if (event.getParent().nowuxie) return false;
-							if (!event.target) {
-								if (info.wuxieable) return true;
-								return false;
-							}
-							if (event.player.hasSkillTag("playernowuxie", false, event.card)) return false;
-							if (get.type(event.card) != "trick" && !info.wuxieable) return false;
-						}
-						return player == game.me && _status.auto == false;
-					},
-					charlotte: true,
-					forced: true,
-					content() {
-						trigger._jd_ddxy = true;
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/ddxy.png", [18, 65, 8, 4.4], true);
-						}
-					},
-				};
-				//使用或打出闪后
-				lib.skill._jd_shiyongshanD = {
-					forced: true,
-					charlotte: true,
-					trigger: {
-						player: ["useCard", "respondAfter"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && event.card.name == "shan";
-					},
-					content() {
-						trigger._jd_ddxy = true;
-						game.as_removeImage();
-						if (_status.as_showImage_phase) {
-							if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-								if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".jpg", [10, 58, 7, 6], true);
-								} else {
-									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".jpg", [3, 58, 7, 6], true);
-								}
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".png", [18, 65, 8, 4.4], true);
-							}
-						}
-					},
-				};
-				//等待响应及游戏结束
-				lib.skill._jd_ddxyE = {
-					trigger: {
-						player: ["chooseToRespondEnd", "useCardToEnd", "phaseJudgeEnd", "respondSha", "shanBegin"],
-					},
-					silent: true,
-					filter(event, player) {
-						if (!event._jd_ddxy) return false;
-						return player == game.me && _status.auto == false;
-					},
-					direct: true,
-					content() {
-						game.as_removeImage();
-						if (_status.as_showImage_phase) {
-							if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-								if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".jpg", [10, 58, 7, 6], true);
-								} else {
-									game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".jpg", [3, 58, 7, 6], true);
-								}
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/" + _status.as_showImage_phase + ".png", [18, 65, 8, 4.4], true);
-							}
-						}
-					},
-				};
-				//对方正在思考
-				lib.skill._jd_dfsk = {
-					trigger: {
-						global: ["phaseBegin", "phaseEnd", "phaseJudgeBegin", "phaseDrawBegin", "phaseUseBegin", "phaseDiscardBegin"],
-					},
-					silent: true,
-					charlotte: true,
-					forced: true,
-					filter(event, player) {
-						//剩余人数两人时
-						if (game.players.length == 2 && _status.currentPhase != game.me) return true;
-					},
-					content() {
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/dfsk.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/dfsk.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/dfsk.png", [18, 65, 8, 4.4], true);
-						}
-					},
-				};
-				//死亡或回合结束消失
-				lib.skill._jd_wjsw = {
-					trigger: {
-						global: ["phaseEnd", "useCardAfter"],
-					},
-					silent: true,
-					filter(event, player) {
-						return _status.currentPhase != game.me && player != game.me;
-					},
-					forced: true,
-					charlotte: true,
-					content() {
-						game.as_removeImage();
-					},
-				};
-				lib.skill._jd_swxs = {
-					trigger: {
-						global: ["dieAfter"],
-					},
-					silent: true,
-					forced: true,
-					charlotte: true,
-					filter(event, player) {
-						return player == game.me && _status.auto == false;
-					},
-					content() {
-						game.as_removeImage();
-					},
-				};
-				//回合开始
-				lib.skill._jd_hhks = {
-					trigger: {
-						player: ["phaseBegin"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: Infinity,
-					firstDo: true,
-					content() {
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhks.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhks.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhks.png", [18, 65, 8, 4.4], true);
-						}
-						_status.as_showImage_phase = "hhks";
-					},
-				};
-				//准备阶段
-				lib.skill._jd_zbjdb = {
-					trigger: {
-						player: ["phaseZhunbeiBefore"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: Infinity,
-					firstDo: true,
-					content() {
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/zbjd.png", [18, 65, 8, 4.4], true);
-						}
-						_status.as_showImage_phase = "zbjd";
-					},
-				};
-				lib.skill._jd_zbjde = {
-					trigger: {
-						player: ["phaseZhunbeiAfter"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: -Infinity,
-					lastDo: true,
-					content() {
-						if (_status.as_showImage_phase && _status.as_showImage_phase == "zbjd") {
-							game.as_removeImage();
-							delete _status.as_showImage_phase;
-						}
-					},
-				};
-				//判定阶段
-				lib.skill._jd_pdjdb = {
-					trigger: {
-						player: ["phaseJudgeBefore"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: Infinity,
-					firstDo: true,
-					content() {
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.png", [18, 65, 8, 4.4], true);
-						}
-						_status.as_showImage_phase = "pdjd";
-					},
-				};
-				lib.skill._jd_pdjde = {
-					trigger: {
-						player: ["phaseJudgeAfter"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: -Infinity,
-					lastDo: true,
-					content() {
-						if (_status.as_showImage_phase && _status.as_showImage_phase == "pdjd") {
-							game.as_removeImage();
-							delete _status.as_showImage_phase;
-						}
-					},
-				};
-				//摸牌阶段
-				lib.skill._jd_mpjdb = {
-					trigger: {
-						player: ["phaseDrawBefore"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: Infinity,
-					firstDo: true,
-					content() {
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/mpjd.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/mpjd.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/mpjd.png", [18, 65, 8, 4.4], true);
-						}
-						_status.as_showImage_phase = "mpjd";
-					},
-				};
-				lib.skill._jd_mpjde = {
-					trigger: {
-						player: ["phaseDrawAfter"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: -Infinity,
-					lastDo: true,
-					content() {
-						if (_status.as_showImage_phase && _status.as_showImage_phase == "mpjd") {
-							game.as_removeImage();
-							delete _status.as_showImage_phase;
-						}
-					},
-				};
-				//出牌阶段
-				lib.skill._jd_cpjdb = {
-					trigger: {
-						player: ["phaseUseBefore"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: Infinity,
-					firstDo: true,
-					content() {
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/cpjd.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/cpjd.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/cpjd.png", [18, 65, 8, 4.4], true);
-						}
-						_status.as_showImage_phase = "cpjd";
-					},
-				};
-				lib.skill._jd_cpjde = {
-					trigger: {
-						player: ["phaseUseAfter"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: -Infinity,
-					lastDo: true,
-					content() {
-						if (_status.as_showImage_phase && _status.as_showImage_phase == "cpjd") {
-							game.as_removeImage();
-							delete _status.as_showImage_phase;
-						}
-					},
-				};
-				//弃牌阶段
-				lib.skill._jd_qpjdb = {
-					trigger: {
-						player: ["phaseDiscardBefore"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: Infinity,
-					firstDo: true,
-					content() {
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/qpjd.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/qpjd.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/qpjd.png", [18, 65, 8, 4.4], true);
-						}
-						_status.as_showImage_phase = "qpjd";
-					},
-				};
-				lib.skill._jd_qpjde = {
-					trigger: {
-						player: ["phaseDiscardAfter"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: -Infinity,
-					lastDo: true,
-					content() {
-						if (_status.as_showImage_phase && _status.as_showImage_phase == "qpjd") {
-							game.as_removeImage();
-							delete _status.as_showImage_phase;
-						}
-					},
-				};
-				//结束阶段
-				lib.skill._jd_jsjdb = {
-					trigger: {
-						player: ["phaseJieshuBefore"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: Infinity,
-					firstDo: true,
-					content() {
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/pdjd.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/jsjd.png", [18, 65, 8, 4.4], true);
-						}
-						_status.as_showImage_phase = "jsjd";
-					},
-				};
-				lib.skill._jd_jsjde = {
-					trigger: {
-						player: ["phaseJieshuAfter"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: -Infinity,
-					lastDo: true,
-					content() {
-						if (_status.as_showImage_phase && _status.as_showImage_phase == "jsjd") {
-							game.as_removeImage();
-							delete _status.as_showImage_phase;
-						}
-					},
-				};
-				//回合结束
-				lib.skill._jd_hhjsb = {
-					trigger: {
-						player: ["phaseEnd"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: Infinity,
-					firstDo: true,
-					content() {
-						if (lib.config.extension_十周年UI_JDTSYangshi == "1") {
-							if (get.mode() == "taixuhuanjing" || lib.config["extension_EngEX_SSServant"]) {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhjs.jpg", [10, 58, 7, 6], true);
-							} else {
-								game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhjs.jpg", [3, 58, 7, 6], true);
-							}
-						} else {
-							game.as_showImage("extension/十周年UI/shoushaUI/lbtn/images/JDTS/hhjs.png", [18, 65, 8, 4.4], true);
-						}
-						_status.as_showImage_phase = "hhjs";
-					},
-				};
-				lib.skill._jd_hhjse = {
-					trigger: {
-						player: ["phaseAfter"],
-					},
-					silent: true,
-					filter(event, player) {
-						return player == game.me && _status.currentPhase == player;
-					},
-					charlotte: true,
-					ruleSkill: true,
-					direct: true,
-					priority: -Infinity,
-					lastDo: true,
-					content() {
-						if (_status.as_showImage_phase && _status.as_showImage_phase == "hhjs") {
-							game.as_removeImage();
-							delete _status.as_showImage_phase;
-						}
-					},
-				};
-			}
 			//玩家进度条
 			if (get.mode() != "connect" && config.jindutiao == true) {
-				lib.onover.push(function (bool) {
-					if (document.getElementById("jindutiaopl")) {
-						document.getElementById("jindutiaopl").remove();
-					}
+				lib.onover.push(function () {
+					var bar = document.getElementById("jindutiaopl");
+					if (bar) bar.remove();
 				});
 				//玩家回合内进度条
 				lib.skill._jindutiao = {
@@ -9096,7 +8605,7 @@ export default async function () {
 					},
 					silent: true,
 					filter(event, player) {
-						if (document.querySelector("#jindutiaopl") && lib.config.extension_十周年UI_jindutiaoUpdata == false) return false;
+						if (document.querySelector("#jindutiaopl") == false) return false;
 						return player == game.me && _status.currentPhase == player;
 					},
 					forced: true,
@@ -9124,15 +8633,14 @@ export default async function () {
 									delete window.timer2;
 								}
 
-								if (document.getElementById("jindutiaopl")) {
-									document.getElementById("jindutiaopl").remove();
-								}
+								var bar = document.getElementById("jindutiaopl");
+								if (bar) bar.remove();
 							},
 						},
 					},
 				};
 				/*------回合外进度条玩家----*/
-				lib.skill._jindutiaopl = {
+				lib.skill._jindutiao_out = {
 					trigger: {
 						global: ["gameStart"],
 						player: ["useCardToBegin", "respondBegin", "chooseToRespondBegin", "damageEnd", "damageAfter", "judgeEnd"],
@@ -9142,14 +8650,14 @@ export default async function () {
 					forced: true,
 					charlotte: true,
 					filter(event, player) {
-						if (document.querySelector("#jindutiaopl") && lib.config.extension_十周年UI_jindutiaoUpdata == false) return false;
+						if (document.querySelector("#jindutiaopl")== false) return false;
 						if (event.name == "gameStart" && lib.config["extension_无名补丁_enable"]) return false;
 						return _status.currentPhase != player && player == game.me;
 					},
 					content() {
 						game.Jindutiaoplayer();
 					},
-					group: ["_jindutiaopl_jieshu"],
+					group: ["_jindutiao_out_jieshu"],
 					subSkill: {
 						jieshu: {
 							trigger: {
@@ -9170,21 +8678,21 @@ export default async function () {
 									clearInterval(window.timer2);
 									delete window.timer2;
 								}
-								if (document.getElementById("jindutiaopl")) {
-									document.getElementById("jindutiaopl").remove();
-								}
+								var bar = document.getElementById("jindutiaopl");
+								if (bar) bar.remove();
 							},
 						},
 					},
 				};
 			}
+
 			//手杀UI
 		},
 		precontent() {
 			if (get.mode() === "chess" || get.mode() === "tafang" || get.mode === "hs_hearthstone") return;
 			if (lib.config["extension_" + decadeUIName + "_eruda"]) {
 				var script = document.createElement("script");
-				script.src = decadeUIPath + "eruda.js";
+				script.src = decadeUIPath + "js/eruda.js";
 				document.body.appendChild(script);
 				script.onload = function () {
 					eruda.init();
@@ -9213,55 +8721,51 @@ export default async function () {
 				}
 
 				decadeModule.init = function () {
-					//原十周年UI内容加载
-					this.css(decadeUIPath + "extension.css");
-					this.css(decadeUIPath + "decadeLayout.css");
-					this.css(decadeUIPath + "card.css");
-					this.css(decadeUIPath + "meihua.css");
-					// 当且仅当初次载入时，newDecadeStyle == void 0
-					if (lib.config.extension_十周年UI_newDecadeStyle != void 0) {
-						this.css(decadeUIPath + "player" + parseFloat(["on", "off", "othersOn", "othersOff", "onlineUI", "babysha"].indexOf(lib.config.extension_十周年UI_newDecadeStyle) + 1) + ".css");
+					// 基础CSS加载
+					["css/extension.css", "css/decadeLayout.css", "css/card.css", "css/meihua.css"].forEach(path => this.css(decadeUIPath + path));
+
+					// newDecadeStyle相关CSS加载
+					const style = lib.config.extension_十周年UI_newDecadeStyle;
+					const styleIndex = ["on", "off", "othersOn", "othersOff", "onlineUI", "babysha"].indexOf(style);
+					if (style !== void 0) {
+						this.css(decadeUIPath + `css/player${styleIndex + 1}.css`);
 					} else {
-						this.css(decadeUIPath + "player2.css");
-					}
-					if (lib.config.extension_十周年UI_newDecadeStyle == "othersOff") {
-						this.css(decadeUIPath + "equip_new_new.css");
-						this.css(decadeUIPath + "layout_new.css");
-					} else if (lib.config.extension_十周年UI_newDecadeStyle == "onlineUI") {
-						this.css(decadeUIPath + "equipOL.css");
-						this.css(decadeUIPath + "layout_new.css");
-					} else if (lib.config.extension_十周年UI_newDecadeStyle == "babysha") {
-						this.css(decadeUIPath + "equiphs.css");
-						this.css(decadeUIPath + "layout_new.css");
-					} else {
-						this.css(decadeUIPath + (lib.config.extension_十周年UI_newDecadeStyle == "on" ? "equip.css" : "equip_new.css"));
-						this.css(decadeUIPath + "layout.css");
+						this.css(decadeUIPath + "css/player2.css");
 					}
 
+					// equip与layout相关CSS加载
+					let equipCss = "css/equip_new.css",
+						layoutCss = "css/layout.css";
+					if (style === "othersOff") {
+						equipCss = "css/equip_new_new.css";
+						layoutCss = "css/layout_new.css";
+					} else if (style === "onlineUI") {
+						equipCss = "css/equip_ol.css";
+						layoutCss = "css/layout_new.css";
+					} else if (style === "babysha") {
+						equipCss = "css/equip_baby.css";
+						layoutCss = "css/layout_new.css";
+					} else if (style === "on") {
+						equipCss = "css/equip.css";
+					}
+					this.css(decadeUIPath + equipCss);
+					this.css(decadeUIPath + layoutCss);
+
+					// 其他条件CSS
 					if (lib.config.extension_十周年UI_meanPrettify) {
-						this.css(decadeUIPath + "menu.css");
+						this.css(decadeUIPath + "css/menu.css");
 					}
 					if (lib.config["extension_十周年UI_choosecharboder"]) {
-						this.css(decadeUIPath + "style.css");
+						this.css(decadeUIPath + "css/style.css");
 					}
-					this.js(decadeUIPath + "spine.js");
-					this.js(decadeUIPath + "component.js");
-					this.js(decadeUIPath + "skill.js");
-					this.js(decadeUIPath + "content.js");
-					this.js(decadeUIPath + "effect.js");
-					this.js(decadeUIPath + "meihua.js");
-					//this.js(decadeUIPath + "cardtuozhuai.js");
-					this.js(decadeUIPath + "animation.js");
-					this.js(decadeUIPath + "dynamicSkin.js");
 
-					//原手杀UI内容加载
-					//避免提示是否下载图片和字体素材
+					// JS加载
+					["js/spine.js", "js/component.js", "js/skill.js", "js/content.js", "js/effect.js", "js/meihua.js", "js/animation.js", "js/dynamicSkin.js"].forEach(path => this.js(decadeUIPath + path));
+
+					// 原手杀UI内容加载
 					if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
-					var layoutPath = decadeUIPath + "shoushaUI/";
-					if (lib.config.extension_十周年UI_KGMH == "1") this.css(layoutPath + "KGMH/" + "kaiguan.css");
-					if (lib.config.extension_十周年UI_KGMH == "2") this.css(layoutPath + "KGMH/" + "kaiguan_new.css");
-
-					var listmap =
+					const layoutPath = decadeUIPath + "shoushaUI/";
+					const listmap =
 						{
 							on: 2,
 							off: 1,
@@ -9269,24 +8773,16 @@ export default async function () {
 							othersOff: 3,
 							onlineUI: 4,
 							babysha: 5,
-						}[lib.config.extension_十周年UI_newDecadeStyle] || 2;
+						}[style] || 2;
 
 					if (!(get.mode() == "chess" || get.mode() == "tafang" || get.mode == "hs_hearthstone")) {
-						var list = ["character", "lbtn", "skill"];
-						list.forEach(pack => {
-							//css加载
-							switch (pack) {
-								case "character":
-									this.css(layoutPath + pack + "/main" + listmap + ".css");
-									break;
-
-								default:
-									this.css(layoutPath + pack + "/main" + listmap + (lib.config.touchscreen ? "" : "_window") + ".css");
-									break;
-							}
-							//js加载
+						["character", "lbtn", "skill"].forEach(pack => {
+							// css加载
+							const cssPath = pack === "character" ? `${layoutPath}${pack}/main${listmap}.css` : `${layoutPath}${pack}/main${listmap}${lib.config.touchscreen ? "" : "_window"}.css`;
+							this.css(cssPath);
+							// js加载
 							this.js(
-								layoutPath + pack + "/" + pack + "/main" + listmap + ".js",
+								`${layoutPath}${pack}/${pack}/main${listmap}.js`,
 								null,
 								function () {},
 								function () {}
@@ -9365,14 +8861,14 @@ export default async function () {
 				each(obj, fn, node) {
 					if (!obj) return node;
 					if (typeof obj.length === "number") {
-						for (var i = 0; i < obj.length; i++) {
+						for (let i = 0; i < obj.length; i++) {
 							if (fn.call(node, obj[i], i) === false) {
 								break;
 							}
 						}
 						return node;
 					}
-					for (var i in obj) {
+					for (const i in obj) {
 						if (fn.call(node, obj[i], i) === false) {
 							break;
 						}
@@ -9405,13 +8901,12 @@ export default async function () {
 							this
 						);
 					},
-					emit(name) {
-						var args = Array.from(arguments).slice(1);
+					emit(name, ...args) {
 						return app.each(
 							this.listens[name],
 							function (item) {
 								item.listen.apply(null, args);
-								item.remove && this.off(name, item);
+								if (item.remove) this.off(name, item);
 							},
 							this
 						);
@@ -9434,7 +8929,7 @@ export default async function () {
 					if (!app.listens[event]) {
 						app.listens[event] = [];
 					}
-					app.listens[event].add(listen);
+					app.listens[event].push(listen);
 				},
 				once(event, listen) {
 					if (!app.listens[event]) {
@@ -9446,50 +8941,48 @@ export default async function () {
 					});
 				},
 				off(event, listen) {
-					var listens = app.listens[event] || [];
-					var filters = listen
-						? listens.filter(function (item) {
-								return item === listen || item.listen === listen;
-						  })
-						: listens.slice(0);
-					filters.forEach(function (item) {
-						listens.remove(item);
+					const listens = app.listens[event] || [];
+					const filters = listen ? listens.filter(item => item === listen || item.listen === listen) : listens.slice(0);
+					filters.forEach(item => {
+						const idx = listens.indexOf(item);
+						if (idx > -1) listens.splice(idx, 1);
 					});
 				},
-				emit(event) {
-					var args = Array.from(arguments).slice(1);
-					var listens = app.listens[event] || [];
-					listens.forEach(function (item) {
+				emit(event, ...args) {
+					const listens = app.listens[event] || [];
+					listens.forEach(item => {
 						if (typeof item === "function") {
 							item.apply(null, args);
 						} else if (typeof item.listen === "function") {
 							item.listen.apply(null, args);
-							item.remove && listens.remove(item);
+							if (item.remove) {
+								const idx = listens.indexOf(item);
+								if (idx > -1) listens.splice(idx, 1);
+							}
 						}
 					});
 				},
 				import(fn) {
-					var obj = fn(lib, game, ui, get, ai, _status, app);
+					const obj = fn(lib, game, ui, get, ai, _status, app);
 					if (obj) {
 						if (obj.name) app.pluginsMap[obj.name] = obj;
 						if (obj.precontent && (!obj.filter || obj.filter())) obj.precontent();
 					}
 					app.plugins.push(obj);
 				},
-
 				importPlugin(data, setText) {
 					if (!window.JSZip) {
-						var args = arguments;
+						const args = arguments;
 						lib.init.js(lib.assetURL + "game", "jszip", function () {
 							app.importPlugin.apply(app, args);
 						});
 						return;
 					}
-					setText = typeof setText === "function" ? setText() : function () {};
-					var zip = new JSZip(data);
-					var dirList = [],
+					setText = typeof setText === "function" ? setText : () => {};
+					const zip = new JSZip(data);
+					const dirList = [],
 						fileList = [];
-					for (var i in zip.files) {
+					for (const i in zip.files) {
 						if (/\/$/.test(i)) {
 							dirList.push("extension/" + app.name + "/" + i);
 						} else if (!/^extension\.(js|css)$/.test(i)) {
@@ -9501,24 +8994,22 @@ export default async function () {
 							});
 						}
 					}
-
-					var total = dirList.length + fileList.length;
-					var finish = 0;
-					var isNode = lib.node && lib.node.fs;
-
-					var writeFile = function () {
-						var file = fileList.shift();
+					const total = dirList.length + fileList.length;
+					let finish = 0;
+					const isNode = lib.node && lib.node.fs;
+					const writeFile = () => {
+						const file = fileList.shift();
 						if (file) {
-							setText("正在导入(" + ++finish + "/" + total + ")...");
+							setText(`正在导入(${++finish}/${total})...`);
 							game.writeFile(isNode ? file.target.asNodeBuffer() : file.target.asArrayBuffer(), file.path, file.name, writeFile);
 						} else {
 							alert("导入完成");
 							setText("导入插件");
 						}
 					};
-					var ensureDir = function () {
+					const ensureDir = () => {
 						if (dirList.length) {
-							setText("正在导入(" + ++finish + "/" + total + ")...");
+							setText(`正在导入(${++finish}/${total})...`);
 							game.ensureDirectory(dirList.shift(), ensureDir);
 						} else {
 							writeFile();
@@ -9527,76 +9018,45 @@ export default async function () {
 					ensureDir();
 				},
 				loadPlugins(callback) {
-					game.getFileList("extension/" + app.name, function (floders) {
-						var total = floders.length;
-						var current = 0;
+					game.getFileList("extension/" + app.name, floders => {
+						const total = floders.length;
+						let current = 0;
 						if (total === current) {
 							callback();
 							return;
 						}
-						var loaded = function () {
-							if (++current === total) {
-								callback();
-							}
+						const loaded = () => {
+							if (++current === total) callback();
 						};
-						floders.forEach(function (dir) {
+						const readAndEval = (dir, file) => {
+							game.readFile(
+								`extension/${app.name}/${dir}/${file}`,
+								data => {
+									const binarry = new Uint8Array(data);
+									const blob = new Blob([binarry]);
+									const reader = new FileReader();
+									reader.readAsText(blob);
+									reader.onload = () => {
+										eval(reader.result);
+										loaded();
+									};
+								},
+								e => {
+									console.info(e);
+									loaded();
+								}
+							);
+						};
+						floders.forEach(dir => {
 							switch (lib.config.extension_十周年UI_newDecadeStyle) {
 								case "on":
-									game.readFile(
-										"extension/" + app.name + "/" + dir + "/main1.js",
-										function (data) {
-											var binarry = new Uint8Array(data);
-											var blob = new Blob([binarry]);
-											var reader = new FileReader();
-											reader.readAsText(blob);
-											reader.onload = function () {
-												eval(reader.result);
-												loaded();
-											};
-										},
-										function (e) {
-											console.info(e);
-											loaded();
-										}
-									);
+									readAndEval(dir, "main1.js");
 									break;
 								case "othersOff":
-									game.readFile(
-										"extension/" + app.name + "/" + dir + "/main3.js",
-										function (data) {
-											var binarry = new Uint8Array(data);
-											var blob = new Blob([binarry]);
-											var reader = new FileReader();
-											reader.readAsText(blob);
-											reader.onload = function () {
-												eval(reader.result);
-												loaded();
-											};
-										},
-										function (e) {
-											console.info(e);
-											loaded();
-										}
-									);
+									readAndEval(dir, "main3.js");
 									break;
 								default:
-									game.readFile(
-										"extension/" + app.name + "/" + dir + "/main2.js",
-										function (data) {
-											var binarry = new Uint8Array(data);
-											var blob = new Blob([binarry]);
-											var reader = new FileReader();
-											reader.readAsText(blob);
-											reader.onload = function () {
-												eval(reader.result);
-												loaded();
-											};
-										},
-										function (e) {
-											console.info(e);
-											loaded();
-										}
-									);
+									readAndEval(dir, "main2.js");
 									break;
 							}
 						});
@@ -9604,28 +9064,18 @@ export default async function () {
 				},
 				reWriteFunction(target, name, replace, str) {
 					if (name && typeof name === "object") {
-						return app.each(
-							name,
-							function (item, index) {
-								app.reWriteFunction(target, index, item[0], item[1]);
-							},
-							target
-						);
+						return app.each(name, (item, index) => app.reWriteFunction(target, index, item[0], item[1]), target);
 					}
-
-					var plugins = app.pluginsMap;
 					if ((typeof replace === "string" || replace instanceof RegExp) && (typeof str === "string" || str instanceof RegExp)) {
-						var funcStr = target[name].toString().replace(replace, str);
-						eval("target." + name + " = " + funcStr);
+						const funcStr = target[name].toString().replace(replace, str);
+						eval(`target.${name} = ${funcStr}`);
 					} else {
-						var func = target[name];
-						target[name] = function () {
-							var result, cancel;
-							var args = Array.from(arguments);
-							var args2 = Array.from(arguments);
+						const func = target[name];
+						target[name] = function (...args) {
+							let result, cancel;
 							if (typeof replace === "function") cancel = replace.apply(this, [args].concat(args));
 							if (typeof func === "function" && !cancel) result = func.apply(this, args);
-							if (typeof str === "function") str.apply(this, [result].concat(args2));
+							if (typeof str === "function") str.apply(this, [result].concat(args));
 							return cancel || result;
 						};
 					}
@@ -9633,19 +9083,10 @@ export default async function () {
 				},
 				reWriteFunctionX(target, name, replace, str) {
 					if (name && typeof name === "object") {
-						return app.each(
-							name,
-							function (item, index) {
-								app.reWriteFunction(target, index, item);
-							},
-							target
-						);
+						return app.each(name, (item, index) => app.reWriteFunction(target, index, item), target);
 					}
-
 					if (Array.isArray(replace)) {
-						var item1 = replace[0];
-						var item2 = replace[1];
-						var item3 = replace[2];
+						let [item1, item2, item3] = replace;
 						if (item3 === "append") {
 							item2 = item1 + item2;
 						} else if (item3 === "insert") {
@@ -9655,17 +9096,15 @@ export default async function () {
 							item1 = RegExp(item1);
 						}
 						if (item1 instanceof RegExp && typeof item2 === "string") {
-							var funcStr = target[name].toString().replace(item1, item2);
-							eval("target." + name + " = " + funcStr);
+							const funcStr = target[name].toString().replace(item1, item2);
+							eval(`target.${name} = ${funcStr}`);
 						} else {
-							var func = target[name];
-							target[name] = function () {
-								var arg1 = Array.from(arguments);
-								var arg2 = Array.from(arguments);
-								var result;
-								if (app.isFunction(item1)) result = item1.apply(this, [arg1].concat(arg1));
-								if (app.isFunction(func) && !result) result = func.apply(this, arg1);
-								if (app.isFunction(item2)) item2.apply(this, [result].concat(arg2));
+							const func = target[name];
+							target[name] = function (...args) {
+								let result;
+								if (app.isFunction(item1)) result = item1.apply(this, [args].concat(args));
+								if (app.isFunction(func) && !result) result = func.apply(this, args);
+								if (app.isFunction(item2)) item2.apply(this, [result].concat(args));
 								return result;
 							};
 						}
@@ -9675,9 +9114,9 @@ export default async function () {
 					return target[name];
 				},
 				waitAllFunction(fnList, callback) {
-					var list = fnList.slice(0);
-					var runNext = function () {
-						var item = list.shift();
+					const list = fnList.slice();
+					const runNext = () => {
+						const item = list.shift();
 						if (typeof item === "function") {
 							item(runNext);
 						} else if (list.length === 0) {
@@ -9696,19 +9135,8 @@ export default async function () {
 					},
 				},
 				get: {
-					playerSkills(node, arg1, arg2) {
-						var skills = node.getSkills(arg1, arg2).slice(0);
-						skills.addArray(Object.keys(node.forbiddenSkills));
-						skills.addArray(
-							Object.keys(node.disabledSkills).filter(function (k) {
-								return !node.hiddenSkills.includes(k) && node.disabledSkills[k].length && node.disabledSkills[k][0] === k + "_awake";
-							})
-						);
-						return skills;
-					},
 					skillInfo(skill, node) {
-						var obj = {};
-						obj.id = skill;
+						const obj = { id: skill };
 						if (lib.translate[skill + "_ab"]) {
 							obj.name = lib.translate[skill + "_ab"];
 							obj.nameSimple = lib.translate[skill + "_ab"];
@@ -9728,33 +9156,27 @@ export default async function () {
 						obj.translation = get.skillInfoTranslation(skill);
 						obj.translationSource = lib.translate[skill + "_info"];
 						obj.translationAppend = lib.translate[skill + "_append"];
-						if (obj.info && obj.info.enable) {
-							obj.type = "enable";
-						} else {
-							obj.type = "trigger";
-						}
+						obj.type = obj.info && obj.info.enable ? "enable" : "trigger";
 						return obj;
 					},
 				},
 				listen(node, func) {
 					node.addEventListener(lib.config.touchscreen ? "touchend" : "click", func);
-					return function () {
-						node.removeEventLisnter(lib.config.touchscreen ? "touchend" : "click", func);
+					return () => {
+						node.removeEventListener(lib.config.touchscreen ? "touchend" : "click", func);
 					};
 				},
 				mockTouch(node) {
-					var event = new Event(lib.config.touchscreen ? "touchend" : "click");
+					const event = new Event(lib.config.touchscreen ? "touchend" : "click");
 					node.dispatchEvent(event);
 					return node;
 				},
 				nextTick(func, time) {
-					var funcs;
-					if (Array.isArray(func)) funcs = func;
-					else funcs = [func];
-					var next = function () {
-						var item = funcs.shift();
+					const funcs = Array.isArray(func) ? func.slice() : [func];
+					const next = () => {
+						const item = funcs.shift();
 						if (item) {
-							setTimeout(function () {
+							setTimeout(() => {
 								item();
 								next();
 							}, time || 0);
@@ -9767,240 +9189,342 @@ export default async function () {
 			if (!lib.config.asset_version) game.saveConfig("asset_version", "无");
 			//函数加载
 			var layoutPath = lib.assetURL + "extension/十周年UI/shoushaUI/";
-			if (lib.config.extension_十周年UI_KGMH == "1") lib.init.css(layoutPath, "KGMH/kaiguan");
-			if (lib.config.extension_十周年UI_KGMH == "2") lib.init.css(layoutPath, "KGMH/kaiguan_new");
-			if (!(get.mode() == "chess" || get.mode() == "tafang" || get.mode == "hs_hearthstone")) {
-				for (var pack of [/*'card',*/ "character", "lbtn", "skill"]) {
-					var listmap =
-						{
-							on: 2,
-							off: 1,
-							othersOn: 1,
-							othersOff: 3,
-							onlineUI: 4,
-							babysha: 5,
-						}[lib.config.extension_十周年UI_newDecadeStyle] || 2;
+			var mode = get.mode();
+			var styleMap = {
+				on: 2,
+				off: 1,
+				othersOn: 1,
+				othersOff: 3,
+				onlineUI: 4,
+				babysha: 5,
+			};
+			if (!(mode == "chess" || mode == "tafang" || mode == "hs_hearthstone")) {
+				var packs = [/*'card',*/ "character", "lbtn", "skill"];
+				var listmap = styleMap[lib.config.extension_十周年UI_newDecadeStyle] || 2;
+				packs.forEach(function (pack) {
 					lib.init.js(
 						layoutPath + pack + "/main" + listmap + ".js",
 						null,
 						function () {},
 						function () {}
 					);
-					switch (pack) {
-						case "character":
-							lib.init.css(layoutPath + pack + "/main" + listmap + ".css");
-
-							break;
-						default:
-							lib.init.css(layoutPath + pack + "/main" + listmap + (get.is.phoneLayout() ? "" : "_window") + ".css");
-							break;
+					if (pack === "character") {
+						lib.init.css(layoutPath + pack + "/main" + listmap + ".css");
+					} else {
+						lib.init.css(layoutPath + pack + "/main" + listmap + (lib.config.phonelayout ? "" : "_window") + ".css");
 					}
-				}
+				});
 			}
 			//函数框架
 			/*进度条框架*/
 			game.Jindutiaoplayer = function () {
-				//----------------进度条主体---------------------//
-				if (window.timer) {
-					clearInterval(window.timer);
-					delete window.timer;
-				}
-				if (window.timer2) {
-					clearInterval(window.timer2);
-					delete window.timer2;
-				}
-				if (document.getElementById("jindutiaopl")) {
-					document.getElementById("jindutiaopl").remove();
-				}
-				var boxContent = document.createElement("div");
-				boxContent.setAttribute("id", "jindutiaopl");
-				//-------样式1-------//
-				if (lib.config.extension_十周年UI_jindutiaoYangshi == "1") {
-					//手杀进度条样式
-					if (window.jindutiaoTeshu) {
-						delete window.jindutiaoTeshu;
-					}
-					boxContent.style.backgroundColor = "rgba(0,0,0,0.4)";
-					boxContent.style.width = "620px";
-					boxContent.style.height = "12.3px";
-					boxContent.style.borderRadius = "1000px";
-					boxContent.style["boxShadow"] = "0px 0px 9px #2e2b27 inset,0px 0px 2.1px #FFFFD5";
-					boxContent.style.overflow = "hidden";
-					boxContent.style.border = "1.2px solid #000000";
-					boxContent.style.position = "fixed";
-					boxContent.style.left = "calc(50% - 300px)";
-					boxContent.style.bottom = parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%";
+				// 清理之前的定时器和元素
+				_clearPreviousTimers();
+				_removePreviousElement();
 
-					var boxTime = document.createElement("div");
-					boxTime.data = 620;
-					boxTime.style.cssText = "background-image: linear-gradient(#fccc54 15%, #d01424 30%, #cc6953 90%);height:12.8px;";
-					boxContent.appendChild(boxTime);
-				}
-				//-------样式2-----//
-				if (lib.config.extension_十周年UI_jindutiaoYangshi == "2") {
-					//十周年PC端进度条样式
-					if (window.jindutiaoTeshu) {
-						delete window.jindutiaoTeshu;
-					}
-					boxContent.style.width = "400px";
-					boxContent.style.height = "24px";
-					boxContent.style.display = "block";
-					boxContent.style.left = "calc(50% - 197px)";
-					boxContent.style.position = "fixed";
-					boxContent.style.bottom = parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%";
+				// 创建进度条容器
+				var boxContent = _createProgressContainer();
 
-					var boxTime = document.createElement("div");
-					boxTime.data = 300;
-					boxTime.style.cssText = "width:280px;height:4.3px;margin:14px 0 0 85px;background-color: #E2E20A;border-right:5px solid #FFF;position: absolute;top: -3.5px;";
-					boxContent.appendChild(boxTime);
+				// 根据配置选择样式
+				var styleConfig = _getStyleConfig();
+				_applyStyle(boxContent, styleConfig);
 
-					var imgBg = document.createElement("img");
-					imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao.png";
-					imgBg.style.cssText = "--w:400px;--h:calc(var(--w)*44/759);width: var(--w);height:var(--h);position: absolute;top: 0;";
-					boxContent.appendChild(imgBg);
-				}
-				//-------样式3-----//
-				if (lib.config.extension_十周年UI_jindutiaoYangshi == "3") {
-					//十周年客户端进度条样式
-					if (!window.jindutiaoTeshu) {
-						window.jindutiaoTeshu = true;
-					}
-					boxContent.style.width = "400px";
-					boxContent.style.height = "13px";
-					boxContent.style.display = "block";
-					boxContent.style["boxShadow"] = "0 0 4px #000000";
-					boxContent.style.margin = "0 0 !important";
-					boxContent.style.position = "fixed";
-					boxContent.style.left = "calc(50% - 197px)";
-					boxContent.style.bottom = parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%";
+				// 创建进度条元素
+				var progressElements = _createProgressElements(styleConfig);
+				_appendProgressElements(boxContent, progressElements);
 
-					var boxTime = document.createElement("div");
-					boxTime.data = 395; /*黄色条长度*/
-					/*boxTime.style.cssText =
-			"width:399px;height:10px;margin:0 0 0 0;background-color: #F4C336;border-radius:2px; border-top:0px solid #000000;border-bottom:0px solid #000000;position: absolute;top: 1px;border-radius: 0.5px;"*/
-					boxTime.style.cssText = "z-index:1;width:399px;height:8px;margin:0 0 0 1px;background-color: #F4C336;border-top:3px solid #EBE1A7;border-bottom:2px solid #73640D;border-left:1px solid #73640D;position: absolute;top: 0px;border-radius:3px;";
-					boxContent.appendChild(boxTime);
-
-					var boxTime2 = document.createElement("div");
-					boxTime2.data = 395; /*白色条长度*/
-					boxTime2.style.cssText = "width:399px;height:0.1px;margin:0 0 0 0.5px;background-color: #fff; opacity:0.8 ;border-top:1px solid #FFF;border-bottom:1px solid #FFF;border-left:1px solid #FFF;position: absolute;top: 17px;border-radius: 2px;";
-					boxContent.appendChild(boxTime2);
-					//白条底图
-					var imgBg3 = document.createElement("img");
-					imgBg3.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao2.1.png";
-					imgBg3.style.cssText = "width: 400px;height:4px;position: absolute;top: 16px;z-index: -1;";
-					boxContent.appendChild(imgBg3);
-
-					var imgBg = document.createElement("img");
-					imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao2.png";
-					imgBg.style.cssText = "width: 400px;height:13px;position: absolute;top: 0;opacity:0;";
-					boxContent.appendChild(imgBg);
-					/*底图*/
-					var imgBg2 = document.createElement("img");
-					imgBg2.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao2.1.png";
-					imgBg2.style.cssText = "width: 400px;height:14px;position: absolute;top: 0;z-index: -1;";
-					boxContent.appendChild(imgBg2);
-				}
-				if (lib.config.extension_十周年UI_jindutiaoYangshi == "4") {
-					if (window.jindutiaoTeshu) {
-						delete window.jindutiaoTeshu;
-					}
-					boxContent.style.width = "400px";
-					boxContent.style.height = "13px";
-					boxContent.style.display = "block";
-					boxContent.style["boxShadow"] = "0 0 4px #000000";
-					boxContent.style.margin = "0 0 !important";
-					boxContent.style.position = "fixed";
-					boxContent.style.left = "calc(50% - 197px)";
-					boxContent.style.bottom = parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%";
-
-					var boxTime = document.createElement("div");
-					boxTime.data = 395; /*黄色条长度*/
-					boxTime.style.cssText = "z-index:1;width:399px;height:10px;margin:0 0 0 0px;background-color: #A56C41;position: absolute;top: 1px;";
-					boxContent.appendChild(boxTime);
-					/*底图*/
-					var imgBg2 = document.createElement("img");
-					imgBg2.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/newTimeBarBg.png";
-					imgBg2.style.cssText = "width: 400px;height:12px;position: absolute;top: -3;z-index: -1;";
-					boxContent.appendChild(imgBg2);
-				}
+				// 添加到页面
 				document.body.appendChild(boxContent);
-				window.timer = setInterval(function () {
-					boxTime.style.width = boxTime.data + "px";
-					boxTime.data--;
-					if (boxTime.data == 0) {
+
+				// 启动主定时器
+				_startMainTimer(progressElements.boxTime, boxContent);
+
+				// 启动特殊定时器（如果需要）
+				if (window.jindutiaoTeshu === true) {
+					_startSpecialTimer(progressElements.boxTime2, progressElements.imgBg3);
+				}
+
+				// 辅助函数
+				function _clearPreviousTimers() {
+					if (window.timer) {
 						clearInterval(window.timer);
 						delete window.timer;
-						boxContent.remove();
-						if (lib.config.extension_十周年UI_jindutiaotuoguan == true && _status.auto == false) {
-							ui.click.auto();
-						}
 					}
-				}, parseFloat(lib.config["extension_十周年UI_jindutiaoST"])); //进度条间隔时间100
-				//-------------//
-				if (window.jindutiaoTeshu == true) {
-					window.timer2 = setInterval(() => {
-						boxTime2.data--;
-						boxTime2.style.width = boxTime2.data + "px";
-						if (boxTime2.data == 0) {
+					if (window.timer2) {
+						clearInterval(window.timer2);
+						delete window.timer2;
+					}
+				}
+
+				function _removePreviousElement() {
+					var existingElement = document.getElementById("jindutiaopl");
+					if (existingElement) {
+						existingElement.remove();
+					}
+				}
+
+				function _createProgressContainer() {
+					var container = document.createElement("div");
+					container.setAttribute("id", "jindutiaopl");
+					return container;
+				}
+
+				function _getStyleConfig() {
+					var styleType = lib.config.extension_十周年UI_jindutiaoYangshi;
+					var configs = {
+						1: {
+							name: "手杀进度条样式",
+							container: {
+								backgroundColor: "rgba(0,0,0,0.4)",
+								width: "620px",
+								height: "12.3px",
+								borderRadius: "1000px",
+								boxShadow: "0px 0px 9px #2e2b27 inset,0px 0px 2.1px #FFFFD5",
+								overflow: "hidden",
+								border: "1.2px solid #000000",
+								position: "fixed",
+								left: "calc(50% - 300px)",
+								bottom: parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%",
+							},
+							progressBar: {
+								data: 620,
+								style: "background-image: linear-gradient(#fccc54 15%, #d01424 30%, #cc6953 90%);height:12.8px;",
+							},
+							clearSpecial: true,
+						},
+						2: {
+							name: "十周年PC端进度条样式",
+							container: {
+								width: "400px",
+								height: "24px",
+								display: "block",
+								left: "calc(50% - 197px)",
+								position: "fixed",
+								bottom: parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%",
+							},
+							progressBar: {
+								data: 300,
+								style: "width:280px;height:4.3px;margin:14px 0 0 85px;background-color: #E2E20A;border-right:5px solid #FFF;position: absolute;top: -3.5px;",
+							},
+							backgroundImage: {
+								src: "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao.png",
+								style: "--w:400px;--h:calc(var(--w)*44/759);width: var(--w);height:var(--h);position: absolute;top: 0;",
+							},
+							clearSpecial: true,
+						},
+						3: {
+							name: "十周年客户端进度条样式",
+							container: {
+								width: "400px",
+								height: "13px",
+								display: "block",
+								boxShadow: "0 0 4px #000000",
+								margin: "0 0 !important",
+								position: "fixed",
+								left: "calc(50% - 197px)",
+								bottom: parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%",
+							},
+							progressBar: {
+								data: 395,
+								style: "z-index:1;width:399px;height:8px;margin:0 0 0 1px;background-color: #F4C336;border-top:3px solid #EBE1A7;border-bottom:2px solid #73640D;border-left:1px solid #73640D;position: absolute;top: 0px;border-radius:3px;",
+							},
+							secondaryBar: {
+								data: 395,
+								style: "width:399px;height:0.1px;margin:0 0 0 0.5px;background-color: #fff; opacity:0.8 ;border-top:1px solid #FFF;border-bottom:1px solid #FFF;border-left:1px solid #FFF;position: absolute;top: 17px;border-radius: 2px;",
+							},
+							backgroundImages: [
+								{
+									src: "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao2.1.png",
+									style: "width: 400px;height:4px;position: absolute;top: 16px;z-index: -1;",
+								},
+								{
+									src: "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao2.png",
+									style: "width: 400px;height:13px;position: absolute;top: 0;opacity:0;",
+								},
+								{
+									src: "extension/十周年UI/shoushaUI/lbtn/images/uibutton/jindutiao2.1.png",
+									style: "width: 400px;height:14px;position: absolute;top: 0;z-index: -1;",
+								},
+							],
+							setSpecial: true,
+						},
+						4: {
+							name: "新样式",
+							container: {
+								width: "400px",
+								height: "13px",
+								display: "block",
+								margin: "0 0 !important",
+								position: "fixed",
+								left: "calc(50% - 197px)",
+								bottom: parseFloat(lib.config["extension_十周年UI_jindutiaoSet"]) + "%",
+							},
+							progressBar: {
+								data: 395,
+								style: "z-index:1;width:399px;height:10px;margin:0 0 0 0px;background-color:rgb(230, 151, 91);position: absolute;top: 1px;",
+							},
+							backgroundImage: {
+								src: "extension/十周年UI/shoushaUI/lbtn/images/uibutton/newTimeBarBg.png",
+								style: "width: 400px;height:12px;position: absolute;top: -3;z-index: -1;",
+							},
+							clearSpecial: true,
+						},
+					};
+
+					return configs[styleType] || configs["1"];
+				}
+
+				function _applyStyle(container, config) {
+					if (config.clearSpecial && window.jindutiaoTeshu) {
+						delete window.jindutiaoTeshu;
+					}
+					if (config.setSpecial && !window.jindutiaoTeshu) {
+						window.jindutiaoTeshu = true;
+					}
+					Object.keys(config.container).forEach(function (key) {
+						container.style[key] = config.container[key];
+					});
+				}
+
+				function _createProgressElements(config) {
+					var elements = {};
+					elements.boxTime = document.createElement("div");
+					elements.boxTime.data = config.progressBar.data;
+					elements.boxTime.style.cssText = config.progressBar.style;
+					if (config.secondaryBar) {
+						elements.boxTime2 = document.createElement("div");
+						elements.boxTime2.data = config.secondaryBar.data;
+						elements.boxTime2.style.cssText = config.secondaryBar.style;
+					}
+					if (config.backgroundImage) {
+						elements.imgBg = _createImageElement(config.backgroundImage);
+					}
+					if (config.backgroundImages) {
+						elements.backgroundImages = config.backgroundImages.map(function (imgConfig, index) {
+							var img = _createImageElement(imgConfig);
+							if (index === 0) elements.imgBg3 = img; // 为特殊定时器保存引用
+							return img;
+						});
+					}
+					return elements;
+				}
+
+				function _createImageElement(imgConfig) {
+					var img = document.createElement("img");
+					img.src = lib.assetURL + imgConfig.src;
+					img.style.cssText = imgConfig.style;
+					return img;
+				}
+
+				function _appendProgressElements(container, elements) {
+					// 添加主进度条
+					container.appendChild(elements.boxTime);
+
+					// 添加次要进度条
+					if (elements.boxTime2) {
+						container.appendChild(elements.boxTime2);
+					}
+
+					// 添加单个背景图片
+					if (elements.imgBg) {
+						container.appendChild(elements.imgBg);
+					}
+
+					// 添加多个背景图片
+					if (elements.backgroundImages) {
+						elements.backgroundImages.forEach(function (img) {
+							container.appendChild(img);
+						});
+					}
+				}
+
+				function _startMainTimer(progressBar, container) {
+					window.timer = setInterval(function () {
+						progressBar.style.width = progressBar.data + "px";
+
+						// 剩余三分之一变红色
+						if (progressBar.data <= 395 / 3) {
+							progressBar.style.backgroundColor = "rgba(230, 56, 65, 0.88)";
+						} else {
+							progressBar.style.backgroundColor = "rgb(230, 151, 91)";
+						}
+
+						progressBar.data--;
+
+						if (progressBar.data == 0) {
+							clearInterval(window.timer);
+							delete window.timer;
+							container.remove();
+
+							if (lib.config.extension_十周年UI_jindutiaotuoguan == true && _status.auto == false) {
+								ui.click.auto();
+							}
+						}
+					}, parseFloat(lib.config["extension_十周年UI_jindutiaoST"]));
+				}
+
+				function _startSpecialTimer(secondaryBar, backgroundImg) {
+					window.timer2 = setInterval(function () {
+						secondaryBar.data--;
+						secondaryBar.style.width = secondaryBar.data + "px";
+
+						if (secondaryBar.data == 0) {
 							clearInterval(window.timer2);
 							delete window.timer2;
 							delete window.jindutiaoTeshu;
-							boxTime2.remove();
-							imgBg3.remove();
-							//ui.click.cancel();//结束回合
-							//点击托管ui.click.auto();
+							secondaryBar.remove();
+							backgroundImg.remove();
 						}
-					}, parseFloat(lib.config["extension_十周年UI_jindutiaoST"]) / 2); //进度条时间
+					}, parseFloat(lib.config["extension_十周年UI_jindutiaoST"]) / 2);
 				}
 			};
 			//-----AI进度条框架----//
 			game.JindutiaoAIplayer = function () {
+				// 清理已有定时器和进度条
 				if (window.timerai) {
 					clearInterval(window.timerai);
 					delete window.timerai;
 				}
-				if (document.getElementById("jindutiaoAI")) {
-					document.getElementById("jindutiaoAI").remove();
-				}
+				var oldBar = document.getElementById("jindutiaoAI");
+				if (oldBar) oldBar.remove();
+
+				// 创建进度条容器和时间条
 				window.boxContentAI = document.createElement("div");
-				window.boxTimeAI = document.createElement("div");
-				window.boxContentAI.setAttribute("id", "jindutiaoAI");
-				if (lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff") {
-					//--------手杀样式-------------//
-					window.boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;";
-					window.boxTimeAI.data = 125;
-					window.boxTimeAI.style.cssText = "z-index:92;--w: 33px;--h: calc(var(--w) * 4/120);width: var(--w);height: var(--h);margin:1px;background-color: #dd9900;position: absolute;top: 0px;";
-					window.boxContentAI.appendChild(boxTimeAI);
+				var boxTimeAI = document.createElement("div");
+				boxContentAI.id = "jindutiaoAI";
+				let isShousha = lib.config.extension_十周年UI_newDecadeStyle != "on" && lib.config.extension_十周年UI_newDecadeStyle != "othersOff";
 
-					var imgBg = document.createElement("img");
-					imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png";
-					imgBg.style.cssText = "position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;";
-					boxContentAI.appendChild(imgBg);
-
-					//-------------------------//
+				// 样式与图片路径
+				if (isShousha) {
+					boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);left:3.5px;bottom:-6.2px;";
+					boxTimeAI.data = 125;
+					boxTimeAI.style.cssText = "z-index:92;--w:33px;--h:calc(var(--w)*4/120);width:var(--w);height:var(--h);margin:1px;background-color:#dd9900;position:absolute;top:0px;";
 				} else {
-					//----------十周年样式--------//
-					window.boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;";
-					window.boxTimeAI.data = 120;
-					window.boxTimeAI.style.cssText = "z-index:91;width: 115px;height: 3.3px;margin:1px;background-color: #f2c84b;position: absolute;top: 0px;border-radius: 3px;";
-					window.boxContentAI.appendChild(boxTimeAI);
-
-					var imgBg = document.createElement("img");
-					imgBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png";
-					imgBg.style.cssText = "position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;";
-					window.boxContentAI.appendChild(imgBg);
-					//--------------------//
+					boxContentAI.style.cssText = "display:block;position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);left:1.5px;bottom:-8.2px;";
+					boxTimeAI.data = 120;
+					boxTimeAI.style.cssText = "z-index:91;width:115px;height:3.3px;margin:1px;background-color:#f2c84b;position:absolute;top:0px;border-radius:3px;";
 				}
-				window.timerai = setInterval(() => {
-					window.boxTimeAI.data--;
-					window.boxTimeAI.style.width = boxTimeAI.data + "px";
-					if (window.boxTimeAI.data == 0) {
+				boxContentAI.appendChild(boxTimeAI);
+
+				// 背景图片
+				var imgBg = document.createElement("img");
+				imgBg.src = lib.assetURL + (isShousha ? "extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png" : "extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png");
+				imgBg.style.cssText = isShousha ? "position:absolute;z-index:91;--w:122px;--h:calc(var(--w)*4/145);width:var(--w);height:var(--h);top:0;" : "position:absolute;z-index:90;--w:122px;--h:calc(var(--w)*8/162);width:var(--w);height:var(--h);top:0;";
+				boxContentAI.appendChild(imgBg);
+
+				// 添加到页面
+				document.body.appendChild(boxContentAI);
+
+				// 进度条动画
+				window.timerai = setInterval(function () {
+					boxTimeAI.data--;
+					boxTimeAI.style.width = boxTimeAI.data + "px";
+					if (boxTimeAI.data === 0) {
 						clearInterval(window.timerai);
 						delete window.timerai;
-						window.boxContentAI.remove();
+						boxContentAI.remove();
 					}
-				}, 150); //进度条时间
+				}, 150);
 			};
 			if (!window.chatRecord) window.chatRecord = [];
 			game.addChatWord = function (strx) {
@@ -10883,19 +10407,19 @@ export default async function () {
 				name: "调试助手",
 				init: false,
 			},
-			kapaituozhuai: {
+			translate: {
 				name: "卡牌拖拽",
 				init: false,
 				intro: "开启后手牌可以任意拖拽牌序，自动重启",
 				onclick(bool) {
-					game.saveConfig("extension_十周年UI_kapaituozhuai", bool);
+					game.saveConfig("extension_十周年UI_translate", bool);
 					setTimeout(() => game.reload(), 100);
 				},
 			},
 			newDecadeStyle: {
 				name: "切换样式",
 				intro: "切换武将边框样式和界面布局，初始为十周年样式，根据个人喜好自行切换，选择不同的设置后游戏会自动重启以生效新的设置",
-				init: "off",
+				init: "on",
 				item: {
 					on: "十周年",
 					off: "新手杀",
@@ -10948,12 +10472,64 @@ export default async function () {
 			},
 			cardPrettify: {
 				name: "卡牌美化",
-				init: "webp",
+				init: "png",
 				item: {
 					off: "关闭",
-					jpg: "online",
+					jpg: "OL卡牌",
 					webp: "彩色卡牌",
 					png: "原十周年",
+				},
+			},
+			cardkmh: {
+				name: "卡牌边框",
+				init: "off",
+				item: {
+					off: "关闭",
+					kuang1: "大司马",
+					kuang2: "大将军",
+					kuang3: "国都护",
+				},
+			},
+			cardbj: {
+				name: "卡牌背景",
+				init: "kb1",
+				item: {
+					kb1: "默认",
+					kb2: "国都护",
+					kb3: "大将军",
+					kb4: "大司马",
+				},
+				onclick: function (item) {
+					game.saveConfig("extension_十周年UI_cardbj", item);
+				},
+				visualMenu: function (node, link) {
+					node.style.height = node.offsetWidth * 1.4 + "px";
+					node.style.backgroundSize = "100% 100%";
+					node.className = "button character incardback";
+					node.setBackgroundImage("extension/十周年UI/assets/image/" + link + ".png");
+				},
+			},
+			chupaizhishi: {
+				name: "出牌指示",
+				intro: "此选项可以切换目标指示特效，根据个人喜好自行切换，重启生效",
+				init: "off",
+				item: {
+					jiangjun: "将军",
+					weijiangjun: "卫将军",
+					cheqijiangjun: "车骑将军",
+					biaoqijiangjun: "骠骑将军",
+					dajiangjun: "大将军",
+					dasima: "大司马",
+					shoushaX: "手杀经典",
+					shousha: "手杀新版",
+					random: "随机",
+					off: "关闭",
+				},
+				update: function () {
+					if (lib.config["extension_十周年UI_chupaizhishi"] == "random") {
+						var i = ["shousha", "shoushaX", "jiangjun", "weijiangjun", "cheqijiangjun", "biaoqijiangjun", "dajiangjun", "dasima"].randomGet();
+						if (window.decadeUI) decadeUI.config.chupaizhishi = i;
+					} else if (window.decadeUI) ui.arena.dataset.chupaizhishi = lib.config["extension_十周年UI_chupaizhishi"];
 				},
 			},
 			//菜单美化
@@ -10963,7 +10539,7 @@ export default async function () {
 				init: false,
 				onclick(bool) {
 					game.saveConfig("extension_十周年UI_meanPrettify", bool);
-					if (bool) lib.init.css(lib.assetURL + "extension/十周年UI", "menu");
+					if (bool) lib.init.css(decadeUIPath + "extension/十周年UI", "menu");
 					else {
 						for (const link of document.head.querySelectorAll("link")) {
 							if (link.href.includes("menu.css")) {
@@ -10972,6 +10548,7 @@ export default async function () {
 							}
 						}
 					}
+					setTimeout(() => game.reload(), 100);
 				},
 			},
 			jiaohuyinxiao: {
@@ -11004,6 +10581,12 @@ export default async function () {
 			dynamicSkin: {
 				name: "动态皮肤",
 				init: false,
+				onclick: function (value) {
+					game.saveConfig("extension_十周年UI_dynamicSkin", value);
+					lib.config.dynamicSkin = value;
+					game.saveConfig("dynamicSkin", value);
+					if (confirm("此功能需要手动导入骨骼文件以及安装《皮肤切换》和《千幻聆音》扩展\n点击确定自动重启")) game.reload();
+				},
 			},
 			dynamicSkinOutcrop: {
 				name: "动皮露头",
@@ -11035,49 +10618,9 @@ export default async function () {
 					if (window.decadeUI) ui.window.dataset.cardAlternateNameVisible = lib.config["extension_十周年UI_cardAlternateNameVisible"] ? "on" : "off";
 				},
 			},
-			campIdentityImageMode: {
-				name: "身份美化",
-				init: true,
-			},
-			playerKillEffect: {
-				name: "击杀特效",
-				init: true,
-				onclick(value) {
-					game.saveConfig("extension_十周年UI_playerKillEffect", value);
-					if (window.decadeUI) decadeUI.config.playerKillEffect = value;
-				},
-			},
-			gameAnimationEffect: {
-				name: "动画特效",
-				init: true,
-			},
-			playerDieEffect: {
-				name: "阵亡特效",
-				init: true,
-				onclick(value) {
-					game.saveConfig("extension_十周年UI_playerDieEffect", value);
-					if (window.decadeUI) decadeUI.config.playerDieEffect = value;
-				},
-			},
-			cardUseEffect: {
-				name: "卡牌特效",
-				init: true,
-				onclick(value) {
-					game.saveConfig("extension_十周年UI_cardUseEffect", value);
-					if (window.decadeUI) decadeUI.config.cardUseEffect = value;
-				},
-			},
-			// playerLineEffect: {
-			// 	name: "玩家指示线特效",
-			// 	init: true,
-			// 	onclick(value) {
-			// 		game.saveConfig("extension_十周年UI_playerLineEffect", value);
-			// 		if (window.decadeUI) decadeUI.config.playerLineEffect = value;
-			// 	},
-			// },
 			showTemp: {
 				name: "卡牌显示",
-				init: false,
+				init: true,
 				intro: "开启此选项后，视为卡牌显示将会替换为十周年UI内置替换显示",
 				onclick(bool) {
 					game.saveConfig("extension_十周年UI_showTemp", bool);
@@ -11165,6 +10708,11 @@ export default async function () {
 					}
 				},
 			},
+			viewInformationPause: {
+				name: "查看武将资料页不暂停",
+				intro: "打开此选项后，单机模式下查看本扩展设计的武将资料页时游戏不会暂停",
+				init: false,
+			},
 			outcropSkin: {
 				name: "露头样式",
 				init: "off",
@@ -11244,8 +10792,8 @@ export default async function () {
 			},
 			shadowStyle: {
 				name: "特效风格",
-				intro: "可根据个人喜好切换局内阴影动态特效与人物弹出文字的样式，目前只有新手杀样式可用",
-				init: "on",
+				intro: "可根据个人喜好切换局内阴影动态特效与人物弹出文字的样式，目前只有新手杀/online样式可用",
+				init: "off",
 				item: {
 					on: "原样式",
 					off: "新样式",
@@ -11294,30 +10842,51 @@ export default async function () {
 			},
 			/*进度条说明*/
 			JDTSM: {
-				name: '<div class="shousha_menu">进度条·查看</div>',
+				name: '<div class="shousha_menu">进度条&阶段提示·查看</div>',
 				clear: true,
 				onclick() {
 					if (this.JDTSM == undefined) {
 						var more = ui.create.div(".JDTSM", '<div class="shousha_text"><li><b>进度条</b>:完善时机包括玩家回合内、人机回合内、玩家回合外、人机回合外。<li><b>进度条时间间隔</b>:设置玩家进度条的时间间隔，默认100毫秒/次<li><b>时间间隔</b>：通俗点说，就是进度条刷新的自定义时间单位/次。时间间隔越小，进度条总时间越少，反之亦然。<li><b>切换不生效？</b>:在游戏里切换时间间隔后不会马上生效，会在下一次进度条出现时生效。<li><b>进度条高度百分比</b>:现在可以在游戏里动态调节进度条高度了，变化发生在每次刷新时，建议开启<b>进度条刷新</b>功能搭配使用。可调节的范围在10%-40%左右。<li><b>进度条刷新</b>:在游戏里开启后，进度条会在每个节点进行刷新（也就是大伙说的旧版进度条）。</div>');
 						this.parentNode.insertBefore(more, this.nextSibling);
 						this.JDTSM = more;
-						this.innerHTML = '<div class="shousha_menu">进度条·关闭</div>';
+						this.innerHTML = '<div class="shousha_menu">进度条&阶段提示·关闭</div>';
 					} else {
 						this.parentNode.removeChild(this.JDTSM);
 						delete this.JDTSM;
-						this.innerHTML = '<div class="shousha_menu">进度条·查看</div>';
+						this.innerHTML = '<div class="shousha_menu">进度条&阶段提示·查看</div>';
 					}
 				},
 			},
 			/*-----进度条-------*/
 			jindutiao: {
-				init: false,
+				init: true,
 				intro: "自己回合内显示进度条带素材",
 				name: "进度条",
 			},
+			JDTS: {
+				init: true,
+				intro: "自己回合内显示对应阶段图片提示",
+				name: "阶段提示",
+			},
+			jindutiaotuoguan: {
+				name: "托管效果",
+				init: false,
+				intro: "开启进度条的情况下，开启此选项后，当玩家的进度条时间走完时，将自动托管。",
+			},
+			JDTSYangshi: {
+				name: "阶段提示",
+				init: "2",
+				intro: "切换阶段提示样式，可根据个人喜好切换",
+				item: {
+					1: "手杀阶段提示",
+					2: "十周年阶段提示",
+					3: "OL阶段提示",
+					4: "欢乐阶段提示",
+				},
+			},
 			jindutiaoYangshi: {
 				name: "进度条样式",
-				init: "1",
+				init: "3",
 				intro: "切换进度条样式，可根据个人喜好切换手杀进度条或十周年进度条，切换后重启生效",
 				item: {
 					1: "手杀进度条",
@@ -11325,11 +10894,6 @@ export default async function () {
 					3: "十周年客户端进度条",
 					4: "一将成名进度条",
 				},
-			},
-			jindutiaotuoguan: {
-				name: "托管效果",
-				init: false,
-				intro: "开启进度条的情况下，开启此选项后，当玩家的进度条时间走完时，将自动托管。",
 			},
 			jindutiaoST: {
 				name: "进度条时间间隔",
@@ -11346,19 +10910,9 @@ export default async function () {
 					2000: "2秒/次",
 				},
 			},
-			jindutiaoUpdata: {
-				name: "玩家进度条刷新",
-				init: false,
-				intro: "开启进度条的情况下，开启此选项后，玩家进度条将会进行刷新",
-			},
-			jindutiaoaiUpdata: {
-				name: "人机进度条刷新",
-				init: false,
-				intro: "开启进度条的情况下，开启此选项后，ai的进度条将会进行刷新",
-			},
 			jindutiaoSet: {
 				name: "进度条高度",
-				init: "20",
+				init: "22",
 				intro: "<li>设置玩家进度条的高度百分比。",
 				item: {
 					10: "10%",
@@ -11383,47 +10937,6 @@ export default async function () {
 					37: "37%",
 					38: "38%",
 					39: "39%",
-				},
-			},
-			FL2: {
-				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
-				intro: "",
-				init: true,
-				clear: true,
-				onclick: function () {
-					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
-				},
-			},
-			/*阶段提示说明*/
-			JDTSSM: {
-				name: '<div class="shousha_menu">阶段提示·查看</div>',
-				clear: true,
-				onclick() {
-					if (this.JDTSSM == undefined) {
-						var more = ui.create.div(".JDTSSM", '<div class="shousha_text"><li><b>阶段提示</b>:回合开始、判定阶段、摸牌阶段、出牌阶段、弃牌阶段、等待响应、对方思考中，其中[对方思考中]，在游戏人数不大于两人时才会出现。<li><b>位置微调</b>：在游玩太虚幻境模式或者使用Eng侍灵扩展时，为避免遮挡，会自动判断并调整阶段提示位置<li><b>人机也有？</b>:人机做了进度条美化和阶段提示美化，样式跟随UI切换。</div>');
-						this.parentNode.insertBefore(more, this.nextSibling);
-						this.JDTSSM = more;
-						this.innerHTML = '<div class="shousha_menu">阶段提示·关闭</div>';
-					} else {
-						this.parentNode.removeChild(this.JDTSSM);
-						delete this.JDTSSM;
-						this.innerHTML = '<div class="shousha_menu">阶段提示·查看</div>';
-					}
-				},
-			},
-			/*----阶段提示----*/
-			JDTS: {
-				init: false,
-				intro: "自己回合内显示对应阶段图片提示",
-				name: "阶段提示",
-			},
-			JDTSYangshi: {
-				name: "阶段提示",
-				init: "1",
-				intro: "切换阶段提示样式，可根据个人喜好切换",
-				item: {
-					1: "手杀阶段提示",
-					2: "十周年阶段提示",
 				},
 			},
 			FL3: {
@@ -11487,16 +11000,6 @@ export default async function () {
 					300000: "5min/次",
 				},
 			},
-			/*其它美化*/
-			FL4: {
-				name: '<b><font color="#00FF66">★𝑪𝒊𝒂𝒍𝒍𝒐～(∠・ω< )⌒★',
-				intro: "",
-				init: true,
-				clear: true,
-				onclick: function () {
-					game.playAudio("..", "extension", "十周年UI/audio", "Ciallo");
-				},
-			},
 			XPJ: {
 				name: "小配件",
 				init: "off",
@@ -11510,16 +11013,6 @@ export default async function () {
 				init: false,
 				intro: "<li>手杀样式下在游戏中，隐藏左下角的聊天按钮<li>需重启",
 				name: "聊天按钮隐藏",
-			},
-			KGMH: {
-				init: "0",
-				intro: "开启后可以美化游戏的选项开关，需要重启",
-				name: "开关美化",
-				item: {
-					0: "关闭",
-					1: "手杀",
-					2: "十周年",
-				},
 			},
 			mx_decade_characterDialog: {
 				name: "自由选将筛选框",
@@ -11564,12 +11057,15 @@ export default async function () {
 			};
 			pack.intro = (pack => {
 				let log = [
-					`魔改十周年UI ${pack.version}`,
-					"最低适配：v1.10.17.3",
+					`十周年UI 当前版本号${pack.version}`,
+					"适配本体：v1.10.17.4 待定",
 					"bugfix",
-					"局内UI显示调整",
+					"函数跟进 待定",
+					"UI界面调整",
+					"特效类功能设置为强开启，移除开关",
+					"",
 				];
-				return `<a href=${pack.diskURL}>点击前往十周年Github仓库</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
+				return `<a href="javascript:void(0)" onclick="navigator.clipboard.writeText('https://github.com/diandian157/decadeUI').then(() => alert('已成功复制，粘贴到浏览器打开，部分进不去需要翻墙'))">点击复制十周年UIGithub仓库地址</a><br><p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">${log.join("<br>•")}</p>`;
 			})(pack);
 			return pack;
 		})(),

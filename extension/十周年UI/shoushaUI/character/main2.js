@@ -1,5 +1,100 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
-	var plugin = {
+	// 工具函数区
+	const extensionPath = `${lib.assetURL}extension/十周年UI/shoushaUI/`;
+
+	// 获取武将分包
+	function getPack(name) {
+		const pack = Object.keys(lib.characterPack).find(pack => lib.characterPack[pack][name]);
+		if (pack) {
+			if (lib.characterSort[pack]) {
+				const sort = Object.keys(lib.characterSort[pack]).find(sort => lib.characterSort[pack][sort].includes(name));
+				if (sort) return lib.translate[sort];
+			}
+			return lib.translate[pack + "_character_config"] || lib.translate[pack];
+		}
+		return "暂无分包";
+	}
+
+	// 获取立绘图片路径
+	function getLihuiPath(originalPath) {
+		return originalPath.replace(/image\/character/, "image/lihui");
+	}
+
+	// 提取图片原始路径
+	function extractImagePath(bg) {
+		if (!bg) return "";
+		if (bg.indexOf('url("') === 0) {
+			return bg.slice(5, bg.indexOf('")'));
+		} else if (bg.indexOf("url('") === 0) {
+			return bg.slice(5, bg.indexOf("')"));
+		}
+		return bg;
+	}
+
+	// 获取等阶图片路径
+	function getRarityIcon(rarity) {
+		return `${extensionPath}character/images/shizhounian/rarity_${rarity}.png`;
+	}
+	function getPeIcon(rarity) {
+		return `${extensionPath}character/images/shizhounian/pe_${rarity}.png`;
+	}
+
+	// 获取千幻等阶
+	function getQhlyLevel(name) {
+		let temp = "junk";
+		if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkinLevel === "function" && typeof game.qhly_getSkin === "function") {
+			switch (game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false)) {
+				case "xiyou":
+					temp = "rare";
+					break;
+				case "shishi":
+					temp = "epic";
+					break;
+				case "chuanshuo":
+					temp = "legend";
+					break;
+				case "putong":
+					temp = "common";
+					break;
+				case "dongtai":
+					temp = "legend";
+					break;
+				case "jueban":
+					temp = "unique";
+					break;
+				case "xianding":
+					temp = "restrictive";
+					break;
+				default:
+					temp = "junk";
+			}
+		}
+		return temp;
+	}
+
+	// 获取千幻皮肤名安全函数
+	function getQhlySkinTranslation(name) {
+		if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkinInfo === "function" && typeof game.qhly_getSkin === "function") {
+			return game.qhly_getSkinInfo(name, game.qhly_getSkin(name), null).translation || "经典形象";
+		}
+		return "经典形象";
+	}
+
+	// 创建立绘div
+	function setLihuiDiv(skinDiv, playerSkin, fallbackUrl) {
+		const originalPath = extractImagePath(playerSkin);
+		const testImg = new Image();
+		testImg.onerror = function () {
+			skinDiv.style.backgroundImage = playerSkin;
+		};
+		testImg.onload = function () {
+			skinDiv.style.backgroundImage = `url("${this.src}")`;
+		};
+		testImg.src = getLihuiPath(originalPath);
+	}
+
+	// 主体插件
+	const plugin = {
 		name: "character",
 		filter: function () {
 			return !["chess", "tafang"].includes(get.mode());
@@ -23,20 +118,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				],
 			});
 		},
-
 		click: {
 			identity: function (e) {
 				e.stopPropagation();
-				var player = this.parentNode;
+				const player = this.parentNode;
 				if (!game.getIdentityList) return;
 				if (player.node.guessDialog) {
 					player.node.guessDialog.classList.toggle("hidden");
 				} else {
-					var list = game.getIdentityList(player);
+					const list = game.getIdentityList(player);
 					if (!list) return;
-					var guessDialog = ui.create.div(".guessDialog", player);
-					var container = ui.create.div(guessDialog);
-
+					const guessDialog = ui.create.div(".guessDialog", player);
+					const container = ui.create.div(guessDialog);
 					lib.setScroll(guessDialog);
 					player.node.guessDialog = guessDialog;
 				}
@@ -46,301 +139,179 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				e.preventDefault();
 				/* taffy分界线 */
 				e.stopPropagation();
-
 				if (plugin.playerDialog) {
 					return plugin.playerDialog.show(this);
 				}
-
-				var container = ui.create.div(".popup-container.hidden", ui.window, function (e) {
+				const container = ui.create.div(".popup-container.hidden", ui.window, function (e) {
 					if (e.target === container) {
 						container.hide();
 						game.resume2();
 					}
 				});
-				var dialog = ui.create.div(".character-dialog.popped", container);
-				var leftPane = ui.create.div(".left", dialog);
-				var rightPane = ui.create.div(".right", dialog);
-
-				var createButton = function (name, parent) {
-					if (!name) return;
-					if (!lib.character[name]) return;
-					var button = ui.create.button(name, "character", parent, true);
-				};
-
-				container.show = function (player) {
-					//通过势力判断技能框的背景颜色
-					var extensionPath = lib.assetURL + "extension/十周年UI/shoushaUI/";
-					var group = player.group;
-					if (group != "wei" && group != "shu" && group != "wu" && group != "qun" && group != "ye" && group != "jin" && group != "daqin" && group != "western" && group != "shen" && group != "key") group = "default";
-					var url = extensionPath + "character/images/shizhounian/skt_" + group + ".png";
-					dialog.style.backgroundImage = 'url("' + url + '")';
-					var skin1 = ui.create.div(".skin1", dialog);
-					var skin2 = ui.create.div(".skin2", dialog);
-
-					//判断是否隐藏，以及获取主副将的姓名
-					var name = player.name1 || player.name;
-					var name2 = player.name2;
-					if (player.classList.contains("unseen") && player !== game.me) {
-						name = "unknown";
-					}
-					if (player.classList.contains("unseen2") && player !== game.me) {
-						name2 = "unknown";
-					}
-
-					//主将立绘
-					var playerSkin;
-					if (name != "unknown") {
-						playerSkin = player.style.backgroundImage;
-						if (!playerSkin) playerSkin = player.childNodes[0].style.backgroundImage;
-
-						// 提取原始图片路径
-						let originalPath = "";
-						if (playerSkin.indexOf('url("') == 0) {
-							originalPath = playerSkin.slice(5, playerSkin.indexOf('")'));
-						} else if (playerSkin.indexOf("url('") == 0) {
-							originalPath = playerSkin.slice(5, playerSkin.indexOf("')"));
-						}
-
-						// 创建新图片测试lihui路径
-						let testImg = new Image();
-						testImg.onerror = function () {
-							// lihui路径不存在，使用原始路径
-							skin1.style.backgroundImage = playerSkin;
-						};
-						testImg.onload = function () {
-							// lihui路径存在，使用lihui路径
-							skin1.style.backgroundImage = 'url("' + this.src + '")';
-						};
-						// 尝试lihui路径
-						testImg.src = originalPath.replace(/image\/character/, "image/lihui");
+				const dialog = ui.create.div(".character-dialog.popped", container);
+				const leftPane = ui.create.div(".left", dialog);
+				const rightPane = ui.create.div(".right", dialog);
+				// 势力背景
+				let group = this.group;
+				if (!["wei", "shu", "wu", "qun", "ye", "jin", "daqin", "western", "shen", "key"].includes(group)) group = "default";
+				dialog.style.backgroundImage = `url("${extensionPath}character/images/shizhounian/skt_${group}.png")`;
+				// 立绘
+				const skin1 = ui.create.div(".skin1", dialog);
+				const skin2 = ui.create.div(".skin2", dialog);
+				// 姓名处理
+				let name = this.name1 || this.name;
+				let name2 = this.name2;
+				if (this.classList.contains("unseen") && this !== game.me) name = "unknown";
+				if (this.classList.contains("unseen2") && this !== game.me) name2 = "unknown";
+				// 主将立绘
+				if (name !== "unknown") {
+					let playerSkin = this.style.backgroundImage || this.childNodes[0]?.style.backgroundImage;
+					setLihuiDiv(skin1, playerSkin, `${extensionPath}character/images/unknown.png`);
+				} else {
+					skin1.style.backgroundImage = `url("${extensionPath}character/images/unknown.png")`;
+				}
+				// 副将立绘
+				if (name2) {
+					if (name2 !== "unknown") {
+						let playerSkin2 = this.childNodes[1]?.style.backgroundImage;
+						setLihuiDiv(skin2, playerSkin2, `${extensionPath}character/images/unknown.png`);
 					} else {
-						var url = extensionPath + "character/images/unknown.png";
-						skin1.style.backgroundImage = 'url("' + url + '")';
+						skin2.style.backgroundImage = `url("${extensionPath}character/images/unknown.png")`;
 					}
-
-					//副将立绘
-					if (name2) {
-						var playerSkin2;
-						if (name2 != "unknown") {
-							playerSkin2 = player.childNodes[1].style.backgroundImage;
-
-							// 提取原始图片路径
-							let originalPath = "";
-							if (playerSkin2.indexOf('url("') == 0) {
-								originalPath = playerSkin2.slice(5, playerSkin2.indexOf('")'));
-							} else if (playerSkin2.indexOf("url('") == 0) {
-								originalPath = playerSkin2.slice(5, playerSkin2.indexOf("')"));
-							}
-
-							// 创建新图片测试lihui路径
-							let testImg = new Image();
-							testImg.onerror = function () {
-								// lihui路径不存在，使用原始路径
-								skin2.style.backgroundImage = playerSkin2;
-							};
-							testImg.onload = function () {
-								// lihui路径存在，使用lihui路径
-								skin2.style.backgroundImage = 'url("' + this.src + '")';
-							};
-							// 尝试lihui路径
-							testImg.src = originalPath.replace(/image\/character/, "image/lihui");
-						} else {
-							var url = extensionPath + "character/images/unknown.png";
-							skin2.style.backgroundImage = 'url("' + url + '")';
-						}
-					}
-
-					//等阶。适配最新版千幻
-					var rarity = game.getRarity(name);
-					if (!rarity) rarity = "junk";
-					var pe = ui.create.div(".pe1", dialog);
-					var url;
-					if (lib.config["extension_千幻聆音_enable"]) {
-						var temp;
-						switch (game.qhly_getSkinLevel(name, game.qhly_getSkin(name), true, false)) {
-							case "xiyou":
-								temp = "rare";
-								break;
-							case "shishi":
-								temp = "epic";
-								break;
-							case "chuanshuo":
-								temp = "legend";
-								break;
-							case "putong":
-								temp = "common";
-								break;
-							case "dongtai":
-								temp = "legend";
-								break;
-							case "jueban":
-								temp = "unique";
-								break;
-							case "xianding":
-								temp = "restrictive";
-								break;
-							default:
-								temp = "junk";
-						}
-						url = extensionPath + "character/images/shizhounian/pe_" + temp + ".png";
-					} else url = extensionPath + "character/images/shizhounian/pe_" + rarity + ".png";
-					pe.style.backgroundImage = 'url("' + url + '")';
-					let value = "";
-					let value2, value3;
-					if (lib.config["extension_千幻聆音_enable"]) {
-						value2 = game.qhly_getSkinInfo(name, game.qhly_getSkin(name), null).translation || "经典形象";
-					} else value2 = "经典形象";
-					value += value2 + "*" + get.translation(name);
-					if (name2) {
-						value += "<br>";
-						if (lib.config["extension_千幻聆音_enable"]) {
-							value3 = game.qhly_getSkinInfo(name2, game.qhly_getSkin(name2), null).translation || "经典形象";
-						} else value3 = "经典形象";
-						value += value3 + "*" + get.translation(name2);
-					}
-					var pn = ui.create.div(".pn1", value);
-					pe.appendChild(pn);
-
-					//武将姓名
-					var nametext = "";
-					if (name && name2) {
-						if (name == "unknown") nametext += "未知";
-						else if (lib.translate[name + "_ab"]) nametext += lib.translate[name + "_ab"];
-						else nametext += get.translation(name);
-						nametext += " / ";
-						if (name2 == "unknown") nametext += "未知";
-						else if (lib.translate[name2 + "_ab"]) nametext += lib.translate[name2 + "_ab"];
-						else nametext += get.translation(name2);
-					} else {
-						if (name == "unknown") nametext += "未知";
-						else if (lib.translate[name + "_ab"]) nametext += lib.translate[name + "_ab"];
-						else nametext += get.translation(name);
-					}
-					var namestyle = ui.create.div(".name", nametext, dialog);
-					namestyle.dataset.camp = group;
-					if (name && name2) {
-						namestyle.style.fontSize = "18px";
-						namestyle.style.letterSpacing = "1px";
-					}
-
-					//等阶图标
-					var head = ui.create.node("img");
-					head.src = extensionPath + "character/images/shizhounian/rarity_" + rarity + ".png";
-					head.style.cssText = "display:inline-block;width:61.6px;height:53.2px;top:-13px; position:absolute;background-color: transparent;z-index:1;margin-left:5px;";
-					namestyle.appendChild(head);
-
-					//分包
-					var getPack = function (name) {
-						const pack = Object.keys(lib.characterPack).find(pack => lib.characterPack[pack][name]);
-						if (pack) {
-							if (lib.characterSort[pack]) {
-								const sort = Object.keys(lib.characterSort[pack]).find(sort => lib.characterSort[pack][sort].includes(name));
-								if (sort) return lib.translate[sort];
-							}
-							return lib.translate[pack + "_character_config"] || lib.translate[pack];
-						}
-						return "暂无分包";
-					};
-
-					ui.create.div(".pack", getPack(name), dialog);
-					leftPane.innerHTML = "<div></div>";
-					rightPane.innerHTML = "<div></div>";
-					lib.setScroll(rightPane.firstChild);
-					var oSkills = player.getSkills(null, false, false).slice(0);
-					if (player == game.me) oSkills = oSkills.concat(player.hiddenSkills);
-					if (oSkills.length) {
-						oSkills.forEach(function (name) {
-							var translation = lib.translate[name];
-							if (translation && lib.translate[name + "_info"] && translation != "" && lib.translate[name + "_info"] != "") {
-								if (!player.getSkills().includes(name) || player.awakenedSkills.includes(name)) ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:0.5">' + translation + "： " + "</span>" + "</div>" + "<div>" + '<span style="opacity:0.5;text-indent:10px">' + get.skillInfoTranslation(name, player) + "</span>" + "</div>", rightPane.firstChild);
-								else ui.create.div(".xskill", "<div data-color>" + translation + "： </div>" + "<div>" + '<span style="text-indent:10px">' + get.skillInfoTranslation(name, player) + "</span>" + "</div>", rightPane.firstChild);
-								//自动发动
-								if (lib.skill[name].frequent || lib.skill[name].subfrequent) {
-									ui.create.div(".xskill", '<div class="underlinenode on gray" style="position:relative;padding-left:0;padding-bottom:3px">【' + translation + "】自动发动</div></div></div>", rightPane.firstChild);
-									var underlinenode = rightPane.firstChild.querySelector(".underlinenode");
-									if (lib.skill[name].frequent) {
-										if (lib.config.autoskilllist.includes(name)) {
+				}
+				// 等阶
+				let rarity = game.getRarity(name) || "junk";
+				const pe = ui.create.div(".pe1", dialog);
+				let peUrl = lib.config["extension_千幻聆音_enable"] ? getPeIcon(getQhlyLevel(name)) : getPeIcon(rarity);
+				pe.style.backgroundImage = `url("${peUrl}")`;
+				// 皮肤名
+				let value = "";
+				let value2 = getQhlySkinTranslation(name);
+				value += `${value2}*${get.translation(name)}`;
+				if (name2) {
+					let value3 = getQhlySkinTranslation(name2);
+					value += `<br>${value3}*${get.translation(name2)}`;
+				}
+				const pn = ui.create.div(".pn1", value);
+				pe.appendChild(pn);
+				// 武将姓名
+				let nametext = "";
+				if (name && name2) {
+					nametext += name === "unknown" ? "未知" : lib.translate[name + "_ab"] || get.translation(name);
+					nametext += " / ";
+					nametext += name2 === "unknown" ? "未知" : lib.translate[name2 + "_ab"] || get.translation(name2);
+				} else {
+					nametext += name === "unknown" ? "未知" : lib.translate[name + "_ab"] || get.translation(name);
+				}
+				const namestyle = ui.create.div(".name", nametext, dialog);
+				namestyle.dataset.camp = group;
+				if (name && name2) {
+					namestyle.style.fontSize = "18px";
+					namestyle.style.letterSpacing = "1px";
+				}
+				// 等阶图标
+				const head = ui.create.node("img");
+				head.src = getRarityIcon(rarity);
+				head.style.cssText = "display:inline-block;width:61.6px;height:53.2px;top:-13px; position:absolute;background-color: transparent;z-index:1;margin-left:5px;";
+				namestyle.appendChild(head);
+				// 分包
+				ui.create.div(".pack", getPack(name), dialog);
+				leftPane.innerHTML = "<div></div>";
+				rightPane.innerHTML = "<div></div>";
+				lib.setScroll(rightPane.firstChild);
+				// 技能区
+				let oSkills = this.getSkills(null, false, false).slice(0);
+				if (this == game.me) oSkills = oSkills.concat(this.hiddenSkills);
+				if (oSkills.length) {
+					oSkills.forEach(skillName => {
+						const translation = lib.translate[skillName];
+						if (translation && lib.translate[skillName + "_info"] && translation !== "" && lib.translate[skillName + "_info"] !== "") {
+							const isAwakened = !this.getSkills().includes(skillName) || this.awakenedSkills.includes(skillName);
+							const skillDiv = ui.create.div(".xskill", `<div data-color>${isAwakened ? '<span style="opacity:0.5">' + translation + "： </span>" : translation + "： "}</div><div>${isAwakened ? '<span style="opacity:0.5;text-indent:10px">' + get.skillInfoTranslation(skillName, this) + "</span>" : '<span style="text-indent:10px">' + get.skillInfoTranslation(skillName, this) + "</span>"}</div>`, rightPane.firstChild);
+							// 自动发动
+							if (lib.skill[skillName].frequent || lib.skill[skillName].subfrequent) {
+								const underlinenode = ui.create.div(".underlinenode on gray", `【${translation}】自动发动`, rightPane.firstChild);
+								underlinenode.style.position = "relative";
+								underlinenode.style.paddingLeft = "0";
+								underlinenode.style.paddingBottom = "3px";
+								if (lib.skill[skillName].frequent && lib.config.autoskilllist.includes(skillName)) {
+									underlinenode.classList.remove("on");
+								}
+								if (lib.skill[skillName].subfrequent) {
+									lib.skill[skillName].subfrequent.forEach(sub => {
+										if (lib.config.autoskilllist.includes(`${skillName}_${sub}`)) {
 											underlinenode.classList.remove("on");
 										}
-									}
-									if (lib.skill[name].subfrequent) {
-										for (var j = 0; j < lib.skill[name].subfrequent.length; j++) {
-											if (lib.config.autoskilllist.includes(name + "_" + lib.skill[name].subfrequent[j])) {
-												underlinenode.classList.remove("on");
-											}
-										}
-									}
-									if (lib.config.autoskilllist.includes(name)) {
-										underlinenode.classList.remove("on");
-									}
-									underlinenode.link = name;
-									underlinenode.listen(ui.click.autoskill2);
-								}
-							}
-						});
-					}
-
-					var hSkills = player.getCards("h");
-					if (hSkills.length) {
-						var allShown = player.isUnderControl() || (!game.observe && game.me?.hasSkillTag("viewHandcard", null, player, true));
-						var shownHs = player.getShownCards();
-						if (shownHs.length) {
-							ui.create.div(".xcaption", player.hasCard(card => !shownHs.includes(card), "h") ? "明置的手牌" : "手牌区域", rightPane.firstChild);
-							shownHs.forEach(function (item) {
-								var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
-								card.style.zoom = "0.6";
-								rightPane.firstChild.appendChild(card);
-							});
-							if (allShown) {
-								var hs = hSkills.slice();
-								hs.removeArray(shownHs);
-								if (hs.length) {
-									ui.create.div(".xcaption", "其他手牌", rightPane.firstChild);
-									hs.forEach(function (item) {
-										var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
-										card.style.zoom = "0.6";
-										rightPane.firstChild.appendChild(card);
 									});
 								}
+								if (lib.config.autoskilllist.includes(skillName)) {
+									underlinenode.classList.remove("on");
+								}
+								underlinenode.link = skillName;
+								underlinenode.listen(ui.click.autoskill2);
 							}
-						} else if (allShown) {
-							ui.create.div(".xcaption", "手牌区域", rightPane.firstChild);
-							hSkills.forEach(function (item) {
-								var card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
-								card.style.zoom = "0.6";
-								rightPane.firstChild.appendChild(card);
-							});
 						}
-					}
-
-					var eSkills = player.getCards("e");
-					if (eSkills.length) {
-						ui.create.div(".xcaption", "装备区域", rightPane.firstChild);
-						eSkills.forEach(function (card) {
-							const cards = card.cards;
-							let str = [get.translation(card), get.translation(card.name + "_info")];
-							if (Array.isArray(cards) && cards.length) str[0] += "（" + get.translation(card.cards) + "）";
-							if (lib.card[card.name]?.cardPrompt) str[1] = lib.card[card.name].cardPrompt(card, player);
-							ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
+					});
+				}
+				// 手牌区
+				const hSkills = this.getCards("h");
+				if (hSkills.length) {
+					const allShown = this.isUnderControl() || (!game.observe && game.me?.hasSkillTag("viewHandcard", null, this, true));
+					const shownHs = this.getShownCards();
+					if (shownHs.length) {
+						ui.create.div(".xcaption", this.hasCard(card => !shownHs.includes(card), "h") ? "明置的手牌" : "手牌区域", rightPane.firstChild);
+						shownHs.forEach(item => {
+							const card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
+							card.style.zoom = "0.6";
+							rightPane.firstChild.appendChild(card);
+						});
+						if (allShown) {
+							const hs = hSkills.slice();
+							hs.removeArray(shownHs);
+							if (hs.length) {
+								ui.create.div(".xcaption", "其他手牌", rightPane.firstChild);
+								hs.forEach(item => {
+									const card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
+									card.style.zoom = "0.6";
+									rightPane.firstChild.appendChild(card);
+								});
+							}
+						}
+					} else if (allShown) {
+						ui.create.div(".xcaption", "手牌区域", rightPane.firstChild);
+						hSkills.forEach(item => {
+							const card = game.createCard(get.name(item, false), get.suit(item, false), get.number(item, false), get.nature(item, false));
+							card.style.zoom = "0.6";
+							rightPane.firstChild.appendChild(card);
 						});
 					}
-
-					var judges = player.getCards("j");
-					if (judges.length) {
-						ui.create.div(".xcaption", "判定区域", rightPane.firstChild);
-						judges.forEach(function (card) {
-							const cards = card.cards;
-							let str = [get.translation(card), get.translation(card.name + "_info")];
-							if ((Array.isArray(cards) && cards.length && !lib.card[card]?.blankCard) || player.isUnderControl(true)) str[0] += "（" + get.translation(cards) + "）";
-							ui.create.div(".xskill", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
-						});
-					}
-
-					container.classList.remove("hidden");
-					game.pause2();
-				};
+				}
+				// 装备区
+				const eSkills = this.getCards("e");
+				if (eSkills.length) {
+					ui.create.div(".xcaption", "装备区域", rightPane.firstChild);
+					eSkills.forEach(card => {
+						const cards = card.cards;
+						let str = [get.translation(card), get.translation(card.name + "_info")];
+						if (Array.isArray(cards) && cards.length) str[0] += `（${get.translation(card.cards)}）`;
+						if (lib.card[card.name]?.cardPrompt) str[1] = lib.card[card.name].cardPrompt(card, this);
+						ui.create.div(".xskill", `<div data-color>${str[0]}</div><div>${str[1]}</div>`, rightPane.firstChild);
+					});
+				}
+				// 判定区
+				const judges = this.getCards("j");
+				if (judges.length) {
+					ui.create.div(".xcaption", "判定区域", rightPane.firstChild);
+					judges.forEach(card => {
+						const cards = card.cards;
+						let str = [get.translation(card), get.translation(card.name + "_info")];
+						if ((Array.isArray(cards) && cards.length && !lib.card[card]?.blankCard) || this.isUnderControl(true)) str[0] += `（${get.translation(cards)}）`;
+						ui.create.div(".xskill", `<div data-color>${str[0]}</div><div>${str[1]}</div>`, rightPane.firstChild);
+					});
+				}
+				container.classList.remove("hidden");
+				if (!lib.config["extension_十周年UI_viewInformationPause"]) game.pause2();
 				plugin.characterDialog = container;
-				container.show(this);
 			},
 		},
 	};

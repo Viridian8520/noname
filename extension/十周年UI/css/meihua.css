@@ -1,0 +1,52 @@
+.handdisplays {
+	background-color: rgba(3, 3, 3, 0.5);
+	width: 35px;
+	height: 90px;
+	left: -45px;
+	bottom: 0;
+	overflow: scroll;
+	opacity: 1;
+}
+
+.handdisplays .handcard {
+	position: relative;
+	margin-top: 5px;
+	text-align: center;
+	width: 100%;
+	font-weight: 700;
+	overflow: scroll;
+	color: rgb(216, 203, 87);
+	font-family: "yuanli";
+	font-size: 13px;
+}
+
+.baby_skill {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 10px;
+	overflow-x: visible;
+	overflow-y: visible;
+	z-index: 9999;
+	background: rgba(0, 0, 0, 0.1);
+	padding: 2px 2px 2px 2px;
+	box-sizing: border-box;
+}
+
+.baby_skill_box {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	font-family: "yuanli";
+	font-size: 15px;
+	color: #fff;
+	background: url("../shoushaUI/skill/babysha/btnnhs3.png");
+	background-size: 100% 100%;
+	border-radius: 4px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+	padding: 6px 2px;
+	min-width: 60px;
+	height: 20px;
+	margin: 0;
+}

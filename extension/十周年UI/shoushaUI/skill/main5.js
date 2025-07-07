@@ -6,6 +6,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 		content(next) {},
 		precontent() {
+			this.initCreateMethods();
+			this.initUpdateMethods();
+			this.initRewrites();
+			this.initVideoContent();
+			ui.skillControlArea = ui.create.div();
+		},
+		initCreateMethods() {
 			Object.assign(ui.create, {
 				skills(skills) {
 					ui.skills = plugin.createSkills(skills, ui.skills);
@@ -24,30 +31,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 				skillControl(clear) {
 					if (!ui.skillControl) {
-						//左手模式添加新的技能按钮位置css
-						if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-							var node = ui.create.div(".skill-control", ui.arena);
-							node.node = {
-								enable: ui.create.div(".enable", node),
-								trigger: ui.create.div(".trigger", node),
-							};
-							for (var i in plugin.controlElement) {
-								node[i] = plugin.controlElement[i];
-							}
-							ui.skillControl = node;
-							//开始复制一遍
-						} else {
-							var node = ui.create.div(".skill-controlzuoshou", ui.arena);
-							node.node = {
-								enable: ui.create.div(".enable", node),
-								trigger: ui.create.div(".trigger", node),
-							};
-							for (var i in plugin.controlElement) {
-								node[i] = plugin.controlElement[i];
-							}
-							ui.skillControl = node;
-						}
-						//结束
+						ui.skillControl = plugin.createSkillControl();
 					}
 					if (clear) {
 						ui.skillControl.node.enable.innerHTML = "";
@@ -56,88 +40,94 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					return ui.skillControl;
 				},
 			});
+		},
+		createSkillControl() {
+			const isRightLayout = lib.config["extension_十周年UI_rightLayout"] == "on";
+			const className = isRightLayout ? ".skill-control" : ".skill-controlzuoshou";
+
+			const node = ui.create.div(className, ui.arena);
+			node.node = {
+				enable: ui.create.div(".enable", node),
+				trigger: ui.create.div(".trigger", node),
+			};
+
+			for (const key in plugin.controlElement) {
+				node[key] = plugin.controlElement[key];
+			}
+
+			return node;
+		},
+		initUpdateMethods() {
 			Object.assign(ui, {
 				updateSkillControl(player, clear) {
-					var eSkills = player.getSkills("e", true, false).slice(0);
-					var skills = app.get.playerSkills(player, true); /*国战隐匿技能*/
+					const eSkills = player.getSkills("e", true, false).slice(0);
+					let skills = player.getSkills("invisible", null, false);
+					let gSkills = null;
+
 					if (ui.skills2 && ui.skills2.skills.length) {
-						var gSkills = ui.skills2.skills;
+						gSkills = ui.skills2.skills;
 					}
 
-					for (var i = 0; i < skills.length; i++) {
-						var info = get.info(skills[i]);
-						if (info && info.nopop && !skills[i].startsWith("olhedao_tianshu_")) skills.splice(i--, 1);
-					}
+					skills = skills.filter(skill => {
+						const info = get.info(skill);
+						return !info || !info.nopop || skill.startsWith("olhedao_tianshu_");
+					});
 
-					var iSkills = player.invisibleSkills.slice(0);
+					const iSkills = player.invisibleSkills.slice(0);
 					game.expandSkills(iSkills);
 					skills.addArray(
-						iSkills.filter(function (skill) {
-							var info = get.info(skill);
+						iSkills.filter(skill => {
+							const info = get.info(skill);
 							return info && info.enable;
 						})
 					);
 
 					if (player === game.me) {
-						var skillControl = ui.create.skillControl(clear);
+						const skillControl = ui.create.skillControl(clear);
 						skillControl.add(skills, eSkills);
 						if (gSkills) skillControl.add(gSkills);
 						skillControl.update();
 						game.addVideo("updateSkillControl", player, clear);
 					}
 
-					var juexingji = {};
-					var xiandingji = {};
-					app.get.playerSkills(player).forEach(function (skill) {
-						var info = get.info(skill);
-						if (!info) return;
-						if (get.is.zhuanhuanji(skill, player) || info.limited || (info.intro && info.intro.content === "limited")) {
-							xiandingji[skill] = player.awakenedSkills.includes(skill);
-						}
-						if (info.juexingji || info.dutySkill) juexingji[skill] = player.awakenedSkills.includes(skill);
-					});
+					const { xiandingji, juexingji } = plugin.processSkillMarks(player);
 					plugin.updateSkillMarks(player, xiandingji, juexingji);
 				},
 			});
+		},
+		processSkillMarks(player) {
+			const xiandingji = {};
+			const juexingji = {};
 
-			app.reWriteFunction(lib.element.player, {
-				addSkill: [
-					null,
-					function () {
-						ui.updateSkillControl(this);
-					},
-				],
-				removeSkill: [
-					null,
-					function () {
-						ui.updateSkillControl(this, true);
-					},
-				],
-				addSkillTrigger: [
-					null,
-					function () {
-						ui.updateSkillControl(this);
-					},
-				],
-				removeSkillTrigger: [
-					null,
-					function () {
-						ui.updateSkillControl(this, true);
-					},
-				],
-				awakenSkill: [
-					null,
-					function () {
-						ui.updateSkillControl(this);
-					},
-				],
-				restoreSkill: [
-					null,
-					function () {
-						ui.updateSkillControl(this);
-					},
-				],
+			player.getSkills("invisible", null, false).forEach(function (skill) {
+				const info = get.info(skill);
+				if (!info) return;
+
+				if (get.is.zhuanhuanji(skill, player) || info.limited || (info.intro && info.intro.content === "limited")) {
+					xiandingji[skill] = player.awakenedSkills.includes(skill);
+				}
+
+				if (info.juexingji || info.dutySkill) {
+					juexingji[skill] = player.awakenedSkills.includes(skill);
+				}
 			});
+
+			return { xiandingji, juexingji };
+		},
+		initRewrites() {
+			const playerMethods = ["addSkill", "removeSkill", "addSkillTrigger", "removeSkillTrigger", "awakenSkill", "restoreSkill"];
+
+			playerMethods.forEach(method => {
+				app.reWriteFunction(lib.element.player, {
+					[method]: [
+						null,
+						function () {
+							ui.updateSkillControl(this, method.includes("remove"));
+						},
+					],
+				});
+			});
+
 			app.reWriteFunction(lib.element.control, {
 				close: [
 					null,
@@ -174,173 +164,208 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
+		},
+		initVideoContent() {
 			Object.assign(game.videoContent, {
 				updateSkillControl(player, clear) {
 					ui.updateSkillControl(player, clear);
 				},
 			});
-			ui.skillControlArea = ui.create.div();
 		},
 		controlElement: {
 			add(skill, eSkills) {
 				if (Array.isArray(skill)) {
-					var node = this;
-					skill.forEach(function (item) {
-						node.add(item, eSkills);
-					});
+					skill.forEach(item => this.add(item, eSkills));
 					return this;
 				}
 
-				var self = this;
-				var skills = game.expandSkills([skill]).map(function (item) {
-					return app.get.skillInfo(item);
+				const skills = game.expandSkills([skill]).map(item => app.get.skillInfo(item));
+				const enableSkills = this.getEnableSkills(skills);
+				const showSkills = enableSkills.length ? enableSkills : skills;
+
+				showSkills.forEach(item => {
+					if (this.hasExistingNode(item.id)) return;
+
+					if (item.type === "enable") {
+						this.createEnableSkillNode(item);
+					} else {
+						this.createTriggerSkillNode(item, eSkills);
+					}
 				});
-				var hasSame = false;
-				var enableSkills = skills.filter(function (item) {
+
+				return this;
+			},
+			getEnableSkills(skills) {
+				let hasSame = false;
+				const enableSkills = skills.filter(item => {
 					if (item.type !== "enable") return false;
 					if (item.name === skills[0].name) hasSame = true;
 					return true;
 				});
 
 				if (!hasSame) enableSkills.unshift(skills[0]);
-				var showSkills = enableSkills.length ? enableSkills : skills;
-				showSkills.forEach(function (item) {
-					var node = self.querySelector('[data-id="' + item.id + '"]');
-					if (node) return;
-					if (item.type === "enable") {
-						let skillName = get.translation(item.name);
-						// 如果是装备技能，只显示前两个字符
-						if (eSkills && eSkills.includes(item.id)) {
-							skillName = skillName.slice(0, 2);
-						}
-						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable, skillName);
-						node.dataset.id = item.id;
-						node.addEventListener("click", function () {
-							game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
-						});
-						app.listen(node, plugin.clickSkill);
-						return;
-					}
-					if (!item.info) return;
-					if (!item.translation) return;
-					if (eSkills && eSkills.includes(item.id)) return;
-					node = ui.create.div(".skillitem", self.node[get.is.phoneLayout() ? "trigger" : "enable"], item.name);
-					node.dataset.id = item.id;
+				return enableSkills;
+			},
+			hasExistingNode(skillId) {
+				return this.querySelector(`[data-id="${skillId}"]`);
+			},
+			createEnableSkillNode(item) {
+				const skillName = get.translation(item.name).slice(0, 2);
+				const className = lib.skill[item.id].limited ? ".xiandingji" : ".skillitem";
+				const node = ui.create.div(className, this.node.enable, skillName);
+
+				node.dataset.id = item.id;
+				node.addEventListener("click", () => {
+					game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
 				});
-				return this;
+				app.listen(node, plugin.clickSkill);
+			},
+			createTriggerSkillNode(item, eSkills) {
+				if (!item.info || !item.translation) return;
+				if (eSkills && eSkills.includes(item.id)) return;
+
+				const skillName = get.translation(item.name).slice(0, 2);
+				const targetNode = lib.config.phonelayout ? this.node.trigger : this.node.enable;
+				const node = ui.create.div(".skillitem", targetNode, skillName);
+
+				node.dataset.id = item.id;
 			},
 			update() {
-				var skills = [];
+				const skills = this.getAllSkills();
+				this.updateSkillNodes(skills);
+				this.updateSkillLevel();
+			},
+			getAllSkills() {
+				const skills = [];
 				if (ui.skills) skills.addArray(ui.skills.skills);
 				if (ui.skills2) skills.addArray(ui.skills2.skills);
 				if (ui.skills3) skills.addArray(ui.skills3.skills);
+				return skills;
+			},
+			updateSkillNodes(skills) {
+				Array.from(this.node.enable.childNodes).forEach(item => {
+					const isUsable = skills.includes(item.dataset.id);
+					const isSelected = _status.event.skill === item.dataset.id;
 
-				Array.from(this.node.enable.childNodes).forEach(function (item) {
-					if (skills.includes(item.dataset.id)) {
-						item.classList.add("usable");
-					} else {
-						item.classList.remove("usable");
-					}
-
-					if (_status.event.skill === item.dataset.id) {
-						item.classList.add("select");
-					} else {
-						item.classList.remove("select");
-					}
+					item.classList.toggle("usable", isUsable);
+					item.classList.toggle("select", isSelected);
 				});
+			},
+			updateSkillLevel() {
+				const triggerCount = this.node.trigger.childNodes.length;
+				const enableCount = this.node.enable.childNodes.length;
 
-				var level1 = Math.min(4, this.node.trigger.childNodes.length);
-				var level2 = this.node.enable.childNodes.length > 2 ? 4 : this.node.enable.childNodes.length > 0 ? 2 : 0;
-				var level = Math.max(level1, level2);
+				const level1 = Math.min(4, triggerCount);
+				const level2 = enableCount > 2 ? 4 : enableCount > 0 ? 2 : 0;
+				const level = Math.max(level1, level2);
+
 				ui.arena.dataset.sclevel = level;
 			},
 		},
 		checkSkill(skill) {
-			var info = lib.skill[skill];
+			const info = lib.skill[skill];
 			if (!info) return -1;
-			if (info.enable) return 1;
-			return 0;
+			return info.enable ? 1 : 0;
 		},
 		clickSkill(e) {
 			if (this.classList.contains("usable")) {
-				var skill = this.dataset.id;
-				var item = ui.skillControlArea.querySelector('[data-id="' + skill + '"]');
+				const skill = this.dataset.id;
+				const item = ui.skillControlArea.querySelector(`[data-id="${skill}"]`);
 				item && app.mockTouch(item);
 			}
 		},
 		createSkills(skills, node) {
-			var same = true;
+			if (this.isSameSkills(skills, node)) {
+				return node;
+			}
+
 			if (node) {
-				if (skills && skills.length) {
-					for (var i = 0; i < node.skills.length; i++) {
-						if (node.skills[i] !== skills[i]) {
-							same = false;
-							break;
-						}
-					}
-				}
-				if (same) return node;
 				node.close();
 				node.delete();
 			}
-			if (!skills && !skills.length) return;
 
-			node = ui.create.div(".control.skillControl", ui.skillControlArea);
-			Object.assign(node, lib.element.control);
-			skills.forEach(function (skill) {
-				var item = ui.create.div(node);
+			if (!skills || !skills.length) return;
+
+			const newNode = ui.create.div(".control.skillControl", ui.skillControlArea);
+			Object.assign(newNode, lib.element.control);
+
+			skills.forEach(skill => {
+				const item = ui.create.div(newNode);
 				item.link = skill;
 				item.dataset.id = skill;
 				item.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
 			});
-			node.skills = skills;
-			node.custom = ui.click.skill;
-			return node;
+
+			newNode.skills = skills;
+			newNode.custom = ui.click.skill;
+			return newNode;
 		},
-		updateSkillMarks(player, skills1, skills2) {
-			var node = player.node.xSkillMarks;
+		isSameSkills(skills, node) {
+			if (!node) return false;
+
+			if (!skills || !skills.length) return true;
+
+			for (let i = 0; i < node.skills.length; i++) {
+				if (node.skills[i] !== skills[i]) {
+					return false;
+				}
+			}
+			return true;
+		},
+		updateSkillMarks(player, xiandingji, juexingji) {
+			let node = player.node.xSkillMarks;
 			if (!node) {
 				node = player.node.xSkillMarks = ui.create.div(".skillMarks", player);
 			}
 
-			Array.from(node.childNodes).forEach(function (item) {
-				if (skills1.hasOwnProperty(item.dataset.id)) return;
-				if (skills2[item.dataset.id]) return;
+			this.cleanupSkillMarks(node, xiandingji, juexingji);
+			this.createSkillMarks(node, xiandingji, juexingji);
+		},
+		cleanupSkillMarks(node, xiandingji, juexingji) {
+			Array.from(node.childNodes).forEach(item => {
+				if (xiandingji.hasOwnProperty(item.dataset.id)) return;
+				if (juexingji[item.dataset.id]) return;
 				item.remove();
 			});
-			//使限定技和转换技显示不同的样式
-			for (var k in skills1) {
-				var info = lib.skill[k];
-				var item = node.querySelector('[data-id="' + k + '"]');
-				if (!item) {
-					if (!info.zhuanhuanji) item = ui.create.div(".skillMarkItem.xiandingji", node, "");
-					else item = ui.create.div(".skillMarkItem.zhuanhuanji", node, "");
-					//如果不是转换技就调用限定技的标记
-				}
-				if (skills1[k]) item.classList.add("used");
-				else item.classList.remove("used");
-				item.dataset.id = k;
-			}
-			//这里结束3}
-			Array.from(node.querySelectorAll(".juexingji")).forEach(function (item) {
-				if (!skills2[item.dataset.id]) {
+
+			Array.from(node.querySelectorAll(".juexingji")).forEach(item => {
+				if (!juexingji[item.dataset.id]) {
 					item.remove();
 				}
 			});
-			//使觉醒技和使命技不同
-			for (var k in skills2) {
-				if (!skills2[k]) continue;
-				var info = lib.skill[k];
-				if (node.querySelector('[data-id="' + k + '"]')) continue;
-				var item;
-				if (info.dutySkill) {
-					item = ui.create.div(".skillMarkItem.duty", node, "");
-				} else item = ui.create.div(".skillMarkItem.juexingji", node, "");
-				item.dataset.id = k;
+		},
+		createSkillMarks(node, xiandingji, juexingji) {
+			for (const skillId in xiandingji) {
+				const info = lib.skill[skillId];
+				let item = node.querySelector(`[data-id="${skillId}"]`);
+
+				if (!item) {
+					const className = info.zhuanhuanji ? ".skillMarkItem.zhuanhuanji" : ".skillMarkItem.xiandingji";
+					item = ui.create.div(className, node, "");
+				}
+
+				item.classList.toggle("used", xiandingji[skillId]);
+				item.dataset.id = skillId;
+			}
+
+			for (const skillId in juexingji) {
+				if (!juexingji[skillId]) continue;
+
+				const info = lib.skill[skillId];
+				if (node.querySelector(`[data-id="${skillId}"]`)) continue;
+
+				const className = info.dutySkill ? ".skillMarkItem.duty" : ".skillMarkItem.juexingji";
+				const item = ui.create.div(className, node, "");
+				item.dataset.id = skillId;
 			}
 		},
 		recontent() {
+			this.initDialogRewrites();
+			this.initPlayerRewrites();
+			this.initConfigRewrites();
+			this.initEventListeners();
+		},
+		initDialogRewrites() {
 			app.reWriteFunction(ui.create, {
 				dialog: [
 					null,
@@ -372,18 +397,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
+		},
+		initPlayerRewrites() {
 			app.reWriteFunction(lib.element.player, {
 				markSkill: [
 					function (args, name) {
-						var info = lib.skill[name];
+						const info = lib.skill[name];
 						if (!info) return;
 						if (info.limited) return this;
 						if (info.intro && info.intro.content === "limited") return this;
 					},
 				],
 			});
-
+		},
+		initConfigRewrites() {
 			app.reWriteFunction(lib.configMenu.appearence.config, {
 				update: [
 					null,
@@ -392,7 +419,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
+		},
+		initEventListeners() {
 			app.on("playerUpdateE", function (player) {
 				plugin.updateMark(player);
 			});
@@ -404,50 +432,40 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 				setName(name) {
 					name = get.translation(name) || name;
-					if (!name || !name.trim()) {
-						this.classList.add("unshow");
-						this.node.name.innerHTML = "";
-					} else {
-						this.classList.remove("unshow");
-						this.node.name.innerHTML = get.translation(name) || name;
-					}
+					const hasName = name && name.trim();
+
+					this.classList.toggle("unshow", !hasName);
+					this.node.name.innerHTML = hasName || "";
 					return this;
 				},
 				setCount(count) {
-					if (typeof count === "number") {
-						this.node.count.innerHTML = count;
-						this.node.count.classList.remove("unshow");
-					} else {
-						this.node.count.innerHTML = "";
-						this.node.count.classList.add("unshow");
-					}
+					const hasCount = typeof count === "number";
+
+					this.node.count.innerHTML = hasCount ? count : "";
+					this.node.count.classList.toggle("unshow", !hasCount);
 					return this;
 				},
 				setExtra(extra) {
-					var str = "";
-
 					if (!Array.isArray(extra)) extra = [extra];
-					extra.forEach(function (item) {
-						if (!item || typeof item !== "string") return this;
-						if (item.indexOf("#") === 0) {
-							item = item.substr(1);
-							str += "<br>";
-						}
-						str += "<div>" + item + "</div>";
-					});
 
-					if (str) {
-						this.node.extra.classList.remove("unshow");
-						this.node.extra.innerHTML = str;
-					} else if (!this._characterMark) {
-						this.node.extra.innerHTML = "";
-						this.node.extra.classList.add("unshow");
-					}
+					const str = extra
+						.filter(item => item && typeof item === "string")
+						.map(item => {
+							if (item.startsWith("#")) {
+								return "<br><div>" + item.substr(1) + "</div>";
+							}
+							return "<div>" + item + "</div>";
+						})
+						.join("");
+
+					this.node.extra.classList.toggle("unshow", !str);
+					this.node.extra.innerHTML = str || "";
 					return this;
 				},
 				setBackground(name, type) {
-					var skill = lib.skill[this.name];
+					const skill = lib.skill[this.name];
 					if (skill && skill.intro && skill.intro.markExtra) return this;
+
 					if (type === "character") {
 						name = get.translation(name) || name;
 						this._characterMark = true;
@@ -456,12 +474,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					return this;
 				},
 				_customintro(uiintro) {
-					var node = this;
-					var info = node.info;
-					var player = node.parentNode.parentNode;
+					const node = this;
+					const info = node.info;
+					const player = node.parentNode.parentNode;
+
 					if (info.name) {
-						if (typeof info.name == "function") {
-							var named = info.name(player.storage[node.skill], player);
+						if (typeof info.name === "function") {
+							const named = info.name(player.storage[node.skill], player);
 							if (named) {
 								uiintro.add(named);
 							}
@@ -472,27 +491,28 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						uiintro.add(get.translation(node.skill));
 					}
 
-					if (typeof info.mark == "function") {
-						var stint = info.mark(uiintro, player.storage[node.skill], player);
+					if (typeof info.mark === "function") {
+						const stint = info.mark(uiintro, player.storage[node.skill], player);
 						if (stint) {
-							var placetext = uiintro.add('<div class="text" style="display:inline">' + stint + "</div>");
-							if (stint.indexOf('<div class="skill"') != 0) {
+							const placetext = uiintro.add(`<div class="text" style="display:inline">${stint}</div>`);
+							if (!stint.startsWith('<div class="skill"')) {
 								uiintro._place_text = placetext;
 							}
 						}
 					} else {
-						var stint = get.storageintro(info.content, player.storage[node.skill], player, uiintro, node.skill);
+						const stint = get.storageintro(info.content, player.storage[node.skill], player, uiintro, node.skill);
 						if (stint) {
-							if (stint[0] == "@") {
-								uiintro.add('<div class="caption">' + stint.slice(1) + "</div>");
+							if (stint.startsWith("@")) {
+								uiintro.add(`<div class="caption">${stint.slice(1)}</div>`);
 							} else {
-								var placetext = uiintro.add('<div class="text" style="display:inline">' + stint + "</div>");
-								if (stint.indexOf('<div class="skill"') != 0) {
+								const placetext = uiintro.add(`<div class="text" style="display:inline">${stint}</div>`);
+								if (!stint.startsWith('<div class="skill"')) {
 									uiintro._place_text = placetext;
 								}
 							}
 						}
 					}
+
 					uiintro.add(ui.create.div(".placeholder.slim"));
 				},
 			},
@@ -501,10 +521,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			mark(e) {
 				e.stopPropagation();
 				delete this._waitingfordrag;
-				if (_status.dragged) return;
-				if (_status.clicked) return;
-				if (ui.intro) return;
-				var rect = this.getBoundingClientRect();
+
+				if (_status.dragged || _status.clicked || ui.intro) return;
+
+				const rect = this.getBoundingClientRect();
 				ui.click.touchpop();
 				ui.click.intro.call(this, {
 					clientX: rect.left + 18,
@@ -514,9 +534,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 		},
 		updateMark(player) {
-			var eh = player.node.equips.childNodes.length * 22;
-			var bv = Math.max(88, eh) * 0.8 + 1.6;
-			player.node.marks.style.bottom = bv + "px";
+			const equipHeight = player.node.equips.childNodes.length * 22;
+			const bottomValue = Math.max(88, equipHeight) * 0.8 + 1.6;
+			player.node.marks.style.bottom = bottomValue + "px";
 		},
 	};
 	return plugin;

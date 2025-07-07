@@ -1,4 +1,4 @@
-.popup-container > .character-dialog {
+.popup-container>.character-dialog {
 	top: calc(50% - var(--h) / 2 + var(--bt));
 	left: calc(50% - var(--w) / 2 + var(--bl));
 }
@@ -21,7 +21,7 @@
 	z-index: 13;
 }
 
-.character-dialog > .blackBg {
+.character-dialog>.blackBg {
 	padding: 10px 25px;
 	position: relative;
 	width: 100%;
@@ -46,7 +46,7 @@
 	background-size: 100% 100%;
 }
 
-.character-dialog > div {
+.character-dialog>div {
 	top: 0;
 	height: 100%;
 	position: absolute;
@@ -54,7 +54,7 @@
 
 /*第一页武将头像和边框*/
 /*武将框*/
-.character-dialog > .blackBg.one > div.biankuang3 {
+.character-dialog>.blackBg.one>div.biankuang3 {
 	width: 25px;
 	height: 185px;
 	top: 32px;
@@ -71,7 +71,7 @@
 	visibility: visible;
 }
 
-.character-dialog > .blackBg.one > div.biankuang3::before {
+.character-dialog>.blackBg.one>div.biankuang3::before {
 	content: "";
 	position: absolute;
 	top: 0;
@@ -85,7 +85,7 @@
 }
 
 /*武将*/
-.character-dialog > .blackBg.one > div.biankuang2 {
+.character-dialog>.blackBg.one>div.biankuang2 {
 	width: 175px;
 	height: 190px;
 	top: 30px;
@@ -119,17 +119,31 @@
 }
 
 /*武将名字*/
-.character-dialog > .name {
+.character-dialog>.name {
 	position: absolute;
-	width: 15px;
+	width: 24px;
+	height: 135px;
+	/* 新增固定高度 */
 	left: 28px;
+	overflow-y: auto;
+	/* 改为垂直滚动 */
+	overflow-x: hidden;
+	/* 隐藏水平滚动 */
 	top: 68px;
 	font-size: 24px;
 	font-family: shousha;
 	z-index: 99;
 	color: #ffffff;
-	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-	/* 模拟黑色描边 */
+	text-shadow:
+		-1px -1px 0 #000,
+		1px -1px 0 #000,
+		-1px 1px 0 #000,
+		1px 1px 0 #000;
+	/* 黑色描边 */
+	line-height: 24px;
+	/* 确保行高匹配字体大小 */
+	white-space: normal;
+	/* 允许多行显示 */
 }
 
 .sjright {
@@ -310,6 +324,7 @@
 
 /* 文字闪烁动画 */
 @keyframes alternateImages {
+
 	0%,
 	49.9%,
 	99.9% {
@@ -790,7 +805,7 @@
 }
 
 /*武将牌不露头*/
-.character-dialog .biankuang2 > div.left2 {
+.character-dialog .biankuang2>div.left2 {
 	left: 19%;
 	top: auto;
 	bottom: 2%;
@@ -822,7 +837,7 @@
 	/* background-color: #fefefe6b; */
 }
 
-.character-dialog > div.left > div {
+.character-dialog>div.left>div {
 	top: 65%;
 	right: 30px;
 	width: 210px;
@@ -832,12 +847,12 @@
 	white-space: nowrap;
 }
 
-.character-dialog.single > div.left > div {
+.character-dialog.single>div.left>div {
 	width: 105px;
 	position: absolute;
 }
 
-.character-dialog div.right > div {
+.character-dialog div.right>div {
 	position: absolute !important;
 	top: 0;
 	left: 0;
@@ -874,7 +889,7 @@
 }
 
 /*技能描述*/
-.character-dialog div.right .xskill > div {
+.character-dialog div.right .xskill>div {
 	/* display: inline;*/
 	display: block;
 	/* 元素独占一行 */
@@ -886,7 +901,7 @@
 }
 
 /*装备描述*/
-.character-dialog div.right .xskillx > div {
+.character-dialog div.right .xskillx>div {
 	/* display: inline;*/
 	display: block;
 	/* 元素独占一行 */
@@ -897,7 +912,7 @@
 	font-family: "shousha";
 }
 
-.character-dialog div.right .xskill > div[data-color] {
+.character-dialog div.right .xskill>div[data-color] {
 	display: inline-block;
 	color: #f7d229;
 	padding: 2px 2px;
@@ -926,7 +941,7 @@
 }
 
 /*装备框*/
-.character-dialog div.right .xskillx > div[data-color] {
+.character-dialog div.right .xskillx>div[data-color] {
 	display: inline-block;
 	text-align: center;
 	font-size: 20px;
@@ -936,7 +951,7 @@
 }
 
 /*主被动*/
-.character-dialog div.right > div > div.xskill > span.skill-type-tag {
+.character-dialog div.right>div>div.xskill>span.skill-type-tag {
 	position: relative;
 	/*相对定位*/
 	color: #f7d229;
@@ -948,23 +963,23 @@
 	text-shadow: none;
 }
 
-.character-dialog div.right .xskill > div[data-color="red"] {
+.character-dialog div.right .xskill>div[data-color="red"] {
 	color: #f7d229;
 	text-shadow: none;
 }
 
-.character-dialog div.right .xskill > div[data-color="black"] {
+.character-dialog div.right .xskill>div[data-color="black"] {
 	color: #f7d229;
 	text-shadow: none;
 }
 
 /*技能文本间距*/
-.character-dialog div.right .xskill + .xskill {
+.character-dialog div.right .xskill+.xskill {
 	margin-top: 15px;
 }
 
 /*衍生技*/
-.character-dialog div.right > div > div.xskill > span.yanshengji {
+.character-dialog div.right>div>div.xskill>span.yanshengji {
 	position: relative;
 	/*相对定位*/
 	color: #f7d229;
@@ -976,7 +991,7 @@
 	text-shadow: none;
 }
 
-.character-dialog div.right > div > div.xskill > span.yanshengji::before {
+.character-dialog div.right>div>div.xskill>span.yanshengji::before {
 	content: "";
 	/* 设置图片的路径，需要替换为你实际的图片路径 */
 	background-image: url("./images/OL_line/ysjineg.png");
@@ -994,7 +1009,7 @@
 }
 
 /*衍生技描述*/
-.character-dialog div.right > div > div.xskill > span.yanshengjiinfo {
+.character-dialog div.right>div>div.xskill>span.yanshengjiinfo {
 	display: block;
 	/* 元素独占一行 */
 	width: 90%;

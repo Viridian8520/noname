@@ -11,16 +11,16 @@
 	z-index: 3;
 }
 
-#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #mebg,
-#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #me {
+#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#mebg,
+#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#me {
 	left: 40px !important;
 }
 
-.lbtn-controls ~ #me #handcards1 {
+.lbtn-controls~#me #handcards1 {
 	--lessw: 40px;
 }
 
-.lbtn-controls > div {
+.lbtn-controls>div {
 	display: block;
 	position: relative;
 }
@@ -36,12 +36,12 @@
 	align-items: flex-start;
 	white-space: normal;
 	position: fixed;
-	bottom: calc(100% - 280px);
-	left: calc(100% - 112.5px);
+	bottom: calc(100% - 340px);
+	left: calc(100% - 147px);
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
-.buttonyjcm > .controls {
+.buttonyjcm>.controls {
 	--w: 56px;
 	--h: calc(var(--w) * 55 / 71);
 	width: var(--w);
@@ -124,7 +124,7 @@
 	padding: 0;
 }
 
-.control > div {
+.control>div {
 	background-image: url("./images/uibutton/btnnnor.png");
 	background-size: 100% 100%;
 	line-height: var(--h);
@@ -144,13 +144,13 @@
 }
 
 /*无懈按钮位置*/
-#arena > #dui-controls > .control.stayleft {
+#arena>#dui-controls>.control.stayleft {
 	left: calc(50% - 420px) !important;
 	margin-bottom: 5px !important;
 	order: 3;
 }
 
-.control > div.primary2 {
+.control>div.primary2 {
 	/*取消按钮*/
 	bottom: 1.8px;
 	color: #f5d79e;
@@ -171,7 +171,7 @@
 	transition: none;
 }
 
-.control > div.primary {
+.control>div.primary {
 	/*确认按钮*/
 	color: #f5d79e;
 	font-family: "yuanli";
@@ -190,53 +190,55 @@
 	background-image: url("./images/uibutton/new_btnn.png");
 }
 
-.control > div.disabled:not([data-type="endButton"]) {
+.control>div.disabled:not([data-type="endButton"]) {
 	background-size: 100% 100%;
 }
 
-.control > div.disabled:not([data-type="endButton"]) {
+.control>div.disabled:not([data-type="endButton"]) {
 	/*-webkit-filter: grayscale(100%);*/
 	filter: grayscale(100%);
 	/*-webkit-filter: brightness(100%);*/
 }
 
-.lbtn-confirm[data-skill] > [data-type="skill2"] {
+.lbtn-confirm[data-skill]>[data-type="skill2"] {
 	display: none;
 }
 
 /*------有点懒具体看main1.css---------------*/
 .handcardNumber {
 	bottom: 0px;
-	right: 230px;
+	right: 260px;
 	font-family: "yuanli";
 	text-shadow: #f5d78e 0 0 1px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px;
 	color: #f5d78e;
 	z-index: 1;
 }
 
-.handcardNumber > .cardPicture {
+.handcardNumber>.cardPicture {
 	left: 110px;
 	bottom: 10px;
 	--w: 100px;
 	--h: calc(var(--w) * 92 / 370);
-	/*宽和长*/
 	width: var(--w);
 	height: var(--h);
-	background-image: url("./images/uibutton/new_count5.png");
+	background-image:
+		linear-gradient(135deg, rgba(111, 78, 55, 0.8) 0%, rgba(111, 78, 55, 0.0) 100%),
+		linear-gradient(to right, rgba(36, 31, 31, 0.8), rgba(36, 31, 31, 0.8)),
+		url("./images/uibutton/new_count5.png");
 	background-size: 100% 100%;
 	position: relative;
 	z-index: -1;
 }
 
 /*手牌数参数*/
-.handcardNumber > .cardNumber {
+.handcardNumber>.cardNumber {
 	left: 115px;
 	bottom: 30px;
 	height: 8px;
 	line-height: 25px;
 	text-align: center;
 	color: #fffcf5;
-	font-size: 20px;
+	font-size: 18px;
 	white-space: nowrap;
 	letter-spacing: 0.35px;
 	/*字体间距*/
@@ -250,7 +252,7 @@
 	text-shadow: #b4a993 0.2px 0.2px 0.2px, #b4a993 0.2px -0.2px 0.2px, #b4a993 -0.2px 0.2px 0.2px, #b4a993 -0.2px -0.2px 0.2px;
 }
 
-.cardRoundNumber > .cardPileNumber {
+.cardRoundNumber>.cardPileNumber {
 	left: 20px;
 	top: -15px;
 	--w: 65px;
@@ -264,7 +266,7 @@
 	z-index: 2;
 }
 
-.cardRoundNumber > .cardPileNumber > span {
+.cardRoundNumber>.cardPileNumber>span {
 	left: 12px;
 	/*牌堆数右移，越大越靠右*/
 	top: 6px;
@@ -277,8 +279,8 @@
 	font-size: 18px;
 }
 
-.cardRoundNumber > .roundNumber,
-.cardRoundNumber > .time {
+.cardRoundNumber>.roundNumber,
+.cardRoundNumber>.time {
 	/*游戏时间*/
 	left: 32px;
 	/*牌堆数/时间右移，越大越靠右*/
@@ -291,7 +293,7 @@
 	z-index: 3;
 }
 
-.cardRoundNumber > .time {
+.cardRoundNumber>.time {
 	/*游戏时间*/
 	top: 48px;
 	/*高度*/
@@ -302,7 +304,7 @@
 
 /*托管中图片（）*/
 
-#autonode > div:last-child {
+#autonode>div:last-child {
 	z-index: 10;
 	margin-bottom: -75px !important;
 	left: calc(50% - 440px);
@@ -334,8 +336,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务忠臣*/
@@ -350,8 +352,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务反贼*/
@@ -366,8 +368,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务内奸*/
@@ -382,8 +384,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务地主*/
@@ -398,8 +400,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务农民*/
@@ -414,8 +416,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务虎队*/
@@ -430,8 +432,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务魏国*/
@@ -446,8 +448,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务蜀国*/
@@ -462,8 +464,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务吴国*/
@@ -478,8 +480,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务晋国*/
@@ -494,8 +496,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务野心家*/
@@ -510,8 +512,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务群雄*/
@@ -526,8 +528,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*身份任务未选择*/
@@ -542,8 +544,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*容错选项*/
@@ -558,8 +560,8 @@
 	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	left: calc(100% - 460.5px);
+	bottom: calc(100% - 185px);
 }
 
 /*左手模式*/
@@ -632,7 +634,7 @@
 	z-index: 1;
 }
 
-.handcardNumber1 > .cardPicture {
+.handcardNumber1>.cardPicture {
 	left: 130px;
 	bottom: -6px;
 	--w: 130px;
@@ -648,7 +650,7 @@
 }
 
 /*手牌数参数*/
-.handcardNumber1 > .cardNumber {
+.handcardNumber1>.cardNumber {
 	left: 160px;
 	bottom: 18px;
 	height: 8px;

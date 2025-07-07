@@ -1,15 +1,21 @@
 .lbtn-controls {
 	/*牌序，记录按钮*/
-	--width: 80px; /*按钮宽度*/
-	--height: 58.6px; /*按钮高度*/
-	left: 0; /*左边距，越大越靠右*/
-	bottom: 15%; /*整体上移*/
+	--width: 80px;
+	/*按钮宽度*/
+	--height: 58.6px;
+	/*按钮高度*/
+	left: 0;
+	/*左边距，越大越靠右*/
+	bottom: 15%;
+	/*整体上移*/
 	z-index: 3;
 }
+
 #arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #mebg,
 #arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #me {
 	left: 40px !important;
 }
+
 .lbtn-controls ~ #me #handcards1 {
 	--lessw: 40px;
 }
@@ -18,13 +24,15 @@
 	display: block;
 	position: relative;
 }
+
 /*二级菜单页面*/
 .HOME {
 	--w: 69px;
-	--h: calc(var(--w) * 446 / 81); /*高和长*/
+	--h: calc(var(--w) * 446 / 81);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
-	top: 0%;
+	top: 7%;
 	left: calc(100% - 119px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/HOME.png");
@@ -39,7 +47,7 @@
 	--h: calc(var(--w) * 73 / 71);
 	width: var(--w);
 	height: var(--h);
-	bottom: calc(100% - 373px);
+	bottom: calc(100% - 423px);
 	left: calc(100% - 112.5px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/SZ.png");
@@ -53,7 +61,7 @@
 	--h: calc(var(--w) * 73 / 71);
 	width: var(--w);
 	height: var(--h);
-	bottom: calc(100% - 248px);
+	bottom: calc(100% - 298px);
 	left: calc(100% - 112.5px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/LK.png");
@@ -67,7 +75,7 @@
 	--h: calc(var(--w) * 73 / 71);
 	width: var(--w);
 	height: var(--h);
-	bottom: calc(100% - 310px);
+	bottom: calc(100% - 360px);
 	left: calc(100% - 112.5px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/BJ.png");
@@ -81,7 +89,7 @@
 	--h: calc(var(--w) * 73 / 71);
 	width: var(--w);
 	height: var(--h);
-	bottom: calc(100% - 187px);
+	bottom: calc(100% - 237px);
 	left: calc(100% - 112.5px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/TX.png");
@@ -95,7 +103,7 @@
 	--h: calc(var(--w) * 74 / 71);
 	width: var(--w);
 	height: var(--h);
-	bottom: calc(100% - 126px);
+	bottom: calc(100% - 178px);
 	left: calc(100% - 112.5px);
 	background-size: 100% 100%;
 	background-image: url("images/CD/TG.png");
@@ -195,6 +203,7 @@
 .lbtn-confirm:not(.closing).removing {
 	opacity: 1 !important;
 }
+
 .control {
 	--height: 32px;
 	width: auto !important;
@@ -211,9 +220,12 @@
 	background-image: url("./images/uibutton/btnn2.png");
 	background-size: 100% 100%;
 	line-height: var(--h);
-	padding: 2.6px 15px !important; /*按钮高度+宽度*/
-	min-width: 100px !important; /*限制最小宽度100*/
-	max-height: 50px !important; /*限制最大高度35*/
+	padding: 2.6px 15px !important;
+	/*按钮高度+宽度*/
+	min-width: 100px !important;
+	/*限制最小宽度100*/
+	max-height: 50px !important;
+	/*限制最大高度35*/
 	text-align: center;
 	margin-top: 0px !important;
 	margin-bottom: 18px !important;
@@ -249,9 +261,12 @@
 			#AB9372 1px -1px 1px,
 			#AB9372 -1px 1px 1px,
 			#AB9372 -1px -1px 1px;*/
-	font-size: 25px; /*字体大小*/
-	line-height: 35px; /*建议别调*/
-	padding: 2.6px 25px !important; /*按钮高度+宽度 (前置定位条件:字体大小) 建议别调1  10*/
+	font-size: 25px;
+	/*字体大小*/
+	line-height: 35px;
+	/*建议别调*/
+	padding: 2.6px 25px !important;
+	/*按钮高度+宽度 (前置定位条件:字体大小) 建议别调1  10*/
 	margin-left: 55px !important;
 	margin-right: 0px !important;
 	margin-top: 0px !important;
@@ -261,6 +276,7 @@
 	overflow: visible;
 	transition: none;
 }
+
 .control > div.primary {
 	/*确认按钮*/
 	/*width: 100px;
@@ -273,9 +289,12 @@
 			#F5D78E 1px -1px 1px,
 			#F5D78E -1px 1px 1px,
 			#F5D78E -1px -1px 1px;*/
-	font-size: 25px; /*字体大小*/
-	line-height: 35px; /*建议别调*/
-	padding: 2.6px 25px !important; /*按钮高度+宽度 (前置定位条件:字体大小) 建议别调0 10*/
+	font-size: 25px;
+	/*字体大小*/
+	line-height: 35px;
+	/*建议别调*/
+	padding: 2.6px 25px !important;
+	/*按钮高度+宽度 (前置定位条件:字体大小) 建议别调0 10*/
 	/*margin: 0px 55px !important;*/
 	margin-left: 10px !important;
 	margin-right: 45px !important;
@@ -301,7 +320,7 @@
 /*------有点懒具体看main1.css---------------*/
 .handcardNumber {
 	bottom: 0px;
-	right: 230px;
+	right: 245px;
 	font-family: "yuanli";
 	text-shadow: #f5d78e 0 0 1px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px, black 0 0 2px;
 	color: #f5d78e;
@@ -310,27 +329,25 @@
 
 .handcardNumber > .cardPicture {
 	left: 90px;
-	bottom: -6px;
-	--w: 130px;
-	--h: calc(var(--w) * 92 / 400); /*宽和长*/
-	width: var(--w);
-	height: var(--h);
-	background-image: url("./images/uibutton/count1.png");
+	bottom: 0px;
+	width: 60px;
+	height: 50px;
+	background-image: url("./images/uibutton/countx1.png");
 	background-size: 100% 100%;
 	position: relative;
 	z-index: -1;
 }
+
 /*手牌数参数*/
 .handcardNumber > .cardNumber {
-	left: 138px;
-	bottom: 18px;
+	left: 103px;
+	bottom: 25px;
 	height: 8px;
 	line-height: 29px;
 	text-align: center;
 	color: #fffcf5;
-	font-size: 20px;
+	font-size: 15px;
 	white-space: nowrap;
-	letter-spacing: 0.35px; /*字体间距*/
 }
 
 .cardRoundNumber {
@@ -353,8 +370,10 @@
 	position: relative;
 	z-index: 2;
 }
+
 .cardRoundNumber > .cardPileNumber > span {
-	left: 13px; /*牌堆数右移，越大越靠右*/
+	left: 13px;
+	/*牌堆数右移，越大越靠右*/
 	top: 12px;
 	width: 100%;
 	display: block;
@@ -363,23 +382,29 @@
 	text-align: center;
 	color: #342510;
 	font-size: 15px;
-	font-weight: bold; /*字体加粗*/
+	font-weight: bold;
+	/*字体加粗*/
 }
+
 .cardRoundNumber > .roundNumber,
 .cardRoundNumber > .time {
 	/*游戏时间*/
-	left: 10px; /*牌堆数/时间右移，越大越靠右*/
+	left: 10px;
+	/*牌堆数/时间右移，越大越靠右*/
 	top: 24px;
 	height: 20px;
-	line-height: 16px; /*游戏轮数/时间间隔*/
+	line-height: 16px;
+	/*游戏轮数/时间间隔*/
 	white-space: nowrap;
 	color: #342510;
 	z-index: 3;
 	font-weight: bold;
 }
+
 .cardRoundNumber > .time {
 	/*游戏时间*/
-	top: 48px; /*高度*/
+	top: 48px;
+	/*高度*/
 	left: 14px;
 	font-size: 17px;
 	color: #342510;
@@ -395,9 +420,12 @@
 	font-size: 0px;
 	text-shadow: none;
 	--w: 530px;
-	--h: calc(var(--w) * 149 / 598); /*é«˜å’Œé•¿*/
-	width: var(--w); /*æŒ‰æ¯”ä¾‹è°ƒèŠ‚*/
-	height: var(--h); /*åŒç†*/
+	--h: calc(var(--w) * 149 / 598);
+	/*é«˜å’Œé•¿*/
+	width: var(--w);
+	/*æŒ‰æ¯”ä¾‹è°ƒèŠ‚*/
+	height: var(--h);
+	/*åŒç†*/
 	/*display: table;*/
 	background-image: url("images/CD/tuoguan2.png");
 	background-size: 100% 100%;
@@ -413,12 +441,14 @@
 	background-image: url("./images/SFTS/Tipzhugong.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务忠臣*/
 .Tipzhongchen {
 	position: fixed;
@@ -427,12 +457,14 @@
 	background-image: url("./images/SFTS/Tipzhongchen.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务反贼*/
 .Tipfanzei {
 	position: fixed;
@@ -441,12 +473,14 @@
 	background-image: url("./images/SFTS/Tipfanzei.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务内奸*/
 .Tipneijian {
 	position: fixed;
@@ -455,12 +489,14 @@
 	background-image: url("./images/SFTS/Tipneijian.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务地主*/
 .Tipdizhu {
 	position: fixed;
@@ -469,12 +505,14 @@
 	background-image: url("./images/SFTS/Tipdizhu.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务农民*/
 .Tipnongmin {
 	position: fixed;
@@ -483,12 +521,14 @@
 	background-image: url("./images/SFTS/Tipnongmin.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务虎队*/
 .Tiphu {
 	position: fixed;
@@ -497,12 +537,14 @@
 	background-image: url("./images/SFTS/hu.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务魏国*/
 .Tipweiguo {
 	position: fixed;
@@ -511,12 +553,14 @@
 	background-image: url("./images/SFTS/Tipweiguo.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务蜀国*/
 .Tipshuguo {
 	position: fixed;
@@ -525,12 +569,14 @@
 	background-image: url("./images/SFTS/Tipshuguo.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务吴国*/
 .Tipwuguo {
 	position: fixed;
@@ -539,12 +585,14 @@
 	background-image: url("./images/SFTS/Tipwuguo.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务晋国*/
 .Tipjinguo {
 	position: fixed;
@@ -553,12 +601,14 @@
 	background-image: url("./images/SFTS/Tipjinguo.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务野心家*/
 .Tipyexinjia {
 	position: fixed;
@@ -567,12 +617,14 @@
 	background-image: url("./images/SFTS/Tipye.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务群雄*/
 .Tipqunxiong {
 	position: fixed;
@@ -581,12 +633,14 @@
 	background-image: url("./images/SFTS/Tipqunxiong.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
+
 /*身份任务未选择*/
 .Tipundefined {
 	position: fixed;
@@ -595,11 +649,12 @@
 	background-image: url("./images/SFTS/Tipyinbi.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*容错选项*/
@@ -610,11 +665,12 @@
 	background-image: url("./images/SFTS/Tipweizhi.png") !important;
 	background-size: 100% 100%;
 	--w: 269px;
-	--h: calc(var(--w) * 214 / 600); /*高和长*/
+	--h: calc(var(--w) * 214 / 600);
+	/*高和长*/
 	width: var(--w);
 	height: var(--h);
 	left: calc(100% - 400.5px);
-	bottom: calc(100% - 145px);
+	bottom: calc(100% - 205px);
 }
 
 /*左手模式*/
@@ -717,7 +773,8 @@
 	left: 130px;
 	bottom: -6px;
 	--w: 130px;
-	--h: calc(var(--w) * 92 / 400); /*宽和长*/
+	--h: calc(var(--w) * 92 / 400);
+	/*宽和长*/
 	width: var(--w);
 	height: var(--h);
 	background-image: url("./images/uibutton/count1.png");
@@ -726,6 +783,7 @@
 	transform: scaleX(-1);
 	z-index: -1;
 }
+
 /*手牌数参数*/
 .handcardNumber1 > .cardNumber {
 	left: 160px;
@@ -736,5 +794,6 @@
 	color: #fffcf5;
 	font-size: 20px;
 	white-space: nowrap;
-	letter-spacing: 0.35px; /*字体间距*/
+	letter-spacing: 0.35px;
+	/*字体间距*/
 }

@@ -1,176 +1,270 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
-	lib.arenaReady.push(function () {
-		//更新轮次
-		var originUpdateRoundNumber = game.updateRoundNumber;
-		game.updateRoundNumber = function () {
-			originUpdateRoundNumber.apply(this, arguments);
-			if (ui.cardRoundTime) ui.cardRoundTime.updateRoundCard();
+	// 常量定义
+	const MODES = {
+		IDENTITY: "identity",
+		DOUDIZHU: "doudizhu",
+		GUOZHAN: "guozhan",
+		VERSUS: "versus",
+		SINGLE: "single",
+		MARTIAL: "martial",
+	};
+
+	const IDENTITIES = {
+		ZHU: "zhu",
+		ZHONG: "zhong",
+		FAN: "fan",
+		NEI: "nei",
+	};
+
+	const GROUPS = {
+		UNKNOWN: "unknown",
+		UNDEFINED: "undefined",
+		WEI: "wei",
+		SHU: "shu",
+		WU: "wu",
+		QUN: "qun",
+		JIN: "jin",
+		YE: "ye",
+	};
+
+	const BACKGROUNDS = ["人间安乐", "兵临城下", "兵荒马乱", "三国开黑节", "华灯初上", "天书乱斗", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游", "十周年"];
+
+	// 工具函数
+	const utils = {
+		playAudio(path) {
+			game.playAudio(path);
+		},
+
+		createImage(src, style) {
+			const img = ui.create.node("img");
+			img.src = lib.assetURL + src;
+			img.style.cssText = style;
+			return img;
+		},
+
+		createDiv(className, container, clickHandler) {
+			const div = ui.create.div(className, container);
+			if (clickHandler) {
+				div.addEventListener("click", clickHandler);
+			}
+			return div;
+		},
+
+		getButtonStyle(width, height, top, left, zIndex = 1) {
+			return `display: block;--w: ${width}px;--h: calc(var(--w) * ${height});width: var(--w);height: var(--h);position: absolute;top: ${top};left: ${left};background-color: transparent;z-index:${zIndex}`;
+		},
+	};
+
+	// 身份提示映射
+	const identityTips = {
+		[IDENTITIES.ZHU]: ".Tipzhugong",
+		[IDENTITIES.ZHONG]: ".Tipzhongchen",
+		[IDENTITIES.FAN]: ".Tipfanzei",
+		[IDENTITIES.NEI]: ".Tipneijian",
+	};
+
+	// 斗地主身份提示映射
+	const doudizhuTips = {
+		[IDENTITIES.ZHU]: ".Tipdizhu",
+		[IDENTITIES.FAN]: ".Tipnongmin",
+	};
+
+	// 国战势力提示映射
+	const groupTips = {
+		[GROUPS.UNKNOWN]: ".Tipundefined",
+		[GROUPS.UNDEFINED]: ".Tipundefined",
+		[GROUPS.WEI]: ".Tipweiguo",
+		[GROUPS.SHU]: ".Tipshuguo",
+		[GROUPS.WU]: ".Tipwuguo",
+		[GROUPS.QUN]: ".Tipqunxiong",
+		[GROUPS.JIN]: ".Tipjinguo",
+		[GROUPS.YE]: ".Tipyexinjia",
+	};
+
+	// 创建问号按钮
+	function createQuestionButton() {
+		const isTouch = lib.config.phonelayout;
+		const bottomOffset = isTouch ? "calc(100% - 55px)" : "calc(100% - 105px)"; // 非触屏布局往下移动20px
+		const questionBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/wenhao.png", `display: block;width: 40px;height: 29px;position: absolute;bottom: ${bottomOffset};left: calc(100% - 159.5px);background-color: transparent;z-index:3`);
+
+		questionBtn.onclick = function () {
+			const popupContainer = ui.create.div(".popup-container", ui.window);
+			utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
+
+			// 根据游戏模式显示不同提示
+			if (lib.config.mode === MODES.IDENTITY) {
+				const tipClass = identityTips[game.me.identity];
+				if (tipClass) {
+					ui.create.div(tipClass, popupContainer);
+				}
+			} else if (lib.config.mode === MODES.DOUDIZHU) {
+				const tipClass = doudizhuTips[game.me.identity];
+				if (tipClass) {
+					ui.create.div(tipClass, popupContainer);
+				}
+			} else if (lib.config.mode === MODES.VERSUS) {
+				ui.create.div(".Tiphu", popupContainer);
+			} else if (lib.config.mode === MODES.GUOZHAN) {
+				const tipClass = groupTips[game.me.group] || ".Tipweizhi";
+				ui.create.div(tipClass, popupContainer);
+			}
+
+			popupContainer.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
+				popupContainer.delete(200);
+			});
 		};
 
-		if (lib.config.mode == "identity" || lib.config.mode == "doudizhu" || lib.config.mode == "guozhan" || lib.config.mode == "versus" || lib.config.mode == "single" || lib.config.mode == "martial") {
-			var wenhao = ui.create.node("img");
-			wenhao.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/wenhao.png";
-			wenhao.style.cssText = "display: block;width: 40px;height: 29px;position: absolute;bottom: calc(100% - 55px);left: calc(100% - 159.5px);background-color: transparent;z-index:3";
+		document.body.appendChild(questionBtn);
+	}
 
-			//--------------//
-			if (lib.config.mode == "identity" || lib.config.mode == "doudizhu" || lib.config.mode == "versus" || lib.config.mode == "guozhan") {
-				wenhao.onclick = function () {
-					var popuperContainer = ui.create.div(".popup-container", ui.window);
-					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
-
-					if (lib.config.mode == "identity") {
-						if (game.me.identity == "zhu") {
-							ui.create.div(".Tipzhugong", popuperContainer);
-						} else if (game.me.identity == "zhong") {
-							ui.create.div(".Tipzhongchen", popuperContainer);
-						} else if (game.me.identity == "fan") {
-							ui.create.div(".Tipfanzei", popuperContainer);
-						} else if (game.me.identity == "nei") {
-							ui.create.div(".Tipneijian", popuperContainer);
-						}
-					}
-					if (lib.config.mode == "doudizhu") {
-						if (game.me.identity == "zhu") {
-							ui.create.div(".Tipdizhu", popuperContainer);
-						} else if (game.me.identity == "fan") {
-							ui.create.div(".Tipnongmin", popuperContainer);
-						}
-					}
-
-					if (lib.config.mode == "versus") {
-						ui.create.div(".Tiphu", popuperContainer);
-					}
-
-					if (lib.config.mode == "guozhan") {
-						if (game.me.group == "unknown" || game.me.group == "undefined") {
-							//未选择身份势力
-							ui.create.div(".Tipundefined", popuperContainer);
-						} else if (game.me.group == "wei") {
-							ui.create.div(".Tipweiguo", popuperContainer);
-						} else if (game.me.group == "shu") {
-							ui.create.div(".Tipshuguo", popuperContainer);
-						} else if (game.me.group == "wu") {
-							ui.create.div(".Tipwuguo", popuperContainer);
-						} else if (game.me.group == "qun") {
-							ui.create.div(".Tipqunxiong", popuperContainer);
-						} else if (game.me.group == "jin") {
-							ui.create.div(".Tipjinguo", popuperContainer);
-						} else if (game.me.group == "ye") {
-							ui.create.div(".Tipyexinjia", popuperContainer);
-						}
-						//容错选项
-						else {
-							ui.create.div(".Tipweizhi", popuperContainer);
-						}
-					}
-					popuperContainer.addEventListener("click", event => {
-						game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
-						popuperContainer.delete(200);
-					});
-				};
-			}
-			document.body.appendChild(wenhao);
-		}
-		//手牌排序
-		var head = ui.create.node("img");
-		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/zhengli.png";
-		//左手整理手牌按钮位置
-		if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-			head.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 33px);left: calc(100% - 376.2px);background-color: transparent;z-index:7";
+	// 创建手牌整理按钮
+	function createSortButton() {
+		const isRightLayout = lib.config["extension_十周年UI_rightLayout"] === "on";
+		const isTouch = lib.config.phonelayout;
+		const sortImg = isTouch ? "zhengli.png" : "zhenglix.png";
+		let sortBtnStyle;
+		if (isTouch) {
+			sortBtnStyle = isRightLayout ? utils.getButtonStyle(88, "81/247", "calc(100% - 35px)", "calc(100% - 380px)", 7) : utils.getButtonStyle(120, "81/247", "calc(100% - 50px)", "right: calc(100% - 400px)", 4);
 		} else {
-			head.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 33px);right: calc(100% - 367.2px);background-color: transparent;z-index:4;";
+			sortBtnStyle = isRightLayout ? utils.getButtonStyle(45, "110/170", "calc(100% - 45px)", "calc(100% - 290px)", 7) : utils.getButtonStyle(88, "81/247", "calc(100% - 33px)", "right: calc(100% - 367.2px)", 4);
 		}
-		head.onclick = function () {
-			//head.onclick=ui.click.sortCard;
+		const sortBtn = utils.createImage(`extension/十周年UI/shoushaUI/lbtn/images/uibutton/${sortImg}`, sortBtnStyle);
+
+		sortBtn.onclick = function () {
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
-			var cards = game.me.getCards("hs");
-			var sort2 = function (b, a) {
-				if (a.name != b.name) return lib.sort.card(a.name, b.name);
-				else if (a.suit != b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
-				else return a.number - b.number;
+
+			const cards = game.me.getCards("hs");
+			const sortFunction = function (b, a) {
+				if (a.name !== b.name) return lib.sort.card(a.name, b.name);
+				if (a.suit !== b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
+				return a.number - b.number;
 			};
+
 			if (cards.length > 1) {
-				cards.sort(sort2);
-				cards.forEach(function (i, j) {
-					game.me.node.handcards1.insertBefore(cards[j], game.me.node.handcards1.firstChild);
+				cards.sort(sortFunction);
+				cards.forEach(function (card, index) {
+					game.me.node.handcards1.insertBefore(cards[index], game.me.node.handcards1.firstChild);
 				});
 				dui.queueNextFrameTick(dui.layoutHand, dui);
 			}
 		};
-		document.body.appendChild(head);
-		//右上角菜单
-		var head = ui.create.node("img");
-		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png";
-		head.style.cssText = "display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-4";
-		document.body.appendChild(head);
 
-		var head = ui.create.node("img");
-		head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png";
-		head.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 69px);left: calc(100% - 112.5px);background-color: transparent;z-index:1";
-		head.onclick = function () {
-			head.style.transform = "scale(0.95)";
-		};
-		document.body.appendChild(head);
+		// 定时检测手牌数，动态显示/隐藏整理按钮
+		sortBtn.style.display = "none";
+		document.body.appendChild(sortBtn);
+		function updateSortButtonVisibility() {
+			sortBtn.style.display = game.me && game.me.getCards("hs").length >= 4 ? "block" : "none";
+		}
+		setInterval(updateSortButtonVisibility, 1000);
+		updateSortButtonVisibility();
+	}
 
-		var head = ui.create.node("div");
-		head.style.cssText = "display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 69px);left: calc(100% - 112.5px);background-color: transparent;z-index:1";
-		head.onclick = function () {
-			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/click.mp3");
-			var popuperContainer = ui.create.div(".popup-container", { background: "rgb(0,0,0,0)" }, ui.window);
-			popuperContainer.addEventListener("click", event => {
-				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/back.mp3");
+	// 创建右上角菜单
+	function createTopRightMenu() {
+		const isTouch = lib.config.phonelayout;
+		const topOffset = isTouch ? "10px" : "60px"; // 非触屏布局往下移动50px
 
+		// 背景阴影
+		const shadow = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png", "display: block;width: 100%;height: 30%;position: absolute;bottom: 0px;background-color: transparent;z-index:-4");
+		document.body.appendChild(shadow);
+
+		// 菜单按钮
+		const menuBtn = utils.createImage("extension/十周年UI/shoushaUI/lbtn/images/CD/button3.png", `display: block;--w: 56px;--h: calc(var(--w) * 74/71);width: var(--w);height: var(--h);position: absolute;top: ${topOffset};right: 55px;background-color: transparent;z-index:5`);
+		document.body.appendChild(menuBtn);
+
+		let menuPopup = null;
+
+		function openMenu() {
+			if (menuPopup) return;
+			utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/click.mp3");
+			menuPopup = ui.create.div(".popup-container", { background: "rgb(0,0,0,0)" }, ui.window);
+			menuPopup.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/back.mp3");
 				event.stopPropagation();
-				popuperContainer.delete(200);
+				closeMenu();
 			});
-			var HOME = ui.create.div(".HOME", popuperContainer);
-			var SZ = ui.create.div(".SZ", popuperContainer);
-			SZ.addEventListener("click", event => {
-				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-
+			// 创建菜单项
+			const home = ui.create.div(".HOME", menuPopup);
+			const settingsBtn = ui.create.div(".SZ", menuPopup);
+			settingsBtn.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 				if (!ui.click.configMenu) return;
 				game.closePopped();
 				game.pause2();
 				ui.click.configMenu();
 				ui.system1.classList.remove("shown");
 				ui.system2.classList.remove("shown");
+				closeMenu();
 			});
-			var LK = ui.create.div(".LK", popuperContainer);
-			LK.addEventListener("click", event => {
-				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-
+			const leaveBtn = ui.create.div(".LK", menuPopup);
+			leaveBtn.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 				window.location.reload();
 			});
-			var BJ = ui.create.div(".BJ", popuperContainer);
-			BJ.addEventListener("click", event => {
-				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-
-				//换背景
-				var Backgrounds = ["人间安乐", "兵临城下", "兵荒马乱", "三国开黑节", "华灯初上", "天书乱斗", "朝堂之上", "校园行", "桃园风格", "汉室当兴", "游卡桌游", "十周年"];
-
-				ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + Backgrounds.randomGet() + ".jpg");
+			const bgBtn = ui.create.div(".BJ", menuPopup);
+			bgBtn.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+				const randomBg = BACKGROUNDS.randomGet();
+				ui.background.setBackgroundImage(`extension/十周年UI/shoushaUI/lbtn/images/background/${randomBg}.jpg`);
 			});
-			var TX = ui.create.div(".TX", popuperContainer);
-			TX.addEventListener("click", event => {
-				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-
+			const surrenderBtn = ui.create.div(".TX", menuPopup);
+			surrenderBtn.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 				game.over();
 			});
-			var TG = ui.create.div(".TG", popuperContainer);
-			TG.addEventListener("click", event => {
-				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-
+			const autoBtn = ui.create.div(".TG", menuPopup);
+			autoBtn.addEventListener("click", event => {
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 				ui.click.auto();
 			});
+		}
+
+		function closeMenu() {
+			if (menuPopup) {
+				menuPopup.delete(200);
+				menuPopup = null;
+			}
+		}
+
+		menuBtn.onclick = function () {
+			if (menuPopup) {
+				closeMenu();
+			} else {
+				openMenu();
+			}
 		};
-		document.body.appendChild(head);
+	}
+
+	// 初始化
+	lib.arenaReady.push(function () {
+		// 更新轮次
+		const originUpdateRoundNumber = game.updateRoundNumber;
+		game.updateRoundNumber = function () {
+			originUpdateRoundNumber.apply(this, arguments);
+			if (ui.cardRoundTime) {
+				ui.cardRoundTime.updateRoundCard();
+			}
+		};
+
+		// 创建UI元素
+		const supportedModes = [MODES.IDENTITY, MODES.DOUDIZHU, MODES.GUOZHAN, MODES.VERSUS, MODES.SINGLE, MODES.MARTIAL];
+		if (supportedModes.includes(lib.config.mode)) {
+			createQuestionButton();
+		}
+
+		createSortButton();
+		createTopRightMenu();
 	});
 
-	var plugin = {
+	// 插件定义
+	const plugin = {
 		name: "lbtn",
+
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
+
 		content(next) {
 			lib.skill._uicardupdate = {
 				trigger: { player: "phaseJieshuBegin" },
@@ -183,14 +277,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				noDeprive: true,
 				priority: -Infinity,
 				filter(event, player) {
-					return player == game.me;
+					return player === game.me;
 				},
 				content() {
-					if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
+					if (ui.updateSkillControl) {
+						ui.updateSkillControl(game.me, true);
+					}
 				},
 			};
 		},
+
 		precontent() {
+			// 扩展视频内容
 			Object.assign(game.videoContent, {
 				createCardRoundTime() {
 					ui.cardRoundTime = plugin.create.cardRoundTime();
@@ -200,15 +298,16 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 				updateCardRoundTime(opts) {
 					if (!ui.cardRoundTime) return;
-					var roundNumber = Math.max(1, game.roundNumber || 1);
-					ui.cardRoundTime.node.roundNumber.innerHTML = "<span>第" + roundNumber + "轮</span>";
+					const roundNumber = Math.max(1, game.roundNumber || 1);
+					ui.cardRoundTime.node.roundNumber.innerHTML = `<span>第${roundNumber}轮</span>`;
 					ui.cardRoundTime.setNumberAnimation(opts.cardNumber);
 				},
 				updateCardnumber(opts) {
 					if (!ui.handcardNumber) return;
-					// ui.handcardNumber.setNumberAnimation(opts.cardNumber);
 				},
 			});
+
+			// 重写UI创建函数
 			app.reWriteFunction(ui.create, {
 				me: [
 					function () {
@@ -237,31 +336,32 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
+
+			// 重写配置菜单
 			app.reWriteFunction(lib.configMenu.appearence.config, {
 				update: [
 					null,
 					function (res, config, map) {
-						map.control_style.hide();
-						map.custom_button.hide();
-						map.custom_button_system_top.hide();
-						map.custom_button_system_bottom.hide();
-						map.custom_button_control_top.hide();
-						map.custom_button_control_bottom.hide();
-						map.radius_size.hide();
+						const hiddenItems = ["control_style", "custom_button", "custom_button_system_top", "custom_button_system_bottom", "custom_button_control_top", "custom_button_control_bottom", "radius_size"];
+						hiddenItems.forEach(item => map[item].hide());
 					},
 				],
 			});
 
+			// 重写确认对话框
 			ui.create.confirm = function (str, func) {
-				var confirm = ui.confirm;
+				let confirm = ui.confirm;
 				if (!confirm) {
 					confirm = ui.confirm = plugin.create.confirm();
 				}
+
 				confirm.node.ok.classList.add("disabled");
 				confirm.node.cancel.classList.add("disabled");
+
 				if (_status.event.endButton) {
 					ui.confirm.node.cancel.classList.remove("disabled");
 				}
+
 				if (str) {
 					if (str.indexOf("o") !== -1) {
 						confirm.node.ok.classList.remove("disabled");
@@ -275,27 +375,32 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (func) {
 					confirm.custom = func;
 				}
+
 				ui.updatec();
 				confirm.update();
 			};
 		},
+
 		create: {
 			control() {},
+
 			confirm() {
-				var confirm = ui.create.control("<span>确定</span>", "cancel");
+				const confirm = ui.create.control("<span>确定</span>", "cancel");
 				confirm.classList.add("lbtn-confirm");
 				confirm.node = {
 					ok: confirm.firstChild,
 					cancel: confirm.lastChild,
 				};
+
 				if (_status.event.endButton) {
 					_status.event.endButton.close();
-					//	delete event.endButton;
 				}
+
 				confirm.node.ok.link = "ok";
 				confirm.node.ok.classList.add("primary");
 				confirm.node.cancel.classList.add("primary2");
 				confirm.custom = plugin.click.confirm;
+
 				app.reWriteFunction(confirm, {
 					close: [
 						function () {
@@ -303,16 +408,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						},
 					],
 				});
-				for (var k in confirm.node) {
-					confirm.node[k].classList.add("disabled");
-					confirm.node[k].removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
-					confirm.node[k].addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
+
+				// 绑定事件
+				for (const key in confirm.node) {
+					const node = confirm.node[key];
+					node.classList.add("disabled");
+					node.removeEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
+					node.addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
 						e.stopPropagation();
 						if (this.classList.contains("disabled")) {
 							if (this.link === "cancel" && this.dataset.type === "endButton" && _status.event.endButton) {
 								_status.event.endButton.custom();
 								ui.confirm.close();
-								//  ui.updatec();
 							}
 							return;
 						}
@@ -323,11 +430,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					});
 				}
 
+				// 处理技能按钮
 				if (ui.skills2 && ui.skills2.skills.length) {
-					var skills = ui.skills2.skills;
+					const skills = ui.skills2.skills;
 					confirm.skills2 = [];
-					for (var i = 0; i < skills.length; i++) {
-						var item = document.createElement("div");
+
+					for (let i = 0; i < skills.length; i++) {
+						const item = document.createElement("div");
 						item.link = skills[i];
 						item.innerHTML = get.translation(skills[i]);
 						item.addEventListener(lib.config.touchscreen ? "touchend" : "click", function (e) {
@@ -336,8 +445,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						});
 
 						item.dataset.type = "skill2";
-						if (ui.updateSkillControl) ui.updateSkillControl(game.me, true); /*
-            confirm.insertBefore(item, confirm.firstChild);*/
+						if (ui.updateSkillControl) {
+							ui.updateSkillControl(game.me, true);
+						}
 					}
 				}
 
@@ -357,84 +467,82 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							ui.updatec();
 						}
 					}
-					if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
+					if (ui.updateSkillControl) {
+						ui.updateSkillControl(game.me, true);
+					}
 				};
+
 				return confirm;
 			},
 
 			handcardNumber() {
-				var node3 = ui.create.div(".settingButton", ui.arena, plugin.click.setting);
+				const isRightLayout = lib.config["extension_十周年UI_rightLayout"] === "on";
+				const isXPJ = lib.config.extension_十周年UI_XPJ === "on";
 
-				/*ui.create.div('.lbtn-controls', ui.arena);*/
-				//-------原版---------//
-				//左手模式加开关
-				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-					if (lib.config.extension_十周年UI_XPJ == "on") {
-						var node5 = ui.create.div(".huanfuButton", ui.arena, plugin.click.huanfu);
-						var node2 = ui.create.div(".jiluButton", ui.arena, ui.click.pause);
-						//-------------------//
+				// 创建设置按钮
+				ui.create.div(".settingButton", ui.arena, plugin.click.setting);
+
+				// 创建功能按钮
+				if (isRightLayout) {
+					if (isXPJ) {
+						ui.create.div(".huanfuButton", ui.arena, plugin.click.huanfu);
+						ui.create.div(".jiluButton", ui.arena, ui.click.pause);
 					} else {
-						//-------新版----------//
-						var node6 = ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
-						var node7 = ui.create.div(".jiluButton_new", ui.arena, ui.click.pause);
-						var node8 = ui.create.div(".meiguiButton_new", ui.arena);
-						var node9 = ui.create.div(".xiaolianButton_new", ui.arena);
-						//---------------------//
+						ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
+						ui.create.div(".jiluButton_new", ui.arena, ui.click.pause);
+						ui.create.div(".meiguiButton_new", ui.arena);
+						ui.create.div(".xiaolianButton_new", ui.arena);
 					}
 				} else {
-					if (lib.config.extension_十周年UI_XPJ == "on") {
-						var node5 = ui.create.div(".huanfuButton1", ui.arena, plugin.click.huanfu);
-						var node2 = ui.create.div(".jiluButton1", ui.arena, ui.click.pause);
-						//-------------------//
+					if (isXPJ) {
+						ui.create.div(".huanfuButton1", ui.arena, plugin.click.huanfu);
+						ui.create.div(".jiluButton1", ui.arena, ui.click.pause);
 					} else {
-						//-------新版----------//
-						var node6 = ui.create.div(".huanfuButton_new1", ui.arena, plugin.click.huanfu);
-						var node7 = ui.create.div(".jiluButton_new1", ui.arena, ui.click.pause);
-						var node8 = ui.create.div(".meiguiButton_new1", ui.arena, plugin.click.meigui);
-						var node9 = ui.create.div(".xiaolianButton_new1", ui.arena, plugin.click.xiaolian);
-						//---------------------//
+						ui.create.div(".huanfuButton_new1", ui.arena, plugin.click.huanfu);
+						ui.create.div(".jiluButton_new1", ui.arena, ui.click.pause);
+						ui.create.div(".meiguiButton_new1", ui.arena, plugin.click.meigui);
+						ui.create.div(".xiaolianButton_new1", ui.arena, plugin.click.xiaolian);
 					}
 				}
-				var node4 = ui.create.div(".tuoguanButton", ui.arena, ui.click.auto);
-				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-					var node = ui.create.div(".handcardNumber", ui.arena).hide();
-					node.node = {
-						cardPicture: ui.create.div(".cardPicture", node),
-						cardNumber: ui.create.div(".cardNumber", node),
-					};
-				} else {
-					var node = ui.create.div(".handcardNumber1", ui.arena).hide();
-					node.node = {
-						cardPicture: ui.create.div(".cardPicture", node),
-						cardNumber: ui.create.div(".cardNumber", node),
-					};
-				}
-				//结束
+
+				// 创建托管按钮
+				ui.create.div(".tuoguanButton", ui.arena, ui.click.auto);
+
+				// 创建手牌数量显示
+				const className = isRightLayout ? ".handcardNumber" : ".handcardNumber1";
+				const node = ui.create.div(className, ui.arena).hide();
+				node.node = {
+					cardPicture: ui.create.div(".cardPicture", node),
+					cardNumber: ui.create.div(".cardNumber", node),
+				};
+
 				node.updateCardnumber = function () {
 					if (!game.me) return;
 
-					var cardNumber2 = game.me.countCards("h") || 0;
-					var cardNumber = game.me.getHandcardLimit() || 0;
-					var numbercolor = "white";
-					if (cardNumber2 > cardNumber) numbercolor = "red";
-					if (cardNumber == Infinity) cardNumber = "∞";
-					this.node.cardNumber.innerHTML = "<span>" + "<font color=" + numbercolor + " > " + cardNumber2 + "</font>" + '<sp style="font-size:20px; font-family:yuanli; color:#FFFCF5;">' + " / " + "</sp>" + cardNumber + "</span>"; /*手牌数参数*/
-					//      this.setNumberAnimation(cardNumber);
+					const currentCards = game.me.countCards("h") || 0;
+					const cardLimit = game.me.getHandcardLimit() || 0;
+					const numberColor = currentCards > cardLimit ? "red" : "white";
+					const displayLimit = cardLimit === Infinity ? "∞" : cardLimit;
+
+					this.node.cardNumber.innerHTML = `<span><font color="${numberColor}">${currentCards}</font>` + `<sp style="font-size:20px; font-family:yuanli; color:#FFFCF5;"> / </sp>${displayLimit}</span>`;
+
 					this.show();
 
 					game.addVideo("updateCardnumber", null, {
-						cardNumber: cardNumber,
+						cardNumber: cardLimit,
 					});
 				};
+
 				node.node.cardNumber.interval = setInterval(function () {
 					ui.handcardNumber.updateCardnumber();
 				}, 1000);
-				//    game.addVideo('createCardRoundTime');
+
 				game.addVideo("createhandcardNumber");
 				return node;
 			},
+
 			cardRoundTime() {
-				var node = ui.create.div(".cardRoundNumber", ui.arena).hide();
+				const node = ui.create.div(".cardRoundNumber", ui.arena).hide();
 				node.node = {
 					cardPileNumber: ui.create.div(".cardPileNumber", node),
 					roundNumber: ui.create.div(".roundNumber", node),
@@ -442,11 +550,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				};
 
 				node.updateRoundCard = function () {
-					var cardNumber = ui.cardPile.childNodes.length || 0;
-					var roundNumber = Math.max(1, game.roundNumber || 1);
-					this.node.roundNumber.innerHTML = "<span>第" + roundNumber + "轮</span>";
+					const cardNumber = ui.cardPile.childNodes.length || 0;
+					const roundNumber = Math.max(1, game.roundNumber || 1);
+					this.node.roundNumber.innerHTML = `<span>第${roundNumber}轮</span>`;
 					this.setNumberAnimation(cardNumber);
 					this.show();
+
 					game.addVideo("updateCardRoundTime", null, {
 						cardNumber: cardNumber,
 						roundNumber: roundNumber,
@@ -454,65 +563,63 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				};
 
 				node.setNumberAnimation = function (num, step) {
-					var item = this.node.cardPileNumber;
+					const item = this.node.cardPileNumber;
 					clearTimeout(item.interval);
+
 					if (!item._num) {
-						item.innerHTML = "<span>" + num + "</span>";
+						item.innerHTML = `<span>${num}</span>`;
 						item._num = num;
-					} else {
+					} else if (item._num !== num) {
+						if (!step) step = 500 / Math.abs(item._num - num);
+
+						if (item._num > num) item._num--;
+						else item._num++;
+
+						item.innerHTML = `<span>${item._num}</span>`;
+
 						if (item._num !== num) {
-							if (!step) step = 500 / Math.abs(item._num - num);
-							if (item._num > num) item._num--;
-							else item._num++;
-							item.innerHTML = "<span>" + item._num + "</span>";
-							if (item._num !== num) {
-								item.interval = setTimeout(function () {
-									node.setNumberAnimation(num, step);
-								}, step);
-							}
+							item.interval = setTimeout(() => {
+								node.setNumberAnimation(num, step);
+							}, step);
 						}
 					}
 				};
 
+				// 时间显示
 				ui.time4 = node.node.time;
 				ui.time4.starttime = get.utc();
 				ui.time4.interval = setInterval(function () {
-					var num = Math.round((get.utc() - ui.time4.starttime) / 1000);
-					if (num >= 3600) {
-						var num1 = Math.floor(num / 3600);
-						var num2 = Math.floor((num - num1 * 3600) / 60);
-						var num3 = num - num1 * 3600 - parseInt(num2) * 60;
-						if (num1 < 10) {
-							num1 = "0" + num1.toString();
-						}
-						if (num2 < 10) {
-							num2 = "0" + num2.toString();
-						}
-						if (num3 < 10) {
-							num3 = "0" + num3.toString();
-						}
-						ui.time4.innerHTML = "<span>" + num1 + ":" + num2 + ":" + num3 + "</span>";
+					const totalSeconds = Math.round((get.utc() - ui.time4.starttime) / 1000);
+
+					if (totalSeconds >= 3600) {
+						const hours = Math.floor(totalSeconds / 3600);
+						const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
+						const seconds = totalSeconds - hours * 3600 - minutes * 60;
+
+						const formatTime = num => (num < 10 ? `0${num}` : num.toString());
+
+						ui.time4.innerHTML = `<span>${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}</span>`;
 					} else {
-						var num1 = Math.floor(num / 60);
-						var num2 = num - num1 * 60;
-						if (num1 < 10) {
-							num1 = "0" + num1.toString();
-						}
-						if (num2 < 10) {
-							num2 = "0" + num2.toString();
-						}
-						ui.time4.innerHTML = "<span>" + num1 + ":" + num2 + "</span>";
+						const minutes = Math.floor(totalSeconds / 60);
+						const seconds = totalSeconds - minutes * 60;
+
+						const formatTime = num => (num < 10 ? `0${num}` : num.toString());
+
+						ui.time4.innerHTML = `<span>${formatTime(minutes)}:${formatTime(seconds)}</span>`;
 					}
 				}, 1000);
+
 				game.addVideo("createCardRoundTime");
 				return node;
 			},
 		},
+
 		click: {
 			huanfu() {
-				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/huanfu.mp3");
-				window.zyile_charactercard ? window.zyile_charactercard(player, false) : ui.click.charactercard(game.me.name, game.zhu, lib.config.mode == "mode_guozhan" ? "guozhan" : true);
+				utils.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/huanfu.mp3");
+				window.zyile_charactercard ? window.zyile_charactercard(player, false) : ui.click.charactercard(game.me.name, game.zhu, lib.config.mode === "mode_guozhan" ? "guozhan" : true);
 			},
+
 			confirm(link, target) {
 				if (link === "ok") {
 					ui.click.ok(target);
@@ -522,31 +629,49 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					target.custom(link);
 				}
 			},
+
+			meigui() {
+				// 玫瑰按钮点击处理
+			},
+
+			xiaolian() {
+				// 笑脸按钮点击处理
+			},
+
+			setting() {
+				// 设置按钮点击处理
+			},
 		},
+
 		compare: {
 			type(a, b) {
 				if (a === b) return 0;
-				var types = ["basic", "trick", "delay", "equip"].addArray([a, b]);
+				const types = ["basic", "trick", "delay", "equip"].addArray([a, b]);
 				return types.indexOf(a) - types.indexOf(b);
 			},
+
 			name(a, b) {
 				if (a === b) return 0;
 				return a > b ? 1 : -1;
 			},
+
 			nature(a, b) {
 				if (a === b) return 0;
-				var nature = [undefined, "fire", "thunder"].addArray([a, b]);
+				const nature = [undefined, "fire", "thunder"].addArray([a, b]);
 				return nature.indexOf(a) - nature.indexOf(b);
 			},
+
 			suit(a, b) {
 				if (a === b) return 0;
-				var suit = ["diamond", "heart", "club", "spade"].addArray([a, b]);
+				const suit = ["diamond", "heart", "club", "spade"].addArray([a, b]);
 				return suit.indexOf(a) - suit.indexOf(b);
 			},
+
 			number(a, b) {
 				return a - b;
 			},
 		},
 	};
+
 	return plugin;
 });

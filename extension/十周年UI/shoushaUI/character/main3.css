@@ -1,9 +1,9 @@
 .button.character,
-#arena > .player.xplayer {
+#arena>.player.xplayer {
 	--width: 120px;
 }
 
-.zbdialogjiemian > .character-dialog {
+.zbdialogjiemian>.character-dialog {
 	top: calc(50% - var(--h) / 2 + var(--bt));
 	left: calc(50% - var(--w) / 2 + var(--bl));
 }
@@ -12,19 +12,19 @@
 
 /*------出牌记录------*/
 
-#arena.chess > #arenalog {
+#arena.chess>#arenalog {
 	display: none !important;
 	background: none;
 }
 
-#arena.observe .handcards > .card > div {
+#arena.observe .handcards>.card>div {
 	opacity: 0 !important;
 	background: none;
 }
 
-#arena.hide_name .player > .name:not(.name_seat),
-#arena.hide_name .player > .name2,
-#arena.hide_name > .dialog .button.character > .name {
+#arena.hide_name .player>.name:not(.name_seat),
+#arena.hide_name .player>.name2,
+#arena.hide_name>.dialog .button.character>.name {
 	display: none !important;
 	background: none;
 }
@@ -48,25 +48,25 @@
 	opacity: 1;
 }
 
-#arena:not(.oldlayout) > #arenalog[data-position="center"] {
+#arena:not(.oldlayout)>#arenalog[data-position="center"] {
 	left: calc(25% + 105px);
 }
 
-#arena:not(.oldlayout) > #arenalog[data-position="left"] {
+#arena:not(.oldlayout)>#arenalog[data-position="left"] {
 	left: 150px;
 }
 
-#arena.oldlayout > #arenalog {
+#arena.oldlayout>#arenalog {
 	top: 160px;
 	width: calc(50% - 280px);
 	height: calc(100% - 355px);
 }
 
-#arena.oldlayout > #arenalog[data-position="center"] {
+#arena.oldlayout>#arenalog[data-position="center"] {
 	left: calc(25% + 150px);
 }
 
-#arena.oldlayout > #arenalog[data-position="left"] {
+#arena.oldlayout>#arenalog[data-position="left"] {
 	left: 240px;
 }
 
@@ -116,7 +116,7 @@
 	color: rgb(233, 131, 255);
 }
 
-#arenalog > div {
+#arenalog>div {
 	position: relative;
 	display: block;
 	width: calc(100% - 23px);
@@ -128,14 +128,14 @@
 	background-size: 100% 100%;
 }
 
-#window:not(.low_performance) #arena #arenalog > div {
+#window:not(.low_performance) #arena #arenalog>div {
 	animation: game_start 0.5s;
 	-webkit-animation: game_start 0.5s;
 }
 
 /*出牌记录*/
 /*吊坠*/
-.character-dialog > .diaozhui {
+.character-dialog>.diaozhui {
 	width: 38px;
 	height: 38px;
 	top: 0px;
@@ -159,7 +159,7 @@
 }
 
 /*新增龙框*/
-.character-dialog > div.longkuang {
+.character-dialog>div.longkuang {
 	/* left: -5%;左边*/
 	top: 0%;
 	left: 2%;
@@ -170,7 +170,7 @@
 }
 
 /*第一页渐变武将技能的文本*/
-.character-dialog > div.jineng {
+.character-dialog>div.jineng {
 	/*font-size: 30px;*/
 	font-size: 0px;
 	width: 30px;
@@ -184,7 +184,7 @@
 }
 
 /*第一页武将技能框*/
-.character-dialog > div.wjkuang {
+.character-dialog>div.wjkuang {
 	left: 91%;
 	top: 13%;
 	height: 52%;
@@ -194,7 +194,7 @@
 }
 
 /*第一页玩家名字*/
-.character-dialog > div.wanjiaming2 {
+.character-dialog>div.wanjiaming2 {
 	font-size: 20px;
 	font-family: yuanli;
 	/*font-weight: bolder;*/
@@ -206,13 +206,21 @@
 }
 
 /*第一页面武将名*/
-.character-dialog > div.wjname {
+.character-dialog>div.wjname {
 	font-size: 18px;
-	top: 20%;
-	/* margin-left:-1%;左边*/
+	overflow-y: auto;
+	/* 改为垂直滚动 */
+	overflow-x: hidden;
+	/* 隐藏水平滚动 */
+	height: 78px;
+	/* 新增固定高度 */
+	line-height: 18px;
+	/* 确保行高匹配字体大小 */
+	white-space: normal;
+	/* 允许多行显示 */
+	top: 65px;
 	left: 4.5%;
-	height: 20%;
-	/*text-align: center;*/
+	right: auto;
 	width: 18px;
 	font-family: yuanli;
 	text-shadow: (to top, rgb(35, 83, 123), rgb(15, 35, 68));
@@ -220,7 +228,7 @@
 }
 
 /*第一页level等级*/
-.character-dialog > div.level {
+.character-dialog>div.level {
 	left: 2%;
 	top: 83.5%;
 	height: 8%;
@@ -255,19 +263,19 @@
 	background-image: url("./images/dialog3.png");
 }
 
-.character-dialog > div {
+.character-dialog>div {
 	top: 0;
 	height: 100%;
 	position: absolute;
 }
 
 /*新增*/
-.player.connect > div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).primary-avatar {
+.player.connect>div:not(.avatar):not(.name):not(.nameol):not(.hp):not(.room):not(.gaming):not(.identity).primary-avatar {
 	display: block !important;
 }
 
 /*第一页面武将原画渐变头像*/
-.character-dialog > div.skin1 {
+.character-dialog>div.skin1 {
 	/* left: 0%;
   top: -20%;
   width: 50%;
@@ -285,7 +293,15 @@
 	/*background-repeat: no-repeat;*/
 	/*遮罩*/
 	/*-webkit-mask: radial-gradient(100px 160px at 120px 160px ,#000 70% , transparent 100% );*/
-	-webkit-mask: linear-gradient(to right, transparent 0%, #000 50px, /* 左侧起始位置 */ #000 calc(100% - 50px), /* 右侧结束位置 */ transparent 100%), linear-gradient(to bottom, transparent 0%, #000 30px, /* 顶部起始位置 */ #000 calc(100% - 30px), /* 底部结束位置 */ transparent 100%);
+	-webkit-mask: linear-gradient(to right, transparent 0%, #000 50px,
+			/* 左侧起始位置 */
+			#000 calc(100% - 50px),
+			/* 右侧结束位置 */
+			transparent 100%), linear-gradient(to bottom, transparent 0%, #000 30px,
+			/* 顶部起始位置 */
+			#000 calc(100% - 30px),
+			/* 底部结束位置 */
+			transparent 100%);
 	-webkit-mask-composite: source-in;
 	/*参数说明*/
 	/*- **横向**：从 `100px` 到 `calc(100% - 100px)` 为不透明区域。
@@ -293,8 +309,9 @@
 - **交集区域**：形成一个宽 `(100% - 200px)`、高 `(100% - 160px)` 的矩形遮罩。
 */
 }
+
 /*这里是名字加皮肤*/
-.character-dialog > div.name {
+.character-dialog>div.name {
 	position: relative;
 	left: 55%;
 	top: 55%;
@@ -307,48 +324,49 @@
 	text-shadow: 0 0 2px rgb(170, 170, 170), 0 0 3px rgb(170, 170, 170), 0 0 4px rgb(170, 170, 170), 0 0 4px rgb(118, 118, 118), 0 0 4px rgb(118, 118, 118);
 }
 
-.character-dialog > div.name[data-camp="wei"] {
+.character-dialog>div.name[data-camp="wei"] {
 	text-shadow: 0 0 2px rgb(94, 135, 238), 0 0 3px rgb(94, 135, 238), 0 0 4px rgb(94, 135, 238);
 }
 
-.character-dialog > div.name[data-camp="shu"] {
+.character-dialog>div.name[data-camp="shu"] {
 	text-shadow: 0 0 2px rgb(255, 100, 100), 0 0 3px rgb(255, 50, 50), 0 0 3px rgb(255, 50, 50);
 }
 
-.character-dialog > div.name[data-camp="Han"] {
+.character-dialog>div.name[data-camp="Han"] {
 	text-shadow: 0 0 2px rgb(255, 100, 100), 0 0 3px rgb(255, 50, 50), 0 0 3px rgb(255, 50, 50);
 }
 
-.character-dialog > div.name[data-camp="qin"] {
+.character-dialog>div.name[data-camp="qin"] {
 	text-shadow: 0 0 2px rgb(255, 100, 100), 0 0 3px rgb(255, 50, 50), 0 0 3px rgb(255, 50, 50);
 }
 
-.character-dialog > div.name[data-camp="wu"] {
+.character-dialog>div.name[data-camp="wu"] {
 	text-shadow: 0 0 1px rgb(100, 233, 100), 0 0 2px rgba(50, 255, 50, 0.789);
 }
 
-.character-dialog > div.name[data-camp="qun"] {
+.character-dialog>div.name[data-camp="qun"] {
 	text-shadow: 0 0 2px rgb(170, 170, 170), 0 0 3px rgb(170, 170, 170), 0 0 4px rgb(170, 170, 170), 0 0 4px rgb(118, 118, 118), 0 0 4px rgb(118, 118, 118);
 }
 
-.character-dialog > div.name[data-camp="shen"] {
+.character-dialog>div.name[data-camp="shen"] {
 	text-shadow: 0 0 2px rgb(255, 200, 0), 0 0 5px rgb(255, 200, 0), 0 0 5px rgb(255, 200, 0);
 }
 
-.character-dialog > div.name[data-camp="ta"] {
+.character-dialog>div.name[data-camp="ta"] {
 	text-shadow: 0 0 2px rgb(255, 200, 0), 0 0 5px rgb(255, 200, 0), 0 0 5px rgb(255, 200, 0);
 }
 
-.character-dialog > div.name[data-camp="ye"],
-.character-dialog > div.name[data-camp="jin"] {
+.character-dialog>div.name[data-camp="ye"],
+.character-dialog>div.name[data-camp="jin"] {
 	text-shadow: 0 0 2px rgb(203, 72, 223), 0 0 5px rgb(195, 28, 237), 0 0 5px rgb(195, 28, 237);
 }
 
-.character-dialog > div.left {
+.character-dialog>div.left {
 	left: 0;
 	width: 50%;
 }
-.character-dialog > div.skillx {
+
+.character-dialog>div.skillx {
 	top: 15%;
 	height: 25%;
 	width: 5%;
@@ -358,10 +376,12 @@
 	position: absolute;
 	z-index: 100;
 }
-.character-dialog > div.skillx.active {
+
+.character-dialog>div.skillx.active {
 	background-image: url("./images/xinsha/skillon.png");
 }
-.character-dialog > div.equip {
+
+.character-dialog>div.equip {
 	top: 40.5%;
 	height: 25%;
 	width: 5%;
@@ -371,15 +391,17 @@
 	position: absolute;
 	z-index: 100;
 }
-.character-dialog > div.equip.active {
+
+.character-dialog>div.equip.active {
 	background-image: url("./images/xinsha/equipon.png");
 }
-.character-dialog.single > div.left {
+
+.character-dialog.single>div.left {
 	width: calc(50% - 105px);
 }
 
 /*技能大窗口*/
-.character-dialog > div.right {
+.character-dialog>div.right {
 	left: 31.5%;
 	height: 90%;
 	top: 10%;
@@ -389,12 +411,12 @@
 	overflow: auto;
 }
 
-.character-dialog.single > div.right {
+.character-dialog.single>div.right {
 	left: calc(0% - 105px);
 	width: calc(50% + 105px);
 }
 
-.character-dialog > div.left > div {
+.character-dialog>div.left>div {
 	top: 50%;
 	right: 15px;
 	width: 210px;
@@ -403,22 +425,22 @@
 	white-space: nowrap;
 }
 
-.character-dialog.single > div.left > div {
+.character-dialog.single>div.left>div {
 	width: 105px;
 }
 
-.character-dialog > div.right > div {
+.character-dialog>div.right>div {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
 }
 
-.character-dialog > div.right div {
+.character-dialog>div.right div {
 	position: relative;
 }
 
 /*武将技能*/
-.character-dialog > div.right .xcaption {
+.character-dialog>div.right .xcaption {
 	color: #dec499;
 	width: 100%;
 	text-align: center;
@@ -427,7 +449,8 @@
 	padding: 20px 0;
 	font-family: "yuanli";
 }
-.character-dialog > div.right .noxcaption {
+
+.character-dialog>div.right .noxcaption {
 	width: 50%;
 	background-image: url("./images/xinsha/unequip.png");
 	background-size: 100% 100%;
@@ -437,9 +460,11 @@
 	top: 45%;
 	left: 23%;
 }
+
 /*技能描述*/
-.character-dialog > div.right .xskill > div {
-	display: block; /* 元素独占一行 */
+.character-dialog>div.right .xskill>div {
+	display: block;
+	/* 元素独占一行 */
 	/* color: #f7f3e0;*/
 	color: #dec499;
 	text-shadow: none;
@@ -452,19 +477,21 @@
 	width: 300px;
 }
 
-.character-dialog > div.right .xskill > div[data-color] {
+.character-dialog>div.right .xskill>div[data-color] {
 	display: inline-block;
 	font-family: "xingkai";
 	font-size: 22px;
 	color: #fffacd;
-	padding: 5px 5px; /* 调整左右padding，预留空间给两端图片 */
+	padding: 5px 5px;
+	/* 调整左右padding，预留空间给两端图片 */
 	text-align: center;
 	min-width: 70px;
 	max-width: 200px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	box-sizing: border-box; /* 确保宽度计算包含padding */
+	box-sizing: border-box;
+	/* 确保宽度计算包含padding */
 
 	/* 新增关键代码：九宫格拉伸 */
 	border-image: url("./images/xinsha/btn3.png") 0 25 fill / 0 15px stretch;
@@ -473,14 +500,16 @@
      0 20px：设置左右边框宽度为20px（与切割尺寸一致）
      fill：填充中间区域
      stretch：中间部分拉伸 */
-	border-width: 0 2px; /* 左右边框宽度与切割尺寸一致 */
-	border-style: solid; /* 必须设置border-style才能生效 */
+	border-width: 0 2px;
+	/* 左右边框宽度与切割尺寸一致 */
+	border-style: solid;
+	/* 必须设置border-style才能生效 */
 	margin-left: 0px !important;
 	margin-top: 10px;
 	width: 10px;
 }
 
-.character-dialog > div.right .xskillx > div {
+.character-dialog>div.right .xskillx>div {
 	display: inline;
 	/* color: #f7f3e0;*/
 	color: #dec499;
@@ -492,15 +521,16 @@
 	margin-top: 10px;
 }
 
-.character-dialog > div.right .xskillx > div[data-color] {
+.character-dialog>div.right .xskillx>div[data-color] {
 	color: #00e13b;
 }
+
 /*技能间距*/
-.character-dialog > div.right .xskill + .xskill {
+.character-dialog>div.right .xskill+.xskill {
 	margin-top: 10px;
 }
 
-.character-dialog > div.caizhu {
+.character-dialog>div.caizhu {
 	left: 16%;
 	top: 75.2%;
 	width: 3.9%;
@@ -704,26 +734,41 @@
 	z-index: 80;
 }
 
-/*名字竖条*/
-.shutiao2 {
-	left: 88.5%;
-	top: 18%;
-	height: 25%;
-	width: 3%;
-	background-size: 100% 100%;
-	z-index: 70;
-}
-
 /*武将名*/
 .wujiangming {
-	font-size: 20px;
-	top: 23%;
-	left: 88.9%;
+	position: absolute;
+	font-size: 22px;
+	top: 20%;
+	left: 87.1%;
+	right: auto;
 	color: orange;
 	font-family: xingkai;
-	/*text-align: center;*/
-	width: 20px;
-	z-index: 99;
+	z-index: 70;
+
+	/* 新增样式 */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 30px 10px;
+	/* 上下保留花纹空间 */
+	box-sizing: border-box;
+
+	/* 背景图片处理 */
+	background: url("./images/xinsha/shutiao.png") center/contain no-repeat;
+	background-size: auto 100%;
+	/* 高度100% 宽度自适应 */
+	width: auto;
+	/* 宽度根据内容自适应 */
+	min-height: 100px;
+	/* 最小高度保证图片显示 */
+	height: auto;
+	/* 高度根据字数自适应 */
+
+	/* 文字竖向排列 */
+	writing-mode: vertical-lr;
+	text-orientation: mixed;
+	line-height: 1.8;
+	/* 调整字间距 */
 }
 
 /*皮肤名*/
@@ -759,24 +804,6 @@
 	border-radius: 9px;
 	transition-property: opacity, transform;
 	-webkit-mask: radial-gradient(70px 97px at 70px 77px ,#000 70% , transparent 100% );*/
-	z-index: 69;
-}
-
-.xingbie {
-	left: 9.5%;
-	top: 48%;
-	height: 5%;
-	width: 3.5%;
-	background-size: 100% 100%;
-	z-index: 69;
-}
-
-.jingji {
-	left: 11.4%;
-	top: 60%;
-	height: 24%;
-	width: 15%;
-	background-size: 100% 100%;
 	z-index: 69;
 }
 
@@ -1006,7 +1033,7 @@
 }
 
 /*武将名字*/
-.character-dialog > div.biankuangname {
+.character-dialog>div.biankuangname {
 	position: absolute;
 	width: 15px;
 	left: 6.7%;
@@ -1016,7 +1043,7 @@
 	z-index: 99;
 }
 
-.character-dialog > div.biankuangname2 {
+.character-dialog>div.biankuangname2 {
 	position: absolute;
 	width: 15px;
 	left: 5.8%;
@@ -1026,6 +1053,6 @@
 	z-index: 99;
 }
 
-.character-dialog > div.dengji {
+.character-dialog>div.dengji {
 	z-index: 68;
 }

@@ -24,49 +24,44 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 				skillControl(clear) {
 					if (!ui.skillControl) {
-						//左手模式添加新的技能按钮位置css
-						if (lib.config["extension_十周年UI_rightLayout"] == "on") {
-							var node = ui.create.div(".skill-control", ui.arena);
-							node.node = {
-								enable: ui.create.div(".enable", node),
-								trigger: ui.create.div(".trigger", node),
-							};
-							for (var i in plugin.controlElement) {
-								node[i] = plugin.controlElement[i];
-							}
-							ui.skillControl = node;
-							//开始复制一遍
-						} else {
-							var node = ui.create.div(".skill-controlzuoshou", ui.arena);
-							node.node = {
-								enable: ui.create.div(".enable", node),
-								trigger: ui.create.div(".trigger", node),
-							};
-							for (var i in plugin.controlElement) {
-								node[i] = plugin.controlElement[i];
-							}
-							ui.skillControl = node;
+						var className = lib.config["extension_十周年UI_rightLayout"] == "on" ? ".skill-control" : ".skill-controlzuoshou";
+
+						var node = ui.create.div(className, ui.arena);
+						node.node = {
+							enable: ui.create.div(".enable", node),
+							trigger: ui.create.div(".trigger", node),
+						};
+
+						for (var i in plugin.controlElement) {
+							node[i] = plugin.controlElement[i];
 						}
-						//结束
+
+						ui.skillControl = node;
 					}
+
 					if (clear) {
 						ui.skillControl.node.enable.innerHTML = "";
 						ui.skillControl.node.trigger.innerHTML = "";
 					}
+
 					return ui.skillControl;
 				},
 			});
 			Object.assign(ui, {
 				updateSkillControl(player, clear) {
 					var eSkills = player.getSkills("e", true, false).slice(0);
-					var skills = app.get.playerSkills(player, true); /*国战隐匿技能*/
+					var skills = player.getSkills("invisible", null, false);
+					var gSkills;
+
 					if (ui.skills2 && ui.skills2.skills.length) {
-						var gSkills = ui.skills2.skills;
+						gSkills = ui.skills2.skills;
 					}
 
 					for (var i = 0; i < skills.length; i++) {
 						var info = get.info(skills[i]);
-						if (info && info.nopop && !skills[i].startsWith("olhedao_tianshu_")) skills.splice(i--, 1);
+						if (info && info.nopop && !skills[i].startsWith("olhedao_tianshu_")) {
+							skills.splice(i--, 1);
+						}
 					}
 
 					var iSkills = player.invisibleSkills.slice(0);
@@ -88,14 +83,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 					var juexingji = {};
 					var xiandingji = {};
-					app.get.playerSkills(player).forEach(function (skill) {
+
+					player.getSkills("invisible", null, false).forEach(function (skill) {
 						var info = get.info(skill);
 						if (!info) return;
+
 						if (get.is.zhuanhuanji(skill, player) || info.limited || (info.intro && info.intro.content === "limited")) {
 							xiandingji[skill] = player.awakenedSkills.includes(skill);
 						}
-						if (info.juexingji || info.dutySkill) juexingji[skill] = player.awakenedSkills.includes(skill);
+
+						if (info.juexingji || info.dutySkill) {
+							juexingji[skill] = player.awakenedSkills.includes(skill);
+						}
 					});
+
 					plugin.updateSkillMarks(player, xiandingji, juexingji);
 				},
 			});
@@ -196,6 +197,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				var skills = game.expandSkills([skill]).map(function (item) {
 					return app.get.skillInfo(item);
 				});
+
 				var hasSame = false;
 				var enableSkills = skills.filter(function (item) {
 					if (item.type !== "enable") return false;
@@ -204,29 +206,34 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 
 				if (!hasSame) enableSkills.unshift(skills[0]);
+
 				var showSkills = enableSkills.length ? enableSkills : skills;
 				showSkills.forEach(function (item) {
 					var node = self.querySelector('[data-id="' + item.id + '"]');
 					if (node) return;
+
 					if (item.type === "enable") {
-						let skillName = get.translation(item.name);
-						// 如果是装备技能，只显示前两个字符
-						if (eSkills && eSkills.includes(item.id)) {
-							skillName = skillName.slice(0, 2);
-						}
-						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable, skillName);
+						let skillName = get.translation(item.name).slice(0, 2);
+						var className = lib.skill[item.id].limited ? ".xiandingji" : ".skillitem";
+						node = ui.create.div(className, self.node.enable, skillName);
 						node.dataset.id = item.id;
-						node.addEventListener("click", function () {
+						if (lib.skill[item.id]?.zhuanhuanji) node.classList.add("zhuanhuanji");
+						if (get.is.locked(item.id, game.me)) node.classList.add("locked");
+						node.addEventListener(lib.config.touchscreen ? "touchend" : "click", function () {
 							game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
 						});
 						app.listen(node, plugin.clickSkill);
 						return;
 					}
-					if (!item.info) return;
-					if (!item.translation) return;
-					if (eSkills && eSkills.includes(item.id)) return;
-					node = ui.create.div(".skillitem", self.node[get.is.phoneLayout() ? "trigger" : "enable"], item.name);
+
+					if (!item.info || !item.translation) return;
+					if (eSkills?.includes(item.id)) return;
+
+					var targetNode = lib.config.phonelayout ? "trigger" : "enable";
+					node = ui.create.div(".skillitem", self.node[targetNode], get.translation(item.name).slice(0, 2));
 					node.dataset.id = item.id;
+					if (lib.skill[item.id]?.zhuanhuanji) node.classList.add("zhuanhuanji");
+					if (get.is.locked(item.id, game.me)) node.classList.add("locked");
 				});
 				return this;
 			},
@@ -237,17 +244,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui.skills3) skills.addArray(ui.skills3.skills);
 
 				Array.from(this.node.enable.childNodes).forEach(function (item) {
-					if (skills.includes(item.dataset.id)) {
-						item.classList.add("usable");
-					} else {
-						item.classList.remove("usable");
-					}
-
-					if (_status.event.skill === item.dataset.id) {
-						item.classList.add("select");
-					} else {
-						item.classList.remove("select");
-					}
+					item.classList[skills.includes(item.dataset.id) ? "add" : "remove"]("usable");
+					item.classList[_status.event.skill === item.dataset.id ? "add" : "remove"]("select");
 				});
 
 				var level1 = Math.min(4, this.node.trigger.childNodes.length);
@@ -271,6 +269,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 		createSkills(skills, node) {
 			var same = true;
+
 			if (node) {
 				if (skills && skills.length) {
 					for (var i = 0; i < node.skills.length; i++) {
@@ -284,16 +283,19 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				node.close();
 				node.delete();
 			}
-			if (!skills && !skills.length) return;
+
+			if (!skills || !skills.length) return;
 
 			node = ui.create.div(".control.skillControl", ui.skillControlArea);
 			Object.assign(node, lib.element.control);
+
 			skills.forEach(function (skill) {
 				var item = ui.create.div(node);
 				item.link = skill;
 				item.dataset.id = skill;
 				item.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
 			});
+
 			node.skills = skills;
 			node.custom = ui.click.skill;
 			return node;
@@ -309,34 +311,42 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (skills2[item.dataset.id]) return;
 				item.remove();
 			});
-			//使限定技和转换技显示不同的样式
+
 			for (var k in skills1) {
 				var info = lib.skill[k];
 				var item = node.querySelector('[data-id="' + k + '"]');
+
 				if (!item) {
-					if (!info.zhuanhuanji) item = ui.create.div(".skillMarkItem.xiandingji", node, "");
-					else item = ui.create.div(".skillMarkItem.zhuanhuanji", node, "");
-					//如果不是转换技就调用限定技的标记
+					var className = !info.zhuanhuanji ? ".skillMarkItem.xiandingji" : ".skillMarkItem.zhuanhuanji";
+					item = ui.create.div(className, node, "");
 				}
-				if (skills1[k]) item.classList.add("used");
-				else item.classList.remove("used");
+
+				if (skills1[k]) {
+					item.classList.add("used");
+				} else {
+					item.classList.remove("used");
+				}
 				item.dataset.id = k;
 			}
-			//这里结束3}
+
 			Array.from(node.querySelectorAll(".juexingji")).forEach(function (item) {
 				if (!skills2[item.dataset.id]) {
 					item.remove();
 				}
 			});
-			//使觉醒技和使命技不同
+
 			for (var k in skills2) {
 				if (!skills2[k]) continue;
+
 				var info = lib.skill[k];
 				if (node.querySelector('[data-id="' + k + '"]')) continue;
+
 				var item;
 				if (info.dutySkill) {
 					item = ui.create.div(".skillMarkItem.duty", node, "");
-				} else item = ui.create.div(".skillMarkItem.juexingji", node, "");
+				} else {
+					item = ui.create.div(".skillMarkItem.juexingji", node, "");
+				}
 				item.dataset.id = k;
 			}
 		},
@@ -427,6 +437,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var str = "";
 
 					if (!Array.isArray(extra)) extra = [extra];
+
 					extra.forEach(function (item) {
 						if (!item || typeof item !== "string") return this;
 						if (item.indexOf("#") === 0) {
@@ -448,6 +459,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				setBackground(name, type) {
 					var skill = lib.skill[this.name];
 					if (skill && skill.intro && skill.intro.markExtra) return this;
+
 					if (type === "character") {
 						name = get.translation(name) || name;
 						this._characterMark = true;
@@ -459,6 +471,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var node = this;
 					var info = node.info;
 					var player = node.parentNode.parentNode;
+
 					if (info.name) {
 						if (typeof info.name == "function") {
 							var named = info.name(player.storage[node.skill], player);
@@ -493,6 +506,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							}
 						}
 					}
+
 					uiintro.add(ui.create.div(".placeholder.slim"));
 				},
 			},
@@ -501,9 +515,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			mark(e) {
 				e.stopPropagation();
 				delete this._waitingfordrag;
-				if (_status.dragged) return;
-				if (_status.clicked) return;
-				if (ui.intro) return;
+
+				if (_status.dragged || _status.clicked || ui.intro) return;
+
 				var rect = this.getBoundingClientRect();
 				ui.click.touchpop();
 				ui.click.intro.call(this, {

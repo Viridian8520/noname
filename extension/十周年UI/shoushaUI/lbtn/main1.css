@@ -109,16 +109,16 @@
 	position: fixed;
 }
 
-#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #mebg,
-#arena:not(.single-handcard):not(.chess).cxy-new-ui > .lbtn-controls ~ #me {
+#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#mebg,
+#arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#me {
 	left: 40px !important;
 }
 
-.lbtn-controls ~ #me #handcards1 {
+.lbtn-controls~#me #handcards1 {
 	--lessw: 40px;
 }
 
-.lbtn-controls > div {
+.lbtn-controls>div {
 	display: block;
 	position: relative;
 }
@@ -151,7 +151,7 @@
 	/*元素边缘圆角大小*/
 }
 
-.lbtn-control + .lbtn-control {
+.lbtn-control+.lbtn-control {
 	margin-top: 1px;
 }
 
@@ -185,7 +185,7 @@
 	/*元素边缘圆角大小*/
 }
 
-.lbtn-control + .lbtn-control {
+.lbtn-control+.lbtn-control {
 	margin-top: 1px;
 }
 
@@ -222,13 +222,13 @@
 }
 
 /*无懈按钮位置*/
-#arena > #dui-controls > .control.stayleft {
+#arena>#dui-controls>.control.stayleft {
 	left: calc(50% - 420px) !important;
 	margin-bottom: 0px !important;
 	order: 3;
 }
 
-.control > div {
+.control>div {
 	/*其他按钮(与下面的相反)*/
 	background-image: url("./images/uibutton/cbtn.png");
 	background-size: 100% 100%;
@@ -256,13 +256,13 @@
 	transition: none;
 }
 
-.control > div.primary {
+.control>div.primary {
 	--p: calc(var(--h) * 11 / 75);
 	background-image: none;
 }
 
 /*分离选项类名*/
-.control > div.choice {
+.control>div.choice {
 	/*其他按钮(确认/取消除外)*/
 	background-image: url("./images/uibutton/cbtn.png");
 	background-size: 100% 100%;
@@ -288,26 +288,26 @@
 }
 
 /*取消按键*/
-.control > div.primary2 {
+.control>div.primary2 {
 	font-size: 30px !important;
 	/*字体大小*/
 	background-image: url("./images/uibutton/confirm-bg-c.png");
 	padding: 8px 12px !important;
 }
 
-.control > div + div {
+.control>div+div {
 	margin-left: 15px;
 }
 
 /*按钮虚化*/
-.control > div.disabled:not([data-type="endButton"]) {
+.control>div.disabled:not([data-type="endButton"]) {
 	background-size: 100% 100%;
 	filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);
 	/*按钮变灰*/
 }
 
-.control > div.primary > span {
+.control>div.primary>span {
 	/*确认按钮*/
 	--sh: calc(var(--h) - 6px);
 	display: block;
@@ -329,11 +329,18 @@
 	position: relative;
 }
 
-.lbtn-confirm[data-skill] > [data-type="skill2"] {
+/*鹿鹿修改 限定技专属按钮*/
+.control>div.primary.xiandingji>span {
+	background-image: url("./images/uibutton/btn2.png");
+}
+
+/*修改结束*/
+
+.lbtn-confirm[data-skill]>[data-type="skill2"] {
 	display: none;
 }
 
-.control > div.huan {
+.control>div.huan {
 	--sh: calc(var(--h) - 6px);
 	display: block;
 	font-size: 40px;
@@ -354,11 +361,11 @@
 	position: relative;
 }
 
-.control > div.huan.huan2 {
+.control>div.huan.huan2 {
 	background-image: url("./images/uibutton/huanpai2.png");
 }
 
-.control > div.qi {
+.control>div.qi {
 	--sh: calc(var(--h) - 6px);
 	display: block;
 	font-size: 40px;
@@ -390,7 +397,7 @@
 }
 
 /*手牌数图片*/
-.handcardNumber > .cardPicture {
+.handcardNumber>.cardPicture {
 	left: 345px;
 	bottom: -10px;
 	--w: 450px;
@@ -406,7 +413,7 @@
 
 /*手牌数值
 /*由于重新设置了数值，所以不调用默认值*/
-.handcardNumber > .cardNumber {
+.handcardNumber>.cardNumber {
 	left: 490px;
 	bottom: 18px;
 	height: 8px;
@@ -430,7 +437,7 @@
 }
 
 /*牌堆图片*/
-.cardRoundNumber > .cardPileNumber {
+.cardRoundNumber>.cardPileNumber {
 	bottom: 20px;
 	width: 44px;
 	height: 57px;
@@ -441,7 +448,7 @@
 	/*为了兼容武将界面*/
 }
 
-.cardRoundNumber > .cardPileNumber > span {
+.cardRoundNumber>.cardPileNumber>span {
 	left: 3.7px;
 	bottom: 18px;
 	width: 100%;
@@ -459,8 +466,8 @@
 
 /*游戏轮数和时间*/
 /*这里要为轮数和时间一起设置参数，但又不能调用默认值，所以用，连写*/
-.cardRoundNumber > .roundNumber,
-.cardRoundNumber > .time {
+.cardRoundNumber>.roundNumber,
+.cardRoundNumber>.time {
 	/*游戏轮数显示*/
 	left: -30px;
 	bottom: 60px;
@@ -470,14 +477,15 @@
 	font-family: "shousha";
 	font-size: 18px;
 	font-weight: 900;
-	text-shadow: -1.7px 0px 3px #2b1f19, 0px -1.7px 3px #2b1f19, 1.7px 0px 3px #2b1f19, 0px 1.7px 3px #2b1f19; /*这个是文字阴影*/
+	text-shadow: -1.7px 0px 3px #2b1f19, 0px -1.7px 3px #2b1f19, 1.7px 0px 3px #2b1f19, 0px 1.7px 3px #2b1f19;
+	/*这个是文字阴影*/
 	white-space: nowrap;
 	color: #97856a;
 }
 
 /*游戏时间显示*/
 /*Q：可能有小伙伴不李姐了，说上面不是定义了游戏时间的参数了吗？为啥这里又来一遍？A：js里创造了两个布局一个是时间，另一个是游戏轮数。关于位置关系，不能一同用一种参数调用，不然会叠在一起（不信你试试），当然下面的颜色属性是可以删掉的，不影响。*/
-.cardRoundNumber > .time {
+.cardRoundNumber>.time {
 	bottom: 60px;
 	font-size: 18px;
 	font-family: "shousha";
@@ -488,7 +496,7 @@
 	color: #97856a;
 }
 
-.control.dou3 > div {
+.control.dou3>div {
 	/*无懈按钮*/
 	background-size: contain;
 	font-size: 0px;
@@ -526,7 +534,7 @@
 	background-image: url("./images/uibutton/paiduiming.png");
 }
 
-.card-statistics-title > div {
+.card-statistics-title>div {
 	position: relative;
 	flex: 1;
 	text-align: center;
@@ -547,7 +555,7 @@
 	position: relative;
 }
 
-.card-statistics-content > div {
+.card-statistics-content>div {
 	overflow: auto;
 	flex: 1;
 	position: relative;
@@ -588,7 +596,7 @@
 	flex: 0.2;
 }
 
-#arenalog > div {
+#arenalog>div {
 	position: relative;
 	display: block;
 	width: calc(100% - 23px);
@@ -600,13 +608,13 @@
 	background-size: 100% 100%;
 }
 
-#window:not(.low_performance) #arena #arenalog > div {
+#window:not(.low_performance) #arena #arenalog>div {
 	animation: game_start 0.5s;
 	-webkit-animation: game_start 0.5s;
 }
 
 /*托管中图片（手杀）*/
-#autonode > div:last-child {
+#autonode>div:last-child {
 	z-index: 10;
 	margin-left: 150px !important;
 	margin-bottom: -46px !important;
@@ -857,7 +865,7 @@
 	border-radius: 0px;
 }
 
-.lbtn-controls + .lbtn-controls {
+.lbtn-controls+.lbtn-controls {
 	margin-top: 1px;
 }
 
@@ -890,7 +898,7 @@
 	font-size: 13px !important;
 }
 
-.handcardNumber1 > .cardPicture1 {
+.handcardNumber1>.cardPicture1 {
 	left: -50px;
 	/* 调整left属性值 */
 	bottom: -16px;
@@ -909,7 +917,7 @@
 	/* 添加左右翻转效果 */
 }
 
-.handcardNumber1 > .cardNumber1 {
+.handcardNumber1>.cardNumber1 {
 	left: 180px;
 	bottom: 12px;
 	height: 8px;
