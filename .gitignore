@@ -27,6 +27,7 @@ Home
 jsconfig.json
 localStorage.json
 main.js
+!mode/**/src/main.js
 # taffy: 自定义gitignore喵
 # node_modules
 # taffy分界线
