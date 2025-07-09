@@ -259,7 +259,11 @@ var newDuilib;
 			// var dpr = e.dpr;
 			/* taffy分界线 */
 			// taffy: 修复皮切导致的特效偏移问题
-			var dpr = e.dpr / (useNewDpr ? parseFloat(window.documentZoom) : 1);
+      var dpr =
+        e.dpr /
+        (useNewDpr
+          ? parseFloat(window.getComputedStyle(document.body).zoom)
+          : 1);
 			/* taffy分界线 */
 			var referSize = { width: e.canvas.width, height: e.canvas.height };
 			var domNode = this.referNode instanceof HTMLElement ? this.referNode : undefined;
@@ -382,9 +386,13 @@ var newDuilib;
 				// renderScale *= dpr;
 				/* taffy分界线 */
 				// taffy: 修复皮切导致的特效偏移问题
-				renderScale *= dpr * (useNewDpr ? parseFloat(documentZoom) : 1);
+        renderScale *=
+          dpr *
+          (useNewDpr
+            ? parseFloat(window.getComputedStyle(document.body).zoom)
+            : 1);
 				/* taffy分界线 */
-			}
+      }
 			
 			if (renderScale != 1) {
 				this.mvp.scale(renderScale, renderScale, 0);
@@ -1167,6 +1175,7 @@ var newDuilib;
 			this.BUILT_3_5_35_ID = 60000 //  版本3.5.35的动皮起始id, 和默认的3.6版本区分
 			this.BUILT_3_7_ID = 70000 //  版本3.7的动皮起始id, 和默认的3.6版本区分
 			this.BUILT_4_1_ID = 80000 //  版本3.7的动皮起始id, 和默认的3.6版本区分
+			this.BUILT_4_2_ID = 90000 //  版本3.7的动皮起始id, 和默认的3.6版本区分
 
 			var offscreen = self.OffscreenCanvas != undefined;
 			if (offscreen) {
@@ -1247,6 +1256,9 @@ var newDuilib;
 						break
 					case '4.1':
 						sprite.id = this.BUILT_4_1_ID++
+						break
+					case '4.2':
+						sprite.id = this.BUILT_4_2_ID++
 						break
 					default:
 						sprite.id = this.BUILT_ID++;
@@ -1439,63 +1451,247 @@ if (decadeModule)
 			animation.cap = new decadeUI.AnimationPlayerPool(4, decadeUIPath + "assets/animation/", "decadeUI.animation");
 
 			var fileList = [
-				{ name: "effect_youxikaishi" },
-				{ name: "effect_youxikaishi_shousha" },
-				{ name: "effect_baguazhen" },
-				{ name: "effect_baiyinshizi" },
-				{ name: "effect_cixiongshuanggujian" },
-				{ name: "effect_fangtianhuaji" },
-				{ name: "effect_guanshifu" },
-				{ name: "effect_gudingdao" },
-				{ name: "effect_hanbingjian" },
-				{ name: "effect_qilingong" },
-				{ name: "effect_qinggangjian" },
-				{ name: "effect_qinglongyanyuedao" },
-				{ name: "effect_renwangdun" },
-				{ name: "effect_shoujidonghua" },
-				{ name: "effect_tengjiafangyu" },
-				{ name: "effect_tengjiaranshao" },
-				{ name: "effect_zhangbashemao" },
-				{ name: "effect_zhiliao" },
-				{ name: "effect_zhugeliannu" },
-				{ name: "effect_zhuqueyushan" },
-				{ name: "effect_jinhe" },
-				{ name: "effect_numa" },
-				{ name: "effect_nvzhuang" },
-				{ name: "effect_wufengjian" },
-				{ name: "effect_yajiaoqiang" },
-				{ name: "effect_yinfengjia" },
-				{ name: "effect_zheji" },
-				{ name: "effect_jisha1" },
-				{ name: "effect_zhenwang" },
-				{ name: "effect_lebusishu" },
-				{ name: "effect_bingliangcunduan" },
-				{ name: "effect_nanmanruqin" },
-				{ name: "effect_taoyuanjieyi" },
-				{ name: "effect_shandian" },
-				{ name: "effect_wanjianqifa_full" },
-				{ name: "effect_xianding", fileType: "json" },
-				{ name: "effect_caochuanjiejian", follow: true },
-				{ name: "effect_guohechaiqiao", follow: true },
-				{ name: "effect_leisha", follow: true },
-				{ name: "effect_heisha", follow: true },
-				{ name: "effect_huosha", follow: true },
-				{ name: "effect_hongsha", follow: true },
-				{ name: "effect_huogong", follow: true },
-				{ name: "effect_panding", follow: true },
-				{ name: "effect_shan", follow: true },
-				{ name: "effect_tao", follow: true },
-				{ name: "effect_tiesuolianhuan", follow: true },
-				{ name: "effect_jiu", follow: true },
-				{ name: "effect_shunshouqianyang", follow: true },
-				{ name: "effect_shushangkaihua", follow: true },
-				{ name: "effect_wanjianqifa", follow: true },
-				{ name: "effect_wuzhongshengyou", follow: true },
-				{ name: "effect_wuxiekeji", follow: true },
-				{ name: "effect_wugufengdeng", follow: true },
-				{ name: "effect_yuanjiaojingong", follow: true },
-				{ name: "effect_zhijizhibi", follow: true },
-				{ name: "effect_zhulutianxia", follow: true },
+				{
+					name: "aar_chupaizhishiX",
+				},
+				{
+					name: "aar_chupaizhishi",
+				},
+				{
+					name: "SF_xuanzhong_eff_jiangjun",
+				},
+				{
+					name: "SF_xuanzhong_eff_weijiangjun",
+				},
+				{
+					name: "SF_xuanzhong_eff_cheqijiangjun",
+				},
+				{
+					name: "SF_xuanzhong_eff_biaoqijiangjun",
+				},
+				{
+					name: "SF_xuanzhong_eff_dajiangjun",
+				},
+				{
+					name: "SF_xuanzhong_eff_dasima",
+				},
+				{
+					name: "effect_youxikaishi",
+				},
+				{
+					name: "effect_youxikaishi_shousha",
+				},
+				{
+					name: "effect_baguazhen",
+				},
+				{
+					name: "effect_baiyinshizi",
+				},
+				{
+					name: "effect_cixiongshuanggujian",
+				},
+				{
+					name: "effect_fangtianhuaji",
+				},
+				{
+					name: "effect_guanshifu",
+				},
+				{
+					name: "effect_gudingdao",
+				},
+				{
+					name: "effect_hanbingjian",
+				},
+				{
+					name: "effect_qilingong",
+				},
+				{
+					name: "effect_qinggangjian",
+				},
+				{
+					name: "effect_qinglongyanyuedao",
+				},
+				{
+					name: "effect_renwangdun",
+				},
+				{
+					name: "effect_shoujidonghua",
+				},
+				{
+					name: "effect_tengjiafangyu",
+				},
+				{
+					name: "effect_tengjiaranshao",
+				},
+				{
+					name: "effect_zhangbashemao",
+				},
+				{
+					name: "effect_zhiliao",
+				},
+				{
+					name: "effect_zhugeliannu",
+				},
+				{
+					name: "effect_zhuqueyushan",
+				},
+				{
+					name: "effect_jinhe",
+				},
+				{
+					name: "effect_numa",
+				},
+				{
+					name: "effect_nvzhuang",
+				},
+				{
+					name: "effect_wufengjian",
+				},
+				{
+					name: "effect_yajiaoqiang",
+				},
+				{
+					name: "effect_yinfengjia",
+				},
+				{
+					name: "effect_zheji",
+				},
+				{
+					name: "effect_jisha1",
+				},
+				{
+					name: "effect_zhenwang",
+				},
+				{
+					name: "effect_lebusishu",
+				},
+				{
+					name: "effect_bingliangcunduan",
+				},
+				{
+					name: "effect_nanmanruqin",
+				},
+				{
+					name: "effect_taoyuanjieyi",
+				},
+				{
+					name: "effect_shandian",
+				},
+				{
+					name: "effect_wanjianqifa_full",
+				},
+				{
+					name: "RWJGD_xiao",
+				},
+				{
+					name: "XRJXN_xiao",
+				},
+				{
+					name: "XTBGZ_xiao",
+				},
+				{
+					name: "ZYSZK_xiao",
+				},
+				{
+					name: "TYBLJ",
+				},
+				{
+					name: "SSHW_TX_chongyingshenfu",
+				},
+				{
+					name: "SSHW_TX_lingbaoxianhu",
+				},
+				{
+					name: "SSHW_TX_taijifuchen",
+				},
+				{
+					name: "effect_xianding",
+					fileType: "json",
+				},
+				{
+					name: "effect_caochuanjiejian",
+					follow: true,
+				},
+				{
+					name: "effect_guohechaiqiao",
+					follow: true,
+				},
+				{
+					name: "effect_leisha",
+					follow: true,
+				},
+				{
+					name: "effect_heisha",
+					follow: true,
+				},
+				{
+					name: "effect_huosha",
+					follow: true,
+				},
+				{
+					name: "effect_hongsha",
+					follow: true,
+				},
+				{
+					name: "effect_huogong",
+					follow: true,
+				},
+				{
+					name: "effect_panding",
+					follow: true,
+				},
+				{
+					name: "effect_shan",
+					follow: true,
+				},
+				{
+					name: "effect_tao",
+					follow: true,
+				},
+				{
+					name: "effect_tiesuolianhuan",
+					follow: true,
+				},
+				{
+					name: "effect_jiu",
+					follow: true,
+				},
+				{
+					name: "effect_shunshouqianyang",
+					follow: true,
+				},
+				{
+					name: "effect_shushangkaihua",
+					follow: true,
+				},
+				{
+					name: "effect_wanjianqifa",
+					follow: true,
+				},
+				{
+					name: "effect_wuzhongshengyou",
+					follow: true,
+				},
+				{
+					name: "effect_wuxiekeji",
+					follow: true,
+				},
+				{
+					name: "effect_wugufengdeng",
+					follow: true,
+				},
+				{
+					name: "effect_yuanjiaojingong",
+					follow: true,
+				},
+				{
+					name: "effect_zhijizhibi",
+					follow: true,
+				},
+				{
+					name: "effect_zhulutianxia",
+					follow: true,
+				},
 			];
 
 			var fileNameList = fileList.concat();
@@ -1524,6 +1720,61 @@ if (decadeModule)
 			var skillAnimation = (function () {
 				var defines = {
 					skill: {
+						rw_bagua_skill: {
+							skill: "rw_bagua_skill",
+							name: "XTBGZ_xiao",
+							scale: 1,
+						},
+						rw_renwang_skill: {
+							skill: "rw_renwang_skill",
+							name: "RWJGD_xiao",
+							scale: 1,
+						},
+						rw_baiyin_skill: {
+							skill: "rw_baiyin_skill",
+							name: "ZYSZK_xiao",
+							scale: 1,
+						},
+						rw_zhuge_skill: {
+							skill: "rw_zhuge_skill",
+							name: "XRJXN_xiao",
+							scale: 1,
+						},
+						rw_tengjia1: {
+							skill: "rw_tengjia1",
+							name: "TYBLJ",
+							action: "TYBLJ_dang",
+							scale: 1,
+						},
+						rw_tengjia2: {
+							skill: "rw_tengjia2",
+							name: "TYBLJ",
+							action: "TYBLJ_huo",
+							scale: 1,
+						},
+						rw_tengjia3: {
+							skill: "rw_tengjia3",
+							name: "TYBLJ",
+							action: "TYBLJ_dang",
+							scale: 1,
+						},
+						gx_lingbaoxianhu: {
+							skill: "gx_lingbaoxianhu",
+							name: "SSHW_TX_lingbaoxianhu",
+							scale: 0.5,
+						},
+						gx_taijifuchen: {
+							skill: "gx_taijifuchen",
+							name: "SSHW_TX_taijifuchen",
+							scale: 0.5,
+							x: [0, 0.48],
+						},
+						gx_chongyingshenfu: {
+							skill: "gx_chongyingshenfu",
+							name: "SSHW_TX_chongyingshenfu",
+							scale: 0.5,
+							x: [0, 0.58],
+						},
 						bagua_skill: {
 							skill: "bagua_skill",
 							name: "effect_baguazhen",
@@ -1626,7 +1877,11 @@ if (decadeModule)
 							name: "effect_jinhe",
 							scale: 0.4,
 						},
-						numa: { skill: "numa", name: "effect_numa", scale: 0.4 },
+						numa: {
+							skill: "numa",
+							name: "effect_numa",
+							scale: 0.4,
+						},
 						nvzhuang: {
 							skill: "nvzhuang",
 							name: "effect_nvzhuang",
@@ -1647,8 +1902,16 @@ if (decadeModule)
 							name: "effect_yinfengjia",
 							scale: 0.5,
 						},
-						zheji: { skill: "zheji", name: "effect_zheji", scale: 0.35 },
-						lebu: { skill: "lebu", name: "effect_lebusishu", scale: 0.7 },
+						zheji: {
+							skill: "zheji",
+							name: "effect_zheji",
+							scale: 0.35,
+						},
+						lebu: {
+							skill: "lebu",
+							name: "effect_lebusishu",
+							scale: 0.7,
+						},
 						bingliang: {
 							skill: "bingliang",
 							name: "effect_bingliangcunduan",
@@ -1672,7 +1935,10 @@ if (decadeModule)
 							name: "effect_wanjianqifa_full",
 							scale: 1.5,
 						},
-						taoyuan: { card: "taoyuan", name: "effect_taoyuanjieyi" },
+						taoyuan: {
+							card: "taoyuan",
+							name: "effect_taoyuanjieyi",
+						},
 					},
 				};
 

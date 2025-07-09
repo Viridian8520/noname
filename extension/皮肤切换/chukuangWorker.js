@@ -1,6 +1,6 @@
 'use strict';
 importScripts('spine.js', './spine-lib/spine_4_0_64.js', './spine-lib/spine_3_8.js',
-    './spine-lib/spine_3_5_35.js', './spine-lib/spine_3_7.js', './spine-lib/spine_4_1.js', 'animation.js', 'settings.js', 'animations.js' );
+    './spine-lib/spine_3_5_35.js', './spine-lib/spine_3_7.js', './spine-lib/spine_4_1.js','./spine-lib/spine_4_2.js', 'animation.js', 'settings.js', 'animations.js' );
 let window = self;
 let devicePixelRatio = 1;
 let documentZoom = 1;
@@ -60,7 +60,9 @@ class PlayerAnimation {
         let pLoad = function (actionParams, times) {
             if (actionParams) {
                 actionParams.alpha = actionParams.alpha == null ? player.alpha : actionParams.alpha
-                let anni = _this.getAnni(player, actionParams.version)
+                // 修复：为version提供默认值，避免undefined错误
+                let version = actionParams.version || (player && player.version) || '3.6';
+                let anni = _this.getAnni(player, version)
 
                 if (!anni.hasSpine(actionParams.name)) {
                     let skelType = actionParams.json ? 'json': 'skel';
@@ -109,6 +111,7 @@ class PlayerAnimation {
         if (data.action === 'GongJi') actionParams = player.gongjiAction
         else if (data.action === 'chukuang') actionParams = player.chuchangAction
         else if (data.action === 'TeShu') actionParams = player.teshuAction
+        else if (data.action === 'hudong') actionParams = player.hudongAction
         else actionParams = player[data.action + 'Action']
         if (!actionParams) return
 
@@ -119,8 +122,10 @@ class PlayerAnimation {
             return this.lianxuChuKuang(player, actionParams, data)
         }
 
-        if (!this.getAnni(player, actionParams.version).hasSpine(actionParams.name)) {
-            this.getAnni(player, actionParams.version).loadSpine(actionParams.name, actionParams.json ? 'json': 'skel', () => {
+        // 修复：为version提供默认值，避免undefined错误
+        let version = actionParams.version || (player && player.version) || '3.6';
+        if (!this.getAnni(player, version).hasSpine(actionParams.name)) {
+            this.getAnni(player, version).loadSpine(actionParams.name, actionParams.json ? 'json': 'skel', () => {
                 this.playChuKuang(player, actionParams, data)
             }, this.errPlaySpine)
         } else {
@@ -149,15 +154,15 @@ class PlayerAnimation {
             showTime += showTimeBefore
 
             // 暂时还是开启动画播放速度默认调为1.2, 默认为1太慢了
-            if (playNode.speed == null || playNode.speed === 1) playNode.speed = 1.2
+            if (playNode.speed == null || playNode.speed === 1) playNode.speed = 1
 
         } else {
-            if (playNode.speed == null || playNode.speed === 1) playNode.speed = 1.2
+            if (playNode.speed == null || playNode.speed === 1) playNode.speed = 1
 
 
         }
         showTime /= (playNode.speed || 1)
-        console.log('showTime', showTime, animation.showTime, playNode.speed)
+        console.log('showTime', showTime, animation.showTime, playNode.speed, 'action:', data.action)
         // 如果是连续攻击, 延长展示的时间, 回框速度加快
         // if (notSetPos && !(playNode.player.shizhounian || playNode.player.chuchang || playNode.player.qhlxBigAvatar)) {
         //     showTime += delayTime - 150
@@ -196,7 +201,9 @@ class PlayerAnimation {
         }, showTime)
         // 重新恢复攻击pose
         if (data.action === 'chuchang') {
-            playNode.scaleTo(playNode.scale * 1.2, 500)
+            // 出场动画直接使用调整后的大小，不进行额外的放大缩小
+            // 保持当前设置的scale值不变
+            // 注释掉放大缩小逻辑，让角色按照调整的大小直接播放
         }
         // 设置是否翻转
         if (!data.me) {
@@ -243,7 +250,9 @@ class PlayerAnimation {
                                 // sprite.x = p.x
                                 // sprite.y = attackArgs.bodySize.bodyHeight - p.y
                                 let referNode = new HTMLElement(p.boundRect, attackArgs.bodySize)
-                                this.getAnni(player, sprite.version).playSpine(sprite, {referNode: referNode})
+                                // 修复：为version提供默认值，避免undefined错误
+                                let spriteVersion = sprite.version || (player && player.version) || '3.6';
+                                this.getAnni(player, spriteVersion).playSpine(sprite, {referNode: referNode})
                             }
                         }
 
@@ -337,7 +346,9 @@ class PlayerAnimation {
                                 let referNode = new HTMLElement(p.boundRect, attackArgs.bodySize)
                                 // let node = this.getAnni(playNode.player).playSpine(sprite, {referNode: referNode})
 
-                                let node = this.getAnni(player, dy.version).playSpine(sprite, {x: startX, y:  attackArgs.bodySize.bodyHeight - startY})
+                                // 修复：为version提供默认值，避免undefined错误
+                                let dyVersion = dy.version || (player && player.version) || '3.6';
+                                let node = this.getAnni(player, dyVersion).playSpine(sprite, {x: startX, y:  attackArgs.bodySize.bodyHeight - startY})
 
                                 if (!zhishixianTime) {
                                     let ani = node.skeleton.data.animations[0]
@@ -352,8 +363,10 @@ class PlayerAnimation {
                             if (dy.effect) {
                                 // 获取指示线的动画时间, 在到达武将框后播放
                                 setTimeout(() => {
-                                    if (!this.getAnni(player, dy.effect.version).hasSpine(dy.effect.name)) {
-                                        this.getAnni(player, dy.effect.version).loadSpine(dy.effect.name, dy.effect.json ? 'json': 'skel', playBaoZha)
+                                    // 修复：为version提供默认值，避免undefined错误
+                                    let effectVersion = dy.effect.version || (player && player.version) || '3.6';
+                                    if (!this.getAnni(player, effectVersion).hasSpine(dy.effect.name)) {
+                                        this.getAnni(player, effectVersion).loadSpine(dy.effect.name, dy.effect.json ? 'json': 'skel', playBaoZha)
                                     } else {
                                         playBaoZha()
                                     }
@@ -361,8 +374,10 @@ class PlayerAnimation {
                             }
                         }
 
-                        if (!this.getAnni(player, dy.version).hasSpine(dy.name)) {
-                            this.getAnni(player, dy.version).loadSpine(dy.name, dy.json ? 'json': 'skel', playZhishixian)
+                        // 修复：为version提供默认值，避免undefined错误
+                        let zhishixianVersion = dy.version || (player && player.version) || '3.6';
+                        if (!this.getAnni(player, zhishixianVersion).hasSpine(dy.name)) {
+                            this.getAnni(player, zhishixianVersion).loadSpine(dy.name, dy.json ? 'json': 'skel', playZhishixian)
                         } else {
                             playZhishixian()
                         }
@@ -393,9 +408,11 @@ class PlayerAnimation {
         let playNode = actionParams.playNode
         // 这里说明上一次出框已经完成, 可能会让原来的待机显现, 保险起见, 再发一次隐藏的消息
         // 判断上次的动作是否播放完成.
-        if (!this.getAnni(playNode.player, actionParams.version).nodes.includes(playNode)) {
+        // 修复：为version提供默认值，避免undefined错误
+        let version = actionParams.version || (playNode.player && playNode.player.version) || '3.6';
+        if (!this.getAnni(playNode.player, version).nodes.includes(playNode)) {
             playNode.skeleton.completed = true
-            let playedSprite = this.getAnni(playNode.player, actionParams.version).playSpine(playNode.actionParams)
+            let playedSprite = this.getAnni(playNode.player, version).playSpine(playNode.actionParams)
             this.setSkin(actionParams, playedSprite)
             playedSprite.player = player
             playedSprite.actionParams = actionParams
@@ -417,6 +434,24 @@ class PlayerAnimation {
             } else {
                 lastTime = lastTime - curTime
                 console.log('多指连续')
+            }
+        } else if (data.action === 'chuchang') {
+            // 出场动画需要播放更完整才重置
+            if (curTime / lastTime >= 0.8) {
+                entry.trackTime = 0
+                console.log('出场动画重置----', curTime/lastTime, curTime)
+            } else {
+                lastTime = lastTime - curTime
+                console.log('出场动画不重置------', curTime/lastTime, curTime)
+            }
+        } else if (data.action === 'TeShu') {
+            // 特殊动画需要播放更完整才重置
+            if (curTime / lastTime >= 0.7) {
+                entry.trackTime = 0
+                console.log('特殊动画重置----', curTime/lastTime, curTime)
+            } else {
+                lastTime = lastTime - curTime
+                console.log('特殊动画不重置------', curTime/lastTime, curTime)
             }
         } else {
             if (curTime / lastTime >= 0.1) {
@@ -459,7 +494,9 @@ class PlayerAnimation {
             actionParams.showTime = actionInfo.showTime
             actionParams.action = actionInfo.action
         }
-        let playedSprite = this.getAnni(player, actionParams.version).playSpine(actionParams)
+        // 修复：为version提供默认值，避免undefined错误
+        let version = actionParams.version || (player && player.version) || '3.6';
+        let playedSprite = this.getAnni(player, version).playSpine(actionParams)
         playedSprite.player = player
         playedSprite.actionParams = actionParams
         this.setSkin(actionParams, playedSprite)
@@ -546,6 +583,10 @@ class PlayerAnimation {
         // 定义为十周年的开局出场
         let chuchang = player.chuchang
         let chuchangType = typeof chuchang
+        
+        // 添加互动出框参数处理
+        let hudong = player.hudong
+        let hudongType = typeof hudong
 
         // 如果填写了出场参数, 基本确认是十周年的真动皮
         if (chuchang) {
@@ -554,6 +595,16 @@ class PlayerAnimation {
                 if (!chuchang.action) {chuchang.action = 'play'}
                 if (!chuchang.scale) {chuchang.scale = player.scale}
                 player.chuchangAction = chuchang
+            }
+        }
+        
+        // 处理互动出框参数
+        if (hudong) {
+            if (hudongType === 'object') {
+                if (!hudong.name) {hudong.name = player.name}
+                if (!hudong.action) {hudong.action = 'play'}
+                if (!hudong.scale) {hudong.scale = player.scale}
+                player.hudongAction = hudong
             }
         }
 
@@ -750,6 +801,15 @@ function setPos(apnode, data) {
             apnode.y = data.player.y + data.player.height * 0.8
             return setShiZhouNianGongJiPos(apnode, data)
             // 出场是原地出场
+        } else if (data.action === 'hudong') {
+            // 如果设置了互动的位置, 那么不使用默认的位置
+            if (apnode.player.hudongAction.x && apnode.player.hudongAction.y) {
+                return
+            }
+            // 默认互动位置略微偏右上方
+            apnode.x = data.player.x + data.player.width / 3
+            apnode.y = data.player.y + data.player.height * 0.7
+            return setShiZhouNianGongJiPos(apnode, data)
         } else {
             return
         }
@@ -771,6 +831,14 @@ function setPos(apnode, data) {
             if (apnode.player.shizhounian) {
                 return setShiZhouNianGongJiPos(apnode, data)
             }
+        } else if (data.action === 'hudong') {
+            if (apnode.player.shizhounian) {
+                return setShiZhouNianGongJiPos(apnode, data)
+            }
+            // 非玩家互动位置特殊处理
+            apnode.x = data.player.x + data.player.width / 3;
+            apnode.y = data.player.y + data.player.height / 2;
+            return;
         }
         apnode.x = data.direction.x;
         apnode.y = data.direction.y;
@@ -831,13 +899,16 @@ function completePlayerParams(avatarPlayer, action) {
         if (action === 'GongJi') actionParams = avatarPlayer.gongjiAction
         else if (action === 'TeShu') actionParams = avatarPlayer.teshuAction
         else if (action === 'chuchang') actionParams = avatarPlayer.chuchangAction
+        else if (action === 'hudong') actionParams = avatarPlayer.hudongAction
         else actionParams = avatarPlayer[action + 'Action']  // 这个写法是可以扩展随意任意想要出框的action, 默认可以出框的只有gongji,teshu,chuchang
 
         if (actionParams && actionParams.name === daijiName) {
             // 只支持假动皮攻击出框, 其他动作和待机相同, 不允许出框
             if (action === 'GongJi') {
                 // 查找待机动作的默认动作标签, 并缓存
-                let results = playerAnimation.getAnni(avatarPlayer, actionParams.version).getSpineActions(daijiName, actionParams.toLoadActions)
+                // 修复：为version提供默认值，避免undefined错误
+                let version = actionParams.version || (avatarPlayer && avatarPlayer.version) || '3.6';
+                let results = playerAnimation.getAnni(avatarPlayer, version).getSpineActions(daijiName, actionParams.toLoadActions)
                 if (results && results.length > 0) {
                     // 检查是否有GongJi标签, 如果有那是真动皮
                     if (actionParams.fakeDynamic) {
@@ -893,24 +964,28 @@ function completePlayerParams(avatarPlayer, action) {
                     }
                 }
                 avatarPlayer.actionState[action] = false
-            }  else if (action === 'chuchang') {
-                let results = playerAnimation.getAnni(avatarPlayer, actionParams.version).getSpineActions(daijiName, actionParams.toLoadActions)
+            } else if (action === 'hudong') {
+                // 处理互动出框动作
+                let version = actionParams.version || (avatarPlayer && avatarPlayer.version) || '3.6';
+                let results = playerAnimation.getAnni(avatarPlayer, version).getSpineActions(daijiName, actionParams.toLoadActions)
                 if (results && results.length > 0) {
                     for (let r of results) {
                         if (r.name === actionParams.action) {
                             avatarPlayer.actionState[action] = {
                                 action: r.name,
                                 duration: r.duration,
-                                showTime: actionParams.showTime ||  Math.min(results[0].duration, 2)
+                                // 互动动画确保至少有1.5秒的显示时间
+                                showTime: actionParams.showTime || Math.max(r.duration, 1.5)
                             }
                             return true
                         }
                     }
-                    // 使用第一个当作chuchang
+                    // 使用第一个当作hudong动作
                     avatarPlayer.actionState[action] = {
                         action: results[0].name,
                         duration: results[0].duration,
-                        showTime: actionParams.showTime || Math.min(results[0].duration, 2)
+                        // 互动动画确保至少有1.5秒的显示时间
+                        showTime: actionParams.showTime || Math.max(results[0].duration, 1.5)
                     }
                     return true
                 }
@@ -921,7 +996,15 @@ function completePlayerParams(avatarPlayer, action) {
             avatarPlayer.actionState[action] = false
         } else {
             // 查找骨骼与正确的标签
-            let results = playerAnimation.getAnni(avatarPlayer, actionParams.version).getSpineActions(actionParams.name, actionParams.toLoadActions)
+            // 修复：确保actionParams存在且有有效的version参数
+            if (!actionParams) {
+                avatarPlayer.actionState[action] = false;
+                return false;
+            }
+            
+            // 为version提供默认值，避免undefined错误
+            let version = actionParams.version || (avatarPlayer && avatarPlayer.version) || '3.6';
+            let results = playerAnimation.getAnni(avatarPlayer, version).getSpineActions(actionParams.name, actionParams.toLoadActions)
             let isArray = Array.isArray(actionParams.action)
             let states = []
 
@@ -937,18 +1020,28 @@ function completePlayerParams(avatarPlayer, action) {
                 for (let r of results) {
                     if (isArray) {
                         if (actionParams.action.includes(r.name)) {
+                            let showTime = actionParams.showTime || r.duration
+                            // 针对特殊动画确保最小显示时间
+                            if (action === 'TeShu') {
+                                showTime = actionParams.showTime || Math.max(r.duration, 1.5)
+                            }
                             states.push({
                                 action: r.name,
                                 duration: r.duration,
-                                showTime: actionParams.showTime || r.duration
+                                showTime: showTime
                             })
                         }
                     } else {
                         if (r.name === actionParams.action) {
+                            let showTime = actionParams.showTime || r.duration
+                            // 针对特殊动画确保最小显示时间
+                            if (action === 'TeShu') {
+                                showTime = actionParams.showTime || Math.max(r.duration, 1.5)
+                            }
                             avatarPlayer.actionState[action] = {
                                 action: r.name,
                                 duration: r.duration,
-                                showTime: actionParams.showTime || r.duration
+                                showTime: showTime
                             }
                             return true
                         }
@@ -968,19 +1061,45 @@ function isChuKuang(data) {
     // 如果已经是出框状态, 直接返回, 不能在短时间内连续请求
     let playerState = playerAnimation.playerState[data.id]
     if (playerState) {
+        let currentTime = new Date().getTime()
+        
+        // 针对出场动画设置更长的冷却时间
         if (data.action === 'chuchang') {
-            playerState['time'] = new Date().getTime()
+            // 出场动画的冷却时间设为2500ms，确保动画播放完整（2秒播放时间+0.5秒缓冲）
+            if (playerState.time && currentTime - playerState.time <= 2500) {
+                return
+            }
+            playerState['time'] = currentTime
+        }
+        // 针对特殊动画设置更长的冷却时间
+        else if (data.action === 'TeShu') {
+            // 特殊动画的冷却时间设为2000ms，确保动画播放完整（1.5秒播放时间+0.5秒缓冲）
+            if (playerState.time && currentTime - playerState.time <= 2000) {
+                return
+            }
+            playerState['time'] = currentTime
+        }
+        // 针对互动动画设置合适的冷却时间
+        else if (data.action === 'hudong') {
+            // 互动动画的冷却时间设为1800ms，确保动画播放完整（1.5秒播放时间+0.3秒缓冲）
+            if (playerState.time && currentTime - playerState.time <= 1800) {
+                return
+            }
+            playerState['time'] = currentTime
         }
         else {
-            console.log(playerState, new Date().getTime(), new Date().getTime() - playerState.time < 40)
+            console.log(playerState, currentTime, currentTime - playerState.time < 40)
             if (playerState.action != null && playerState.action !== data.action) {
                 return
             }
-            if (playerState.lastAction === 'chuchang' && playerState.time && new Date().getTime() - playerState.time <= 200) {
+            if (playerState.lastAction === 'chuchang' && playerState.time && currentTime - playerState.time <= 2500) {
+                return
+            }
+            if (playerState.lastAction === 'TeShu' && playerState.time && currentTime - playerState.time <= 2000) {
                 return
             }
             // 延时100ms执行动作, 防止两次触发相近
-            if (playerState.time && new Date().getTime() - playerState.time < 40) {
+            if (playerState.time && currentTime - playerState.time < 40) {
                 // if (playerState.lastAction && playerState.lastAction !== data.action) {
                 //     setTimeout(() => {
                 //         isChuKuang(data)
@@ -1013,6 +1132,7 @@ function isChuKuang(data) {
         if (data.action === 'GongJi') actionParams = player.gongjiAction
         else if (data.action === 'chukuang') actionParams = player.chuchangAction
         else if (data.action === 'TeShu') actionParams = player.teshuAction
+        else if (data.action === 'hudong') actionParams = player.hudongAction
         else actionParams = player[data.action + 'Action']
         if (extraParams) {
             if (actionParams) {
@@ -1051,6 +1171,7 @@ function isChuKuang(data) {
         if (data.action === 'GongJi') actionParams = primaryPlayer.gongjiAction
         else if (data.action === 'chukuang') actionParams = primaryPlayer.chuchangAction
         else if (data.action === 'TeShu') actionParams = primaryPlayer.teshuAction
+        else if (data.action === 'hudong') actionParams = primaryPlayer.hudongAction
         else actionParams = primaryPlayer[data.action + 'Action']
         if (extraParams) {
             if (actionParams) {
@@ -1090,6 +1211,7 @@ function isChuKuang(data) {
         if (data.action === 'GongJi') actionParams = deputyPlayer.gongjiAction
         else if (data.action === 'chukuang') actionParams = deputyPlayer.chuchangAction
         else if (data.action === 'TeShu') actionParams = deputyPlayer.teshuAction
+        else if (data.action === 'hudong') actionParams = deputyPlayer.hudongAction
         else actionParams = deputyPlayer[data.action + 'Action']
         if (extraParams) {
             if (actionParams) {
@@ -1143,7 +1265,23 @@ function adjust(data) {
     let player = playerAnimation.findPlayerParams(data.id, data.skinId)
     if (!player) return;
 
-    let actionParams = player.gongjiAction
+    // 修复：支持调整不同类型的动作，包括出场动作
+    let actionParams
+    if (data.action === 'GongJi') {
+        actionParams = player.gongjiAction
+    } else if (data.action === 'chukuang' || data.action === 'chuchang') {
+        actionParams = player.chuchangAction
+    } else if (data.action === 'TeShu') {
+        actionParams = player.teshuAction
+    } else if (data.action === 'hudong') {
+        actionParams = player.hudongAction
+    } else if (data.action) {
+        actionParams = player[data.action + 'Action']
+    } else {
+        // 如果没有指定动作类型，默认调整攻击动作（保持兼容性）
+        actionParams = player.gongjiAction
+    }
+    
     if (!actionParams) return
 
     if (data.x != null && data.y != null) {
@@ -1153,17 +1291,40 @@ function adjust(data) {
     }
     if (data.scale != null) {
         // 同一个动皮出框通过调整静态大小即可.
-        if (actionParams.scale) {
-            actionParams.scale = data.scale
-        }
+        actionParams.scale = data.scale
     }
     if (data.angle != null) {
         // 同一个动皮出框通过调整静态大小即可.
-        if (actionParams.angle) {
-            actionParams.angle = data.angle
-        }
+        actionParams.angle = data.angle
     }
     actionParams.posAuto = false
+    
+    // 立即更新正在播放的动画
+    let version = actionParams.version || (player && player.version) || '3.6';
+    let animationManager = playerAnimation.getAnni(player, version);
+    
+    // 查找正在播放的动画节点
+    if (animationManager && animationManager.nodes) {
+        let updatedNodes = 0;
+        for (let node of animationManager.nodes) {
+            // 检查是否是当前玩家的动画节点且未完成
+            if ((node.player === player || (node.actionParams && node.actionParams === actionParams)) && !node.completed) {
+                // 立即更新节点的位置、缩放、角度
+                if (data.x != null && data.y != null) {
+                    node.x = actionParams.x;
+                    node.y = actionParams.y;
+                }
+                if (data.scale != null) {
+                    node.scale = actionParams.scale;
+                }
+                if (data.angle != null) {
+                    node.angle = actionParams.angle;
+                }
+                updatedNodes++;
+            }
+        }
+        console.log(`adjust: 已更新 ${updatedNodes} 个动画节点，动作类型: ${data.action}`);
+    }
 }
 
 
@@ -1181,19 +1342,68 @@ function playEffect(data) {
         position.parent = null
     }
 
-    if (dynamic.hasSpine(sprite.name)) {
-        dynamic.playSpine(sprite, position)
-    } else {
-        dynamic.loadSpine(sprite.name, sprite.json ? 'json': 'skel', () => {
-            dynamic.playSpine(sprite, position)
-        }, () => {
-
-        })
+    // 为循环特效添加安全机制：如果设置了loop但没有设置maxTime，则默认设置5秒的最大播放时间
+    if (sprite.loop && !sprite.maxTime && !sprite.maxLoops) {
+        sprite.maxTime = 5000; // 默认最多播放5秒
+        console.warn('检测到循环特效未设置最大时间，自动设置为5秒：', sprite.name);
     }
 
+    // 播放特效的函数
+    let doPlayEffect = () => {
+        let playNode = dynamic.playSpine(sprite, position);
+        
+        // 如果是循环特效，设置自动清除
+        if (sprite.loop && playNode) {
+            if (sprite.maxTime) {
+                // 按时间清除
+                setTimeout(() => {
+                    dynamic.stopSpine(sprite);
+                    console.log('自动清除循环特效（时间限制）：', sprite.name);
+                }, sprite.maxTime);
+            } else if (sprite.maxLoops) {
+                // 按循环次数清除（需要监听动画事件，这里简化处理）
+                let estimatedTime = (sprite.maxLoops * 2000); // 假设每次循环2秒
+                setTimeout(() => {
+                    dynamic.stopSpine(sprite);
+                    console.log('自动清除循环特效（次数限制）：', sprite.name);
+                }, estimatedTime);
+            }
+        }
+    };
 
+    if (dynamic.hasSpine(sprite.name)) {
+        doPlayEffect();
+    } else {
+        dynamic.loadSpine(sprite.name, sprite.json ? 'json': 'skel', () => {
+            doPlayEffect();
+        }, () => {
+            console.error('加载特效失败：', sprite.name);
+        })
+    }
 }
 
+// 清除特效
+function clearEffect(data) {
+    let sprite = data.sprite
+    if (typeof sprite === 'string') {
+        sprite = {name: sprite}
+    }
+    let v = sprite.version || '3.6'
+    let dynamic = playerAnimation.getAnni(null, v)
+    dynamic.stopSpine(sprite)
+}
+
+// 清除所有特效
+function clearAllEffects() {
+    // 清除普通动画管理器中的所有特效
+    if (playerAnimation && playerAnimation.animationManager) {
+        playerAnimation.animationManager.stopSpineAll()
+    }
+    // 清除十周年UI动画管理器中的所有特效
+    if (decadeUIAni) {
+        decadeUIAni.stopSpineAll()
+    }
+}
 
 /** @type {AnimationManager} */
 let decadeUIAni
@@ -1419,6 +1629,12 @@ onmessage = function (e) {
             break
         case 'PLAY_EFFECT':
             playEffect(data)
+            break
+        case 'CLEAR_EFFECT':
+            clearEffect(data)
+            break
+        case 'CLEAR_ALL_EFFECTS':
+            clearAllEffects()
             break
         case 'CREATE_DECADE_ANI':
             createDecadeAni(data)

@@ -1,8 +1,13 @@
-game.import("extension",function(lib,game,ui,get,ai,_status) {
+game.import("extension", function (lib, game, ui, get, ai, _status) {
 
     return {
         name: "皮肤切换",
-        content:function(config,pack) {
+        content: function (config, pack) {
+            // 引入调整框样式
+            const adjustBoxStyle = document.createElement('link')
+            adjustBoxStyle.rel = 'stylesheet'
+            adjustBoxStyle.href = lib.assetURL + 'extension/皮肤切换/style/adjustBox.css'
+            document.head.appendChild(adjustBoxStyle)
 
             /* 动皮相关功能 */
             function dynamicInit() {
@@ -17,11 +22,21 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                 // 根据本地的存储内容, 更改十周年UI的skinDynamic的数据
                 function updateDecadeDynamicSkin() {
-                    if (!skinSwitch.saveSkinParams) return
+                    console.log('=== updateDecadeDynamicSkin 开始执行 ===');
+                    if (!skinSwitch.saveSkinParams) {
+                        console.log('saveSkinParams不存在，跳过应用');
+                        return;
+                    }
+                    console.log('当前saveSkinParams:', skinSwitch.saveSkinParams);
+
                     for (let k in skinSwitch.saveSkinParams) {
+                        console.log(`处理角色: ${k}`);
                         // 只更新存在key的数据
                         for (let m in skinSwitch.saveSkinParams[k]) {
+                            console.log(`  处理皮肤: ${m}`);
                             if (decadeUI.dynamicSkin[k] && decadeUI.dynamicSkin[k][m]) {
+                                console.log(`    找到对应的dynamicSkin配置`);
+                                console.log(`    保存的参数:`, skinSwitch.saveSkinParams[k][m]);
                                 let gongji = decadeUI.dynamicSkin[k][m].gongji
                                 if (skinSwitch.saveSkinParams[k][m].gongji) {
                                     if (typeof gongji === 'string') {
@@ -40,11 +55,16 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 }
                                 for (let assignK of ['x', 'y', 'scale', 'angle']) {
                                     if (skinSwitch.saveSkinParams[k][m][assignK] != null) {
-                                        decadeUI.dynamicSkin[k][m][assignK] = skinSwitch.saveSkinParams[k][m][assignK]
+                                        console.log(`      应用${assignK}参数:`, skinSwitch.saveSkinParams[k][m][assignK]);
+                                        decadeUI.dynamicSkin[k][m][assignK] = skinSwitch.saveSkinParams[k][m][assignK];
+                                        console.log(`      应用后的值:`, decadeUI.dynamicSkin[k][m][assignK]);
                                     }
                                 }
                                 if (decadeUI.dynamicSkin[k][m].beijing && skinSwitch.saveSkinParams[k][m].beijing) {
                                     decadeUI.dynamicSkin[k][m].beijing = Object.assign(decadeUI.dynamicSkin[k][m].beijing, skinSwitch.saveSkinParams[k][m].beijing)
+                                }
+                                if (decadeUI.dynamicSkin[k][m].qianjing && skinSwitch.saveSkinParams[k][m].qianjing) {
+                                    decadeUI.dynamicSkin[k][m].qianjing = Object.assign(decadeUI.dynamicSkin[k][m].qianjing, skinSwitch.saveSkinParams[k][m].qianjing)
                                 }
                                 // decadeUI.dynamicSkin[k][m] = Object.assign(decadeUI.dynamicSkin[k][m], skinSwitch.saveSkinParams[k][m])
                                 if (gongji) {
@@ -55,6 +75,14 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 if (skinSwitch.saveSkinParams[k][m].qhlx) {
                                     decadeUI.dynamicSkin[k][m].qhlx = skinSwitch.saveSkinParams[k][m].qhlx
                                 }
+
+                                // 添加出场出框和特殊出框调整
+                                if (decadeUI.dynamicSkin[k][m].chuchang && skinSwitch.saveSkinParams[k][m].chuchang) {
+                                    decadeUI.dynamicSkin[k][m].chuchang = Object.assign(decadeUI.dynamicSkin[k][m].chuchang, skinSwitch.saveSkinParams[k][m].chuchang)
+                                }
+                                if (decadeUI.dynamicSkin[k][m].teshu && skinSwitch.saveSkinParams[k][m].teshu) {
+                                    decadeUI.dynamicSkin[k][m].teshu = Object.assign(decadeUI.dynamicSkin[k][m].teshu, skinSwitch.saveSkinParams[k][m].teshu)
+                                }
                             }
                         }
                     }
@@ -62,303 +90,68 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     // 为所有动皮添加皮肤名称 skinName参数
                     for (let k in decadeUI.dynamicSkin) {
                         for (let skinName in decadeUI.dynamicSkin[k]) {
-                            decadeUI.dynamicSkin[k][skinName].skinName = skinName
+                            try {
+                                decadeUI.dynamicSkin[k][skinName].skinName = skinName
+                            } catch (e) {
+                                let str = "";
+                                str += k + ":" + skinName + "\n";
+                                str += JSON.stringify(decadeUI.dynamicSkin[k][skinName]);
+                                alert(str);
+                            }
                         }
                     }
+                    console.log('=== updateDecadeDynamicSkin 执行完成 ===');
                 }
-
-                // 替换十周年内容
+                // 替换十周年内容                
                 function modifyDecadeUIContent() {
                     let Player = {};
-
-                    function pfqh_reinit(from, to, maxHp, online) {
-                        var info1 = lib.character[from];
-                        var info2 = lib.character[to];
-                        var smooth = true;
-                        let originName2 = this.name2
-                        if (maxHp == 'nosmooth') {
-                            smooth = false;
-                            maxHp = null;
-                        }
-                        if (this.name2 == from) {
-                            this.name2 = to;
-                            if (this.isUnseen(0) && !this.isUnseen(1)) {
-                                this.sex = info2[0];
-                                this.name = to;
-                            }
-                            if (smooth) this.smoothAvatar(true);
-                            this.node.avatar2.setBackground(to, 'character');
-                            this.node.name2.innerHTML = get.slimName(to);
-                        } else if (this.name == from || this.name1 == from) {
-                            if (this.name1 == from) {
-                                this.name1 = to;
-                            }
-                            if (!this.classList.contains('unseen2')) {
-                                this.name = to;
-                                this.sex = info2[0];
-                            }
-                            if (smooth) this.smoothAvatar(false);
-                            this.node.avatar.setBackground(to, 'character');
-                            this.node.name.innerHTML = get.slimName(to);
-
-                            if (this == game.me && ui.fakeme) {
-                                ui.fakeme.style.backgroundImage = this.node.avatar.style.backgroundImage;
-                            }
-                        } else {
-                            return this;
-                        }
-                        if (online) {
-                            return;
-                        }
-                        for (var i = 0; i < info1[3].length; i++) {
-                            this.removeSkill(info1[3][i]);
-                        }
-                        for (var i = 0; i < info2[3].length; i++) {
-                            // taffy: 主公技修复
-                            var info=get.info(info2[3][i]);
-                            if(info&&info.zhuSkill&&!this.isZhu2()) continue;
-                            /* taffy分界线 */
-                            this.addSkill(info2[3][i]);
-                        }
-                        if (Array.isArray(maxHp)) {
-                            this.maxHp = maxHp[1];
-                            this.hp = maxHp[0];
-                        } else {
-                            var num;
-                            if (maxHp === false) {
-                                num = 0;
-                            } else {
-                                if (typeof maxHp != 'number') {
-                                    maxHp = get.infoMaxHp(info2[2]);
-                                }
-                                num = maxHp - get.infoMaxHp(info1[2]);
-                            }
-                            if (typeof this.singleHp == 'boolean') {
-                                if (num % 2 != 0) {
-                                    if (this.singleHp) {
-                                        this.maxHp += (num + 1) / 2;
-                                        this.singleHp = false;
-                                    } else {
-                                        this.maxHp += (num - 1) / 2;
-                                        this.singleHp = true;
-                                        if (!game.online) {
-                                            this.doubleDraw();
-                                        }
-                                    }
-                                } else {
-                                    this.maxHp += num / 2;
-                                }
-                            } else {
-                                this.maxHp += num;
-                            }
-                        }
-                        game.broadcast(function (player, from, to, skills) {
-                            player.reinit(from, to, null, true);
-                            player.applySkills(skills);
-                        }, this, from, to, get.skillState(this));
-                        game.addVideo('reinit3', this, {
-                            from: from,
-                            to: to,
-                            hp: this.maxHp,
-                            avatar2: this.name2 == to
-                        });
-                        this.update();
-                        var skin = skinSwitch.getDynamicSkin(null, to);
-                        if (this.doubleAvatar) {
-                            let primary = true;
-                            let deputy = true;
-                            // 上面会重新赋值, 所以这里需要修改变身bug
-                            if (originName2 === from) primary = false;
-                            else deputy = false;
-                            if (this.dynamic) {
-                                this.stopDynamic(primary, deputy);
-                                decadeUI.CUR_DYNAMIC--;
-                            }
-                            if (skin) {
-                                skin.player = skin
-                                this.playDynamic(skin, deputy);
-                                decadeUI.CUR_DYNAMIC++;
-                                skinSwitch.dynamic.setBackground(deputy ? "deputy" : "primary", this);
-                            }
-                        } else {
-                            if (this.dynamic) {
-                                this.stopDynamic();
-                                decadeUI.CUR_DYNAMIC--;
-                            }
-                            if (skin) {
-                                skin.player = skin;
-                                this.playDynamic(skin, false);
-                                decadeUI.CUR_DYNAMIC++;
-                                if (skin.background) {
-                                    this.$dynamicWrap.style.backgroundImage = 'url("' + lib.assetURL + 'extension/十周年UI/assets/dynamic/' + skin.background + '")';
-                                } else {
-                                    this.$dynamicWrap.style.backgroundImage = 'url("' + lib.assetURL + 'extension/皮肤切换/images/card/card.png")'
-                                }
-
-                            }
-                        }
-                        skinSwitch.skinSwitchCheckYH(this)
-                    };
-
-                    function pfqh_uninit() {
-                        skinSwitch.origin_uninit.apply(this, arguments)
-                        // 取消头框
-                        let skinYh = this.getElementsByClassName("skinYh");
-                        if (skinYh.length > 0) {
-                            this.removeChild(skinYh[0])
-                        }
-                        return this
-                    }
 
                     if (lib.config[skinSwitch.decadeKey.dynamicSkin]) {
                         if (self.OffscreenCanvas === undefined) {
                             alert("您的设备环境不支持新版手杀动皮效果，请更换更好的设备或者不使用此版本的手杀动皮效果");
                             return
                         } else {
-                            // 拦截原来的logSkill函数, 加上如果使用非攻击技能,就播放特殊动画
-                            // 本体1.9.117.2, 由于logSkill的trigger没有使用前就可以触发的, 所以仍然复制一份进行处理.
-                            // taffy: 注释皮肤切换原版代码
-                            // if (lib.version >= '1.9.117.2') {
-                            /* taffy分界线 */
-                            // taffy: 修复版本号检测喵
-                            if (lib.version >= '1.9.117.2' || lib.version >= '1.10.1') {
-                            /* taffy分界线 */
-                                console.log('======== version >= 1.9.117.2===========')
-                                if (!lib.element.player._pfqh_replace_logSkill) {
-                                    // 保存原始的logSkill
-                                    lib.element.player._pfqh_replace_logSkill = lib.element.player.logSkill;
-                                    lib.element.player.logSkill = function (name, targets, nature, logv) {
-                                        if (game.phaseNumber > 0) {
-                                            if (name.indexOf("_") !== 0 && skinSwitch.filterSkills.indexOf(name) === -1 || this.skills.indexOf(name) !== -1) {
-                                                // taffy: 注释皮肤切换原版代码
-                                                // if (this.isAlive() && this.dynamic && !this.GongJi) {
-                                                /* taffy分界线 */
-                                                // taffy: 修复一个复活后无动皮武将使用技能报错的逆天bug喵
-                                                if (this.isAlive() && this.dynamic && !this.GongJi && this.dynamic.primary !== null) {
-                                                /* taffy分界线 */
-                                                    if (!this.doubleAvatar) {
-                                                        let teshu = this.dynamic.primary.player.teshu
-                                                        if (typeof teshu === 'object') {
-                                                            if (teshu.whitelist) {
-                                                                if (teshu.whitelist.includes(name)) {
-                                                                    skinSwitch.chukuangWorkerApi.chukuangAction(this, 'TeShu');
-                                                                }
-                                                            } else {
-                                                                skinSwitch.chukuangWorkerApi.chukuangAction(this, 'TeShu');
+
+                            // 技能
+                            lib.skill._tsx = {
+                                trigger: {
+                                    player: ["logSkillBegin", "useSkillBegin"],
+                                },
+                                silent: true,
+                                charlotte: true,
+                                forced: true,
+                                priority: 2022,
+                                filter(event, player) {
+                                    return player.dynamic
+                                },
+                                async content(event, player) {
+                                    let name = event._trigger.skill
+                                    if (game.phaseNumber > 0) {
+                                        if (name.indexOf("_") !== 0 && skinSwitch.filterSkills.indexOf(name) === -1 || event.player.skills.indexOf(name) !== -1) {
+                                            if (event.player.isAlive() && event.player.dynamic.primary && !event.player.GongJi) {
+                                                if (!event.player.doubleAvatar) {
+                                                    let teshu = event.player.dynamic.primary.player && event.player.dynamic.primary.player.teshu
+                                                    if (teshu !== null && typeof teshu === 'object') {
+                                                        if (teshu.whitelist) {
+                                                            if (teshu.whitelist.includes(name)) {
+                                                                skinSwitch.chukuangWorkerApi.chukuangAction(event.player, 'TeShu');
                                                             }
                                                         } else {
-                                                            skinSwitch.chukuangWorkerApi.chukuangAction(this, 'TeShu');
+                                                            skinSwitch.chukuangWorkerApi.chukuangAction(event.player, 'TeShu');
                                                         }
                                                     } else {
-                                                        skinSwitch.chukuangWorkerApi.chukuangAction(this, 'TeShu');
+                                                        skinSwitch.chukuangWorkerApi.chukuangAction(event.player, 'TeShu');
                                                     }
+                                                } else {
+                                                    skinSwitch.chukuangWorkerApi.chukuangAction(event.player, 'TeShu');
                                                 }
-                                                let skillInfo = get.info(name)
-                                                if (skillInfo) {
-                                                    let specailEvent = (player, triggerName) => {
-                                                        let res = skinSwitch.dynamic.getSpecial(player, triggerName)
-                                                        res.forEach(r => {
-                                                            const {avatar, special, effs, isPrimary} = r
-                                                            let audio
-                                                            // 判断觉醒技能是否是当前角色的
-                                                            let tryPlayTransform = () => {
-                                                                let pName = isPrimary ? player.name : player.name2
-                                                                let cha = lib.character[pName]
-                                                                if (!cha[3].includes(name)) {
-                                                                    // 可能是子技能触发的特效, 比如使命技
-                                                                    if (!cha[3].includes(name.slice(0, name.lastIndexOf('_'))))
-                                                                        return
-                                                                }
-                                                                let transform = effs.transform
-                                                                if (!transform || !(transform in special) ) return
-                                                                let trans = special[transform]
-                                                                let dskins = decadeUI.dynamicSkin
-                                                                // 播放转换的骨骼
-                                                                let newName = trans.name
-                                                                if (newName) {
-                                                                    // 分割名字, 获取骨骼, 与当前角色的骨骼的名字比较,是否是同名
-                                                                    let [key, skinName] = newName.split('/')
-                                                                    let dInfo = key && skinName && dskins[key] && dskins[key][skinName]
-                                                                    if (dInfo) {
-                                                                        skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, {huanfuEffect: effs.effect})
-                                                                    }
-                                                                } else {
-                                                                    skinSwitch.dynamic.transformDst(player, isPrimary, trans, {huanfuEffect: effs.effect})
-                                                                }
-                                                                audio = trans.audio
-
-                                                            }
-                                                            tryPlayTransform()
-                                                            // 检查是否有播放特效
-                                                            let effectPlay = special.condition[triggerName].play
-                                                            if (effectPlay) {
-                                                                let eff = special[effectPlay]
-                                                                if (eff) {
-                                                                    if (!eff.x) eff.x = [0, 0.5]
-                                                                    if (!eff.y) eff.y = [0, 0.5]
-                                                                    setTimeout(() => {
-                                                                        skinSwitch.chukuangWorkerApi.playEffect(eff)
-                                                                    }, (eff.delay || 0) * 1000)
-                                                                    if (!audio)  audio = eff.audio
-                                                                }
-                                                            }
-
-                                                            if (!audio) audio = special.condition[triggerName].audio
-                                                            if (audio) {
-                                                                game.playAudio('..', skinSwitch.dcdPath, 'assets/dynamic', audio)
-                                                            }
-
-                                                        })
-                                                    }
-
-                                                    if (skillInfo.juexingji) {
-                                                        specailEvent(this,'juexingji')
-                                                    }
-                                                    // taffy: 补充检查限定技喵
-                                                    if (skillInfo.limited) {
-                                                        specailEvent(this,'xiandingji')
-                                                    }
-                                                    /* taffy分界线 */
-
-                                                    // 检查使命技
-                                                    if (name.endsWith('_fail')) {
-                                                        let parentSkill = name.slice(0, name.length - 5)
-                                                        let parentSkillInfo = get.info(parentSkill)
-                                                        if (parentSkillInfo && parentSkillInfo.dutySkill) {
-                                                            specailEvent(this, 'shimingjiFail')
-                                                        }
-                                                    } else if (name.endsWith('_achieve')) {
-                                                        let parentSkill = name.slice(0, name.length - 8)
-                                                        let parentSkillInfo = get.info(parentSkill)
-                                                        if (parentSkillInfo && parentSkillInfo.dutySkill) {
-                                                            specailEvent(this,'shimingjiSuccess')
-                                                        }
-                                                    }
-
-                                                }
-
-                                            }
-                                        }
-
-                                        return lib.element.player._pfqh_replace_logSkill.apply(this, [name, targets, nature, logv])
-                                    }
-                                }
-
-                            } else {
-                                lib.element.player.logSkill = function (name, targets, nature, logv) {
-                                    // 播放角色使用非攻击技能的特殊动画
-                                    if (game.phaseNumber > 0) {
-                                        if (name.indexOf("_") !== 0 && skinSwitch.filterSkills.indexOf(name) === -1 || this.skills.indexOf(name) !== -1) {
-                                            // if (name.indexOf("_") !== 0 && skinSwitch.filterSkills.indexOf(name) === -1 && this.getStockSkills().indexOf(name) !== -1) {
-                                            if (this.isAlive() && this.dynamic && !this.GongJi) {
-                                                skinSwitch.chukuangWorkerApi.chukuangAction(this, 'TeShu')
                                             }
                                             let skillInfo = get.info(name)
                                             if (skillInfo) {
                                                 let specailEvent = (player, triggerName) => {
                                                     let res = skinSwitch.dynamic.getSpecial(player, triggerName)
                                                     res.forEach(r => {
-                                                        const {avatar, special, effs, isPrimary} = r
+                                                        const { avatar, special, effs, isPrimary } = r
                                                         let audio
                                                         // 判断觉醒技能是否是当前角色的
                                                         let tryPlayTransform = () => {
@@ -370,7 +163,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                                     return
                                                             }
                                                             let transform = effs.transform
-                                                            if (!transform || !(transform in special) ) return
+                                                            if (!transform || !(transform in special)) return
                                                             let trans = special[transform]
                                                             let dskins = decadeUI.dynamicSkin
                                                             // 播放转换的骨骼
@@ -380,10 +173,10 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                                 let [key, skinName] = newName.split('/')
                                                                 let dInfo = key && skinName && dskins[key] && dskins[key][skinName]
                                                                 if (dInfo) {
-                                                                    skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, {huanfuEffect: effs.effect})
+                                                                    skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, { huanfuEffect: effs.effect })
                                                                 }
                                                             } else {
-                                                                skinSwitch.dynamic.transformDst(player, isPrimary, trans, {huanfuEffect: effs.effect})
+                                                                skinSwitch.dynamic.transformDst(player, isPrimary, trans, { huanfuEffect: effs.effect })
                                                             }
                                                             audio = trans.audio
 
@@ -399,210 +192,92 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                                 setTimeout(() => {
                                                                     skinSwitch.chukuangWorkerApi.playEffect(eff)
                                                                 }, (eff.delay || 0) * 1000)
-                                                                if (!audio)  audio = eff.audio
+                                                                if (!audio) audio = eff.audio
                                                             }
                                                         }
-
                                                         if (!audio) audio = special.condition[triggerName].audio
                                                         if (audio) {
                                                             game.playAudio('..', skinSwitch.dcdPath, 'assets/dynamic', audio)
                                                         }
-
                                                     })
                                                 }
-
+                                                let res = skinSwitch.dynamic.getSpecial(event.player, name)
+                                                res.forEach(r => {
+                                                    let { avatar, isPrimary } = r
+                                                    let special = avatar.special
+                                                    if (!special) return;
+                                                    let effs = special.condition[name]
+                                                    let audio
+                                                    let tryTransform = () => {
+                                                        let transform = effs.transform
+                                                        if (!transform || !(transform in special)) return
+                                                        let trans = special[transform]
+                                                        let dskins = decadeUI.dynamicSkin
+                                                        // 播放转换的骨骼
+                                                        let newName = trans.name
+                                                        if (newName) {
+                                                            // 分割名字, 获取骨骼, 与当前角色的骨骼的名字比较,是否是同名
+                                                            let [key, skinName] = newName.split('/')
+                                                            let dInfo = key && skinName && dskins[key] && dskins[key][skinName]
+                                                            if (dInfo) {
+                                                                // 添加audio属性，用于在transformDst中更新语音
+                                                                dInfo.audio = trans.audio
+                                                                skinSwitch.dynamic.transformDst(event.player, isPrimary, dInfo, { huanfuEffect: effs.effect })
+                                                            }
+                                                        } else {
+                                                            skinSwitch.dynamic.transformDst(event.player, isPrimary, trans, { huanfuEffect: effs.effect })
+                                                        }
+                                                        audio = trans.audio
+                                                    }
+                                                    let tryEffectPlay = () => {
+                                                        // 检查是否有播放特效
+                                                        let effectPlay = effs.play
+                                                        if (effectPlay) {
+                                                            let eff = special[effectPlay]
+                                                            if (eff) {
+                                                                if (!eff.x) eff.x = [0, 0.5]
+                                                                if (!eff.y) eff.y = [0, 0.5]
+                                                                setTimeout(() => {
+                                                                    skinSwitch.chukuangWorkerApi.playEffect(eff)
+                                                                }, (eff.delay || 0) * 1000)
+                                                                if (!audio) audio = eff.audio
+                                                            }
+                                                        }
+                                                    }
+                                                    tryTransform()
+                                                    tryEffectPlay()
+                                                })
                                                 if (skillInfo.juexingji) {
-                                                    specailEvent(this,'juexingji')
+                                                    specailEvent(event.player, 'juexingji')
                                                 }
-                                                // taffy: 补充检查限定技喵
-                                                if (skillInfo.xiandingji) {
-                                                    specailEvent(this,'xiandingji')
+                                                if (skillInfo.limited) {
+                                                    specailEvent(event.player, 'xiandingji')
                                                 }
-                                                /* taffy分界线 */
-
                                                 // 检查使命技
                                                 if (name.endsWith('_fail')) {
                                                     let parentSkill = name.slice(0, name.length - 5)
                                                     let parentSkillInfo = get.info(parentSkill)
                                                     if (parentSkillInfo && parentSkillInfo.dutySkill) {
-                                                        specailEvent(this, 'shimingjiFail')
+                                                        specailEvent(event.player, 'shimingjiFail')
                                                     }
                                                 } else if (name.endsWith('_achieve')) {
                                                     let parentSkill = name.slice(0, name.length - 8)
                                                     let parentSkillInfo = get.info(parentSkill)
                                                     if (parentSkillInfo && parentSkillInfo.dutySkill) {
-                                                        specailEvent(this,'shimingjiSuccess')
+                                                        specailEvent(event.player, 'shimingjiSuccess')
                                                     }
                                                 }
 
                                             }
-                                        }
-                                    }
 
-                                    /******* game.js原始代码 start **************/
-                                    if (get.itemtype(targets) == 'player') targets = [targets];
-                                    var nopop = false;
-                                    var popname = name;
-                                    if (Array.isArray(name)) {
-                                        popname = name[1];
-                                        name = name[0];
-                                    }
-                                    var checkShow = this.checkShow(name);
-                                    if (lib.translate[name]) {
-                                        this.trySkillAnimate(name, popname, checkShow);
-                                        if (Array.isArray(targets) && targets.length) {
-                                            var str;
-                                            if (targets[0] == this) {
-                                                str = '#b自己';
-                                                if (targets.length > 1) {
-                                                    str += '、';
-                                                    str += get.translation(targets.slice(1));
-                                                }
-                                            } else str = targets;
-                                            game.log(this, '对', str, '发动了', '【' + get.skillTranslation(name, this) + '】');
-                                        } else {
-                                            game.log(this, '发动了', '【' + get.skillTranslation(name, this) + '】');
                                         }
                                     }
-                                    if (nature != false) {
-                                        if (nature === undefined) {
-                                            nature = 'green';
-                                        }
-                                        this.line(targets, nature);
-                                    }
-                                    var info = lib.skill[name];
-                                    if (info && info.ai && info.ai.expose != undefined &&
-                                        this.logAi && (!targets || targets.length != 1 || targets[0] != this)) {
-                                        this.logAi(lib.skill[name].ai.expose);
-                                    }
-                                    if (info && info.round) {
-                                        var roundname = name + '_roundcount';
-                                        this.storage[roundname] = game.roundNumber;
-                                        this.syncStorage(roundname);
-                                        this.markSkill(roundname);
-                                    }
-                                    game.trySkillAudio(name, this, true);
-                                    if (game.chess) {
-                                        this.chessFocus();
-                                    }
-                                    if (logv === true) {
-                                        game.logv(this, name, targets, null, true);
-                                    } else if (info && info.logv !== false) {
-                                        game.logv(this, name, targets);
-                                    }
-
-                                    if (info) {
-                                        var player = this;
-                                        var players = player.getSkills(null, false, false);
-                                        var equips = player.getSkills('e');
-                                        var global = lib.skill.global.slice(0);
-                                        var logInfo = {
-                                            skill: name,
-                                            targets: targets,
-                                            event: _status.event,
-                                        };
-                                        if (info.sourceSkill) {
-                                            logInfo.sourceSkill = name;
-                                            // taffy: 注释皮肤切换原版代码
-                                            // if (global.contains(name)) {
-                                            /* taffy分界线 */
-                                            // taffy: 消灭contains报警喵
-                                            if (global.includes(name)) {
-                                            /* taffy分界线 */
-                                                logInfo.type = 'global';
-                                            // taffy: 注释皮肤切换原版代码
-                                            // } else if (players.contains(name)) {
-                                            /* taffy分界线 */
-                                            // taffy: 消灭contains报警喵
-                                            } else if (players.includes(name)) {
-                                            /* taffy分界线 */
-                                                logInfo.type = 'player';
-                                            // taffy: 注释皮肤切换原版代码
-                                            // } else if (equips.contains(name)) {
-                                            /* taffy分界线 */
-                                            // taffy: 消灭contains报警喵
-                                            } else if (equips.includes(name)) {
-                                            /* taffy分界线 */
-                                                logInfo.type = 'equip';
-                                            }
-                                        } else {
-                                            // taffy: 注释皮肤切换原版代码
-                                            // if (global.contains(name)) {
-                                            /* taffy分界线 */
-                                            // taffy: 消灭contains报警喵
-                                            if (global.includes(name)) {
-                                            /* taffy分界线 */
-                                                logInfo.sourceSkill = name;
-                                                logInfo.type = 'global';
-                                            // taffy: 注释皮肤切换原版代码
-                                            // } else if (players.contains(name)) {
-                                            /* taffy分界线 */
-                                            // taffy: 消灭contains报警喵
-                                            } else if (players.includes(name)) {
-                                            /* taffy分界线 */
-                                                logInfo.sourceSkill = name;
-                                                logInfo.type = 'player';
-                                            // taffy: 注释皮肤切换原版代码
-                                            // } else if (equips.contains(name)) {
-                                            /* taffy分界线 */
-                                            // taffy: 消灭contains报警喵
-                                            } else if (equips.includes(name)) {
-                                            /* taffy分界线 */
-                                                logInfo.sourceSkill = name;
-                                                logInfo.type = 'equip';
-                                            } else {
-                                                var bool = false;
-                                                for (var i of players) {
-                                                    var expand = [i];
-                                                    game.expandSkills(expand);
-                                                    // taffy: 注释皮肤切换原版代码
-                                                    // if (expand.contains(name)) {
-                                                    /* taffy分界线 */
-                                                    // taffy: 消灭contains报警喵
-                                                    if (expand.includes(name)) {
-                                                    /* taffy分界线 */
-                                                        bool = true;
-                                                        logInfo.sourceSkill = i;
-                                                        logInfo.type = 'player';
-                                                        break;
-                                                    }
-                                                }
-                                                if (!bool) {
-                                                    for (var i of players) {
-                                                        var expand = [i];
-                                                        game.expandSkills(expand);
-                                                        // taffy: 注释皮肤切换原版代码
-                                                        // if (expand.contains(name)) {
-                                                        /* taffy分界线 */
-                                                        // taffy: 消灭contains报警喵
-                                                        if (expand.includes(name)) {
-                                                        /* taffy分界线 */
-                                                            logInfo.sourceSkill = i;
-                                                            logInfo.type = 'equip';
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        player.getHistory('useSkill').push(logInfo);
-                                    }
-
-                                    if (this._hookTrigger) {
-                                        for (var i = 0; i < this._hookTrigger.length; i++) {
-                                            var info = lib.skill[this._hookTrigger[i]].hookTrigger;
-                                            if (info && info.log) {
-                                                info.log(this, name, targets);
-                                            }
-                                        }
-                                    }
-                                    /******* game.js原始代码 end  **************/
-                                };
+                                }
                             }
 
                             lib.skill._gj = {
                                 // 指定多个目标也让触发攻击状态
-                                trigger: {player: ['useCardBefore', 'useCard1', 'useCard2']},
+                                trigger: { player: ['useCardBefore', 'useCard1', 'useCard2'] },
                                 forced: true,
                                 filter: function (event, player) {
                                     if (player.isUnseen()) return false;
@@ -677,7 +352,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 }
                                             }
                                             getArgs()
-                                            skinSwitch.chukuangWorkerApi.chukuangAction(player, 'GongJi', args ? {attackArgs: args, triggername: event.triggername} : {});
+                                            skinSwitch.chukuangWorkerApi.chukuangAction(player, 'GongJi', args ? { attackArgs: args, triggername: event.triggername } : {});
                                             player.__lastGongji = {
                                                 t: new Date().getTime(),
                                                 tLen: event._trigger.targets.length,
@@ -689,7 +364,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 }
                                                 getArgs()
                                                 if (args) {
-                                                    skinSwitch.chukuangWorkerApi.chukuangAction(player, 'GongJi', {attackArgs: args, triggername: event.triggername})
+                                                    skinSwitch.chukuangWorkerApi.chukuangAction(player, 'GongJi', { attackArgs: args, triggername: event.triggername })
                                                     player.__lastGongji = {
                                                         t: new Date().getTime(),
                                                         tLen: event._trigger.targets.length,
@@ -702,144 +377,6 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     }
                                 }
                             }
-
-                            lib.skill._hf = {
-                                trigger: {
-                                    global: 'gameStart'
-                                },
-                                forced: true,
-                                init: function (player, skill) {
-                                    player.storage._hf = 0;
-                                },
-                                filter: function (event, player) {
-                                    return !lib.config[skinSwitch.configKey.hideHuanFu]
-                                },
-                                content: function () {
-                                    if (skinSwitch.dynamic.skinDiv) return
-                                    let skins
-                                    if (player.name === "unknown" && player.name1) {
-                                        skins = decadeUI.dynamicSkin[player.name1];
-                                    } else {
-                                        skins = decadeUI.dynamicSkin[player.name];
-                                    }
-                                    if (!skins) return;
-                                    let keys = Object.keys(skins);
-                                    if (keys.length < 1) return;
-                                    // 创建换肤按钮, 也就是右上角的换肤功能.
-                                    let div = ui.create.div('.switchSkinButton', ui.arena);
-                                    div.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', function () {
-                                        skinSwitch.dynamic.skinDivShowOrHide(true);
-                                        game.playAudio("..", "extension", "皮肤切换/audio/game", "Menu.mp3");
-                                    })
-
-                                    let hf = skinSwitch.huanfu;
-                                    // 播放换肤动画
-                                    if (!dcdAnim.hasSpine(hf.name)) {
-                                        dcdAnim.loadSpine(hf.name, "skel");
-                                    }
-                                    // skinSwitch.dynamic.initSwitch(player, skins);
-                                    skinSwitch.dynamic.initSwitchV2(player, skins);
-                                    document.body.appendChild(div);
-                                    player.storage._hf++;
-                                }
-                            }
-
-                            if (lib.config[skinSwitch.configKey.clickPlayerDynamic]) {
-                                lib.skill._initPlayerChangeSkin = {
-                                    trigger: {
-                                        global: 'gameStart'
-                                    },
-                                    forced: true,
-                                    filter: function (event, player) {
-                                        return game.me === player
-                                    },
-                                    content: function() {
-                                        for (let p of game.players) {
-                                            // 添加一个隐藏的窗口,放入player下面
-                                            let box = ui.create.div('.playerToolBox .hidden', p)
-                                            let skinHoverBtn = ui.create.div('.skinHoverBtn', box)
-                                            let img = document.createElement('img')
-                                            img.style.width = '95%'
-                                            img.style.height = '95%'
-                                            skinHoverBtn.appendChild(img)
-                                            img.src = lib.assetURL + 'extension/皮肤切换/images/other/change-model.png'
-
-                                            let timer
-                                            p.node.avatar.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', (e) => {
-                                                // 过滤掉选择角色事件
-                                                if((_status.event.name !== "chooseToUse" && _status.clicked !== false) || p.classList.contains('selectable') || p.classList.contains('target')){
-                                                    return
-                                                }
-                                                if(timer){
-                                                    // 表示是双击事件
-                                                    clearTimeout(timer)
-                                                    timer = null
-                                                    return
-                                                }
-                                                timer = setTimeout(() => {
-                                                    timer = null
-                                                    if (_status.playOpenTool) {
-                                                        if ( _status.playOpenTool !== p)_status.playOpenTool.getElementsByClassName('playerToolBox')[0].classList.add('hidden')
-                                                        else return
-                                                    }
-                                                    _status.clicked = false
-                                                    box.classList.remove('hidden')
-                                                    _status.playOpenTool = p
-                                                    skinHoverBtn.name = p.name
-                                                    skinHoverBtn.isPrimary = true
-                                                    e.stopPropagation()
-
-                                                }, 250)
-
-                                            })
-                                            if (p.node.avatar2) {
-                                                p.node.avatar2.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', (e) => {
-                                                    // 防止选择事件触发
-                                                    if((_status.event.name !== "chooseToUse" && _status.clicked !== false) || p.classList.contains('selectable') || p.classList.contains('target')){
-                                                        return
-                                                    }
-                                                    if(timer){
-                                                        // 表示是双击事件
-                                                        clearTimeout(timer)
-                                                        timer = null
-                                                        return
-                                                    }
-                                                    timer = setTimeout(() => {
-                                                        if (_status.playOpenTool) {
-                                                            if ( _status.playOpenTool !== p)_status.playOpenTool.getElementsByClassName('playerToolBox')[0].classList.add('hidden')
-                                                            else return
-                                                        }
-                                                        box.classList.remove('hidden')
-                                                        _status.clicked = false
-                                                        _status.playOpenTool = p
-                                                        timer = null
-                                                        skinHoverBtn.name = p.name2
-                                                        skinHoverBtn.isPrimary = false
-                                                    }, 250)
-                                                })
-                                            }
-                                            skinHoverBtn.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', (e) => {
-                                                // e.stopPropagation()
-                                                if (_status.playOpenTool) {
-                                                    if ( _status.playOpenTool !== p)_status.playOpenTool.getElementsByClassName('playerToolBox')[0].classList.add('hidden')
-                                                }
-                                                delete _status.playOpenTool
-                                                box.classList.add('hidden')
-                                                skinSwitch.qhly_open_small(skinHoverBtn.name, p, skinHoverBtn.isPrimary)
-
-                                            })
-                                        }
-
-                                        document.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', () => {
-                                            if (_status.playOpenTool) {
-                                                _status.playOpenTool.getElementsByClassName('playerToolBox')[0].classList.add('hidden')
-                                                delete _status.playOpenTool
-                                            }
-                                        })
-                                    }
-                                };
-                            }
-
                             // 只有主动发动技能才会触发这个
                             lib.skill._ts = {
                                 trigger: {
@@ -858,10 +395,10 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     let skillInfo = get.info(triggerSkill)
                                     let dskins = decadeUI.dynamicSkin
                                     if (skillInfo) {
-                                        if(skillInfo.limited){
+                                        if (skillInfo.limited) {
                                             let res = skinSwitch.dynamic.getSpecial(player, 'xiandingji')
                                             res.forEach(r => {
-                                                const {avatar, special, effs, isPrimary} = r
+                                                const { avatar, special, effs, isPrimary } = r
                                                 let pName = isPrimary ? player.name : player.name2
                                                 let cha = lib.character[pName]
                                                 if (!cha[3].includes(triggerSkill)) {
@@ -870,7 +407,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 let audio
                                                 let tryPlayTransform = () => {
                                                     let transform = effs.transform
-                                                    if (!transform || !(transform in special) ) return
+                                                    if (!transform || !(transform in special)) return
                                                     let trans = special[transform]
                                                     let dskins = decadeUI.dynamicSkin
                                                     // 播放转换的骨骼
@@ -880,10 +417,10 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                         let [key, skinName] = newName.split('/')
                                                         let dInfo = key && skinName && dskins[key] && dskins[key][skinName]
                                                         if (dInfo) {
-                                                            skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, {huanfuEffect: effs.effect})
+                                                            skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, { huanfuEffect: effs.effect })
                                                         }
                                                     } else {
-                                                        skinSwitch.dynamic.transformDst(player, isPrimary, trans, {huanfuEffect: effs.effect})
+                                                        skinSwitch.dynamic.transformDst(player, isPrimary, trans, { huanfuEffect: effs.effect })
                                                     }
                                                     audio = trans.audio
                                                 }
@@ -910,13 +447,13 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                     game.playAudio('..', skinSwitch.dcdPath, 'assets/dynamic', audio)
                                                 }
                                             })
-                                        }else if(skillInfo.dutySkill){
+                                        } else if (skillInfo.dutySkill) {
                                             skillType = 'shimingji';
 
                                         } else if (skillInfo.zhuanhuanji) {
                                             let res = skinSwitch.dynamic.getSpecial(player, 'zhuanhuanji')
                                             res.forEach(r => {
-                                                const {avatar, special, effs, isPrimary} = r
+                                                const { avatar, special, effs, isPrimary } = r
                                                 let pName = isPrimary ? player.name : player.name2
                                                 let cha = lib.character[pName]
                                                 if (!cha[3].includes(triggerSkill)) {
@@ -926,7 +463,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 let audio
                                                 let tryPlayTransform = () => {
                                                     let transform = effs.transform
-                                                    if (!transform || !(transform in special) ) return
+                                                    if (!transform || !(transform in special)) return
                                                     let trans = special[transform]
                                                     const originSkin = player.originSkin
                                                     if (player.zhuanhuanjiFlag) {
@@ -937,18 +474,18 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                             let [key, skinName] = newName.split('/')
                                                             let dInfo = key && skinName && dskins[key] && dskins[key][skinName]
                                                             if (dInfo) {
-                                                                skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, {huanfuEffect: effs.effect})
+                                                                skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, { huanfuEffect: effs.effect })
                                                             }
                                                         } else {
-                                                            skinSwitch.dynamic.transformDst(player, isPrimary, trans, {huanfuEffect: effs.effect})
+                                                            skinSwitch.dynamic.transformDst(player, isPrimary, trans, { huanfuEffect: effs.effect })
                                                         }
                                                     } else {
                                                         // 如果当前已经是变身后的骨骼, 需要恢复原始骨骼.
                                                         if (avatar.name !== originSkin.name) {
                                                             // 触发变回原始皮肤
-                                                            skinSwitch.dynamic.transformDst(player, isPrimary, originSkin, {huanfuEffect: effs.effect, isOrigin: true})
+                                                            skinSwitch.dynamic.transformDst(player, isPrimary, originSkin, { huanfuEffect: effs.effect, isOrigin: true })
                                                         } else {
-                                                            skinSwitch.dynamic.transformDst(player, isPrimary, originSkin, {huanfuEffect: effs.effect, isOrigin: true})
+                                                            skinSwitch.dynamic.transformDst(player, isPrimary, originSkin, { huanfuEffect: effs.effect, isOrigin: true })
                                                         }
                                                     }
                                                     audio = trans.audio
@@ -980,13 +517,8 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     }
 
                                     // 过滤技能白名单, 只在单将模式下生效
-                                    // taffy: 注释皮肤切换原版代码
-                                    // if (!player.doubleAvatar) {
-                                    /* taffy分界线 */
-                                    // taffy: 修复一个复活后无动皮武将使用技能报错的逆天bug喵
-                                    if (!player.doubleAvatar && player.dynamic.primary !== null) {
-                                    /* taffy分界线 */
-                                        let teshu = player.dynamic.primary && player.dynamic.primary.player.teshu
+                                    if (!player.doubleAvatar) {
+                                        let teshu = player.dynamic.primary && player.dynamic.primary.player && player.dynamic.primary.player.teshu
                                         if (typeof teshu === 'object') {
                                             if (teshu.whitelist) {
                                                 if (teshu.whitelist.includes(triggerSkill)) {
@@ -1005,14 +537,12 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             }
 
                             lib.skill._playAudioToQueue = {
-                                trigger: {player: ['useCardBefore', 'respondBefore']},
+                                trigger: { player: ['useCardBefore', 'respondBefore'] },
                                 forced: true,
                                 filter: function (event, player) {
                                     if (player.isUnseen()) return false;
                                     if (!player.dynamic) return false;
-
-                                    // return event.getParent(3).name === 'useCard' ||
-                                    return player.dynamic.primary && player.dynamic.primary.player.audio
+                                    return player.dynamic.primary && player.dynamic.primary.player && player.dynamic.primary.player.audio
                                 },
                                 content: function () {
                                     let id = player.dynamic.id
@@ -1023,8 +553,8 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     // 添加到队列中, 每次播放音频, 检查当前队列是否有待替换的语音需要进行播放
                                     let card = event.getTrigger().card
                                     let cardName
-                                    if(card.name=='sha'&&(card.nature=='fire'||card.nature=='thunder'||card.nature=='ice'||card.nature=='stab')){
-                                        cardName = card.name+'_'+card.nature
+                                    if (card.name == 'sha' && (card.nature == 'fire' || card.nature == 'thunder' || card.nature == 'ice' || card.nature == 'stab')) {
+                                        cardName = card.name + '_' + card.nature
                                     } else {
                                         cardName = card.name
                                     }
@@ -1039,68 +569,52 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 }
                             }
 
-                            // lib.skill._changeSkelSkin = {
-                            //     trigger: {
-                            //         global: 'gameStart'
-                            //     },
-                            //     forced: true,
-                            //     filter: function (event, player) {
-                            //         return player.dynamic
-                            //     },
-                            //     content: function () {
-                            //         // 添加监听按压角色框, 更换皮肤事件
-                            //         player._at = new AnyTouch(player)
-                            //         player._at.on('press', (e) => {
-                            //             skinSwitch.postMsgApi.changeSkelSkin(player)
-                            //         })
-                            //
-                            //     }
-                            // }
-
-                            // lib.skill._checkDynamicShenYh = {
-                            //     trigger: {
-                            //         global: 'gameStart'
-                            //     },
-                            //     forced: true,
-                            //     filter: function (event, player) {
-                            //         return !player.doubleAvatar && player.dynamic && !(lib.config[skinSwitch.decadeKey.newDecadeStyle] === "on")  && !player.classList.contains('unseen') && !player.classList.contains('unseen2');
-                            //     },
-                            //     content: function () {
-                            //         var isYh = player.getElementsByClassName("skinYh");
-                            //         if (Object.keys(isYh).length <= 0) {
-                            //             var yh = skinSwitch.createYH(player.group);
-                            //             player.appendChild(yh);
-                            //         }
-                            //     }
-                            // };
-
-                            // 检查游戏开始, 检查自己的是否是十周年真动皮, 播放出场动画, 暂时不考虑双将模式
+                            // 回合开始,,播放出场动画, 暂时不考虑双将模式
                             lib.skill._checkDcdChuChang = {
-                                trigger:{
-                                    global:"phaseBefore",
+                                trigger: {
+                                    global: "phaseBefore",
                                 },
                                 forced: true,
                                 filter: function (event, player) {
-                                    return game.players.length > 1  /*&&player.phaseNumber===0*/ && player === event.player && !player.doubleAvatar && player.dynamic && player.dynamic.primary && player.dynamic.primary.player.chuchang
+                                    return game.players.length > 1  /*&&player.phaseNumber===0*/ && player === event.player && !player.doubleAvatar && player.dynamic && player.dynamic.primary && player.dynamic.primary.player && player.dynamic.primary.player.chuchang
                                 },
                                 content: function () {
                                     skinSwitch.chukuangWorkerApi.chukuangAction(player, 'chuchang')
                                 }
                             };
+                            
+                            // 添加互动出框，当玩家响应对方的出牌动作时
+                            lib.skill._checkHudongChuKuang = {
+                                trigger: {
+                                    player: "respond",
+                                },
+                                forced: true,
+                                filter: function (event, player) {
+                                    // 只有动皮并且设置了hudong参数的角色才触发互动出框
+                                    return player.dynamic && player.dynamic.primary && 
+                                           player.dynamic.primary.player && player.dynamic.primary.player.hudong &&
+                                           lib.config[skinSwitch.configKey.attackEffect] === 'on';
+                                },
+                                content: function () {
+                                    // 触发互动出框效果
+                                    skinSwitch.chukuangWorkerApi.chukuangAction(player, 'hudong');
+                                }
+                            };
+                            
                             lib.skill._checkDcdShan = {
-                                trigger:{
-                                    player:'useCard'
+                                trigger: {
+                                    player: 'useCard'
                                 },
                                 forced: true,
                                 filter: function (event, player) {
                                     // 打出闪时
-                                    return event.card.name === 'shan' && player.dynamic && (player.dynamic.primary && player.dynamic.primary.player.shizhounian || player.dynamic.deputy && player.dynamic.deputy.player.shizhounian)
+                                    return event.card.name === 'shan' && player.dynamic && (player.dynamic.primary && player.dynamic.primary.player && player.dynamic.primary.player.shizhounian || player.dynamic.deputy && player.dynamic.deputy.player && player.dynamic.deputy.player.shizhounian)
                                 },
                                 content: function () {
                                     // 如果是双将, 只指定一个进行
-                                    if (player.dynamic.primary && player.dynamic.primary.player.shizhounian) {
+                                    if (player.dynamic.primary && player.dynamic.primary.player && player.dynamic.primary.player.shizhounian) {
                                         skinSwitch.postMsgApi.action(player, player.dynamic.primary.player.shan || 'play3', player.dynamic.primary)
-                                    } else {
+                                    } else if (player.dynamic.deputy && player.dynamic.deputy.player && player.dynamic.deputy.player.shizhounian) {
                                         skinSwitch.postMsgApi.action(player, player.dynamic.deputy.player.shan || 'play3', player.dynamic.deputy)
                                     }
 
@@ -1114,12 +628,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 },
                                 forced: true,
                                 filter: function (event, player) {
-                                    // taffy: 注释extension.js原版代码喵
-                                    // return !(lib.config[skinSwitch.decadeKey.newDecadeStyle] === "on")
-                                    /* taffy分界线 */
-                                    // taffy: 增加一些选项喵
-                                    return lib.config[skinSwitch.decadeKey.newDecadeStyle] !== "on" || lib.config[skinSwitch.configKey.taffy_open_circle_top]
-                                    /* taffy分界线 */
+                                    return !(lib.config[skinSwitch.decadeKey.newDecadeStyle] === "on")
                                 },
                                 content: function () {
                                     skinSwitch.skinSwitchCheckYH(player)
@@ -1133,17 +642,297 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 },
                                 forced: true,
                                 filter: function (event, player) {
-                                    // taffy: 注释extension.js原版代码喵
-                                    // return !(lib.config[skinSwitch.decadeKey.newDecadeStyle] === "on")
-                                    /* taffy分界线 */
-                                    // taffy: 增加一些选项喵
-                                    return lib.config[skinSwitch.decadeKey.newDecadeStyle] !== "on" || lib.config[skinSwitch.configKey.taffy_open_circle_top]
-                                    /* taffy分界线 */
+                                    return !(lib.config[skinSwitch.decadeKey.newDecadeStyle] === "on")
                                 },
                                 content: function () {
                                     skinSwitch.skinSwitchCheckYH(player)
                                 }
                             }
+
+                            // 回合计数变身触发
+                            lib.skill._pfqh_check_roundCount = {
+                                trigger: {
+                                    player: "phaseBegin",
+                                },
+                                silent: true,
+                                charlotte: true,
+                                forced: true,
+                                priority: 2022,
+                                filter(event, player) {
+                                    return player.dynamic && player.isAlive();
+                                },
+                                content: function () {
+                                    // 获取与回合计数相关的特殊效果
+                                    let res = skinSwitch.dynamic.getSpecial(player, 'roundCount');
+                                    if (res && res.length > 0) {
+                                        res.forEach(r => {
+                                            const { avatar, special, effs, isPrimary } = r;
+                                            // 检查是否达到回合数触发条件
+                                            if (effs && effs.rounds && player.phaseNumber === effs.rounds) {
+                                                let audio = null;
+                                                
+                                                // 处理变身
+                                                let tryPlayTransform = () => {
+                                                    let transform = effs.transform;
+                                                    if (transform) {
+                                                        let newSkin = null;
+                                                        if (Array.isArray(transform)) {
+                                                            // 多个变身选项
+                                                            for (let i = 0; i < transform.length; i++) {
+                                                                newSkin = special[transform[i]];
+                                                                if (newSkin) break;
+                                                            }
+                                                        } else {
+                                                            // 单个变身选项
+                                                            newSkin = special[transform];
+                                                        }
+                                                        
+                                                        if (newSkin) {
+                                                            if (newSkin.audio) audio = newSkin.audio;
+                                                            
+                                                            // 如果有name属性，进行变身
+                                                            if (newSkin.name) {
+                                                                skinSwitch.dynamic.bianshen(player, newSkin.name, isPrimary);
+                                                                
+                                                                // 播放变身特效
+                                                                if (newSkin.effect) {
+                                                                    setTimeout(() => {
+                                                                        if (typeof newSkin.effect === "string") {
+                                                                            skinSwitch.chukuangWorkerApi.playEffect({
+                                                                                name: `../../../皮肤切换/effects/${newSkin.effect}/${newSkin.effect}`,
+                                                                                version: "4.0"
+                                                                            });
+                                                                        }
+                                                                    }, 300);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                };
+                                                
+                                                // 处理特效播放
+                                                let tryPlayEffect = () => {
+                                                    let effectPlay = effs.play;
+                                                    if (effectPlay) {
+                                                        let eff = special[effectPlay];
+                                                        if (eff) {
+                                                            if (!eff.x) eff.x = [0, 0.5];
+                                                            if (!eff.y) eff.y = [0, 0.5];
+                                                            setTimeout(() => {
+                                                                skinSwitch.chukuangWorkerApi.playEffect(eff);
+                                                            }, (eff.delay || 0) * 1000);
+                                                            if (!audio) audio = eff.audio;
+                                                        }
+                                                    }
+                                                };
+                                                
+                                                tryPlayTransform();
+                                                tryPlayEffect();
+                                                
+                                                // 播放音效
+                                                if (!audio) audio = effs.audio;
+                                                if (audio) {
+                                                    game.playAudio('..', skinSwitch.dcdPath, 'assets/dynamic', audio);
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            };
+
+                            lib.skill._check_die_yh = {
+                                trigger: {
+                                    player: "dieBefore",
+                                },
+                                silent: true,
+                                charlotte: true,
+                                forced: true,
+                                filter(event, player) {
+                                    return player.dynamic
+                                },
+                                content: function () {
+                                    let skinYh = player.getElementsByClassName("skinYh");
+                                    if (skinYh.length > 0) {
+                                        player.removeChild(skinYh[0]);
+                                    }
+                                }
+                            }
+
+                            // 添加游戏开始时重新应用保存的动皮参数的技能
+                            lib.skill._pfqh_reapply_saved_params = {
+                                trigger: {
+                                    global: 'gameStart'
+                                },
+                                forced: true,
+                                silent: true,
+                                priority: 100, // 高优先级确保在其他技能之前执行
+                                content: function () {
+                                    // 多次尝试应用参数，确保成功
+                                    let applyParams = () => {
+                                        console.log('=== 尝试应用保存的动皮参数 ===');
+                                        console.log('当前保存的参数:', window.skinSwitch ? skinSwitch.saveSkinParams : 'skinSwitch不存在');
+                                        console.log('十周年UI状态:', window.decadeUI ? '已加载' : '未加载');
+
+                                        if (window.skinSwitch && typeof skinSwitch.updateDecadeDynamicSkin === 'function' && window.decadeUI) {
+                                            skinSwitch.updateDecadeDynamicSkin();
+                                            console.log('已重新应用保存的动皮参数');
+
+                                            // 输出应用后的结果
+                                            if (decadeUI.dynamicSkin) {
+                                                console.log('应用后的dynamicSkin:', decadeUI.dynamicSkin);
+                                            }
+                                            return true;
+                                        } else {
+                                            console.warn('条件不满足，跳过应用');
+                                            return false;
+                                        }
+                                    };
+
+                                    // 立即尝试一次
+                                    if (!applyParams()) {
+                                        // 如果失败，延迟500ms再试
+                                        setTimeout(() => {
+                                            if (!applyParams()) {
+                                                // 如果还失败，再延迟1000ms试一次
+                                                setTimeout(() => {
+                                                    if (!applyParams()) {
+                                                        // 最后再延迟2000ms试一次
+                                                        setTimeout(applyParams, 2000);
+                                                    }
+                                                }, 1000);
+                                            }
+                                        }, 500);
+                                    }
+                                }
+                            }
+
+                            // 添加角色初始化时重新应用保存的动皮参数的技能
+                            lib.skill._pfqh_reapply_on_init = {
+                                trigger: {
+                                    player: 'enterGame'
+                                },
+                                forced: true,
+                                silent: true,
+                                priority: -100, // 低优先级，确保在角色完全初始化后执行
+                                filter: function (event, player) {
+                                    return player.dynamic && player.dynamic.primary;
+                                },
+                                content: function () {
+                                    // 延迟执行，确保角色完全初始化
+                                    setTimeout(() => {
+                                        console.log('=== 角色初始化完成，重新应用保存的动皮参数 ===', player.name);
+                                        if (window.skinSwitch && typeof skinSwitch.updateDecadeDynamicSkin === 'function' && window.decadeUI) {
+                                            skinSwitch.updateDecadeDynamicSkin();
+                                            console.log('角色初始化时已重新应用保存的动皮参数');
+                                        }
+                                    }, 200);
+                                }
+                            }
+
+                            // 不知道怎么合并, 在回合开始和回合结束, 检测Player的group变化
+                            lib.skill._fix_phase_yh = {
+                                trigger: {
+                                    player: ['phaseBegin', 'phaseEnd']
+                                },
+                                forced: true,
+                                filter: function (event, player) {
+                                    return !(lib.config[skinSwitch.decadeKey.newDecadeStyle] === "on")
+                                },
+                                content: function () {
+                                    skinSwitch.skinSwitchCheckYH(player)
+                                }
+                            }
+
+                            // 回合计数变身触发
+                            lib.skill._pfqh_check_roundCount = {
+                                trigger: {
+                                    player: "phaseBegin",
+                                },
+                                silent: true,
+                                charlotte: true,
+                                forced: true,
+                                priority: 2022,
+                                filter(event, player) {
+                                    return player.dynamic && player.isAlive();
+                                },
+                                content: function () {
+                                    // 获取与回合计数相关的特殊效果
+                                    let res = skinSwitch.dynamic.getSpecial(player, 'roundCount');
+                                    if (res && res.length > 0) {
+                                        res.forEach(r => {
+                                            const { avatar, special, effs, isPrimary } = r;
+                                            // 检查是否达到回合数触发条件
+                                            if (effs && effs.rounds && player.phaseNumber === effs.rounds) {
+                                                let audio = null;
+                                                
+                                                // 处理变身
+                                                let tryPlayTransform = () => {
+                                                    let transform = effs.transform;
+                                                    if (transform) {
+                                                        let newSkin = null;
+                                                        if (Array.isArray(transform)) {
+                                                            // 多个变身选项
+                                                            for (let i = 0; i < transform.length; i++) {
+                                                                newSkin = special[transform[i]];
+                                                                if (newSkin) break;
+                                                            }
+                                                        } else {
+                                                            // 单个变身选项
+                                                            newSkin = special[transform];
+                                                        }
+                                                        
+                                                        if (newSkin) {
+                                                            if (newSkin.audio) audio = newSkin.audio;
+                                                            
+                                                            // 如果有name属性，进行变身
+                                                            if (newSkin.name) {
+                                                                skinSwitch.dynamic.bianshen(player, newSkin.name, isPrimary);
+                                                                
+                                                                // 播放变身特效
+                                                                if (newSkin.effect) {
+                                                                    setTimeout(() => {
+                                                                        if (typeof newSkin.effect === "string") {
+                                                                            skinSwitch.chukuangWorkerApi.playEffect({
+                                                                                name: `../../../皮肤切换/effects/${newSkin.effect}/${newSkin.effect}`,
+                                                                                version: "4.0"
+                                                                            });
+                                                                        }
+                                                                    }, 300);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                };
+                                                
+                                                // 处理特效播放
+                                                let tryPlayEffect = () => {
+                                                    let effectPlay = effs.play;
+                                                    if (effectPlay) {
+                                                        let eff = special[effectPlay];
+                                                        if (eff) {
+                                                            if (!eff.x) eff.x = [0, 0.5];
+                                                            if (!eff.y) eff.y = [0, 0.5];
+                                                            setTimeout(() => {
+                                                                skinSwitch.chukuangWorkerApi.playEffect(eff);
+                                                            }, (eff.delay || 0) * 1000);
+                                                            if (!audio) audio = eff.audio;
+                                                        }
+                                                    }
+                                                };
+                                                
+                                                tryPlayTransform();
+                                                tryPlayEffect();
+                                                
+                                                // 播放音效
+                                                if (!audio) audio = effs.audio;
+                                                if (audio) {
+                                                    game.playAudio('..', skinSwitch.dcdPath, 'assets/dynamic', audio);
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            };
 
                             lib.skill._check_die_yh = {
                                 trigger: {
@@ -1179,8 +968,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     // 获取有配置了special的角色
                                     let res = skinSwitch.dynamic.getSpecial(player, 'lowhp')
                                     res.forEach(r => {
-                                        const {avatar, special, effs, isPrimary} = r
-
+                                        const { avatar, special, effs, isPrimary } = r
                                         // 默认回复血量不变回来, 和十周年保持一致
                                         if (event.getTrigger().num > 0 && !effs.recover) {
                                             return
@@ -1194,7 +982,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                         }
                                         if (!effs.recover) {
                                             if ((isPrimary && hp >= player._primaryLowestHp) || (!isPrimary && hp >= player._deputyLowestHp))
-                                            return // 排除救助回来, 然后继续重复变身
+                                                return // 排除救助回来, 然后继续重复变身
                                         }
                                         if (isPrimary) {
                                             player._primaryLowestHp = hp
@@ -1218,7 +1006,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                     }
                                                 }
                                             }
-                                            transList.sort((a, b) => {return a.hp - b.hp})
+                                            transList.sort((a, b) => { return a.hp - b.hp })
                                             // 找到合适的符合当前血量的区间.
                                             let index = -1
                                             for (let i = 0; i < transList.length; i++) {
@@ -1234,7 +1022,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                             if (index === -1) {
                                                 // 如果当前已经是变身后的骨骼, 需要恢复原始骨骼.
                                                 if (!originSkin.skin) originSkin.skin = 'default'
-                                                skinSwitch.dynamic.transformDst(player, isPrimary, originSkin, {huanfuEffect: effs.effect, isOrigin: true})
+                                                skinSwitch.dynamic.transformDst(player, isPrimary, originSkin, { huanfuEffect: effs.effect, isOrigin: true })
                                             } else {
                                                 // 说明当前满足血量变化
                                                 trans = transList[index]
@@ -1246,18 +1034,41 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                     if (!key || !skinName) return
                                                     let dInfo = dskins[key] && dskins[key][skinName]
                                                     if (!dInfo) return
-                                                    skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, {huanfuEffect: effs.effect})
+
+                                                    // 创建新的dInfo副本，避免修改原始对象
+                                                    let newDInfo = Object.assign({}, dInfo)
+                                                    console.log(newDInfo)
+
+                                                    // 添加audio属性，确保在transformDst中更新语音
+                                                    newDInfo.audio = trans.audio
+                                                    console.log(newDInfo.audio)
+
+                                                    // 标记需要更新音频
+                                                    newDInfo._needUpdateAudio = true
+
+                                                    // 传递原始皮肤的音频信息以便恢复
+                                                    if (avatar && avatar.audio) {
+                                                        newDInfo._originalAudio = avatar.audio
+                                                    }
+                                                    console.log(newDInfo._originalAudio)
+
+                                                    skinSwitch.dynamic.transformDst(player, isPrimary, newDInfo, { huanfuEffect: effs.effect })
 
                                                     // 只有更换新骨骼才会触发播放语音
                                                     if (dInfo.name !== player.dynamic[isPrimary ? 'primary' : 'deputy'].name) {
                                                         tryPlayEffect()
-                                                        if (!audio)  audio = special.condition.lowhp.audio
+                                                        if (!audio) audio = special.condition.lowhp.audio
                                                         if (audio) {
                                                             game.playAudio('..', skinSwitch.dcdPath, 'assets/dynamic', audio)
                                                         }
+
+                                                        // 强制重新加载皮肤的语音
+                                                        setTimeout(() => {
+                                                            skinSwitch.reloadAudioForSkin(player, isPrimary, trans.audio);
+                                                        }, 1000);
                                                     }
                                                 } else {
-                                                    skinSwitch.dynamic.transformDst(player, isPrimary, trans, {huanfuEffect: effs.effect})
+                                                    skinSwitch.dynamic.transformDst(player, isPrimary, trans, { huanfuEffect: effs.effect })
                                                 }
                                             }
 
@@ -1276,7 +1087,6 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 }
                                             }
                                         }
-
                                         tryPlayTransform()
                                     })
                                 }
@@ -1304,7 +1114,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     }
                                     let res = skinSwitch.dynamic.getSpecial(player, 'damageTimes')
                                     res.forEach(r => {
-                                        const {avatar, special, effs, isPrimary} = r
+                                        const { avatar, special, effs, isPrimary } = r
                                         // 获取低血量的配置
                                         let transforms = effs.transform || []
 
@@ -1318,7 +1128,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 transList.push(set)
                                             }
                                         }
-                                        transList.sort((a, b) => {return a.times - b.times})
+                                        transList.sort((a, b) => { return a.times - b.times })
                                         let times = player.__damage_times
                                         // 找到合适的符合当前血量的区间.
                                         let index = -1
@@ -1346,14 +1156,25 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 let [key, skinName] = newName.split('/')
                                                 let dInfo = key && skinName && dskins[key] && dskins[key][skinName]
                                                 if (dInfo) {
-                                                    skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, {huanfuEffect: effs.effect})
+                                                    // 添加audio属性和标记，确保语音更新
+                                                    dInfo = Object.assign({}, dInfo);
+                                                    dInfo.audio = trans.audio;
+                                                    dInfo._needUpdateAudio = true;
+
+                                                    skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, { huanfuEffect: effs.effect })
 
                                                     // 只有更换新骨骼才会触发播放语音
                                                     if (dInfo.name !== avatar.name) {
+                                                        // 强制重新加载皮肤的语音
+                                                        setTimeout(() => {
+                                                            if (trans.audio) {
+                                                                skinSwitch.reloadAudioForSkin(player, isPrimary, trans.audio);
+                                                            }
+                                                        }, 1000);
                                                         audio = trans.audio
 
                                                         // 检查是否有播放特效
-                                                        let effectPlay =  effs.play
+                                                        let effectPlay = effs.play
                                                         if (effectPlay) {
                                                             let eff = special[effectPlay]
                                                             if (eff) {
@@ -1375,7 +1196,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                                                 }
                                             } else {
-                                                skinSwitch.dynamic.transformDst(player, isPrimary, trans, {huanfuEffect: effs.effect})
+                                                skinSwitch.dynamic.transformDst(player, isPrimary, trans, { huanfuEffect: effs.effect })
                                             }
                                         }
                                     })
@@ -1399,15 +1220,15 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     let res = skinSwitch.dynamic.getSpecial(player, 'damage')
 
                                     res.forEach(r => {
-                                        const {avatar, special, effs, isPrimary} = r
+                                        const { avatar, special, effs, isPrimary } = r
                                         let pName = isPrimary ? player.name : player.name2
                                         let audio
                                         let tryPlayTransform = () => {
                                             // 判断当前皮肤是否已经进行过变身了, 如果变身过, 取消变身.
                                             let key = isPrimary ? 'damagePrimaryTransform' : 'damageDeputyTransform'
-                                            if (player[key]) {return}
+                                            if (player[key]) { return }
                                             let transform = effs.transform
-                                            if (!transform || !(transform in special) ) return
+                                            if (!transform || !(transform in special)) return
                                             let trans = special[transform]
                                             let dskins = decadeUI.dynamicSkin
                                             // 播放转换的骨骼
@@ -1417,10 +1238,32 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 let [key, skinName] = newName.split('/')
                                                 let dInfo = key && skinName && dskins[key] && dskins[key][skinName]
                                                 if (dInfo) {
-                                                    skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, {huanfuEffect: effs.effect})
+                                                    // 添加audio属性和标记，确保语音更新
+                                                    dInfo = Object.assign({}, dInfo);
+                                                    dInfo.audio = trans.audio;
+                                                    dInfo._needUpdateAudio = true;
+
+                                                    skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, { huanfuEffect: effs.effect })
+
+                                                    // 强制重新加载皮肤的语音
+                                                    setTimeout(() => {
+                                                        if (trans.audio) {
+                                                            skinSwitch.reloadAudioForSkin(player, isPrimary, trans.audio);
+                                                        }
+                                                    }, 1000);
                                                 }
                                             } else {
-                                                skinSwitch.dynamic.transformDst(player, isPrimary, trans, {huanfuEffect: effs.effect})
+                                                // 为trans添加标记
+                                                trans = Object.assign({}, trans);
+                                                trans._needUpdateAudio = true;
+                                                skinSwitch.dynamic.transformDst(player, isPrimary, trans, { huanfuEffect: effs.effect })
+
+                                                // 强制重新加载皮肤的语音
+                                                setTimeout(() => {
+                                                    if (trans.audio) {
+                                                        skinSwitch.reloadAudioForSkin(player, isPrimary, trans.audio);
+                                                    }
+                                                }, 1000);
                                             }
                                             audio = trans.audio
                                         }
@@ -1466,11 +1309,11 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 content: function () {
                                     let res = skinSwitch.dynamic.getSpecial(player, 'jisha')
                                     res.forEach(r => {
-                                        const {avatar, special, effs, isPrimary} = r
+                                        const { avatar, special, effs, isPrimary } = r
                                         let audio
                                         let tryTransform = () => {
                                             let transform = effs.transform
-                                            if (!transform || !(transform in special) ) return
+                                            if (!transform || !(transform in special)) return
                                             let trans = special[transform]
                                             let dskins = decadeUI.dynamicSkin
                                             // 播放转换的骨骼
@@ -1480,10 +1323,32 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 let [key, skinName] = newName.split('/')
                                                 let dInfo = key && skinName && dskins[key] && dskins[key][skinName]
                                                 if (dInfo) {
-                                                    skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, {huanfuEffect: effs.effect})
+                                                    // 添加audio属性和标记，确保语音更新
+                                                    dInfo = Object.assign({}, dInfo);
+                                                    dInfo.audio = trans.audio;
+                                                    dInfo._needUpdateAudio = true;
+
+                                                    skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, { huanfuEffect: effs.effect })
+
+                                                    // 强制重新加载皮肤的语音
+                                                    setTimeout(() => {
+                                                        if (trans.audio) {
+                                                            skinSwitch.reloadAudioForSkin(player, isPrimary, trans.audio);
+                                                        }
+                                                    }, 1000);
                                                 }
                                             } else {
-                                                skinSwitch.dynamic.transformDst(player, isPrimary, trans, {huanfuEffect: effs.effect})
+                                                // 为trans添加标记
+                                                trans = Object.assign({}, trans);
+                                                trans._needUpdateAudio = true;
+                                                skinSwitch.dynamic.transformDst(player, isPrimary, trans, { huanfuEffect: effs.effect })
+
+                                                // 强制重新加载皮肤的语音
+                                                setTimeout(() => {
+                                                    if (trans.audio) {
+                                                        skinSwitch.reloadAudioForSkin(player, isPrimary, trans.audio);
+                                                    }
+                                                }, 1000);
                                             }
                                             audio = trans.audio
                                         }
@@ -1515,580 +1380,131 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 }
                             }
 
-                            // 覆盖reinit方法
-                            lib.element.player.reinit = pfqh_reinit
-
-                            // 重写一下取消初始化的方法, 在后面添加取消头框的方法
-                            if (!skinSwitch.origin_uninit) {
-                                skinSwitch.origin_uninit = lib.element.player.uninit
-                            }
-                            lib.element.player.uninit = pfqh_uninit
-
-                            // game原有的init函数, 模仿千幻聆音, 为了防止被覆盖, 直接拷贝过来, 也代表着需要随时和game主体的保持一致. 不然会出bug, 就和logSkill一样
-                            let gameInit = function(character,character2,skill){
-                                if(typeof character=='string'&&!lib.character[character]){
-                                    lib.character[character]=get.character(character);
-                                }
-                                if(typeof character2=='string'&&!lib.character[character2]){
-                                    lib.character[character2]=get.character(character2);
-                                }
-                                if(!lib.character[character]) return;
-                                if(get.is.jun(character2)){
-                                    var tmp=character;
-                                    character=character2;
-                                    character2=tmp;
-                                }
-                                if(character2==false){
-                                    skill=false;
-                                    character2=null;
-                                }
-                                var info=lib.character[character];
-                                if(!info){
-                                    info=['','',1,[],[]];
-                                }
-                                if(!info[4]){
-                                    info[4]=[];
-                                }
-                                var skills=info[3].slice(0);
-                                this.clearSkills(true);
-                                this.classList.add('fullskin');
-                                // taffy: 注释皮肤切换原版代码
-                                // if(!game.minskin&&get.is.newLayout()&&!info[4].contains('minskin')){
-                                /* taffy分界线 */
-                                // taffy: 消灭contains报警喵
-                                if(!game.minskin&&get.is.newLayout()&&!info[4].includes('minskin')){
-                                /* taffy分界线 */
-                                    this.classList.remove('minskin');
-                                    this.node.avatar.setBackground(character,'character');
-                                }
-                                else{
-                                    this.node.avatar.setBackground(character,'character');
-                                    // taffy: 注释皮肤切换原版代码
-                                    // if(info[4].contains('minskin')){
-                                    /* taffy分界线 */
-                                    // taffy: 消灭contains报警喵
-                                    if(info[4].includes('minskin')){
-                                    /* taffy分界线 */
-                                        this.classList.add('minskin');
-                                    }
-                                    else if(game.minskin){
-                                        this.classList.add('minskin');
-                                    }
-                                    else{
-                                        this.classList.remove('minskin');
-                                    }
-                                }
-
-                                var hp1=get.infoHp(info[2]);
-                                var maxHp1=get.infoMaxHp(info[2]);
-                                var hujia1=get.infoHujia(info[2]);
-
-                                this.node.avatar.show();
-                                this.node.count.show();
-                                this.node.equips.show();
-                                this.name=character;
-                                this.name1=character;
-                                // taffy: 解决tempname报错喵
-                                this.tempname=[];
-                                  /* taffy分界线 */
-                                this.sex=info[0];
-                                this.group=info[1];
-                                this.hp=hp1;
-                                this.maxHp=maxHp1;
-                                this.hujia=hujia1;
-                                this.node.intro.innerHTML=lib.config.intro;
-                                this.node.name.dataset.nature=get.groupnature(this.group);
-                                lib.setIntro(this);
-                                this.node.name.innerHTML=get.slimName(character);
-                                if(this.classList.contains('minskin')&&this.node.name.querySelectorAll('br').length>=4){
-                                    this.node.name.classList.add('long');
-                                }
-                                // taffy: 注释皮肤切换原版代码
-                                // if(info[4].contains('hiddenSkill')&&!this.noclick){
-                                /* taffy分界线 */
-                                // taffy: 消灭contains报警喵
-                                if(info[4].includes('hiddenSkill')&&!this.noclick){
-                                /* taffy分界线 */
-                                    if(!this.hiddenSkills) this.hiddenSkills=[];
-                                    this.hiddenSkills.addArray(skills);
-                                    skills=[];
-                                    this.classList.add(_status.video?'unseen_v':'unseen');
-                                    this.name='unknown';
-                                    if(!this.node.name_seat&&!_status.video){
-                                        this.node.name_seat=ui.create.div('.name.name_seat',get.verticalStr(get.translation(this.name)),this);
-                                        this.node.name_seat.dataset.nature=get.groupnature(this.group);
-                                    }
-                                    this.sex='male';
-                                    //this.group='unknown';
-                                    this.storage.nohp=true;
-                                    skills.add('g_hidden_ai');
-                                }
-                                if(character2&&lib.character[character2]){
-                                    var info2=lib.character[character2];
-                                    if(!info2){
-                                        info2=['','',1,[],[]];
-                                    }
-                                    if(!info2[4]){
-                                        info2[4]=[];
-                                    }
-                                    this.classList.add('fullskin2');
-                                    this.node.avatar2.setBackground(character2,'character');
-
-                                    this.node.avatar2.show();
-                                    this.name2=character2;
-                                    var hp2=get.infoHp(info2[2]);
-                                    var maxHp2=get.infoMaxHp(info2[2]);
-                                    var hujia2=get.infoHujia(info2[2]);
-                                    this.hujia+=hujia2;
-                                    var double_hp;
-                                    if(_status.connectMode||get.mode()=='single'){
-                                        double_hp='pingjun';
-                                    }
-                                    else{
-                                        double_hp=get.config('double_hp');
-                                    }
-                                    switch(double_hp){
-                                        case 'pingjun':{
-                                            this.maxHp=Math.floor((maxHp1+maxHp2)/2);
-                                            this.hp=Math.floor((hp1+hp2)/2);
-                                            this.singleHp=((maxHp1+maxHp2)%2===1);
-                                            break;
+                             // 改变势力
+                            lib.skill._pfqh_check_changeGroup = {
+                                trigger: {
+                                    global: 'gameStart'
+                                },
+                                silent: true,
+                                charlotte: true,
+                                forced: true,
+                                priority: 2022,
+                                filter(event,player) {
+                                    return player.dynamic;
+                                },
+                                content: function() {
+                                    let res = skinSwitch.dynamic.getSpecial(player, 'changeGroup');
+                                    // 接口传不过来呜呜呜，再写一遍
+                                    var groupMap = {
+                                      'wei': ['wei'],
+                                      'shu': ['shu'],
+                                      'wu': ['wu'],
+                                      'qun': ['qun']
+                                    };
+                                    function getFirstGroupType(characterName) {
+                                      var group = get.groupnature(lib.character[characterName]);
+                                      for (var type in groupMap) {
+                                        if (groupMap[type].some(function(keyword) { return group.startsWith(keyword); })) {
+                                          return type;
                                         }
-                                        case 'zuidazhi':{
-                                            this.maxHp=Math.max(maxHp1,maxHp2);
-                                            this.hp=Math.max(hp1,hp2);
-                                            break;
-                                        }
-                                        case 'zuixiaozhi':{
-                                            this.maxHp=Math.min(maxHp1,maxHp2);
-                                            this.hp=Math.min(hp1,hp2);
-                                            break;
-                                        }
-                                        case 'zonghe':{
-                                            this.maxHp=maxHp1+maxHp2;
-                                            this.hp=hp1+hp2;
-                                            break;
-                                        }
-                                        default:{
-                                            this.maxHp=maxHp1+maxHp2-3;
-                                            this.hp=hp1+hp2-3;
-                                        };
+                                      }  
+                                      return null; 
                                     }
-                                    this.node.count.classList.add('p2');
-                                    // taffy: 注释皮肤切换原版代码
-                                    // if(info2[4].contains('hiddenSkill')&&!this.noclick){
-                                    /* taffy分界线 */
-                                    // taffy: 消灭contains报警喵
-                                    if(info2[4].includes('hiddenSkill')&&!this.noclick){
-                                    /* taffy分界线 */
-                                        if(!this.hiddenSkills) this.hiddenSkills=[];
-                                        this.hiddenSkills.addArray(info2[3]);
-                                        this.classList.add(_status.video?'unseen2_v':'unseen2');
-                                        this.storage.nohp=true;
-                                        skills.add('g_hidden_ai');
-                                    }
-                                    else skills=skills.concat(info2[3]);
+                                    var playerGroupType = getFirstGroupType(player.name);
+                                    var currentPlayerGroupType = player.group;
+                                    if (currentPlayerGroupType !== playerGroupType) {    
 
-                                    this.node.name2.innerHTML=get.slimName(character2);
-                                }
-                                if(this.storage.nohp){
-                                    this.storage.rawHp=this.hp;
-                                    this.storage.rawMaxHp=this.maxHp;
-                                    this.hp=1;
-                                    this.maxHp=1;
-                                    this.node.hp.hide();
-                                }
-                                if(skill!=false){
-                                    // taffy: 主公技修复
-                                    skills=skills.filter(skill=>{
-                                      var info=get.info(skill);
-                                      if(info&&info.zhuSkill&&!this.isZhu2()) return false;
-                                      return true;
-                                    });
-                                    /* taffy分界线 */
-                                    for(var i=0;i<skills.length;i++){
-                                        this.addSkill(skills[i]);
-                                    }
-                                    this.checkConflict();
-                                }
-                                lib.group.add(this.group);
-                                if(this.inits){
-                                    for(var i=0;i<lib.element.player.inits.length;i++){
-                                        lib.element.player.inits[i](this);
-                                    }
-                                }
-                                if(this._inits){
-                                    for(var i=0;i<this._inits.length;i++){
-                                        this._inits[i](this);
-                                    }
-                                }
-                                this.update();
-                                return this;
-                            }
+                                        // 检查是否执行过换肤操作
+                                        res.forEach(r => {
+                                            const { avatar, special, effs, isPrimary } = r;
+                                            let audio;
 
-                            Player.init = function (character, character2, skill) {
+                                            let tryTransform = () => {
+                                                let transform = effs.transform;
+                                                if (!transform || !(transform in special)) return;
+                                                let trans = special[transform];
+                                                let dskins = decadeUI.dynamicSkin;
+                                                // 播放转换的骨骼
+                                                let newName = trans.name;
+                                                if (newName) {
+                                                    // 分割名字, 获取骨骼, 与当前角色的骨骼的名字比较,是否是同名
+                                                    let [key, skinName] = newName.split('/');
+                                                    let dInfo = key && skinName && dskins[key] && dskins[key][skinName];
+                                                    if (dInfo) {
+                                                        skinSwitch.dynamic.transformDst(player, isPrimary, dInfo, { huanfuEffect: effs.effect });
+                                                    }
+                                                } else {
+                                                    skinSwitch.dynamic.transformDst(player, isPrimary, trans, { huanfuEffect: effs.effect });
+                                                }
+                                                audio = trans.audio;
+                                            };
 
-                                // EngEX设计的动皮露头外框, 还是比较好看的.
-                                let isYh = this.getElementsByClassName("skinYh");
-                                if (isYh.length > 0) {
-                                    isYh[0].remove();
-                                }
-                                let bj = this.getElementsByClassName("gain-skill flex");
-                                if (bj.length > 0) {
-                                    bj[0].innerHTML = null;
-                                }
-                                this.doubleAvatar = (character2 && lib.character[character2]) !== undefined;
-                                let CUR_DYNAMIC = decadeUI.CUR_DYNAMIC;
-                                let MAX_DYNAMIC = decadeUI.MAX_DYNAMIC;
-                                if (CUR_DYNAMIC === undefined) {
-                                    CUR_DYNAMIC = 0;
-                                    decadeUI.CUR_DYNAMIC = CUR_DYNAMIC;
-                                }
+                                            let tryEffectPlay = () => {
+                                                // 检查是否有播放特效
+                                                let effectPlay = effs.play;
+                                                if (effectPlay) {
+                                                    let eff = special[effectPlay];
+                                                    if (eff) {
+                                                        if (!eff.x) eff.x = [0, 0.5];
+                                                        if (!eff.y) eff.y = [0, 0.5];
+                                                        setTimeout(() => {
+                                                            skinSwitch.chukuangWorkerApi.playEffect(eff);
+                                                        }, (eff.delay || 0) * 1000);
+                                                        if (!audio) audio = eff.audio;
+                                                    }
+                                                }
+                                            };
+                                            tryTransform();
+                                            tryEffectPlay();
 
-                                if (MAX_DYNAMIC === undefined) {
-                                    MAX_DYNAMIC = skinSwitch.isMobile() ? 2 : 10;
-                                    if (window.OffscreenCanvas)
-                                        MAX_DYNAMIC += 8;
-                                    decadeUI.MAX_DYNAMIC = MAX_DYNAMIC;
-                                }
-
-                                // 这里会有一个bug, 就是在自定义的乱斗模式里, 同一个角色会快速初始化两次, 所以导致当骨骼还没完全加载好,就取执行stop函数,导致删除node失败
-                                // 最后会出现重影,就是有两个apnode同时渲染
-                                if (this.dynamic) {
-                                    if (this.dynamic.primary) this.stopDynamic(true, false)
-                                    if (this.dynamic.deputy) this.stopDynamic(false, true)
-                                }
-                                let showDynamic = (this.dynamic || CUR_DYNAMIC < MAX_DYNAMIC) && duicfg.dynamicSkin;
-                                let y = false;
-                                if (showDynamic && _status.mode != null) {
-                                    let skins;
-
-                                    let avatars = this.doubleAvatar ? [character, character2] : [character];
-                                    let dskins = decadeUI.dynamicSkin;
-                                    let increased;
-                                    let hasHideWuJiang = false
-
-                                    for (let i = 0; i < avatars.length; i++) {
-
-                                        skins = dskins[avatars[i]];
-                                        if (skins === undefined)
-                                            continue;
-
-                                        let keys = Object.keys(skins);
-                                        if (keys.length === 0) {
-                                            console.error('player.init: ' + avatars[i] + ' 没有设置动皮参数');
-                                            continue;
-                                        }
-                                        let skin
-
-                                        let dynamicSkinKey = skinSwitch.configKey.dynamicSkin
-                                        // 将皮肤的相关参数保存起来
-                                        if (lib.config[dynamicSkinKey]) {
-                                            let ps = lib.config[dynamicSkinKey][avatars[i]];
-                                            if (ps === 'none') continue // 主动设置为静皮的
-
-                                            if (ps) {
-                                                skin = skins[ps];
-                                            } else {
-                                                lib.config[dynamicSkinKey][avatars[i]] = Object.keys(skins)[0];
-                                                game.saveConfig(dynamicSkinKey, lib.config[dynamicSkinKey]);
+                                            if (!audio) audio = special.condition.changeGroup.audio;
+                                            if (audio) {
+                                                game.playAudio('..', skinSwitch.dcdPath, 'assets/dynamic', audio);
                                             }
-                                        } else {
-                                            lib.config[dynamicSkinKey] = {};
-                                            lib.config[dynamicSkinKey][avatars[i]] = Object.keys(skins)[0];
-                                            game.saveConfig(dynamicSkinKey, lib.config[dynamicSkinKey]);
-                                        }
-                                        // 如果没有保存皮肤参数, 那么默认获取第0个皮肤
-                                        if (!skin) skin = skins[Object.keys(skins)[0]];
-                                        if (skin.speed === undefined) skin.speed = 1;
-                                        y = true;
-                                        if (!skin.skinName) skin.skinName = keys[i];
-                                        if (!this.doubleAvatar) {
-                                            if (this === game.me) {
-                                                skinSwitch.selectSkinData.value = keys[i];
-                                            }
-                                        }
-                                        // player是保存皮肤原始参数, 当动皮播放完毕后还需要返回原始位置
-                                        skin.player = skin;
-                                        // if (skin.action && skin.pos) skin.action = "ChuChang";
-                                        let hide = lib.character[avatars[i]][4];
-                                        let isHide;
-                                        if (hide.length > 0 && hide[0] === "hiddenSkill") {
-                                            isHide = true;
-                                            hasHideWuJiang = true
-                                        }
-                                        // 是否有副将
-                                        if (get.mode() === "guozhan" || isHide) skin.deputy = true;
 
-                                        // 检测皮肤是否放在其他位置, 更换皮肤名字
-                                        if (skin.localePath) {
-                                            // 防止同一个武将重复初始化出错找不到骨骼
-                                            if (!skin.name.startsWith(skin.localePath + '/')) {
-                                                skin.name = skin.localePath + '/' + skin.name
-                                                skin.background = skin.localePath + '/' + skin.background
-                                            }
-                                        }
-
-                                        if (!this.doubleAvatar && !isHide) {
-                                            if (skin.background) {
-                                                this.$dynamicWrap.style.backgroundImage = 'url("' + lib.assetURL + 'extension/十周年UI/assets/dynamic/' + skin.background + '")';
-                                            } else {
-                                                this.$dynamicWrap.style.backgroundImage = 'url("' + lib.assetURL + 'extension/皮肤切换/images/card/card.png")'
-                                            }
-                                        }
-                                        this.playDynamic(skin, i === 1);
-                                        if (!increased) {
-                                            increased = true;
-                                            decadeUI.CUR_DYNAMIC++;
-                                        }
-
-                                    }
-                                    if ((this.doubleAvatar && (get.mode() === "guozhan")) || hasHideWuJiang) {
-                                        let e = this.getElementsByClassName("dynamic-wrap");
-                                        if (e.length > 0) {
-                                            e[0].style.display = "none";
-                                            e[0].style.height = "100%";
-                                            e[0].style.borderRadius = "0";
-                                        }
-                                    }
-                                    var forces = lib.character[character][1];
-
-                                    if (forces !== 'shen' && !hasHideWuJiang) {
-                                        skinSwitch.skinSwitchCheckYH(this, forces)
-                                    }
-
-                                    skinSwitch.dynamic.startPlay2Random(this)
+                                        });
+                                    }                
                                 }
-
-                                var jie;
-                                if (character && duicfg.showJieMark) {
-                                    if (lib.characterPack.refresh)
-                                        jie = lib.characterPack.refresh[character];
-                                    if (jie == null) {
-                                        jie = character.substr(0, 3);
-                                        jie == 're_' || jie == 'ol_' || jie == 'xin' || jie == 'old';
-                                    }
-
-                                    if (jie != null) {
-                                        jie = lib.translate[character][0];
-                                        if (jie == '界') {
-                                            if (this.$jieMark == undefined)
-                                                this.$jieMark = dui.element.create('jie-mark', this);
-                                            else
-                                                this.appendChild(this.$jieMark);
-                                        }
-                                    }
-                                }
-
-                                // var result = this._super.init.apply(this, arguments);
-                                var result = gameInit.apply(this, arguments);
-                                if (jie == '界') {
-                                    var text = result.node.name.innerText;
-                                    if (text[1] == '\n')
-                                        text = text.substr(2);
-                                    else
-                                        text = text.substr(1);
-
-                                    result.node.name.innerText = text;
-                                }
-                                return result;
                             };
 
-                            // 有暗将的修改
-                            Player.showCharacter = function (num, log) {
-                                let toShow = [];
-                                if ((num === 0 || num === 2) && this.isUnseen(0)) toShow.add(this.name1);
-                                if ((num === 1 || num === 2) && this.isUnseen(1)) toShow.add(this.name2);
-                                if (!toShow.length) return;
-                                if (num === 0 && !this.isUnseen(0)) {
-                                    return;
-                                }
-                                if (num === 1 && (!this.name2 || !this.isUnseen(1))) {
-                                    return;
-                                }
-                                if (!this.isUnseen(2)) {
-                                    return;
-                                }
-                                let that = this;
-
-                                let addYh = () => {
-                                    skinSwitch.skinSwitchCheckYH(that)
-                                }
-
-                                function showDynamicSkin(e)
-                                {
-
-                                    if (that.dynamic) {
-                                        function post(id) {
-                                            let e = that.getElementsByClassName("dynamic-wrap");
-                                            if (e.length > 0) e[0].style.display = "block";
-                                            skinSwitch.postMsgApi.show(that, id)
-                                        }
-
-                                        if (e === "unseen") {
-                                            if (that.dynamic.primary) {
-                                                skinSwitch.dynamic.setBackground("primary", that);
-                                                post(that.dynamic.primary.id);
-                                                addYh()
+                            // 千幻聆音势力换肤
+                            lib.skill._qhlyChangeGroupSkin = {
+                                trigger: {
+                                    global: 'gameStart' 
+                                },
+                                filter: function (event,player) {
+                                    return lib.qhly_skinChange[game.qhly_getRealName(player.name1)] || lib.qhly_skinChange[game.qhly_getRealName(player.name2)];
+                                },
+                                direct: true,
+                                forced: true,
+                                charlotte: true,
+                                content: function () {
+                                    var groupMap = {
+                                        'wei': ['wei'],
+                                        'shu': ['shu'],
+                                        'wu': ['wu'],
+                                        'qun': ['qun']
+                                    };
+                                    function getFirstGroupType(characterName) {
+                                        var group = get.groupnature(lib.character[characterName]);
+                                        for (var type in groupMap) {
+                                            if (groupMap[type].some(function(keyword) { return group.startsWith(keyword); })) {
+                                                return type;
                                             }
-                                        } else if (e === "unseen2") {
-                                            if (that.dynamic.deputy) {
-                                                skinSwitch.dynamic.setBackground("deputy", that);
-                                                post(that.dynamic.deputy.id);
-                                                addYh()
-                                            }
-                                        }
+                                        }  
+                                        return null; 
                                     }
+                                    //先切换动皮，导致接口传不过去
+                                    var playerGroupType = getFirstGroupType(player.name);
+                                    var currentPlayerGroupType = player.group;
+                                    // 检查
+                                    if (currentPlayerGroupType !== playerGroupType) {
+                                        if (typeof game.qhly_changeSkillSkin === 'function') {
+                                            game.qhly_changeSkillSkin(player, 'changeGroup');
+                                        }
+                                    }   
                                 }
-
-                                lib.element.player.$showCharacter.apply(this, arguments);
-
-                                switch (num) {
-                                    case 0:
-                                        showDynamicSkin("unseen");
-                                        break;
-                                    case 1:
-                                        showDynamicSkin("unseen2");
-                                        break;
-                                    case 2:
-                                        showDynamicSkin("unseen");
-                                        showDynamicSkin("unseen2");
-                                        break;
-                                }
-
-
-                                let next = game.createEvent('showCharacter', false);
-                                next.player = this;
-                                next.num = num;
-                                next.toShow = toShow;
-                                next._args = arguments;
-                                next.setContent('showCharacter');
-                                return next;
                             };
-
-                            Player.playDynamic = function (animation, deputy) {
-                                deputy = deputy === true;
-                                if (animation == undefined) return console.error('playDynamic: 参数1不能为空');
-                                var dynamic = this.dynamic;
-                                if (!dynamic) {
-                                    dynamic = new duilib.DynamicPlayer('assets/dynamic/');
-                                    dynamic.dprAdaptive = true;
-                                    this.dynamic = dynamic;
-                                    this.$dynamicWrap.appendChild(dynamic.canvas)
-                                    skinSwitch.rendererOnMessage.addListener(this, 'logMessage', function (data) {
-                                        console.log('dyWorker', data)
-                                    })
-
-                                }
-                                // taffy: 注释皮肤切换原版代码
-                                // let isCutBg = lib.config[skinSwitch.configKey.cugDynamicBg] &&  ui.arena.dataset.dynamicSkinOutcrop === 'on' && (ui.arena.dataset.newDecadeStyle === 'on')
-                                /* taffy分界线 */
-                                // taffy: 修复动皮背景裁剪选项失效的问题喵
-                                let isCutBg = lib.config[skinSwitch.configKey.cugDynamicBg] &&  ui.arena.dataset.dynamicSkinOutcrop === 'on'
-                                /* taffy分界线 */
-
-                                if (typeof animation == 'string') animation = { name: animation };
-                                if (this.doubleAvatar) {
-                                    // 由于这里是直接修改原始的x数组, 所以会影响到第二次更新该皮肤时会导致位置偏移, 所以copy一份进行赋值变化
-                                    animation = Object.assign({}, animation)
-                                    if (Array.isArray(animation.x)) {
-                                        animation.x = animation.x.concat();
-                                        animation.x[1] += deputy ? 0.25 : -0.25;
-                                    } else {
-                                        if (animation.x == undefined) {
-                                            animation.x = [0, deputy ? 0.75 : 0.25];
-                                        } else {
-                                            animation.x = [animation.x, deputy ? 0.25 : -0.25];
-                                        }
-                                    }
-                                    animation.clip = {
-                                        x: [0, deputy ? 0.5 : 0],
-                                        y: 0,
-                                        width: [0, 0.5],
-                                        height: [0, 1],
-                                        clipParent: true
-                                    }
-                                    // taffy: 注释extension.js原版代码喵
-                                    // if (animation.player && animation.player.beijing && isCutBg) {
-                                    /* taffy分界线 */
-                                    // taffy: 非十周年动皮不裁剪背景喵
-                                    if (animation.player && animation.player.beijing && isCutBg && (!lib.config[skinSwitch.configKey.taffy_cugDynamicBg] || (lib.config[skinSwitch.configKey.taffy_cugDynamicBg] && animation.player.shizhounian))) {
-                                    /* taffy分界线 */
-                                        animation.player.beijing.clip = {
-                                            x: [0, deputy ? 0.5 : 0],
-                                            y: 0,
-                                            width: [0, 0.5],
-                                            height: [0, 0.9],
-                                            clipParent: true
-                                        }
-                                    }
-                                } else {
-                                    // taffy: 注释extension.js原版代码喵
-                                    // if (animation.player && animation.player.beijing && isCutBg) {
-                                    /* taffy分界线 */
-                                    // taffy: 非十周年动皮不裁剪背景喵
-                                    if (animation.player && animation.player.beijing && isCutBg && (!lib.config[skinSwitch.configKey.taffy_cugDynamicBg] || (lib.config[skinSwitch.configKey.taffy_cugDynamicBg] && animation.player.shizhounian))) {
-                                    /* taffy分界线 */
-                                        animation.player.beijing.clip = {
-                                            x: 0,
-                                            y: 0,
-                                            width: [0, 1],
-                                            height: [0, 0.9],
-                                            clipParent: true
-                                        }
-                                    }
-                                }
-                                if (this.$dynamicWrap.parentNode != this) this.appendChild(this.$dynamicWrap);
-                                // if (this.$newDynamicWrap && this.$newDynamicWrap.parentNode !== this) this.appendChild(this.$newDynamicWrap);
-                                dynamic.outcropMask = duicfg.dynamicSkinOutcrop;
-                                if (animation.player) {
-                                    animation.player.isMobile = skinSwitch.isMobile()
-                                }
-                                var avatar = dynamic.play(animation);
-
-                                if (deputy === true) {
-                                    dynamic.deputy = avatar;
-                                } else {
-                                    dynamic.primary = avatar;
-                                }
-
-                                this.classList.add(deputy ? 'd-skin2' : 'd-skin');
-                                // 播放完动皮自动调用初始化功能
-                                skinSwitch.chukuangPlayerInit(this, !deputy, animation.player)
-
-                            }
-
-
-                            Player.stopDynamic = function(primary, deputy){
-                                var dynamic = this.dynamic;
-                                if (!dynamic) return;
-
-                                primary = primary === true;
-                                deputy  = deputy  === true;
-
-                                if (primary && dynamic.primary) {
-                                    dynamic.stop(dynamic.primary);
-                                    dynamic.primary = null;
-                                } else if (deputy && dynamic.deputy) {
-                                    dynamic.stop(dynamic.deputy);
-                                    dynamic.deputy = null;
-                                } else if (!primary && !deputy) {
-                                    dynamic.stopAll();
-                                    dynamic.primary = null;
-                                    dynamic.deputy = null;
-                                }
-
-                                if (!dynamic.primary && !dynamic.deputy) {
-                                    this.classList.remove('d-skin');
-                                    this.classList.remove('d-skin2');
-                                    this.$dynamicWrap.remove();
-                                }
-
-                                // 如果有语音映射, 做一些清除操作, 其实如果做的再多一点, 可以在这里加一些停止动皮后回收资源的操作
-                                skinSwitch.cleanupAfterStopDynamic(this, primary, deputy)
-                            }
-
-                            skinSwitch.stopDynamic = Player.stopDynamic
 
                             // 先初步进行初始化
                             if (!lib.config['extension_千幻聆音_enable'] || lib.config['extension_千幻聆音_qhly_decadeCloseDynamic'] || !(lib.config.qhly_currentViewSkin === 'decade' || lib.config.qhly_currentViewSkin === 'shousha')) {
@@ -2097,26 +1513,17 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         }
                         let retryOverride = function (times, timer) {
                             if (times < 0) return
-                            // taffy: 注释extension.js原版代码喵
-                            // if (!window.decadeUI || !lib.skill._decadeUI_usecardBegin) {
-                            /* taffy分界线 */
-                            // taffy: 更正函数名称
-                            if (!window.decadeUI || !lib.skill.decadeUI_usecardBegin) {
-                            /* taffy分界线 */
+                            if (!window.decadeUI || !lib.skill._decadeUI_usecardBegin) {
                                 console.log(`第${times}次尝试`)
                                 let ti = setTimeout(() => {
-                                    retryOverride(times-1, ti)
+                                    retryOverride(times - 1, ti)
                                 }, 10)
                             } else {
                                 overrides(lib.element.player, Player)
                                 console.log('替换十周年UI player成功')
                                 // 为当前的每一个player更换init方法
                                 for (let i = 0; i < game.players.length; i++) {
-                                    game.players[i].init = Player.init;
                                     game.players[i].playDynamic = Player.playDynamic;
-                                    game.players[i].showCharacter = Player.showCharacter;
-                                    game.players[i].reinit = pfqh_reinit;
-                                    // game.players[i].uninit = pfqh_uninit;
                                 }
 
                                 if (timer) {
@@ -2133,12 +1540,15 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     // ======== 替换结束 ========
                 }
 
-                function overrides (dest, src) {
+                function overrides(dest, src) {
                     if (!src) return
                     for (let key in src) {
                         dest[key] = src[key];
                     }
                 }
+
+                // 将updateDecadeDynamicSkin函数暴露到skinSwitch对象中，以便在游戏开始时调用
+                skinSwitch.updateDecadeDynamicSkin = updateDecadeDynamicSkin;
 
                 skinSwitch.waitUntil(() => {
                     return window.decadeUI && window.decadeModule && decadeUI.dynamicSkin
@@ -2159,13 +1569,49 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 // 等待十周年UI加载完成
                 skinSwitch.waitUntil(() => {
                     return window.decadeModule
-                }, skinSwitch.overrideExtL2dMenuItem)
+                },
+                    skinSwitch.overrideExtL2dMenuItem)
             }
-
             dynamicInit()
             l2dInit()
         },
-        precontent:function() {
+        precontent: function () {
+            // 加载settings.js配置文件
+            lib.init.js(lib.assetURL + 'extension/皮肤切换/settings.js', null, function() {
+                // 从settings.js中读取showTopArc配置并设置到全局变量
+                if (typeof showTopArc !== 'undefined') {
+                    window.showTopArc = showTopArc;
+                } else {
+                    window.showTopArc = true; // 默认显示顶部圆弧
+                }
+                
+                // 从扩展配置中读取showTopArc的值（优先级高于settings.js）
+                if (lib.config[skinSwitch.configKey.showTopArc] !== undefined) {
+                    window.showTopArc = lib.config[skinSwitch.configKey.showTopArc];
+                }
+            });
+            
+            // 添加全局错误处理器，处理千幻语音相关的文件访问错误
+            if (typeof window !== 'undefined') {
+                const originalError = window.onerror;
+                window.onerror = function (message, source, lineno, colno, error) {
+                    // 检查是否是文件访问相关的错误
+                    if (message && typeof message === 'string') {
+                        if (message.includes('ENOENT') && message.includes('sanguoaudio')) {
+                            console.warn('捕获到千幻语音文件访问错误:', message);
+                            console.warn('这通常表示千幻聆音扩展中缺少对应的语音文件');
+                            console.warn('错误已被安全处理，不会影响游戏运行');
+                            return true; // 阻止错误冒泡
+                        }
+                    }
+                    // 对于其他错误，调用原始处理器
+                    if (originalError) {
+                        return originalError.call(this, message, source, lineno, colno, error);
+                    }
+                    return false;
+                };
+            }
+
             window.skinSwitch = {
                 name: "皮肤切换",
                 version: 1.11,
@@ -2179,24 +1625,17 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     'dynamicSkin': 'extension_皮肤切换_dynamicSkin', // 保存选择的皮肤的历史数据
                     'showEditMenu': 'extension_皮肤切换_showEditMenu', // 是否加入顶部菜单
                     'showPreviewDynamicMenu': 'extension_皮肤切换_showPreviewDynamicMenu', // 预览是否加入顶部菜单
-                    // 'closeXYPosAdjust': 'extension_皮肤切换_closeXYPosAdjust',  // 是否显示坐标微调
                     'hideHuanFu': 'extension_皮肤切换_hideHuanFu',  // 关闭隐藏换肤按钮
                     'useDynamic': 'extension_皮肤切换_useDynamic',  // 使用皮肤切换携带的出框功能
                     'isAttackFlipX': 'extension_皮肤切换_isAttackFlipX',  //
                     'cugDynamicBg': 'extension_皮肤切换_cugDynamicBg',  // 是否裁剪动态背景
-                    // 'replaceDecadeAni': 'extension_皮肤切换_replaceDecadeAni',  // 是否替换十周年ui的动画播放器对象
-                    // 'adjustQhlyFact': 'extension_皮肤切换_adjustQhlyFact',  // 调整预览参数
-                    // 'modifyQhlxPreview': 'extension_皮肤切换_modifyQhlxPreview',  // 调整预览大小
-                    'l2dEnable': 'extension_皮肤切换_l2dEnable',  // 是否允许l2d
-                    'l2dSetting': 'extension_皮肤切换_l2dSetting',  // l2d配置
-                    'lastPreviewPath': 'extension_皮肤切换_lastPreviewPath',  // 上一次预览的位置
-                    'previewSkinsDynamic': 'extension_皮肤切换_previewSkinsDynamic',  // 预览动皮皮肤使用动皮
-                    'clickPlayerDynamic': 'extension_皮肤切换_clickPlayerDynamic',  // 单击角色出现换肤功能
-                    'czgEnable': 'extension_皮肤切换_czgEnable',  // 藏珍阁开启
-                    // taffy: 新增一些额外选项喵
-                    'taffy_cugDynamicBg': 'extension_皮肤切换_taffy_cugDynamicBg',
-                    'taffy_open_circle_top': 'extension_皮肤切换_taffy_open_circle_top',
-                    /* taffy分界线 */
+
+                    'lastPreviewPath': 'extension_皮肤切换_lastPreviewPath',  // 上一次预览路径
+                    'savedPositions': 'extension_皮肤切换_savedPositions',  // 保存的位置参数
+                    'enableQianhuanAudio': 'extension_皮肤切换_enableQianhuanAudio',  // 是否启用千幻语音集成
+                    'attackEffect': 'extension_皮肤切换_attackEffect',  // 是否启用攻击和互动出框效果
+
+                    'showTopArc': 'extension_皮肤切换_showTopArc',  // 是否显示顶部圆弧
                 },
                 // 十周年UI的配置key
                 decadeKey: {
@@ -2221,7 +1660,967 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     }
                     return false;
                 },
-                bodySize:function(){
+
+                editBoxShowOrHide: function () {
+                    editBoxShowOrHide()
+                },
+
+                // 新增：中文角色名到千幻拼音名的映射
+                getCharacterPinyinName: function (chineseName) {
+                    // 千幻聆音中的武将名使用拼音
+                    const nameMapping = {
+                        // 基础武将
+                        '赵云': 'zhaoyun',
+                        '马超': 'machao',
+                        '黄忠': 'huangzhong',
+                        '关羽': 'guanyu',
+                        '张飞': 'zhangfei',
+                        '刘备': 'liubei',
+                        '诸葛亮': 'zhugeliang',
+                        '司马懿': 'simayi',
+                        '曹操': 'caocao',
+                        '夏侯惇': 'xiahoudun',
+                        '张辽': 'zhangliao',
+                        '许褚': 'xuchu',
+                        '甘宁': 'ganning',
+                        '吕蒙': 'lvmeng',
+                        '黄盖': 'huanggai',
+                        '周瑜': 'zhouyu',
+                        '大乔': 'daqiao',
+                        '小乔': 'xiaoqiao',
+                        '孙尚香': 'sunshangxiang',
+                        '陆逊': 'luxun',
+                        '孙权': 'sunquan',
+                        '华佗': 'huatuo',
+                        '吕布': 'lvbu',
+                        '貂蝉': 'diaochan',
+
+                        // 神武将
+                        '神关羽': 'shenguanyu',
+                        '神吕蒙': 'shenlvmeng',
+                        '神周瑜': 'shenzhouyu',
+                        '神诸葛亮': 'shenzhugeliang',
+                        '神司马懿': 'shensimayi',
+                        '神曹操': 'shencaocao',
+                        '神吕布': 'shenlvbu',
+
+                        // 其他武将（添加更多映射）
+                        '赵襄': 'zhaoxiang',
+                        '马云騄': 'mayunlu',
+                        '张春华': 'zhangchunhua',
+                        '法正': 'fazheng',
+                        '庞统': 'pangtong',
+                        '徐庶': 'xushu',
+                        '魏延': 'weiyan',
+                        '姜维': 'jiangwei',
+                        '邓艾': 'dengai',
+                        '钟会': 'zhonghui',
+                        '夏侯渊': 'xiahouyuan',
+                        '曹仁': 'caoren',
+                        '曹丕': 'caopi',
+                        '贾诩': 'jiaxu',
+                        '郭嘉': 'guojia',
+                        '荀彧': 'xunyu',
+                        '张郃': 'zhanghe',
+                        '徐晃': 'xuhuang',
+                        '于禁': 'yujin',
+                        '乐进': 'yuejin',
+                        '典韦': 'dianwei',
+                        '太史慈': 'taishici',
+                        '孙坚': 'sunjian',
+                        '孙策': 'sunce',
+                        '周泰': 'zhoutai',
+                        '凌统': 'lingtong',
+                        '程普': 'chengpu',
+                        '黄祖': 'huangzu',
+                        '韩当': 'handang',
+                        '蒋钦': 'jiangqin',
+                        '祖茂': 'zumao',
+                        '程昱': 'chengyu',
+                        '荀攸': 'xunyou',
+                        '刘晔': 'liuye',
+                        '满宠': 'manchong',
+                        '董昭': 'dongzhao',
+                        '蒯越': 'kuaiyue',
+                        '韩嵩': 'hansong',
+                        '刘表': 'liubiao',
+                        '蔡瑁': 'caimao',
+                        '张允': 'zhangyun',
+                        '蒯良': 'kuailiang',
+                        '伊籍': 'yiji',
+                        '孙乾': 'sunqian',
+                        '简雍': 'jianyong',
+                        '糜竺': 'mizhu',
+                        '糜芳': 'mifang',
+                        '廖化': 'liaohua',
+                        '关平': 'guanping',
+                        '关兴': 'guanxing',
+                        '张苞': 'zhangbao',
+                        '赵统': 'zhaotong',
+                        '赵广': 'zhaoguang',
+                        '关索': 'guansuo',
+                        '刘封': 'liufeng',
+                        '孟达': 'mengda',
+                        '霍峻': 'huojun',
+                        '张松': 'zhangsong',
+                        '法孝直': 'faxiaozhi',
+                        '彭羕': 'pengyang',
+                        '李严': 'liyan',
+                        '吴懿': 'wuyi',
+                        '马岱': 'madai',
+                        '王平': 'wangping',
+                        '句扶': 'jufu',
+                        '张翼': 'zhangyi',
+                        '廖立': 'liaoli',
+                        '杨仪': 'yangyi',
+                        '费祎': 'feiyi',
+                        '董允': 'dongyun',
+                        '蒋琬': 'jiangwan',
+                        '马谡': 'masu',
+                        '高翔': 'gaoxiang',
+                        '魏文长': 'weiwenchang',
+                        '习珍': 'xizhen',
+                        '陈到': 'chendao',
+                        '向宠': 'xiangchong',
+                        '张嶷': 'zhangyi',
+                        '宗预': 'zongyu',
+                        '费诗': 'feishi',
+                        '彭羕': 'pengyang'
+                    };
+
+                    // 如果有映射，返回拼音名；否则尝试自动转换或返回原名
+                    if (nameMapping[chineseName]) {
+                        return nameMapping[chineseName];
+                    }
+
+                    // 对于没有映射的角色，尝试一些常见的转换规则
+                    // 移除"神"前缀
+                    if (chineseName.startsWith('神')) {
+                        let baseName = chineseName.substring(1);
+                        if (nameMapping[baseName]) {
+                            return 'shen' + nameMapping[baseName];
+                        }
+                    }
+
+                    // 如果都没有找到，返回原名（可能千幻中就是中文名）
+                    console.warn('未找到角色名映射:', chineseName, '将使用原名尝试');
+                    return chineseName;
+                },
+
+                // 新增：千幻语音集成辅助函数
+                getQianhuanAudioConfig: function (characterName, skinName) {
+                    // 检查是否启用千幻语音集成功能
+                    if (!lib.config[skinSwitch.configKey.enableQianhuanAudio]) {
+                        return null;
+                    }
+
+                    if (!skinSwitch.qhly_hasExtension('千幻聆音')) {
+                        return null;
+                    }
+
+                    try {
+                        // 转换中文角色名为千幻聆音中的拼音名
+                        const pinyinName = this.getCharacterPinyinName(characterName);
+
+                        // 构建千幻语音路径
+                        const qhAudioBasePath = 'sanguoaudio/';
+                        const skillAudioPath = qhAudioBasePath + pinyinName + '/' + (skinName || 'default');
+                        const cardAudioPath = qhAudioBasePath + pinyinName + '/' + (skinName || 'default') + '/card';
+
+                        console.log('构建千幻语音配置:', {
+                            originalCharacter: characterName,
+                            pinyinCharacter: pinyinName,
+                            skin: skinName,
+                            skillPath: skillAudioPath,
+                            cardPath: cardAudioPath
+                        });
+
+                        // 返回音频配置对象
+                        // 注意：实际的文件存在性检查会在loadAudioFiles中的safeGetFileList进行
+                        return {
+                            skill: skillAudioPath,
+                            card: cardAudioPath
+                        };
+                    } catch (e) {
+                        console.warn('构建千幻语音配置失败:', characterName, skinName, e);
+                        return null;
+                    }
+                },
+
+                // 新增：为皮肤数据添加千幻语音支持
+                enhanceSkinWithQianhuanAudio: function (skinData, characterName, skinName) {
+                    if (!skinData || skinData.audio) {
+                        return skinData; // 如果已经有audio配置，则不覆盖
+                    }
+
+                    const qhAudioConfig = skinSwitch.getQianhuanAudioConfig(characterName, skinName);
+                    if (qhAudioConfig) {
+                        skinData.audio = qhAudioConfig;
+                        console.log('为皮肤添加千幻语音支持:', characterName, skinName);
+                    }
+
+                    return skinData;
+                },
+
+                // 新增：强制刷新当前角色的语音映射（用于觉醒等特殊情况）
+                forceRefreshAudioMapping: function (player, isPrimary) {
+                    if (!player || !player.dynamic) {
+                        console.warn('forceRefreshAudioMapping: player或dynamic不存在');
+                        return;
+                    }
+
+                    let name = isPrimary ? player.name1 : player.name2;
+                    if (!name) {
+                        console.warn('forceRefreshAudioMapping: 无法获取角色名');
+                        return;
+                    }
+
+                    console.log('====== 开始强制刷新语音映射 ======');
+                    console.log('角色:', name, '位置:', isPrimary ? '主将' : '副将');
+
+                    let id = player.dynamic.id;
+                    let skinId = isPrimary ?
+                        (player.dynamic.primary ? player.dynamic.primary.id : null) :
+                        (player.dynamic.deputy ? player.dynamic.deputy.id : null);
+
+                    if (!skinId) {
+                        console.warn('无法获取skinId');
+                        return;
+                    }
+
+                    // 更彻底地清除语音映射
+                    this.clearAllAudioMappings(name, id, skinId);
+
+                    // 获取当前皮肤信息
+                    let currentSkin = isPrimary ? player.dynamic.primary : player.dynamic.deputy;
+                    if (currentSkin && currentSkin.name) {
+                        let [characterName, skinName] = currentSkin.name.split('/');
+                        if (characterName && skinName) {
+                            console.log('当前皮肤信息:', characterName, skinName);
+
+                            // 尝试获取千幻语音配置
+                            let audioConfig = currentSkin.audio || skinSwitch.getQianhuanAudioConfig(characterName, skinName);
+                            if (audioConfig) {
+                                console.log('找到语音配置:', audioConfig);
+
+                                // 立即重建语音映射，不使用延迟
+                                this.rebuildAudioMappings(name, id, skinId, audioConfig.skill, audioConfig.card,
+                                    skinSwitch.dcdPath + '/assets/dynamic/', function (path) {
+                                        let foundDot = path.lastIndexOf('.');
+                                        if (foundDot < 0) return path;
+                                        return path.slice(0, foundDot);
+                                    });
+
+                                // 强制清除浏览器的音频缓存
+                                setTimeout(() => {
+                                    this.clearBrowserAudioCache(name);
+                                    console.log('====== 强制刷新语音映射完成 ======');
+                                }, 200);
+
+                            } else {
+                                console.warn('未找到语音配置:', characterName, skinName);
+                            }
+                        } else {
+                            console.warn('无法解析皮肤名称:', currentSkin.name);
+                        }
+                    } else {
+                        console.warn('无法获取当前皮肤信息');
+                    }
+                },
+
+                // 新增：清除浏览器的音频缓存
+                clearBrowserAudioCache: function (characterName) {
+                    console.log('清除浏览器音频缓存:', characterName);
+
+                    // 强制清除Audio对象的缓存
+                    if (window.Audio && window.Audio.cache) {
+                        try {
+                            delete window.Audio.cache;
+                        } catch (e) {
+                            console.log('无法删除Audio缓存');
+                        }
+                    }
+
+                    // 如果游戏有音频缓存机制，也尝试清除
+                    if (game.audio && typeof game.audio.clear === 'function') {
+                        try {
+                            game.audio.clear();
+                            console.log('已清除游戏音频缓存');
+                        } catch (e) {
+                            console.log('清除游戏音频缓存失败:', e);
+                        }
+                    }
+
+                    // 强制垃圾回收（如果支持）
+                    if (window.gc && typeof window.gc === 'function') {
+                        try {
+                            window.gc();
+                            console.log('已触发垃圾回收');
+                        } catch (e) {
+                            console.log('垃圾回收不可用');
+                        }
+                    }
+                },
+
+                // 新增：测试千幻语音集成功能
+                testQianhuanAudioIntegration: function (characterName, skinName) {
+                    console.log('=== 测试千幻语音集成功能 ===');
+                    console.log('角色名:', characterName);
+                    console.log('皮肤名:', skinName);
+
+                    // 检查千幻聆音是否安装
+                    let hasQianhuanExtension = skinSwitch.qhly_hasExtension('千幻聆音');
+                    console.log('千幻聆音扩展是否安装:', hasQianhuanExtension);
+
+                    // 检查配置是否启用
+                    let isEnabled = lib.config[skinSwitch.configKey.enableQianhuanAudio];
+                    console.log('千幻语音集成是否启用:', isEnabled);
+
+                    // 尝试获取语音配置
+                    let audioConfig = skinSwitch.getQianhuanAudioConfig(characterName, skinName);
+                    console.log('语音配置结果:', audioConfig);
+
+                    if (audioConfig) {
+                        console.log('技能语音路径:', audioConfig.skill);
+                        console.log('卡牌语音路径:', audioConfig.card);
+                    }
+
+                    console.log('=== 测试完成 ===');
+                    return audioConfig;
+                },
+
+                // 新增：检查当前语音映射状态
+                checkCurrentAudioMappings: function (characterName) {
+                    console.log('=== 当前语音映射状态 ===');
+                    console.log('角色名:', characterName);
+
+                    if (!skinSwitch.audioMap) {
+                        console.log('audioMap 不存在');
+                        return;
+                    }
+
+                    console.log('总语音映射数量:', Object.keys(skinSwitch.audioMap).length);
+
+                    // 查找该角色相关的语音映射
+                    let relatedMappings = {};
+                    for (let key in skinSwitch.audioMap) {
+                        if (key.includes(characterName) || key.startsWith('skill/') || key.startsWith('die/')) {
+                            relatedMappings[key] = skinSwitch.audioMap[key];
+                        }
+                    }
+
+                    console.log('角色相关语音映射:', relatedMappings);
+
+                    // 检查avatarAudioSkinMap
+                    if (skinSwitch.avatarAudioSkinMap && skinSwitch.avatarAudioSkinMap[characterName]) {
+                        console.log('角色专属映射:', skinSwitch.avatarAudioSkinMap[characterName]);
+                    } else {
+                        console.log('该角色没有专属语音映射');
+                    }
+
+                    console.log('=== 检查完成 ===');
+                    return relatedMappings;
+                },
+
+                // 新增：彻底清除角色语音映射（针对对局中皮肤切换）
+                clearCharacterAudioMappings: function (characterName) {
+                    if (!characterName) return;
+
+                    console.log('====== 开始彻底清除角色语音映射 ======');
+                    console.log('角色名:', characterName);
+
+                    let clearedCount = 0;
+
+                    // 清除 lib.audioMap 中的映射（更彻底的清除）
+                    if (lib.audioMap) {
+                        let keysToDelete = [];
+                        for (let key in lib.audioMap) {
+                            // 清除所有包含角色名的映射，包括技能和卡牌
+                            if (key.includes(characterName) ||
+                                key.includes(`skill_${characterName}`) ||
+                                key.includes(`card_${characterName}`) ||
+                                key.includes(`die/${characterName}`) ||
+                                key.includes(`skill/${characterName}`) ||
+                                key.startsWith(`die/${characterName}`) ||
+                                key.includes(`effect/${characterName}`) ||
+                                key.includes(`/${characterName}/`)) {
+                                keysToDelete.push(key);
+                            }
+                        }
+
+                        keysToDelete.forEach(key => {
+                            console.log('删除audioMap映射:', key);
+                            delete lib.audioMap[key];
+                            clearedCount++;
+                        });
+                    }
+
+                    // 清除 lib.avatarAudioSkinMap 中的映射  
+                    if (lib.avatarAudioSkinMap && lib.avatarAudioSkinMap[characterName]) {
+                        console.log('删除avatarAudioSkinMap映射:', characterName);
+                        delete lib.avatarAudioSkinMap[characterName];
+                        clearedCount++;
+                    }
+
+                    // 清除skinSwitch自己的映射
+                    if (skinSwitch.audioMap) {
+                        let keysToDelete = [];
+                        for (let key in skinSwitch.audioMap) {
+                            if (key.includes(characterName)) {
+                                keysToDelete.push(key);
+                            }
+                        }
+
+                        keysToDelete.forEach(key => {
+                            console.log('删除skinSwitch.audioMap映射:', key);
+                            delete skinSwitch.audioMap[key];
+                            clearedCount++;
+                        });
+                    }
+
+                    if (skinSwitch.avatarAudioSkinMap && skinSwitch.avatarAudioSkinMap[characterName]) {
+                        console.log('删除skinSwitch.avatarAudioSkinMap映射:', characterName);
+                        delete skinSwitch.avatarAudioSkinMap[characterName];
+                        clearedCount++;
+                    }
+
+                    // 清除浏览器音频缓存
+                    this.clearBrowserAudioCache();
+
+                    console.log(`彻底清除了 ${clearedCount} 个角色语音映射`);
+                    console.log('====== 角色语音映射清除完成 ======');
+                },
+
+                // 新增：手动强制刷新指定角色的语音（调试用）
+                manualRefreshAudio: function (characterName) {
+                    console.log('=== 手动强制刷新角色语音 ===');
+                    console.log('角色名:', characterName);
+
+                    // 查找包含该角色的player
+                    let targetPlayer = null;
+                    let isPrimary = true;
+
+                    for (let player of game.players) {
+                        if (player.name1 === characterName) {
+                            targetPlayer = player;
+                            isPrimary = true;
+                            break;
+                        } else if (player.name2 === characterName) {
+                            targetPlayer = player;
+                            isPrimary = false;
+                            break;
+                        }
+                    }
+
+                    if (!targetPlayer) {
+                        console.warn('未找到对应的player对象');
+                        return;
+                    }
+
+                    console.log('找到目标角色:', targetPlayer, '位置:', isPrimary ? '主将' : '副将');
+
+                    // 强制刷新语音映射
+                    this.forceRefreshAudioMapping(targetPlayer, isPrimary);
+
+                    console.log('=== 手动刷新完成 ===');
+                },
+
+                // 新增：测试对局中皮肤切换语音（快速测试）
+                testInGameSkinSwitchAudio: function () {
+                    console.log('=== 对局中皮肤切换语音测试 ===');
+
+                    if (!game.me) {
+                        console.warn('当前不在对局中');
+                        return;
+                    }
+
+                    let player = game.me;
+                    let characterName = player.name1;
+
+                    console.log('当前角色:', characterName);
+                    console.log('当前动皮状态:', player.dynamic);
+
+                    // 检查当前皮肤的语音配置
+                    if (player.dynamic && player.dynamic.primary) {
+                        let currentSkin = player.dynamic.primary;
+                        console.log('当前皮肤信息:', currentSkin);
+                        console.log('当前皮肤语音配置:', currentSkin.audio);
+
+                        // 检查千幻语音配置
+                        if (currentSkin.name) {
+                            let [charName, skinName] = currentSkin.name.split('/');
+                            let qhAudioConfig = skinSwitch.getQianhuanAudioConfig(charName, skinName);
+                            console.log('千幻语音配置:', qhAudioConfig);
+                        }
+                    }
+
+                    // 检查当前语音映射
+                    this.checkCurrentAudioMappings(characterName);
+
+                    console.log('=== 测试完成 ===');
+                    console.log('如果皮肤切换后语音不更新，请在切换后执行:');
+                    console.log(`skinSwitch.manualRefreshAudio('${characterName}')`);
+                },
+
+                // 新增：检查千幻聆音扩展和语音文件状态
+                checkQianhuanAudioStatus: function () {
+                    console.log('=== 检查千幻聆音扩展状态 ===');
+
+                    // 检查千幻聆音扩展是否存在
+                    let qhPath = lib.assetURL + 'extension/千幻聆音/';
+                    console.log('千幻聆音根路径:', qhPath);
+
+                    // 检查是否有千幻相关函数
+                    let hasQhFunctions = typeof game.qhly_getSkinFile === 'function';
+                    console.log('千幻聆音功能函数存在:', hasQhFunctions);
+
+                    if (!hasQhFunctions) {
+                        console.warn('⚠️ 千幻聆音扩展未正确加载或未启用');
+                        console.warn('请检查：1. 是否安装了千幻聆音扩展 2. 是否已启用该扩展');
+                        return false;
+                    }
+
+                    // 如果当前在对局中，检查当前角色的语音目录
+                    if (game.me && game.me.dynamic && game.me.dynamic.primary) {
+                        let characterName = game.me.name1;
+                        let currentSkin = game.me.dynamic.primary;
+
+                        console.log('当前角色:', characterName);
+                        console.log('当前皮肤:', currentSkin.name);
+
+                        if (currentSkin.name) {
+                            let [charName, skinName] = currentSkin.name.split('/');
+                            console.log('解析角色名:', charName);
+                            console.log('解析皮肤名:', skinName);
+
+                            let skillPath = qhPath + `sanguoaudio/${charName}/${skinName}/`;
+                            let cardPath = qhPath + `sanguoaudio/${charName}/${skinName}/card/`;
+
+                            console.log('期望的技能语音路径:', skillPath);
+                            console.log('期望的卡牌语音路径:', cardPath);
+
+                            // 尝试检查目录是否存在
+                            this.testDirectoryExists(skillPath, '技能语音目录');
+                            this.testDirectoryExists(cardPath, '卡牌语音目录');
+                        }
+                    }
+
+                    console.log('=== 检查完成 ===');
+                    return true;
+                },
+
+                // 新增：测试目录是否存在
+                testDirectoryExists: function (path, description) {
+                    try {
+                        game.getFileList(path, function (folds, files) {
+                            if (files && files.length > 0) {
+                                console.log(`✅ ${description}存在，包含${files.length}个文件:`, files);
+                            } else {
+                                console.log(`⚠️ ${description}存在但为空`);
+                            }
+                        });
+                    } catch (e) {
+                        console.warn(`❌ ${description}不存在或无法访问:`, path);
+                        console.warn('错误详情:', e.message);
+                    }
+                },
+
+                // 新增：智能语音修复（优先千幻，降级到原始）
+                smartFixInGameAudio: function () {
+                    console.log('=== 智能语音修复开始 ===');
+
+                    if (!game.me) {
+                        console.warn('当前不在对局中');
+                        return;
+                    }
+
+                    let player = game.me;
+                    let characterName = player.name1;
+
+                    console.log('正在为角色修复语音:', characterName);
+
+                    // 1. 立即清除所有旧的语音映射
+                    this.clearCharacterAudioMappings(characterName);
+
+                    // 2. 检查千幻语音是否可用
+                    setTimeout(() => {
+                        if (player.dynamic && player.dynamic.primary) {
+                            let currentSkin = player.dynamic.primary;
+                            if (currentSkin.name) {
+                                let [charName, skinName] = currentSkin.name.split('/');
+                                console.log('尝试智能修复:', charName, skinName);
+
+                                // 先尝试千幻语音
+                                let qhAudioConfig = skinSwitch.getQianhuanAudioConfig(charName, skinName);
+
+                                // 检查千幻语音路径是否真实存在
+                                this.verifyAndApplyAudioConfig(currentSkin, charName, skinName, qhAudioConfig, player);
+                            }
+                        }
+                    }, 200);
+                },
+
+                // 新增：验证并应用语音配置
+                verifyAndApplyAudioConfig: function (skin, charName, skinName, qhAudioConfig, player) {
+                    console.log('验证语音配置可用性...');
+
+                    if (qhAudioConfig && qhAudioConfig.skill) {
+                        let skillPath = lib.assetURL + 'extension/千幻聆音/' + qhAudioConfig.skill;
+
+                        // 测试千幻技能语音目录是否存在
+                        try {
+                            game.getFileList(skillPath, (folds, files) => {
+                                if (files && files.length > 0) {
+                                    console.log('✅ 千幻语音可用，应用千幻语音配置');
+                                    skin.audio = qhAudioConfig;
+                                    this.forceRefreshAudioMapping(player, true);
+                                    console.log('=== 千幻语音修复完成 ===');
+                                } else {
+                                    console.log('⚠️ 千幻语音目录为空，使用降级方案');
+                                    this.applyFallbackAudio(skin, charName, skinName, player);
+                                }
+                            });
+                        } catch (e) {
+                            console.log('❌ 千幻语音不可用，使用降级方案');
+                            this.applyFallbackAudio(skin, charName, skinName, player);
+                        }
+                    } else {
+                        console.log('⚠️ 未找到千幻语音配置，使用降级方案');
+                        this.applyFallbackAudio(skin, charName, skinName, player);
+                    }
+                },
+
+                // 新增：应用降级语音方案
+                applyFallbackAudio: function (skin, charName, skinName, player) {
+                    console.log('应用降级语音方案...');
+
+                    // 查找皮肤原有的语音配置
+                    let dskins = decadeUI.dynamicSkin;
+                    let originalSkin = dskins[charName] && dskins[charName][skinName];
+
+                    if (originalSkin && originalSkin.audio) {
+                        console.log('✅ 找到皮肤原有语音配置，应用原有配置');
+                        skin.audio = originalSkin.audio;
+                        this.forceRefreshAudioMapping(player, true);
+                        console.log('=== 原有语音修复完成 ===');
+                    } else {
+                        // 尝试使用角色默认语音
+                        console.log('尝试使用角色默认语音配置...');
+                        let defaultAudio = {
+                            skill: `audio/skill/${charName}`,
+                            card: `audio/card/${charName}`
+                        };
+
+                        skin.audio = defaultAudio;
+                        this.forceRefreshAudioMapping(player, true);
+                        console.log('=== 默认语音修复完成 ===');
+                    }
+
+                    console.log('请尝试使用技能或卡牌测试语音是否正常');
+                },
+
+                // 新增：测试角色名映射
+                testCharacterNameMapping: function (characterName) {
+                    console.log('=== 测试角色名映射 ===');
+                    console.log('输入角色名:', characterName);
+
+                    let pinyinName = skinSwitch.getCharacterPinyinName(characterName);
+                    console.log('映射后拼音名:', pinyinName);
+
+                    // 如果当前在对局中，测试实际路径
+                    if (game.me && game.me.dynamic && game.me.dynamic.primary) {
+                        let currentSkin = game.me.dynamic.primary;
+                        if (currentSkin.name) {
+                            let [charName, skinName] = currentSkin.name.split('/');
+                            if (charName === characterName) {
+                                let expectedPath = `extension/千幻聆音/sanguoaudio/${pinyinName}/${skinName}/`;
+                                console.log('期望的千幻语音路径:', expectedPath);
+
+                                // 测试路径是否存在
+                                skinSwitch.testDirectoryExists(lib.assetURL + expectedPath, '技能语音目录');
+
+                                let cardPath = `extension/千幻聆音/sanguoaudio/${pinyinName}/${skinName}/card/`;
+                                console.log('期望的卡牌语音路径:', cardPath);
+                                skinSwitch.testDirectoryExists(lib.assetURL + cardPath, '卡牌语音目录');
+                            }
+                        }
+                    }
+
+                    console.log('=== 测试完成 ===');
+                    return pinyinName;
+                },
+
+                // 新增：深度语音系统重置
+                deepResetAudioSystem: function () {
+                    console.log('=== 开始深度语音系统重置 ===');
+
+                    // 1. 完全重置所有语音映射
+                    if (skinSwitch.audioMap) {
+                        console.log('清除skinSwitch.audioMap，当前条目:', Object.keys(skinSwitch.audioMap).length);
+                        skinSwitch.audioMap = {};
+                    }
+
+                    if (skinSwitch.avatarAudioSkinMap) {
+                        console.log('清除skinSwitch.avatarAudioSkinMap');
+                        skinSwitch.avatarAudioSkinMap = {};
+                    }
+
+                    if (lib.audioMap) {
+                        console.log('清除lib.audioMap，当前条目:', Object.keys(lib.audioMap).length);
+                        let keysToDelete = [];
+                        for (let key in lib.audioMap) {
+                            if (key.includes('skill/') || key.includes('card/') || key.includes('die/')) {
+                                keysToDelete.push(key);
+                            }
+                        }
+                        keysToDelete.forEach(key => delete lib.audioMap[key]);
+                        console.log('从lib.audioMap清除了', keysToDelete.length, '个条目');
+                    }
+
+                    if (lib.avatarAudioSkinMap) {
+                        console.log('清除lib.avatarAudioSkinMap');
+                        lib.avatarAudioSkinMap = {};
+                    }
+
+                    // 2. 强制清除浏览器音频缓存
+                    this.clearBrowserAudioCache();
+
+                    // 3. 重置音频播放队列
+                    if (skinSwitch.audioPlayQueue) {
+                        skinSwitch.audioPlayQueue = [];
+                    }
+
+                    console.log('=== 深度语音系统重置完成 ===');
+                },
+
+                // 新增：强制重建当前角色语音映射
+                forceRebuildCurrentAudio: function () {
+                    console.log('=== 强制重建当前角色语音映射 ===');
+
+                    if (!game.me || !game.me.dynamic || !game.me.dynamic.primary) {
+                        console.warn('当前不在对局中或没有动皮');
+                        return;
+                    }
+
+                    let player = game.me;
+                    let characterName = player.name1;
+                    let currentSkin = player.dynamic.primary;
+
+                    if (!currentSkin.name) {
+                        console.warn('无法获取当前皮肤名称');
+                        return;
+                    }
+
+                    let [charName, skinName] = currentSkin.name.split('/');
+                    let pinyinName = this.getCharacterPinyinName(charName);
+
+                    console.log('重建语音映射:', {
+                        原角色名: charName,
+                        拼音名: pinyinName,
+                        皮肤名: skinName
+                    });
+
+                    // 构建新的语音配置
+                    let newAudioConfig = {
+                        skill: `sanguoaudio/${pinyinName}/${skinName}`,
+                        card: `sanguoaudio/${pinyinName}/${skinName}/card`
+                    };
+
+                    // 强制应用新配置
+                    currentSkin.audio = newAudioConfig;
+                    currentSkin._needUpdateAudio = true;
+
+                    console.log('新语音配置:', newAudioConfig);
+
+                    // 立即重新初始化语音系统
+                    setTimeout(() => {
+                        this.initPlayerAudioImmediate(player, true, currentSkin);
+                    }, 100);
+                },
+
+                // 新增：立即初始化玩家语音（不等待）
+                initPlayerAudioImmediate: function (player, isPrimary, playParams) {
+                    console.log('=== 立即初始化玩家语音 ===');
+
+                    if (!player.dynamic) {
+                        console.warn('player.dynamic不存在');
+                        return;
+                    }
+
+                    let name = isPrimary ? player.name1 : player.name2;
+                    let id = player.dynamic.id;
+                    let skinId = isPrimary ? player.dynamic.primary.id : player.dynamic.deputy.id;
+
+                    console.log('语音初始化参数:', { name, id, skinId });
+
+                    if (!playParams.audio) {
+                        console.warn('没有语音配置');
+                        return;
+                    }
+
+                    // 确保语音映射表存在
+                    if (!skinSwitch.audioMap) {
+                        skinSwitch.audioMap = {};
+                    }
+                    if (!skinSwitch.avatarAudioSkinMap) {
+                        skinSwitch.avatarAudioSkinMap = {};
+                    }
+
+                    // 清除该角色的旧映射
+                    if (skinSwitch.avatarAudioSkinMap[name]) {
+                        for (let key in skinSwitch.avatarAudioSkinMap[name]) {
+                            delete skinSwitch.audioMap[key];
+                        }
+                        delete skinSwitch.avatarAudioSkinMap[name];
+                    }
+
+                    skinSwitch.avatarAudioSkinMap[name] = {};
+
+                    let skillPath = playParams.audio.skill;
+                    let cardPath = playParams.audio.card;
+
+                    // 使用千幻聆音的根路径
+                    let rootPath = lib.assetURL + 'extension/千幻聆音/';
+
+                    console.log('语音路径配置:', { skillPath, cardPath, rootPath });
+
+                    // 文件名处理函数
+                    let qhly_earse_ext = function (path) {
+                        let foundDot = path.lastIndexOf('.');
+                        if (foundDot < 0) return path;
+                        return path.slice(0, foundDot);
+                    };
+
+                    // 处理技能语音
+                    if (skillPath) {
+                        let path = rootPath + skillPath;
+                        console.log('加载技能语音路径:', path);
+
+                        this.safeGetFileList(path, (folds, files) => {
+                            console.log('找到技能语音文件:', files);
+                            for (let file of files) {
+                                file = qhly_earse_ext(file);
+                                let key;
+                                let audioPath = '../' + path + '/' + file;
+
+                                if (file === name) {
+                                    key = 'die/' + file;
+                                } else if (file === 'victory' || file === 'win') {
+                                    key = 'effect/' + id + '/' + skinId + '/' + 'victory';
+                                } else {
+                                    key = 'skill/' + file;
+                                }
+
+                                skinSwitch.audioMap[key] = audioPath;
+                                skinSwitch.avatarAudioSkinMap[name][key] = audioPath;
+
+                                console.log('添加技能语音映射:', key, '->', audioPath);
+                            }
+                            console.log('技能语音映射完成');
+                        }, (error) => {
+                            console.warn('技能语音路径不存在:', path);
+                        });
+                    }
+
+                    // 处理卡牌语音
+                    if (cardPath) {
+                        let path = rootPath + cardPath;
+                        console.log('加载卡牌语音路径:', path);
+
+                        this.safeGetFileList(path, (folds, files) => {
+                            console.log('找到卡牌语音文件:', files);
+                            for (let file of files) {
+                                file = qhly_earse_ext(file);
+                                let key = 'card/' + id + '/' + skinId + '/' + file;
+                                let audioPath = '../' + path + '/' + file;
+
+                                skinSwitch.audioMap[key] = audioPath;
+                                skinSwitch.avatarAudioSkinMap[name][key] = audioPath;
+
+                                console.log('添加卡牌语音映射:', key, '->', audioPath);
+                            }
+                            console.log('卡牌语音映射完成');
+                        }, (error) => {
+                            console.warn('卡牌语音路径不存在:', path);
+                        });
+                    }
+
+                    console.log('=== 语音初始化完成 ===');
+                },
+
+                // 新增：终极语音修复（一键解决所有问题）
+                ultimateAudioFix: function () {
+                    console.log('🚀 === 终极语音修复开始 === 🚀');
+
+                    if (!game.me) {
+                        console.warn('当前不在对局中');
+                        return;
+                    }
+
+                    let player = game.me;
+                    let characterName = player.name1;
+
+                    console.log('正在为角色执行终极修复:', characterName);
+
+                    // 步骤1: 深度重置语音系统
+                    this.deepResetAudioSystem();
+
+                    // 步骤2: 等待系统重置完成后重建语音
+                    setTimeout(() => {
+                        console.log('🔧 开始重建语音映射...');
+                        this.forceRebuildCurrentAudio();
+                    }, 300);
+
+                    // 步骤3: 等待重建完成后进行验证
+                    setTimeout(() => {
+                        console.log('🔍 验证语音映射状态...');
+                        this.checkCurrentAudioMappings(characterName);
+
+                        console.log('✅ === 终极语音修复完成 === ✅');
+                        console.log('请尝试使用技能或卡牌测试语音效果');
+                        console.log('如果仍有问题，请重新切换一次皮肤');
+                    }, 1000);
+                },
+
+                // 新增：立即修复对局中语音问题（一键修复）
+                fixInGameAudioNow: function () {
+                    console.log('=== 立即修复对局中语音问题 ===');
+
+                    if (!game.me) {
+                        console.warn('当前不在对局中');
+                        return;
+                    }
+
+                    let player = game.me;
+                    let characterName = player.name1;
+
+                    console.log('正在修复角色:', characterName);
+
+                    // 1. 立即清除所有旧的语音映射
+                    this.clearCharacterAudioMappings(characterName);
+
+                    // 2. 等待200ms后重新构建语音映射
+                    setTimeout(() => {
+                        if (player.dynamic && player.dynamic.primary) {
+                            let currentSkin = player.dynamic.primary;
+                            if (currentSkin.name) {
+                                let [charName, skinName] = currentSkin.name.split('/');
+                                console.log('重新构建语音映射:', charName, skinName);
+
+                                // 重新应用千幻语音配置
+                                skinSwitch.enhanceSkinWithQianhuanAudio(currentSkin, charName, skinName);
+
+                                // 强制刷新语音映射
+                                setTimeout(() => {
+                                    this.forceRefreshAudioMapping(player, true);
+                                    console.log('=== 语音修复完成 ===');
+                                    console.log('请尝试使用技能或卡牌测试语音是否正常');
+                                }, 500);
+                            }
+                        }
+                    }, 200);
+                },
+                bodySize: function () {
                     let size = {}
                     let body = document.body
                     size.updated = true
@@ -2231,44 +2630,54 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 },
                 // 检查圆弧
                 skinSwitchCheckYH: function (player, forces) {
-                    // taffy: 注释extension.js原版代码喵
-                    // if (lib.config['extension_十周年UI_newDecadeStyle'] == "on") return;
-                    /* taffy分界线 */
-                    // taffy: 非十周年动皮添加圆弧喵
-                    if (lib.config['extension_十周年UI_newDecadeStyle'] == "on" && lib.config['extension_千幻聆音_enable'] || ui.arena.dataset.dynamicSkinOutcrop !== 'on' || !lib.config[skinSwitch.configKey.taffy_open_circle_top]) return;
-                    /* taffy分界线 */
+                    if (lib.config['extension_十周年UI_newDecadeStyle'] == "on") return;
                     if (!player || get.itemtype(player) != 'player') return;
+                    
+                    // 检查是否启用顶部圆弧显示
+                    if (typeof window.showTopArc !== 'undefined' && !window.showTopArc) {
+                        // 如果配置为不显示顶部圆弧，则移除已有的圆弧元素
+                        let skinYh = player.getElementsByClassName("skinYh");
+                        if (skinYh.length > 0) {
+                            player.removeChild(skinYh[0]);
+                        }
+                        return;
+                    }
+
+                    // 确保获取正确的势力，优先使用传入的forces参数，其次是player.group
                     let group = forces || player.group || 'weizhi';
                     let isYh = false;
 
+                    // 检查动皮是否存在并且需要显示圆顶
                     if (player.dynamic) {
                         if (player.dynamic.primary && !player.isUnseen(0)) isYh = true;
                         if (player.dynamic.deputy && !player.isUnseen(1)) isYh = true;
                     }
 
+                    // 获取已有的圆顶元素
                     let skinYh = player.getElementsByClassName("skinYh");
-                    // taffy: 非十周年动皮添加圆弧喵
-                    if (lib.config[skinSwitch.configKey.cugDynamicBg] && (!lib.config[skinSwitch.configKey.taffy_cugDynamicBg] || lib.config[skinSwitch.configKey.taffy_cugDynamicBg] && player.dynamic?.primary?.shizhounian)) {
-                        if (skinYh.length > 0) {
-                          player.removeChild(skinYh[0]);
-                        }
-                        return
-                    }
-                    /* taffy分界线 */
+
+                    // 如果需要显示圆顶但不存在，则创建
                     if (isYh && skinYh.length == 0) {
-                        let yh = skinSwitch.createYH(group)
-                        player.append(yh)
-                    } else if (!isYh && skinYh.length > 0) {
+                        let yh = skinSwitch.createYH(group);
+                        player.appendChild(yh);
+                    }
+                    // 如果不需要显示圆顶但存在，则移除
+                    else if (!isYh && skinYh.length > 0) {
                         player.removeChild(skinYh[0]);
-                    } else if (isYh && skinYh.length > 0) {
-                        let yh = skinYh[0]
-                        let splits = (yh.src || '').split('/')
-                        let sub = splits[splits.length - 1]
-                        let curGroup = sub.split('.')[0]
+                    }
+                    // 如果需要显示圆顶且已存在，检查是否需要更新
+                    else if (isYh && skinYh.length > 0) {
+                        let yh = skinYh[0];
+                        let srcPath = yh.src || '';
+                        let splits = srcPath.split('/');
+                        let sub = splits[splits.length - 1];
+                        let curGroup = sub.split('.')[0];
+
+                        // 如果势力不匹配，则移除旧的圆顶并创建新的
                         if (curGroup !== group) {
-                            skinYh[0].remove()
-                            yh = skinSwitch.createYH(group)
-                            player.append(yh)
+                            skinYh[0].remove();
+                            let newYh = skinSwitch.createYH(group);
+                            player.appendChild(newYh);
                         }
                     }
                 },
@@ -2283,7 +2692,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             return;
                         }
                     // taffy: 补充web端读取文件喵
-                    } else if (typeof resolveLocalFileSystemURL!='function') {
+                    } else if (typeof resolveLocalFileSystemURL != 'function') {
                       try {
                         game.readFile(lib.assetURL + path, (function (name) {
                           return function (entry) {
@@ -2339,12 +2748,12 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     var isLeft = pos.x >= width ? false : true;
                     if (sl) {
                         if (isLeft) {
-                            return {x: [0, 1.2], y: [0, 0], isLeft: isLeft};
-                        } else return {x: [0, -0.1], y: [0, 0], isLeft: isLeft};
+                            return { x: [0, 1.2], y: [0, 0], isLeft: isLeft };
+                        } else return { x: [0, -0.1], y: [0, 0], isLeft: isLeft };
                     } else {
                         if (isLeft) {
-                            return {x: [0, 0.4], y: [0, 0.5], isLeft: isLeft};
-                        } else return {x: [0, 0.63], y: [0, 0.5], isLeft: isLeft};
+                            return { x: [0, 0.4], y: [0, 0.5], isLeft: isLeft };
+                        } else return { x: [0, 0.63], y: [0, 0.5], isLeft: isLeft };
                     }
                 },
                 backupFileDui: function () {
@@ -2369,7 +2778,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 game.writeFile(data, backDir, f, function () {
                                     console.log(`备份${f}成功`)
                                     skinSwitch.addProgress(progressBar, ++current, tasks)
-                                    if(current >= files.length) {
+                                    if (current >= files.length) {
                                         progressBG.style.opacity = "0";
                                         skinSwitchMessage.show({
                                             type: 'success',
@@ -2381,7 +2790,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         }
                     })
                 },
-                modifyFileDui: function() {
+                modifyFileDui: function () {
                     // if (lib.config[skinSwitch.configKey.bakeup]) {
                     //     // alert('已经备份了十周年文件, 无需重复操作')
                     //     return
@@ -2453,7 +2862,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 text: '正在生成中, 请等待',
                                 duration: 1500,
                             })
-                            pfqhUtils.generateDynamicFile(lib,decadeUI.dynamicSkin)
+                            pfqhUtils.generateDynamicFile(lib, decadeUI.dynamicSkin)
                         }
                     }
                 },
@@ -2488,20 +2897,28 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 },
                 createYH: function (group) {
                     var yh = document.createElement("img");
+                    // 修复圆顶图片路径问题，确保正确加载势力对应的图片
                     yh.src = skinSwitch.url + "/images/border/" + group + ".png";
-                    yh.classList.add("skinYh")
+                    // 以下是备用的空白图，如果上面的图片加载失败，可以取消注释使用
+                    // yh.src = skinSwitch.url + "/images/border/kongbai.png";
+                    yh.classList.add("skinYh");
                     yh.style.display = "block";
                     yh.style.position = "absolute";
-                    // taffy: 注释原版皮切代码喵
-                    // yh.style.top = "-22px";
-                    /* taffy分界线 */
-                    // taffy: 调整圆弧位置喵
-                    yh.style.top = "-35px";
-                    yh.style.left = "-9px";
-                    /* taffy分界线 */
+                    yh.style.top = "-22px";
                     yh.style.height = "50px";
                     yh.style.width = "131.1px";
                     yh.style.zIndex = "61";
+                    // 添加onerror处理，确保图片加载失败时有备用方案
+                    yh.onerror = function () {
+                        this.src = skinSwitch.url + "/images/border/weizhi.png";
+                        console.log("势力图标加载失败，使用默认图标");
+                    };
+                    
+                    // 根据配置决定是否显示
+                    if (typeof window.showTopArc !== 'undefined' && !window.showTopArc) {
+                        yh.style.display = "none";
+                    }
+                    
                     return yh;
                 },
                 resetDynamicData: function () {
@@ -2521,6 +2938,8 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     let background = ui.create.div('.pfqh-qh-skinchange-background', document.body);
                     let backgroundBack = ui.create.div('.pfqh-qh-skinchange-background', background);
                     let dialog = ui.create.div('.pfqh-qh-skinchange-dialog', background);
+                    let dragHandle = ui.create.div('.skin-drag-handle', dialog);
+                    dragHandle.title = '拖拽移动千幻小窗';
                     let exit = ui.create.div('.pfqh-qh-skinchange-exit', dialog);
                     let cover = ui.create.div('.pfqh-qh-skinchange-cover', dialog);
                     let content = ui.create.div('.pfqh-qh-skinchange-area', cover);
@@ -2561,7 +2980,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     // 缓存小窗的加载资源
                     if (!skinSwitch.smallWindowAm) {
                         let skinCanvas = document.createElement('canvas')
-                        skinSwitch.smallWindowAm = new AnimationManager(lib.assetURL + 'extension/十周年UI/assets/dynamic/', skinCanvas, 33321, {offscreen: false})
+                        skinSwitch.smallWindowAm = new AnimationManager(lib.assetURL + 'extension/十周年UI/assets/dynamic/', skinCanvas, 33321, { offscreen: false })
                         skinCanvas.style.height = '100%'
                         skinCanvas.style.width = '100%'
                     }
@@ -2569,7 +2988,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     let skinCanvas = am.canvas
                     d.appendChild(skinCanvas)
                     let coverSize = cover.getBoundingClientRect()
-                    am.updateSpineAll({width: coverSize.width, height: coverSize.height, dpr: Math.max(self.devicePixelRatio * (self.documentZoom ? self.documentZoom : 1), 1)})
+                    am.updateSpineAll({ width: coverSize.width, height: coverSize.height, dpr: Math.max(self.devicePixelRatio * (self.documentZoom ? self.documentZoom : 1), 1) })
 
                     let viewState = {
                         offset: 0,
@@ -2705,14 +3124,14 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     let build_id = 0
                     let beijing_id = 888888
 
-                    let skinInfoMap = {'__default': {skinName: null}}
+                    let skinInfoMap = { '__default': { skinName: null } }
 
                     let currentSelect = null // 当前选择的动皮名称
                     if (lib.config[dynamicSkinKey]) {
                         let ps = lib.config[dynamicSkinKey][name];
                         if (ps !== 'none') currentSelect = ps + '.jpg'
                     }
-                    // 没有包含千幻, 暂时不设置静皮, 静皮用小杀代替, 以后可能用系统默认皮肤代替, 或者系统默认的皮肤系统代替
+                    // 没有包含千幻, 暂时不设置静皮, 静皮用小杀代替, 以后可能用系统默认皮肤代替
                     keys.map(name => {
                         skinInfoMap[name] = {
                             staticImg: "url(" + skinSwitch.url + "/images/character/小杀.png)",
@@ -2735,7 +3154,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         // 如果该皮肤存在, 那么设置该皮肤为静态皮肤
                         skinSwitch.qhly_checkFileExist(path, exists => {
                             if (exists) {
-                                skinInfoMap[name].staticImg = 'url("' + lib.assetURL + path+ '")'
+                                skinInfoMap[name].staticImg = 'url("' + lib.assetURL + path + '")'
                             }
                         })
                     })
@@ -2771,6 +3190,10 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             sprite.beijing = Object.assign({}, sprite.beijing)
                             sprite.beijing.viewportNode = skinView
                         }
+                        if (sprite.qianjing) {
+                            sprite.qianjing = Object.assign({}, sprite.qianjing)
+                            sprite.qianjing.viewportNode = skinView
+                        }
 
                         sprite.player = sprite;
                         skinView.style.backgroundImage = 'url("' + lib.assetURL + 'extension/十周年UI/assets/dynamic/' + sprite.background + '")'
@@ -2780,6 +3203,10 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         if (sprite.player && sprite.player.beijing != null) {
                             beijingDynamic = am.getAnimation(sprite.player.beijing.version || sprite.player.version)
                         }
+                        let qianjingDynamic
+                        if (sprite.player && sprite.player.qianjing != null) {
+                            qianjingDynamic = am.getAnimation(sprite.player.qianjing.version || sprite.player.version)
+                        }
 
                         let loadDaiJi = () => {
                             if (!dynamic.hasSpine(sprite.name)) {
@@ -2788,16 +3215,27 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     if (sprite.player.beijing) {
                                         runBeijing()
                                     } else {
-                                        run()
+                                        run1()
+                                    }
+
+                                    if (sprite.player.qianjing) {
+                                        runqianjing()
+                                    } else {
+                                        run2()
                                     }
                                 })
                             } else {
                                 if (sprite.player.beijing) {
                                     runBeijing()
+                                }
+                                if (sprite.player.qianjing) {
+                                    runqianjing()
                                 } else {
-                                    run()
+                                    run1()
+                                    run2()
                                 }
                             }
+
                         }
                         let loadBeiJingDaiJi = () => {
                             if (!beijingDynamic.hasSpine(sprite.player.beijing.name)) {
@@ -2809,18 +3247,40 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 loadDaiJi()
                             }
                         }
-                        let run = function (beijingNode) {
+                        let run1 = function (beijingNode) {
                             let t = dynamic.playSpine(sprite)
                             t.opacity = 0
                             t.beijingNode = beijingNode
 
                             let skins = t.skeleton.data.skins
                             if (sprite.player.skin) {
+                                let skinFound = false;
                                 for (let i = 0; i < skins.length; i++) {
                                     if (skins[i].name === sprite.player.skin) {
                                         // 设置skin
-                                        t.skeleton.setSkinByName(skins[i].name);
+                                        try {
+                                            t.skeleton.setSkinByName(skins[i].name);
+                                            t.skeleton.setSlotsToSetupPose();
+                                            skinFound = true;
+                                        } catch (e) {
+                                            console.warn('Failed to set skin:', skins[i].name, e);
+                                        }
+                                        break;
+                                    }
+                                }
+                                // 如果指定的皮肤不存在，尝试使用默认皮肤或第一个可用皮肤
+                                if (!skinFound && skins.length > 0) {
+                                    try {
+                                        // 优先尝试使用默认皮肤
+                                        if (t.skeleton.data.defaultSkin) {
+                                            t.skeleton.setSkin(t.skeleton.data.defaultSkin);
+                                        } else {
+                                            // 如果没有默认皮肤，使用第一个可用皮肤
+                                            t.skeleton.setSkinByName(skins[0].name);
+                                        }
                                         t.skeleton.setSlotsToSetupPose();
+                                    } catch (e) {
+                                        console.warn('Failed to set fallback skin:', e);
                                     }
                                 }
                             }
@@ -2832,16 +3292,16 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             }
                             if (labels.includes(jinchangLabel)) {
                                 // 清空原来的state状态, 添加出场
-                                t.skeleton.state.setEmptyAnimation(0,0);
-                                t.skeleton.state.setAnimation(0, jinchangLabel, false,0);
+                                t.skeleton.state.setEmptyAnimation(0, 0);
+                                t.skeleton.state.setAnimation(0, jinchangLabel, false, 0);
                                 if (t.player.action && t.player.action !== jinchangLabel) {
-                                    t.skeleton.state.addAnimation(0, t.player.action,true,-0.01);
+                                    t.skeleton.state.addAnimation(0, t.player.action, true, -0.01);
                                     t.action = t.player.action
                                 } else {
                                     for (let defaultDaiJi of ['DaiJi', 'play']) {
                                         let da = getLabelIgnoreCase(t, defaultDaiJi)
                                         if (da) {
-                                            t.skeleton.state.addAnimation(0, da,true,-0.01);
+                                            t.skeleton.state.addAnimation(0, da, true, -0.01);
                                             t.player.action = da
                                             t.action = da
                                         }
@@ -2853,7 +3313,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             let setAnimation = () => {
                                 // 如果包含Teshu或者play2. 那么接着播放这两个标签
                                 for (let lab of ['TeShu', 'play2']) {
-                                    if (labels.includes(lab) && lab !== daijiActioh){
+                                    if (labels.includes(lab) && lab !== daijiActioh) {
                                         t.skeleton.state.addAnimation(0, lab, false, 0).listener = {
                                             complete: function (trackIndex) {
                                                 t.skeleton.state.addAnimation(0, daijiActioh, true, 0)
@@ -2872,6 +3332,11 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 beijingNode.skeleton.state.tracks[0].trackTime = 0;
                                 t.skeleton.state.tracks[0].trackTime = 0;
                                 beijingNode.opacity = 1;
+                            }
+                            if (qianjingNode) {
+                                qianjingNode.skeleton.state.tracks[0].trackTime = 0;
+                                t.skeleton.state.tracks[0].trackTime = 0;
+                                qianjingNode.opacity = 1;
                             }
                             sortNodes();
                             t.opacity = 1;
@@ -2941,7 +3406,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     let lowerLabel = label.toLowerCase()
                                     for (let daijiName of ['DaiJi', 'BeiJing', 'play']) {
                                         if (daijiName.toLowerCase() === lowerLabel) {
-                                            node.skeleton.state.addAnimation(0, label,true,-0.01);
+                                            node.skeleton.state.addAnimation(0, label, true, -0.01);
                                             node.action = label
                                             break
                                         }
@@ -2950,7 +3415,55 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             }
                             // 检查当前节点是否存在位于背景层下的node, 提上来
                             sortNodes()
-                            run(node)
+                            run1(node)
+                        }
+                        let runqianjing = () => {
+                            sprite.player.qianjing.loop = true
+                            sprite.player.qianjing.id = qianjing_id++
+                            if (sprite.player.qianjing.alpha == null)
+                                sprite.player.qianjing.alpha = sprite.player.alpha
+
+                            // 如果是双将的话, 复制裁剪.
+                            if (!sprite.player.qianjing.clip && sprite.clip) {
+                                sprite.player.qianjing.clip = sprite.clip
+                            }
+                            let node
+                            try {
+                                node = qianjingDynamic.playSpine(sprite.player.qianjing)
+                                node.isqianjing = true
+                            } catch (e) {
+                                console.error(e)
+                            }
+
+                            // 获取所有actions
+                            let chuChangLabel = ''
+                            let labels = getAllActionLabels(node)
+                            for (let label of labels) {
+                                let lowerLabel = label.toLowerCase()
+                                if (lowerLabel === 'chuchang') {
+                                    chuChangLabel = label
+                                    break
+                                }
+                            }
+                            // 查找背景是否也有出场标签
+                            if (chuChangLabel) {
+                                node.skeleton.state.setAnimation(0, chuChangLabel, false, 0);
+                                // 获取所有actions
+
+                                for (let label of labels) {
+                                    let lowerLabel = label.toLowerCase()
+                                    for (let daijiName of ['DaiJi', 'Chuchang', 'play']) {
+                                        if (daijiName.toLowerCase() === lowerLabel) {
+                                            node.skeleton.state.addAnimation(0, label, true, -0.01);
+                                            node.action = label
+                                            break
+                                        }
+                                    }
+                                }
+                            }
+                            // 检查当前节点是否存在位于背景层下的node, 提上来
+                            sortNodes()
+                            run2(node)
                         }
 
                         let sortNodes = () => {
@@ -2989,10 +3502,6 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         let skinKeys = Object.keys(skinInfoMap)
                         // viewState.skins = skinList;
                         viewState.skinTotalWidth = (viewState.skinPerWidth + viewState.skinGap) * skinKeys.length - viewState.skinGap;
-                        // taffy: 修复千幻扩展皮肤顺序错乱问题
-                        skinKeys.remove('__default');
-                        skinKeys.unshift('__default');
-                        /* taffy分界线 */
                         for (let i = 0; i < skinKeys.length; i++) {
                             let skinKey = skinKeys[i]
 
@@ -3083,6 +3592,9 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 if (skinView.node.beijingNode) {
                                                     am.getAnimation(skinView.node.beijingNode.version).stopSpine(skinView.node.beijingNode)
                                                 }
+                                                if (skinView.node.qianjingNode) {
+                                                    am.getAnimation(skinView.node.qianjingNode.version).stopSpine(skinView.node.qianjingNode)
+                                                }
                                                 skinView.node = null;
                                             }
                                             setStaticSkin()
@@ -3111,17 +3623,11 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                             game.qhly_setCurrentSkin(name, skin, function () {
                                                 viewState.refreshSkins();
                                             }, true);
-                                            // taffy: 非十周年动皮检测圆弧喵
-                                            skinSwitch.skinSwitchCheckYH(player)
-                                            /* taffy分界线 */
                                         } else {
                                             game.qhly_setCurrentSkin(name, skin, function () {
                                                 viewState.refreshSkins();
                                             }, true);
                                             setStaticSkin()
-                                            // taffy: 非十周年动皮检测圆弧喵
-                                            skinSwitch.skinSwitchCheckYH(player)
-                                            /* taffy分界线 */
                                         }
                                     })
                                 })(name, skin, skinView);
@@ -3158,15 +3664,9 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                             currentSelect = skin
                                             skinView.setBackground(name, 'character');
                                             setStaticSkin()
-                                            // taffy: 非十周年动皮检测圆弧喵
-                                            skinSwitch.skinSwitchCheckYH(player)
-                                            /* taffy分界线 */
                                         } else {
                                             skinSwitch.dynamic.selectSkinV3(skinKey, player, isPrimary)
                                             currentSelect = skin
-                                            // taffy: 非十周年动皮检测圆弧喵
-                                            skinSwitch.skinSwitchCheckYH(player)
-                                            /* taffy分界线 */
                                         }
                                         viewState.refreshSkins()
                                     })
@@ -3192,6 +3692,9 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                     handleSkinInfo()
 
+                    // 初始化千幻小窗拖拽功能
+                    this.initSmallWindowDrag(dialog, dragHandle);
+
                     backgroundBack.listen(function (event) {
                         exitListener();
                     });
@@ -3203,9 +3706,231 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         }
                     })
                 },
+                // 初始化千幻小窗拖拽功能
+                initSmallWindowDrag: function (dialog, dragHandle) {
+                    if (!dialog || !dragHandle) return;
+
+                    let isDragging = false;
+                    let startX = 0;
+                    let startY = 0;
+                    let initialLeft = 0;
+                    let initialTop = 0;
+
+                    // 获取事件类型
+                    const downEvent = lib.config.touchscreen ? 'touchstart' : 'mousedown';
+                    const moveEvent = lib.config.touchscreen ? 'touchmove' : 'mousemove';
+                    const upEvent = lib.config.touchscreen ? 'touchend' : 'mouseup';
+
+                    // 获取触摸/鼠标坐标
+                    const getEventCoords = (e) => {
+                        if (e.touches && e.touches.length > 0) {
+                            return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                        }
+                        return { x: e.clientX, y: e.clientY };
+                    };
+
+                    // 开始拖拽
+                    const startDrag = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        isDragging = true;
+                        const coords = getEventCoords(e);
+                        startX = coords.x;
+                        startY = coords.y;
+
+                        // 获取当前位置
+                        const rect = dialog.getBoundingClientRect();
+                        initialLeft = rect.left;
+                        initialTop = rect.top;
+
+                        // 添加拖拽状态样式
+                        dialog.classList.add('dragging');
+
+                        // 阻止默认的transform，使用绝对定位
+                        dialog.style.position = 'fixed';
+                        dialog.style.left = initialLeft + 'px';
+                        dialog.style.top = initialTop + 'px';
+                        dialog.style.transform = 'none';
+
+                        // 添加全局事件监听
+                        document.addEventListener(moveEvent, handleDrag, { passive: false });
+                        document.addEventListener(upEvent, stopDrag);
+                    };
+
+                    // 处理拖拽
+                    const handleDrag = (e) => {
+                        if (!isDragging) return;
+
+                        e.preventDefault();
+                        const coords = getEventCoords(e);
+                        const deltaX = coords.x - startX;
+                        const deltaY = coords.y - startY;
+
+                        const newLeft = initialLeft + deltaX;
+                        const newTop = initialTop + deltaY;
+
+                        // 限制在屏幕范围内
+                        const maxLeft = window.innerWidth - dialog.offsetWidth;
+                        const maxTop = window.innerHeight - dialog.offsetHeight;
+
+                        const constrainedLeft = Math.max(0, Math.min(newLeft, maxLeft));
+                        const constrainedTop = Math.max(0, Math.min(newTop, maxTop));
+
+                        dialog.style.left = constrainedLeft + 'px';
+                        dialog.style.top = constrainedTop + 'px';
+                    };
+
+                    // 停止拖拽
+                    const stopDrag = () => {
+                        if (!isDragging) return;
+
+                        isDragging = false;
+                        dialog.classList.remove('dragging');
+
+                        // 移除全局事件监听
+                        document.removeEventListener(moveEvent, handleDrag);
+                        document.removeEventListener(upEvent, stopDrag);
+                    };
+
+                    // 重置位置功能（双击拖拽手柄）
+                    const resetPosition = () => {
+                        dialog.style.position = '';
+                        dialog.style.left = '';
+                        dialog.style.top = '';
+                        dialog.style.transform = 'translate(-50%, -50%)';
+                    };
+
+                    // 绑定事件
+                    dragHandle.addEventListener(downEvent, startDrag);
+
+                    // 双击重置位置
+                    let clickCount = 0;
+                    dragHandle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        clickCount++;
+                        setTimeout(() => {
+                            if (clickCount === 2) {
+                                resetPosition();
+                            }
+                            clickCount = 0;
+                        }, 300);
+                    });
+                },
                 selectSkinData: {
                     temp: "",
                     value: "",
+                },
+                // 初始化角色调整窗口拖拽功能
+                initEditBoxDrag: function (editBox, dragHandle) {
+                    if (!editBox || !dragHandle) return;
+
+                    let isDragging = false;
+                    let startX = 0;
+                    let startY = 0;
+                    let initialLeft = 0;
+                    let initialTop = 0;
+
+                    // 获取事件类型
+                    const downEvent = lib.config.touchscreen ? 'touchstart' : 'mousedown';
+                    const moveEvent = lib.config.touchscreen ? 'touchmove' : 'mousemove';
+                    const upEvent = lib.config.touchscreen ? 'touchend' : 'mouseup';
+
+                    // 获取触摸/鼠标坐标
+                    const getEventCoords = (e) => {
+                        if (e.touches && e.touches.length > 0) {
+                            return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                        }
+                        return { x: e.clientX, y: e.clientY };
+                    };
+
+                    // 开始拖拽
+                    const startDrag = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        isDragging = true;
+                        const coords = getEventCoords(e);
+                        startX = coords.x;
+                        startY = coords.y;
+
+                        // 获取当前位置
+                        const rect = editBox.getBoundingClientRect();
+                        initialLeft = rect.left;
+                        initialTop = rect.top;
+
+                        // 添加拖拽状态样式
+                        editBox.classList.add('dragging');
+
+                        // 阻止默认的transform，使用绝对定位
+                        editBox.style.position = 'fixed';
+                        editBox.style.left = initialLeft + 'px';
+                        editBox.style.top = initialTop + 'px';
+                        editBox.style.transform = 'none';
+
+                        // 添加全局事件监听
+                        document.addEventListener(moveEvent, handleDrag, { passive: false });
+                        document.addEventListener(upEvent, stopDrag);
+                    };
+
+                    // 处理拖拽
+                    const handleDrag = (e) => {
+                        if (!isDragging) return;
+
+                        e.preventDefault();
+                        const coords = getEventCoords(e);
+                        const deltaX = coords.x - startX;
+                        const deltaY = coords.y - startY;
+
+                        const newLeft = initialLeft + deltaX;
+                        const newTop = initialTop + deltaY;
+
+                        // 限制在屏幕范围内
+                        const maxLeft = window.innerWidth - editBox.offsetWidth;
+                        const maxTop = window.innerHeight - editBox.offsetHeight;
+
+                        const constrainedLeft = Math.max(0, Math.min(newLeft, maxLeft));
+                        const constrainedTop = Math.max(0, Math.min(newTop, maxTop));
+
+                        editBox.style.left = constrainedLeft + 'px';
+                        editBox.style.top = constrainedTop + 'px';
+                    };
+
+                    // 停止拖拽
+                    const stopDrag = () => {
+                        if (!isDragging) return;
+
+                        isDragging = false;
+                        editBox.classList.remove('dragging');
+
+                        // 移除全局事件监听
+                        document.removeEventListener(moveEvent, handleDrag);
+                        document.removeEventListener(upEvent, stopDrag);
+                    };
+
+                    // 重置位置功能（双击拖拽手柄）
+                    const resetPosition = () => {
+                        editBox.style.position = '';
+                        editBox.style.left = '';
+                        editBox.style.top = '';
+                        editBox.style.transform = '';
+                    };
+
+                    // 绑定事件
+                    dragHandle.addEventListener(downEvent, startDrag);
+
+                    // 双击重置位置
+                    let clickCount = 0;
+                    dragHandle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        clickCount++;
+                        setTimeout(() => {
+                            if (clickCount === 2) {
+                                resetPosition();
+                            }
+                            clickCount = 0;
+                        }, 300);
+                    });
                 },
                 // 触发以下武器技能不触发角色的特殊动画
                 filterSkills: [
@@ -3217,7 +3942,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     'bagua_skill', 'bahu',
                 ],
                 dynamic: {
-                    initSwitch: function (player,skins) {
+                    initSwitch: function (player, skins) {
                         if (player.name == "unknown" && player.name1) {
                             var name = player.name1;
                         } else {
@@ -3238,7 +3963,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         })
                         var keys = Object.keys(skins)
                         for (let i = 0; i < keys.length; i++) {
-                            var t = ui.create.div(".engSkin",skinBox);
+                            var t = ui.create.div(".engSkin", skinBox);
                             t.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', function (e) {
                                 e.stopPropagation();
                             })
@@ -3301,7 +4026,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     break
                                 }
                             }
-                            for (let i = 0; i < keys.length; i++){
+                            for (let i = 0; i < keys.length; i++) {
                                 let k = keys[i]
                                 let skinInfo = skinInfos[k]
                                 let skinAvatar = ui.create.div(".skin-avatar", skins);
@@ -3325,9 +4050,9 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     // 并且设置选择的是当前皮肤
                                     let selInfo = skinSwitch.dynamic.playerTempSkinInfo[player.pfqhId]
                                     if (isPrimary) {
-                                        selInfo.primary = {temp: skinImgDiv, value: k, curIndex: curIndex - 2 <= 0 ? 0 : curIndex - 2}
+                                        selInfo.primary = { temp: skinImgDiv, value: k, curIndex: curIndex - 2 <= 0 ? 0 : curIndex - 2 }
                                     } else {
-                                        selInfo.deputy = {temp: skinImgDiv, value: k, curIndex: i}
+                                        selInfo.deputy = { temp: skinImgDiv, value: k, curIndex: i }
                                     }
                                 }
                                 if (skinSwitch.qhly_hasExtension('千幻聆音')) {
@@ -3395,8 +4120,8 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 this.dynamicSkinInfo[i] = dyInfo
 
                                 this.playerTempSkinInfo[i] = {
-                                    primary: {temp: '', value: '', curIndex: 0},
-                                    deputy: {temp: '', value: '', curIndex: 0},
+                                    primary: { temp: '', value: '', curIndex: 0 },
+                                    deputy: { temp: '', value: '', curIndex: 0 },
                                 }
                             }
 
@@ -3431,6 +4156,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     </div>
                                 </div>
                                 <div id="skinDiv2">
+                                    <div class="skin-drag-handle" id="skinDragHandle" title="拖拽移动皮肤切换窗口"></div>
                                     <div class="skinBox">
                                         <div class="pfqhLeftArrow" id="dynamicLeftArrow"></div>
                                         <div class="skins" id="pfqhSkins">
@@ -3445,6 +4171,9 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             document.getElementById('skinDiv2').addEventListener(addLisName, e => {
                                 e.stopPropagation()
                             })
+
+                            // 添加拖拽功能
+                            this.initDragFunctionality()
 
                             // 将座次号添加到option中
                             let playerSkinSelect = document.getElementById('playerSkinSelect')
@@ -3562,6 +4291,120 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             }
                         }
                     },
+                    // 初始化拖拽功能
+                    initDragFunctionality: function () {
+                        const skinDiv2 = document.getElementById('skinDiv2');
+                        const dragHandle = document.getElementById('skinDragHandle');
+
+                        if (!skinDiv2 || !dragHandle) return;
+
+                        let isDragging = false;
+                        let startX = 0;
+                        let startY = 0;
+                        let initialLeft = 0;
+                        let initialTop = 0;
+
+                        // 获取事件类型
+                        const downEvent = lib.config.touchscreen ? 'touchstart' : 'mousedown';
+                        const moveEvent = lib.config.touchscreen ? 'touchmove' : 'mousemove';
+                        const upEvent = lib.config.touchscreen ? 'touchend' : 'mouseup';
+
+                        // 获取触摸/鼠标坐标
+                        const getEventCoords = (e) => {
+                            if (e.touches && e.touches.length > 0) {
+                                return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                            }
+                            return { x: e.clientX, y: e.clientY };
+                        };
+
+                        // 开始拖拽
+                        const startDrag = (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            isDragging = true;
+                            const coords = getEventCoords(e);
+                            startX = coords.x;
+                            startY = coords.y;
+
+                            // 获取当前位置
+                            const rect = skinDiv2.getBoundingClientRect();
+                            initialLeft = rect.left;
+                            initialTop = rect.top;
+
+                            // 添加拖拽状态样式
+                            skinDiv2.classList.add('dragging');
+
+                            // 阻止默认的transform，使用绝对定位
+                            skinDiv2.style.position = 'fixed';
+                            skinDiv2.style.left = initialLeft + 'px';
+                            skinDiv2.style.top = initialTop + 'px';
+                            skinDiv2.style.transform = 'none';
+
+                            // 添加全局事件监听
+                            document.addEventListener(moveEvent, handleDrag, { passive: false });
+                            document.addEventListener(upEvent, stopDrag);
+                        };
+
+                        // 处理拖拽
+                        const handleDrag = (e) => {
+                            if (!isDragging) return;
+
+                            e.preventDefault();
+                            const coords = getEventCoords(e);
+                            const deltaX = coords.x - startX;
+                            const deltaY = coords.y - startY;
+
+                            const newLeft = initialLeft + deltaX;
+                            const newTop = initialTop + deltaY;
+
+                            // 限制在屏幕范围内
+                            const maxLeft = window.innerWidth - skinDiv2.offsetWidth;
+                            const maxTop = window.innerHeight - skinDiv2.offsetHeight;
+
+                            const constrainedLeft = Math.max(0, Math.min(newLeft, maxLeft));
+                            const constrainedTop = Math.max(0, Math.min(newTop, maxTop));
+
+                            skinDiv2.style.left = constrainedLeft + 'px';
+                            skinDiv2.style.top = constrainedTop + 'px';
+                        };
+
+                        // 停止拖拽
+                        const stopDrag = () => {
+                            if (!isDragging) return;
+
+                            isDragging = false;
+                            skinDiv2.classList.remove('dragging');
+
+                            // 移除全局事件监听
+                            document.removeEventListener(moveEvent, handleDrag);
+                            document.removeEventListener(upEvent, stopDrag);
+                        };
+
+                        // 重置位置功能（双击拖拽手柄）
+                        const resetPosition = () => {
+                            skinDiv2.style.position = '';
+                            skinDiv2.style.left = '';
+                            skinDiv2.style.top = '';
+                            skinDiv2.style.transform = 'translate(-50%, -50%)';
+                        };
+
+                        // 绑定事件
+                        dragHandle.addEventListener(downEvent, startDrag);
+
+                        // 双击重置位置
+                        let clickCount = 0;
+                        dragHandle.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            clickCount++;
+                            setTimeout(() => {
+                                if (clickCount === 2) {
+                                    resetPosition();
+                                }
+                                clickCount = 0;
+                            }, 300);
+                        });
+                    },
                     // 修改eng选择皮肤框的写法
                     selectSkinV2: function (skinName, target) {
                         if (!skinName) return
@@ -3586,6 +4429,21 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             let skin = avatarSkins[skinName]
                             if (!skin) return
                             player.stopDynamic(isPrimary, !isPrimary)
+
+                            // 添加千幻语音支持
+                            console.log('对局中皮肤切换 - selectSkinV2:', avatarName, skinName, isPrimary ? '主将' : '副将');
+
+                            // 深度重置语音系统
+                            console.log('selectSkinV2 - 执行深度语音重置');
+                            skinSwitch.deepResetAudioSystem();
+
+                            skinSwitch.enhanceSkinWithQianhuanAudio(skin, avatarName, skinName);
+
+                            // 标记需要刷新语音
+                            if (skin.audio) {
+                                skin._needUpdateAudio = true;
+                                console.log('selectSkinV2 - 检测到语音配置，标记需要刷新:', skin.audio);
+                            }
 
                             skin.player = skin;
                             dcdAnim.playSpine(skinSwitch.huanfu, { scale: 0.5, parent: player });
@@ -3617,6 +4475,16 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             }
 
                             player.playDynamic(skin, !isPrimary);
+
+                            // 皮肤切换完成后强制重建语音映射
+                            setTimeout(() => {
+                                console.log('selectSkinV2 - 皮肤切换完成，重建语音映射');
+                                if (skin.audio) {
+                                    skin._needUpdateAudio = true;
+                                    skinSwitch.initPlayerAudioImmediate(player, isPrimary, skin);
+                                }
+                            }, 1200);
+
                             if (skin.background) {
                                 player.$dynamicWrap.style.backgroundImage = 'url("' + lib.assetURL + 'extension/十周年UI/assets/dynamic/' + skin.background + '")';
                             } else {
@@ -3653,9 +4521,42 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                         player.stopDynamic(isPrimary, !isPrimary)
                         skin.player = skin
+
+                        // 尝试从千幻聆音读取语音配置
+                        console.log('对局中皮肤切换 - selectSkinV3:', avatarName, skinName, isPrimary ? '主将' : '副将');
+
+                        // 深度重置语音系统
+                        console.log('selectSkinV3 - 执行深度语音重置');
+                        skinSwitch.deepResetAudioSystem();
+
+                        skinSwitch.enhanceSkinWithQianhuanAudio(skin, avatarName, skinName);
+
+                        // 标记需要刷新语音
+                        if (skin.audio) {
+                            skin._needUpdateAudio = true;
+                            console.log('selectSkinV3 - 检测到语音配置，标记需要刷新:', skin.audio);
+                        }
+
                         dcdAnim.playSpine(skinSwitch.huanfu, { scale: 0.5, parent: player })
                         skin.deputy = !isPrimary
                         player.playDynamic(skin, !isPrimary);
+
+                        // 皮肤切换后重新应用保存的动皮参数
+                        setTimeout(() => {
+                            if (window.skinSwitch && typeof skinSwitch.updateDecadeDynamicSkin === 'function') {
+                                console.log('皮肤切换后重新应用保存的动皮参数...');
+                                skinSwitch.updateDecadeDynamicSkin();
+                            }
+                        }, 100);
+
+                        // 皮肤切换完成后强制重建语音映射
+                        setTimeout(() => {
+                            console.log('selectSkinV3 - 皮肤切换完成，重建语音映射');
+                            if (skin.audio) {
+                                skin._needUpdateAudio = true;
+                                skinSwitch.initPlayerAudioImmediate(player, isPrimary, skin);
+                            }
+                        }, 1200);
 
                         if (skin.background) {
                             player.$dynamicWrap.style.backgroundImage = 'url("' + lib.assetURL + 'extension/十周年UI/assets/dynamic/' + skin.background + '")';
@@ -3698,6 +4599,16 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 var skin = dui.dynamicSkin[player.name][e.alt];
                                 // if (skin.action) delete skin.action;
                                 player.stopDynamic();
+
+                                // 添加千幻语音支持
+                                console.log('对局中皮肤切换 - selectSkin:', player.name, e.alt);
+
+                                // 深度重置语音系统
+                                console.log('selectSkin - 执行深度语音重置');
+                                skinSwitch.deepResetAudioSystem();
+
+                                skinSwitch.enhanceSkinWithQianhuanAudio(skin, player.name, e.alt);
+
                                 skinSwitch.huanfu.parent = player;
                                 skin.player = skin;
                                 dcdAnim.playSpine(skinSwitch.huanfu, skinSwitch.huanfu);
@@ -3709,9 +4620,32 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                         skin.background = skin.localePath + '/' + skin.background
                                     }
                                 }
-                                // 重新初始化
 
+                                // 标记需要刷新语音
+                                if (skin.audio) {
+                                    skin._needUpdateAudio = true;
+                                    console.log('selectSkin - 检测到语音配置，标记需要刷新:', skin.audio);
+                                }
+
+                                // 重新初始化
                                 player.playDynamic(skin, false);
+
+                                // 皮肤切换后重新应用保存的动皮参数
+                                setTimeout(() => {
+                                    if (window.skinSwitch && typeof skinSwitch.updateDecadeDynamicSkin === 'function') {
+                                        console.log('皮肤切换后重新应用保存的动皮参数...');
+                                        skinSwitch.updateDecadeDynamicSkin();
+                                    }
+                                }, 100);
+
+                                // 皮肤切换完成后强制重建语音映射
+                                setTimeout(() => {
+                                    console.log('selectSkin - 皮肤切换完成，重建语音映射');
+                                    if (skin.audio) {
+                                        skin._needUpdateAudio = true;
+                                        skinSwitch.initPlayerAudioImmediate(player, true, skin);
+                                    }
+                                }, 1200);
                                 if (skin.background) {
                                     player.$dynamicWrap.style.backgroundImage = 'url("' + lib.assetURL + 'extension/十周年UI/assets/dynamic/' + skin.background + '")';
                                 } else {
@@ -3748,12 +4682,12 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             skinSwitch.dynamic.skinDiv.style.display = "block";
                             setTimeout(() => {
                                 skinSwitch.dynamic.skinDiv.style.opacity = "1";
-                            },200);
+                            }, 200);
                         } else {
                             skinSwitch.dynamic.skinDiv.style.opacity = "0";
                             setTimeout(() => {
                                 skinSwitch.dynamic.skinDiv.style.display = "none";
-                            },400);
+                            }, 400);
                         }
                     },
                     judgingRealName: function (name) {
@@ -3761,10 +4695,10 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         let boss = name.indexOf("boss_");
                         let special = shen > -1 ? shen : boss > -1 ? boss : -1;
                         if (special > -1) {
-                            return name.substr(special,name.length);
+                            return name.substr(special, name.length);
                         } else {
                             var index = name.lastIndexOf("_");
-                            return name.substr(index + 1,name.length);
+                            return name.substr(index + 1, name.length);
                         }
                     },
                     /**
@@ -3776,12 +4710,11 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                      *   isDouble: boolean  // 是否是双将
                      *   dynamic: 需要播放的动皮参数
                      * }
-                     *
                      */
                     checkCanBeAction: function (player) {
                         let isPrimary = player.dynamic.primary;
                         let res = {
-                            isDouble : false,
+                            isDouble: false,
                             deputy: false,
                             needHide: undefined
                         }
@@ -3818,7 +4751,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             }
                         }
                     },
-                    setBackground : function (avatar,player) {
+                    setBackground: function (avatar, player) {
                         // 设置背景, 配合千幻使用, 会自动设置, 西瓜大佬的限定技需要读取这个角色的默认背景放到图框里面, 配合兼容
                         let skin = player.dynamic[avatar];
                         let obj = player.getElementsByClassName(avatar + "-avatar")[0];
@@ -3945,7 +4878,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             let effs
                             effs = special.condition[triName]
                             if (!effs) return null
-                            return {avatar, special, effs, isPrimary}
+                            return { avatar, special, effs, isPrimary }
                         }
                         let res = []
                         if (player.dynamic) {
@@ -3959,12 +4892,17 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         return res
                     },
                     // 更改为指定参数的状态,
-                    transformDst: (player, isPrimary, dstInfo, extraParams = {isOrigin: false, huanfuEffect: null}) => {
+                    transformDst: (player, isPrimary, dstInfo, extraParams = { isOrigin: false, huanfuEffect: null }) => {
                         const avatar = isPrimary ? player.dynamic.primary : player.dynamic.deputy
-                        let {isOrigin, huanfuEffect} = extraParams
+                        let { isOrigin, huanfuEffect } = extraParams
                         // 标明这时转换播放骨骼
                         dstInfo = Object.assign({}, dstInfo)
                         dstInfo._transform = true
+
+                        // 记录原始骨骼的音频配置，确保可以恢复
+                        if (avatar && avatar.audio && !dstInfo.audio) {
+                            dstInfo.audio = avatar.audio
+                        }
 
                         if (dstInfo.name == null || dstInfo.name === avatar.name) {
                             if (dstInfo.action) {
@@ -3990,7 +4928,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     if (huanfuEffect in changeEffects) {
                                         huanfuEffect = changeEffects[huanfuEffect]
                                     } else {
-                                        huanfuEffect = {name: huanfuEffect};
+                                        huanfuEffect = { name: huanfuEffect };
                                     }
                                 }
                                 huanfuEff = Object.assign(huanfuEff, huanfuEffect)
@@ -4001,7 +4939,108 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                             setTimeout(() => {
                                 player.stopDynamic(isPrimary, !isPrimary)
-                                player.playDynamic(dstInfo, !isPrimary);
+
+                                // 添加_needUpdateAudio标记，确保playDynamic会重新初始化音频
+                                dstInfo._needUpdateAudio = true
+
+                                // 如果没有audio配置，尝试从千幻聆音获取
+                                if (!dstInfo.audio && dstInfo.name) {
+                                    let [key, skinName] = dstInfo.name.split('/');
+                                    if (key && skinName) {
+                                        const qhAudioConfig = skinSwitch.getQianhuanAudioConfig(key, skinName);
+                                        if (qhAudioConfig) {
+                                            dstInfo.audio = qhAudioConfig;
+                                            console.log('变身时从千幻聆音读取语音配置:', key, skinName, qhAudioConfig);
+                                        }
+                                    }
+                                }
+
+                                // 确保游戏音频系统被初始化
+                                if (!skinSwitch.pfqh_originPlayAudio) {
+                                    skinSwitch.pfqh_originPlayAudio = game.playAudio
+                                }
+                                if (!skinSwitch.qfqh_originPlaySkillAudio) {
+                                    skinSwitch.qfqh_originPlaySkillAudio = game.playSkillAudio
+                                }
+
+                                // 重新初始化语音
+                                if (dstInfo.audio) {
+                                    let id = player.dynamic.id
+                                    let skinId = isPrimary ?
+                                        (player.dynamic.primary ? player.dynamic.primary.id : null) :
+                                        (player.dynamic.deputy ? player.dynamic.deputy.id : null)
+
+                                    if (!skinSwitch.audioMap) {
+                                        skinSwitch.audioMap = {}
+                                    }
+
+                                    // 处理音频路径
+                                    let skillPath = dstInfo.audio.skill
+                                    let cardPath = dstInfo.audio.card
+                                    let rootPath = skinSwitch.dcdPath + '/assets/dynamic/'
+
+                                    // 如果是千幻语音路径，则使用千幻的根路径
+                                    if (skillPath && skillPath.includes('sanguoaudio/')) {
+                                        rootPath = lib.assetURL + 'extension/千幻聆音/'
+                                    }
+
+                                    // 处理文件扩展名的辅助函数
+                                    let qhly_earse_ext = function (path) {
+                                        let foundDot = path.lastIndexOf('.');
+                                        if (foundDot < 0) return path;
+                                        return path.slice(0, foundDot);
+                                    }
+
+                                    // 更新技能语音
+                                    if (skillPath) {
+                                        let path = rootPath + skillPath
+                                        game.getFileList(path, function (folds, files) {
+                                            for (let file of files) {
+                                                file = qhly_earse_ext(file);
+                                                let key
+                                                if (file === name) {
+                                                    key = 'die/' + file
+                                                    skinSwitch.audioMap[key] = '../' + path + '/' + file;
+                                                } else if (file === 'victory' || file === 'win') {
+                                                    key = 'effect/' + id + '/' + skinId + '/' + 'victory'
+                                                    skinSwitch.audioMap[key] = '../' + path + '/' + file;
+                                                } else {
+                                                    key = 'skill/' + file
+                                                    skinSwitch.audioMap[key] = '../' + path + '/' + file;
+                                                }
+                                                if (skinSwitch.avatarAudioSkinMap[name]) {
+                                                    skinSwitch.avatarAudioSkinMap[name][key] = null
+                                                }
+                                            }
+                                        })
+                                    }
+
+                                    // 更新卡牌语音
+                                    if (cardPath) {
+                                        // 如果是千幻卡牌语音路径，也使用千幻的根路径
+                                        let cardRootPath = rootPath;
+                                        if (cardPath.includes('sanguoaudio/')) {
+                                            cardRootPath = lib.assetURL + 'extension/千幻聆音/';
+                                        }
+                                        let path = cardRootPath + cardPath
+                                        game.getFileList(path, function (folds, files) {
+                                            for (let file of files) {
+                                                file = qhly_earse_ext(file);
+                                                let key = 'card/' + id + '/' + skinId + '/' + file
+                                                skinSwitch.audioMap[key] = '../' + path + '/' + file
+                                                if (skinSwitch.avatarAudioSkinMap[name]) {
+                                                    skinSwitch.avatarAudioSkinMap[name][key] = null
+                                                }
+                                            }
+                                        })
+                                    }
+                                }
+
+                                // 变身完成后，强制刷新语音映射以确保千幻语音正确加载
+                                setTimeout(() => {
+                                    skinSwitch.forceRefreshAudioMapping(player, isPrimary);
+                                }, 200);
+
                             }, (huanfuEff.delay || 0) * 1000)
 
                             if (dstInfo.background) {
@@ -4063,7 +5102,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 },
                 // 向worker通信发送的消息api, 统一管理
                 postMsgApi: {
-                    _onchangeDynamicWindow: function(player, res) {
+                    _onchangeDynamicWindow: function (player, res) {
                         let canvas = player.getElementsByClassName("animation-player")[0];
                         let dynamicWrap
                         if (player.isQhlx) {
@@ -4073,7 +5112,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             //     dynamicWrap = player.getElementsByClassName("dynamicPlayerCanvas")[0]
                             //
                             // } else {
-                                dynamicWrap = player.getElementsByClassName("dynamic-wrap")[0];
+                            dynamicWrap = player.getElementsByClassName("dynamic-wrap")[0];
                             // }
                         }
                         skinSwitch.rendererOnMessage.addListener(player, 'chukuangFirst', function (data) {
@@ -4114,7 +5153,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                         skinSwitch.rendererOnMessage.addListener(player, 'chukuangSecond', function (data) {
                             // 这里表示动画已经准备好了, 可以显示
-                            setTimeout(()=>{
+                            setTimeout(() => {
                                 canvas.classList.remove('pfqhFadeIn')
                             }, 50)
 
@@ -4208,7 +5247,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         }
                         return res
                     },
-                    actionTeShu: function(player) {
+                    actionTeShu: function (player) {
                         let r = this.action(player, 'TeShu')
                         if (r) {
                             // 记录teshu上次的时间, 防止重复播放特殊动画
@@ -4221,14 +5260,14 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         }
                     },
                     // 播放十周年的出场动画
-                    actionChuChang: function(player) {
+                    actionChuChang: function (player) {
                         let r = this.action(player, 'chuchang')
                         if (r) {
                             player.GongJi = true
                             this._onchangeDynamicWindow(player, r)
                         }
                     },
-                    actionGongJi: function(player, extraParams) {
+                    actionGongJi: function (player, extraParams) {
                         skinSwitch.chukuangWorkerApi.chukuangAction(player, 'GongJi', extraParams)
                         // let r = this.action(player, 'GongJi')
                         // if (r) {
@@ -4316,7 +5355,11 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             angle: posData.angle
                         })
                         if (mode === 'chukuang') {
-                            skinSwitch.chukuangWorkerApi.adjust(player, posData)
+                            skinSwitch.chukuangWorkerApi.adjust(player, posData, 'GongJi')
+                        } else if (mode === 'chuchang') {
+                            skinSwitch.chukuangWorkerApi.adjust(player, posData, 'chuchang')
+                        } else if (mode === 'teshu') {
+                            skinSwitch.chukuangWorkerApi.adjust(player, posData, 'TeShu')
                         }
                     },
                     show: function (player, skinId) {
@@ -4372,7 +5415,11 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             ...posData
                         })
                         if (mode === 'chukuang') {
-                            skinSwitch.chukuangWorkerApi.adjust(player, posData)
+                            skinSwitch.chukuangWorkerApi.adjust(player, posData, 'GongJi')
+                        } else if (mode === 'chuchang') {
+                            skinSwitch.chukuangWorkerApi.adjust(player, posData, 'chuchang')
+                        } else if (mode === 'teshu') {
+                            skinSwitch.chukuangWorkerApi.adjust(player, posData, 'TeShu')
                         }
                     },
                     getNodeInfo: function (player) {
@@ -4535,12 +5582,13 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             extraParams: extraParams,  // 表示需要更新出框的播放效果
                         })
                     },
-                    adjust: function (player, posData) {
+                    adjust: function (player, posData, action) {
                         skinSwitch.chukuangWorkerInit()
                         skinSwitch.chukuangWorker.postMessage({
                             message: "ADJUST",
                             id: player.dynamic.id,
                             skinId: player.dynamic.primary.id,
+                            action: action,  // 添加action参数
                             xyPos: posData.xyPos,
                             x: posData.x,
                             y: posData.y,
@@ -4564,6 +5612,21 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             message: "PLAY_EFFECT",
                             sprite,
                             position: position,
+                        })
+                    },
+                    // 清除特效
+                    clearEffect: function (sprite) {
+                        skinSwitch.chukuangWorkerInit()
+                        skinSwitch.chukuangWorker.postMessage({
+                            message: "CLEAR_EFFECT",
+                            sprite: sprite,
+                        })
+                    },
+                    // 清除所有特效
+                    clearAllEffects: function () {
+                        skinSwitch.chukuangWorkerInit()
+                        skinSwitch.chukuangWorker.postMessage({
+                            message: "CLEAR_ALL_EFFECTS"
                         })
                     },
                     // 提前加载资源, 防止突然换肤卡顿
@@ -4593,7 +5656,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             }
                         }
                     },
-                    getPlayerById: function(id, isQhlx) {
+                    getPlayerById: function (id, isQhlx) {
                         for (let p of game.players) {
                             if (p.dynamic && p.dynamic.id === id) {
                                 return p
@@ -4631,7 +5694,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             isPrimary: data.isPrimary,
                             skinId: data.skinId
                         })
-                        skinSwitch.rendererOnMessage.addListener(player, 'hideAllNodeEnd', function (){
+                        skinSwitch.rendererOnMessage.addListener(player, 'hideAllNodeEnd', function () {
                             let pp = skinSwitch.getCoordinate(player, true)
                             let me = player === game.me
                             skinSwitch.chukuangWorker.postMessage({
@@ -4669,6 +5732,36 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                     }
                                 })
                             }
+                            if (data.action === 'GongJi') {
+                            // 音效默认寻找与待机动作同名的音效
+                            let playName = avatar.player.name
+                            // 暂时不区分不同出框攻击的音效.
+                            // 开始播放音效, 音效名等同
+                            // 优先播放十周年同名文件夹下同名的音效文件
+                            let path = 'extension/十周年UI/assets/dynamic/' + playName + '_1.mp3'
+                            skinSwitch.qhly_checkFileExist(path, exists => {
+                                if (exists) {
+                                    game.playAudio("..", path)
+                                } else {
+                                    game.playAudio("..", "extension", "皮肤切换/audio/effect", playName + "_1.mp3")
+                                }
+                            })
+                        }
+                        if (data.action === 'TeShu') {
+                            // 音效默认寻找与待机动作同名的音效
+                            let playName = avatar.player.name
+                            // 暂时不区分不同出框攻击的音效.
+                            // 开始播放音效, 音效名等同
+                            // 优先播放十周年同名文件夹下同名的音效文件
+                            let path = 'extension/十周年UI/assets/dynamic/' + playName + '_2.mp3'
+                            skinSwitch.qhly_checkFileExist(path, exists => {
+                                if (exists) {
+                                    game.playAudio("..", path)
+                                } else {
+                                    game.playAudio("..", "extension", "皮肤切换/audio/effect", playName + "_2.mp3")
+                                }
+                            })
+                        }
 
                         })
 
@@ -4731,20 +5824,20 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             id: dynamic.id,
                         })
                         // 将原来的置空
-                        skinSwitch.rendererOnMessage.addListener(player, 'hideAllNodeEnd', function (){})
+                        skinSwitch.rendererOnMessage.addListener(player, 'hideAllNodeEnd', function () { })
                     }
 
                 },
                 chukuangWorker: null,  // 管理出框的worker
                 chukuangWorkerInit: function () {
                     if (!skinSwitch.chukuangWorker) {
-                        skinSwitch.chukuangWorker = new Worker(skinSwitch.url +'chukuangWorker.js')
+                        skinSwitch.chukuangWorker = new Worker(skinSwitch.url + 'chukuangWorker.js')
                         skinSwitch.chukuangWorkerApi.create()
                         skinSwitch.chukuangWorkerOnMessage.init()
                     }
                 },
                 // 停止动皮后的一些收尾操作
-                cleanupAfterStopDynamic: function(player, primary, deputy) {
+                cleanupAfterStopDynamic: function (player, primary, deputy) {
                     // 清除某个角色的语音映射
                     let clearAudioMap = (name) => {
                         if (skinSwitch.avatarAudioSkinMap) {
@@ -4765,7 +5858,404 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         clearAudioMap(player.name2)
                     }
                 },
-                chukuangPlayerInit: function(player, isPrimary, playParams) {
+
+                // 强制重新加载角色皮肤的语音 - 用于解决觉醒掉血技能切换皮肤后语音不更新的问题
+                reloadAudioForSkin: function (player, isPrimary, audioConfig) {
+                    // 确保player和dynamic还存在
+                    if (!player || !player.isAlive() || !player.dynamic) {
+                        return;
+                    }
+
+                    // 获取当前角色名称和ID
+                    let name = isPrimary ? player.name1 : player.name2;
+                    if (!name) return;
+
+                    let id = player.dynamic.id;
+                    let skinId = isPrimary ?
+                        (player.dynamic.primary ? player.dynamic.primary.id : null) :
+                        (player.dynamic.deputy ? player.dynamic.deputy.id : null);
+
+                    if (!skinId) return;
+
+                    console.log('开始重新加载语音:', name, id, skinId, '当前位置:', isPrimary ? '主将' : '副将');
+
+                    // 更彻底地清除语音映射 - 清除所有相关的key
+                    this.clearAllAudioMappings(name, id, skinId);
+
+                    // 如果没有提供audioConfig，尝试从千幻聆音获取
+                    if (!audioConfig) {
+                        // 尝试从当前动皮获取角色名和皮肤名
+                        let currentSkin = isPrimary ? player.dynamic.primary : player.dynamic.deputy;
+                        if (currentSkin && currentSkin.name) {
+                            let [characterName, skinName] = currentSkin.name.split('/');
+                            if (characterName && skinName) {
+                                audioConfig = skinSwitch.getQianhuanAudioConfig(characterName, skinName);
+                                if (audioConfig) {
+                                    console.log('觉醒切换皮肤 - 从千幻聆音获取语音配置:', characterName, skinName, audioConfig);
+                                }
+                            }
+                        }
+                    }
+
+                    // 重新初始化语音系统
+                    if (!audioConfig) {
+                        console.warn('觉醒切换皮肤 - 无法获取音频配置，跳过语音重新加载');
+                        return;
+                    }
+
+                    let skillPath = audioConfig.skill;
+                    let cardPath = audioConfig.card;
+                    if (!skillPath && !cardPath) return;
+
+                    let rootPath = skinSwitch.dcdPath + '/assets/dynamic/';
+
+                    // 如果是千幻语音路径，则使用千幻的根路径
+                    if (skillPath && skillPath.includes('sanguoaudio/')) {
+                        rootPath = lib.assetURL + 'extension/千幻聆音/';
+                    }
+
+                    // 重新创建语音映射
+                    if (!skinSwitch.audioMap) {
+                        skinSwitch.audioMap = {};
+                    }
+                    if (!skinSwitch.avatarAudioSkinMap) {
+                        skinSwitch.avatarAudioSkinMap = {};
+                    }
+                    skinSwitch.avatarAudioSkinMap[name] = {};
+
+                    // 处理文件扩展名的辅助函数
+                    let qhly_earse_ext = function (path) {
+                        let foundDot = path.lastIndexOf('.');
+                        if (foundDot < 0) return path;
+                        return path.slice(0, foundDot);
+                    };
+
+                    // 强制重建语音映射
+                    console.log('开始重建语音映射...');
+                    this.rebuildAudioMappings(name, id, skinId, skillPath, cardPath, rootPath, qhly_earse_ext);
+
+                    // 确保音频系统初始化
+                    this.ensureAudioSystemInitialized(id, skinId);
+
+                    console.log('已重新初始化语音系统', name, id, skinId);
+                },
+
+                // 新增：更彻底地清除所有相关的语音映射
+                clearAllAudioMappings: function (name, id, skinId) {
+                    console.log('清除所有语音映射:', name, id, skinId);
+
+                    // 清除avatarAudioSkinMap中的映射
+                    if (skinSwitch.avatarAudioSkinMap && skinSwitch.avatarAudioSkinMap[name]) {
+                        for (let key in skinSwitch.avatarAudioSkinMap[name]) {
+                            delete skinSwitch.audioMap[key];
+                        }
+                        delete skinSwitch.avatarAudioSkinMap[name];
+                    }
+
+                    // 清除所有可能的语音key模式
+                    const keysToRemove = [];
+                    for (let key in skinSwitch.audioMap) {
+                        // 清除以下模式的key:
+                        // - skill/技能名
+                        // - die/角色名 
+                        // - card/id/skinId/卡牌名
+                        // - effect/id/skinId/victory
+                        if (key.startsWith('skill/') ||
+                            key.startsWith('die/' + name) ||
+                            key.includes('/' + id + '/' + skinId + '/') ||
+                            key.includes('/effect/' + id + '/' + skinId)) {
+                            keysToRemove.push(key);
+                        }
+                    }
+
+                    // 删除找到的所有相关key
+                    keysToRemove.forEach(key => {
+                        console.log('删除旧语音映射:', key);
+                        delete skinSwitch.audioMap[key];
+                    });
+
+                    console.log('清除了', keysToRemove.length, '个旧的语音映射');
+                },
+
+                // 新增：强制重建语音映射
+                rebuildAudioMappings: function (name, id, skinId, skillPath, cardPath, rootPath, qhly_earse_ext) {
+                    console.log('重建语音映射:', { name, id, skinId, skillPath, cardPath, rootPath });
+
+                    // 确保映射表存在
+                    if (!skinSwitch.audioMap) {
+                        skinSwitch.audioMap = {};
+                    }
+                    if (!skinSwitch.avatarAudioSkinMap) {
+                        skinSwitch.avatarAudioSkinMap = {};
+                    }
+                    if (!skinSwitch.avatarAudioSkinMap[name]) {
+                        skinSwitch.avatarAudioSkinMap[name] = {};
+                    }
+
+                    // 立即添加标记，表示这个角色正在使用新的语音映射
+                    skinSwitch.avatarAudioSkinMap[name]['_rebuilding'] = true;
+
+                    // 重建技能语音映射
+                    if (skillPath) {
+                        this.buildSkillAudioMapping(name, id, skinId, skillPath, rootPath, qhly_earse_ext);
+                    }
+
+                    // 重建卡牌语音映射
+                    if (cardPath) {
+                        this.buildCardAudioMapping(name, id, skinId, cardPath, rootPath, qhly_earse_ext);
+                    }
+
+                    // 强制刷新语音系统缓存
+                    setTimeout(() => {
+                        this.refreshAudioSystemCache(name, id, skinId);
+                    }, 100);
+                },
+
+                // 新增：构建技能语音映射
+                buildSkillAudioMapping: function (name, id, skinId, skillPath, rootPath, qhly_earse_ext) {
+                    // 如果是千幻语音路径，需要特殊处理根路径
+                    let skillRootPath = rootPath;
+                    if (skillPath.includes('sanguoaudio/')) {
+                        skillRootPath = lib.assetURL + 'extension/千幻聆音/';
+                    }
+
+                    let path = skillRootPath + skillPath;
+                    console.log('构建技能语音映射:', path);
+
+                    // 使用安全的文件列表获取
+                    this.safeGetFileList(path, (folds, files) => {
+                        let mappingCount = 0;
+                        for (let file of files) {
+                            file = qhly_earse_ext(file);
+                            let key;
+                            let audioPath = '../' + path + '/' + file;
+
+                            if (file === name) {
+                                key = 'die/' + file;
+                            } else if (file === 'victory' || file === 'win') {
+                                key = 'effect/' + id + '/' + skinId + '/' + 'victory';
+                            } else {
+                                key = 'skill/' + file;
+                            }
+
+                            // 强制覆盖旧的映射
+                            skinSwitch.audioMap[key] = audioPath;
+                            skinSwitch.avatarAudioSkinMap[name][key] = audioPath;
+                            mappingCount++;
+
+                            console.log('添加技能语音映射:', key, '->', audioPath);
+                        }
+                        console.log('技能语音映射构建完成，共', mappingCount, '个文件');
+                    }, (error) => {
+                        console.warn('技能语音目录访问失败:', skillPath, error);
+                    });
+                },
+
+                // 新增：构建卡牌语音映射
+                buildCardAudioMapping: function (name, id, skinId, cardPath, rootPath, qhly_earse_ext) {
+                    // 如果是千幻卡牌语音路径，也使用千幻的根路径
+                    let cardRootPath = rootPath;
+                    if (cardPath.includes('sanguoaudio/')) {
+                        cardRootPath = lib.assetURL + 'extension/千幻聆音/';
+                    }
+
+                    let path = cardRootPath + cardPath;
+                    console.log('构建卡牌语音映射:', path);
+
+                    // 使用安全的文件列表获取
+                    this.safeGetFileList(path, (folds, files) => {
+                        let mappingCount = 0;
+                        for (let file of files) {
+                            file = qhly_earse_ext(file);
+                            let key = 'card/' + id + '/' + skinId + '/' + file;
+                            let audioPath = '../' + path + '/' + file;
+
+                            // 强制覆盖旧的映射
+                            skinSwitch.audioMap[key] = audioPath;
+                            skinSwitch.avatarAudioSkinMap[name][key] = audioPath;
+                            mappingCount++;
+
+                            console.log('添加卡牌语音映射:', key, '->', audioPath);
+                        }
+                        console.log('卡牌语音映射构建完成，共', mappingCount, '个文件');
+                    }, (error) => {
+                        console.warn('卡牌语音目录访问失败:', cardPath, error);
+                    });
+                },
+
+                // 新增：刷新语音系统缓存
+                refreshAudioSystemCache: function (name, id, skinId) {
+                    console.log('刷新语音系统缓存:', name, id, skinId);
+
+                    // 标记重建完成
+                    if (skinSwitch.avatarAudioSkinMap && skinSwitch.avatarAudioSkinMap[name]) {
+                        delete skinSwitch.avatarAudioSkinMap[name]['_rebuilding'];
+                        skinSwitch.avatarAudioSkinMap[name]['_lastRefresh'] = Date.now();
+                    }
+
+                    // 输出当前的语音映射状态
+                    console.log('当前语音映射状态:', {
+                        audioMapSize: Object.keys(skinSwitch.audioMap).length,
+                        characterMappings: skinSwitch.avatarAudioSkinMap[name] ? Object.keys(skinSwitch.avatarAudioSkinMap[name]).length : 0
+                    });
+
+                    // 强制触发一次音频系统重新初始化
+                    if (skinSwitch.pfqh_originPlayAudio && skinSwitch.qfqh_originPlaySkillAudio) {
+                        console.log('语音系统已重新初始化，新的语音映射生效');
+                    }
+                },
+
+                // 安全的getFileList函数，在目录不存在时不会抛出错误
+                safeGetFileList: function (path, callback, errorCallback) {
+                    // 检查路径是否包含千幻语音，如果不存在则不尝试访问
+                    if (path.includes('千幻聆音/sanguoaudio/')) {
+                        // 对于千幻语音路径，我们需要更谨慎地处理
+                        let testPath = path.replace('../', '');
+                        console.log('尝试访问千幻语音目录:', testPath);
+                    }
+
+                    try {
+                        game.getFileList(path, function (folds, files) {
+                            if (files && files.length > 0) {
+                                console.log('成功读取语音目录:', path, files.length + '个文件');
+                                if (callback) callback(folds, files);
+                            } else {
+                                console.warn('语音目录为空:', path);
+                                if (errorCallback) errorCallback('目录为空');
+                            }
+                        });
+                    } catch (e) {
+                        // 如果是千幻语音目录访问失败，给出更友好的提示
+                        if (path.includes('千幻聆音/sanguoaudio/')) {
+                            console.warn('千幻语音目录不存在或无法访问:', path);
+                            console.warn('请检查千幻聆音扩展是否正确安装，以及是否存在对应的语音文件');
+                        } else {
+                            console.warn('语音目录访问失败:', path, e.message);
+                        }
+                        if (errorCallback) errorCallback(e);
+                    }
+                },
+
+                // 加载语音文件
+                loadAudioFiles: function (name, id, skinId, skillPath, cardPath, rootPath, qhly_earse_ext) {
+
+                    // 更新技能语音
+                    if (skillPath) {
+                        // 如果是千幻语音路径，需要特殊处理根路径
+                        let skillRootPath = rootPath;
+                        if (skillPath.includes('sanguoaudio/')) {
+                            skillRootPath = lib.assetURL + 'extension/千幻聆音/';
+                        }
+
+                        let path = skillRootPath + skillPath;
+                        this.safeGetFileList(path, function (folds, files) {
+                            for (let file of files) {
+                                file = qhly_earse_ext(file);
+                                let key;
+                                if (file === name) {
+                                    key = 'die/' + file;
+                                    skinSwitch.audioMap[key] = '../' + path + '/' + file;
+                                } else if (file === 'victory' || file === 'win') {
+                                    key = 'effect/' + id + '/' + skinId + '/' + 'victory';
+                                    skinSwitch.audioMap[key] = '../' + path + '/' + file;
+                                } else {
+                                    key = 'skill/' + file;
+                                    skinSwitch.audioMap[key] = '../' + path + '/' + file;
+                                }
+                                if (skinSwitch.avatarAudioSkinMap[name]) {
+                                    skinSwitch.avatarAudioSkinMap[name][key] = null;
+                                }
+                            }
+                            console.log('重新加载语音完成 - 技能语音', name, id, skinId, skillPath);
+                        }, function (error) {
+                            console.warn('技能语音目录访问失败:', skillPath, error);
+                        });
+                    }
+
+                    // 更新卡牌语音
+                    if (cardPath) {
+                        // 如果是千幻卡牌语音路径，也使用千幻的根路径
+                        let cardRootPath = rootPath;
+                        if (cardPath.includes('sanguoaudio/')) {
+                            cardRootPath = lib.assetURL + 'extension/千幻聆音/';
+                        }
+
+                        let path = cardRootPath + cardPath;
+                        this.safeGetFileList(path, function (folds, files) {
+                            for (let file of files) {
+                                // 储存技能映射, 规则与模仿千幻, 与千幻一致
+                                file = qhly_earse_ext(file);
+                                // 储存动皮相关的id和角色名字
+                                let id = player.dynamic.id
+                                let skinId = isPrimary ? player.dynamic.primary.id : player.dynamic.deputy.id
+                                let key = 'card/' + id + '/' + skinId + '/' + file
+                                skinSwitch.audioMap[key] = '../' + path + '/' + file
+                                skinSwitch.avatarAudioSkinMap[name][key] = null
+                            }
+                            console.log('重新加载语音完成 - 卡牌语音', name, id, skinId, cardPath);
+                        }, function (error) {
+                            console.warn('卡牌语音目录访问失败:', cardPath, error);
+                        });
+                    }
+                },
+
+                // 确保音频系统已初始化
+                ensureAudioSystemInitialized: function (id, skinId) {
+                    // 确保音频系统已经被初始化
+                    if (!skinSwitch.pfqh_originPlayAudio) {
+                        skinSwitch.pfqh_originPlayAudio = game.playAudio;
+                        game.playAudio = function () {
+                            let string = '';
+                            let others = [];
+                            for (let arg of arguments) {  //将参数拼接成一个字符串，方便查找映射
+                                if (typeof arg == 'string' || typeof arg == 'number') {
+                                    string = string + "/" + arg;
+                                } else {
+                                    others.push(arg);
+                                }
+                            }
+
+                            let replaces = string.split('/');
+                            let replace = '';
+
+                            if (string.startsWith('/skill') && replaces.length === 3) {
+                                replace = string.slice(1);
+                            } else if (string.startsWith('/die') && replaces.length === 3) {
+                                replace = string.slice(1);
+                            } else if (string.startsWith('/effect/win')) {
+                                replace = 'effect/' + id + '/' + skinId + '/' + 'victory';
+                            }
+
+                            if (replace.length) {
+                                let rp = skinSwitch.audioMap[replace];
+                                if (rp) {
+                                    let args = rp.split("/");
+                                    args.addArray(others);
+                                    return skinSwitch.pfqh_originPlayAudio.apply(this, args);
+                                }
+                            }
+                            return skinSwitch.pfqh_originPlayAudio.apply(this, arguments);
+                        };
+                    }
+
+                    if (!skinSwitch.qfqh_originPlaySkillAudio) {
+                        skinSwitch.qfqh_originPlaySkillAudio = game.playSkillAudio;
+                        game.playSkillAudio = function (name, index) {
+                            let replaceKey = "skill/" + name;
+                            if (!index) {
+                                index = Math.ceil(Math.random() * 2);
+                            }
+                            replaceKey = replaceKey + index;
+                            let rp = skinSwitch.audioMap[replaceKey];
+                            if (rp) {
+                                let args = rp.split("/");
+                                return skinSwitch.pfqh_originPlayAudio.apply(this, args);
+                            }
+                            return skinSwitch.qfqh_originPlaySkillAudio.apply(this, arguments);
+                        };
+                    }
+                },
+                chukuangPlayerInit: function (player, isPrimary, playParams) {
                     if (!player.dynamic) return
 
                     // 动皮播放开始播放骨骼.  虽然放在这里不是很合适. 为了减少其他扩展添加的扩展. todo, 后面更换
@@ -4777,7 +6267,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     let isPlayer = get.itemtype(player) === 'player'
 
                     // 检查只有当前是player或者是千幻大屏预览才会进行初始化
-                    if (!(isPlayer || player.classList.contains('qh-shousha-big-avatar') || player.getElementsByClassName('qhdynamic-decade-big-wrap').length || player.getElementsByClassName('qhdynamic-big-wrap').length)) {
+                    if (!(isPlayer || [...player.classList].includes('qh-shousha-big-avatar') || player.getElementsByClassName('qhdynamic-decade-big-wrap').length || player.getElementsByClassName('qhdynamic-big-wrap').length)) {
                         return
                     }
                     if (!isPlayer) {
@@ -4800,12 +6290,29 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         let name = isPrimary ? player.name1 : player.name2
                         let id = player.dynamic.id
                         let skinId = isPrimary ? player.dynamic.primary.id : player.dynamic.deputy.id
+
+                        // 检查是否需要强制更新音频
+                        let forceUpdate = playParams._needUpdateAudio === true
+
+                        // 如果强制更新，先清除现有映射
+                        if (forceUpdate && skinSwitch.avatarAudioSkinMap && skinSwitch.avatarAudioSkinMap[name]) {
+                            for (let key in skinSwitch.avatarAudioSkinMap[name]) {
+                                delete skinSwitch.audioMap[key]
+                                delete skinSwitch.avatarAudioSkinMap[name][key]
+                            }
+                        }
+
                         // 检查是否有配置动皮的专属语音, 懒加载替换playAudio语音, 如果有需要专门配置的语音, 那么进行替换, 替换语音的代码参考自千幻聆音1.5 精简版本, 感谢这些无名杀开源扩展作者们的先驱贡献
-                        if (playParams.audio &&  isPlayer){
+                        if (playParams.audio && isPlayer) {
 
                             let skillPath = playParams.audio.skill
                             let cardPath = playParams.audio.card
                             let rootPath = skinSwitch.dcdPath + '/assets/dynamic/'
+
+                            // 如果是千幻语音路径，则使用千幻的根路径
+                            if (skillPath && skillPath.includes('sanguoaudio/')) {
+                                rootPath = lib.assetURL + 'extension/千幻聆音/'
+                            }
                             if (!skinSwitch.audioMap) {
                                 skinSwitch.audioMap = {}
                             }
@@ -4815,163 +6322,54 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             skinSwitch.avatarAudioSkinMap[name] = {}
                             // 切换皮肤后需要删除原来的语音映射
                             //将某个文件路径抹除扩展名。如file.txt -> file
-                            let qhly_earse_ext = function(path){
+                            let qhly_earse_ext = function (path) {
                                 let foundDot = path.lastIndexOf('.');
-                                if(foundDot < 0) return path;
-                                return path.slice(0,foundDot);
+                                if (foundDot < 0) return path;
+                                return path.slice(0, foundDot);
                             }
                             // 获取该文件夹下的所有技能和卡牌语音
                             if (skillPath) {
-                                let path = rootPath  + skillPath
-                                /* taffy分界线 */
-                                // taffy: 注释皮肤切换原版代码喵
-                                // game.getFileList(path, function (folds, files) {
-                                //     let name = isPrimary ? player.name1 : player.name2
-                                //     for (let file of files) {
-                                //         // 储存技能映射, 规则与模仿千幻, 与千幻一致
-                                //         file = qhly_earse_ext(file);
-                                //         let key
-                                //         if (file === name) {
-                                //             key = 'die/' + file
-                                //             skinSwitch.audioMap[key] = '../' + path + '/' + file;
-                                //         } else if (file === 'victory' || file === 'win') {
-                                //             key = 'effect/' + id + '/' + skinId + '/' + 'victory'
-                                //             skinSwitch.audioMap[key] = '../' + path + '/' + file;
-                                //         } else {
-                                //             key = 'skill/' + file
-                                //             skinSwitch.audioMap[key] = '../' + path + '/' + file;
-                                //         }
-                                //         skinSwitch.avatarAudioSkinMap[name][key] = null
-                                //     }
-                                // })
-                                /* taffy分界线 */
-                                // taffy: web端读取文件路径喵
-                                try {
-                                  game.getFileList(path, function (folds, files) {
-                                      let name = isPrimary ? player.name1 : player.name2
-                                      for (let file of files) {
-                                          // 储存技能映射, 规则与模仿千幻, 与千幻一致
-                                          file = qhly_earse_ext(file);
-                                          let key
-                                          if (file === name) {
-                                              key = 'die/' + file
-                                              skinSwitch.audioMap[key] = '../' + path + '/' + file;
-                                          } else if (file === 'victory' || file === 'win') {
-                                              key = 'effect/' + id + '/' + skinId + '/' + 'victory'
-                                              skinSwitch.audioMap[key] = '../' + path + '/' + file;
-                                          } else {
-                                              key = 'skill/' + file
-                                              skinSwitch.audioMap[key] = '../' + path + '/' + file;
-                                          }
-                                          skinSwitch.avatarAudioSkinMap[name][key] = null
-                                      }
-                                  })
-                                } catch (error) {
-                                  let folds = [];
-                                  let files = [];
-                                  if (path === 'extension/十周年UI/assets/dynamic/神郭嘉/倚星折月/audio') {
-                                    folds = [];
-                                    files = ['bingliang.mp3','diaohulishan.mp3','guohe.mp3','huogong.mp3','jiedao.mp3','jiu.mp3','juedou.mp3','lebu.mp3','lianjunshengyan.mp3','lulitongxin.mp3','nanman.mp3','sghuishi1.mp3','sghuishi2.mp3','sha.mp3','sha_fire.mp3','sha_thunder.mp3','shan.mp3','shandian.mp3','shen_guojia.mp3','shuishi1.mp3','shuishi2.mp3','shuiyanqijun.mp3','shunshou.mp3','stianyi1.mp3','stianyi2.mp3','tao.mp3','taoyuan.mp3','tiesuo.mp3','victory.mp3','wanjian.mp3','wugu.mp3','wuxie.mp3','wuzhong.mp3','yuanjiao.mp3','zhibi.mp3','zuoxing1.mp3','zuoxing2.mp3'];
-                                  } else if (path === 'extension/十周年UI/assets/dynamic/神郭嘉/倚星折月2/audio') {
-                                    folds = [];
-                                    files = ['bingliang.mp3','diaohulishan.mp3','die.mp3','guohe.mp3','huogong.mp3','jiedao.mp3','jiu.mp3','juedou.mp3','lebu.mp3','lianjunshengyan.mp3','lulitongxin.mp3','nanman.mp3','resghuishi1.mp3','resghuishi2.mp3','sghuishi1.mp3','sghuishi2.mp3','sha.mp3','sha_fire.mp3','sha_thunder.mp3','shan.mp3','shandian.mp3','shen_guojia.mp3','shuishi1.mp3','shuishi2.mp3','shuiyanqijun.mp3','shunshou.mp3','stianyi1.mp3','stianyi2.mp3','tao.mp3','taoyuan.mp3','tiesuo.mp3','vector.mp3','victory.mp3','wanjian.mp3','wugu.mp3','wuxie.mp3','wuzhong.mp3','yuanjiao.mp3','zhibi.mp3','zuoxing1.mp3','zuoxing2.mp3'];
-                                  } else if (path === 'extension/十周年UI/assets/dynamic/钟会/潜蛟觊天/audio') {
-                                    folds = [];
-                                    files = ['bingliang.mp3','chiling.mp3','diaohulishan.mp3','guohe.mp3','gz_guguoanbang.mp3','gz_haolingtianxia','gz_kefuzhongyuan','huogong.mp3','huoshaolianying','jiedao.mp3','jiu.mp3','juedou.mp3','lebu.mp3','lianjunshengyan.mp3','lulitongxin.mp3','nanman.mp3','paiyi_re_zhonghui1.mp3','paiyi_re_zhonghui2.mp3','re_zhonghui.mp3','requanji1.mp3','requanji2.mp3','sha.mp3','sha_fire.mp3','sha_thunder.mp3','shan.mp3','shandian.mp3','shuiyanqijun.mp3','shunshou.mp3','tao.mp3','taoyuan.mp3','tiesuo.mp3','wanjian.mp3','wenhe.mp3','wugu.mp3','wuxie.mp3','wuzhong.mp3','yiyi.mp3','yuanjiao.mp3','zhibi.mp3','zili_re_zhonghui1.mp3','zili_re_zhonghui2.mp3'];
-                                  } else if (path === 'extension/十周年UI/assets/dynamic/钟会/潜蛟觊天2/audio') {
-                                    folds = [];
-                                    files = ['bingliang.mp3','chiling.mp3','diaohulishan.mp3','guohe.mp3','gz_guguoanbang.mp3','gz_haolingtianxia','gz_kefuzhongyuan','huogong.mp3','huoshaolianying','jiedao.mp3','jiu.mp3','juedou.mp3','lebu.mp3','lianjunshengyan.mp3','lulitongxin.mp3','nanman.mp3','paiyi_re_zhonghui1.mp3','paiyi_re_zhonghui2.mp3','re_zhonghui.mp3','requanji1.mp3','requanji2.mp3','sha.mp3','sha_fire.mp3','sha_thunder.mp3','shan.mp3','shandian.mp3','shuiyanqijun.mp3','shunshou.mp3','tao.mp3','taoyuan.mp3','tiesuo.mp3','wanjian.mp3','wenhe.mp3','wugu.mp3','wuxie.mp3','wuzhong.mp3','yiyi.mp3','yuanjiao.mp3','zhibi.mp3','zili_re_zhonghui1.mp3','zili_re_zhonghui2.mp3'];
-                                  } else if (path === 'extension/十周年UI/assets/dynamic/赵襄/月痕芳影/audio') {
-                                    folds = [];
-                                    files = ['fanghun1.mp3', 'fanghun2.mp3', 'fuhan1.mp3', 'fuhan2.mp3', 'dc_zhaoxiang.mp3'];
-                                  } else if (path === 'extension/十周年UI/assets/dynamic/赵襄/月痕芳影2/audio') {
-                                    folds = [];
-                                    files = ['fanghun1.mp3', 'fanghun2.mp3', 'fuhan1.mp3', 'fuhan2.mp3', 'dc_zhaoxiang.mp3'];
-                                  }
-                                  let name = isPrimary ? player.name1 : player.name2
-                                  for (let file of files) {
-                                      // 储存技能映射, 规则与模仿千幻, 与千幻一致
-                                      file = qhly_earse_ext(file);
-                                      let key
-                                      if (file === name) {
-                                          key = 'die/' + file
-                                          skinSwitch.audioMap[key] = '../' + path + '/' + file;
-                                      } else if (file === 'victory' || file === 'win') {
-                                          key = 'effect/' + id + '/' + skinId + '/' + 'victory'
-                                          skinSwitch.audioMap[key] = '../' + path + '/' + file;
-                                      } else {
-                                          key = 'skill/' + file
-                                          skinSwitch.audioMap[key] = '../' + path + '/' + file;
-                                      }
-                                      skinSwitch.avatarAudioSkinMap[name][key] = null
-                                  }
-                                }
+                                let path = rootPath + skillPath
+                                game.getFileList(path, function (folds, files) {
+                                    let name = isPrimary ? player.name1 : player.name2
+                                    for (let file of files) {
+                                        // 储存技能映射, 规则与模仿千幻, 与千幻一致
+                                        file = qhly_earse_ext(file);
+                                        let key
+                                        if (file === name) {
+                                            key = 'die/' + file
+                                            skinSwitch.audioMap[key] = '../' + path + '/' + file;
+                                        } else if (file === 'victory' || file === 'win') {
+                                            key = 'effect/' + id + '/' + skinId + '/' + 'victory'
+                                            skinSwitch.audioMap[key] = '../' + path + '/' + file;
+                                        } else {
+                                            key = 'skill/' + file
+                                            skinSwitch.audioMap[key] = '../' + path + '/' + file;
+                                        }
+                                        skinSwitch.avatarAudioSkinMap[name][key] = null
+                                    }
+                                })
                             }
 
                             if (cardPath) {
-                                let path = rootPath + cardPath
-                                // taffy: 注释皮肤切换原版代码喵
-                                // game.getFileList(path, function (folds, files) {
-                                //     for (let file of files) {
-                                //         // 储存技能映射, 规则与模仿千幻, 与千幻一致
-                                //         file = qhly_earse_ext(file);
-                                //         // 储存动皮相关的id和角色名字
-                                //         let id = player.dynamic.id
-                                //         let skinId = isPrimary ? player.dynamic.primary.id : player.dynamic.deputy.id
-                                //         let key = 'card/' + id + '/' + skinId + '/' + file
-                                //         skinSwitch.audioMap[key] = '../' + path + '/' + file
-                                //         skinSwitch.avatarAudioSkinMap[name][key] = null
-                                //     }
-                                // })
-                                /* taffy分界线 */
-                                // taffy: web端读取文件路径喵
-                                try {
-                                  game.getFileList(path, function (folds, files) {
-                                      for (let file of files) {
-                                          // 储存技能映射, 规则与模仿千幻, 与千幻一致
-                                          file = qhly_earse_ext(file);
-                                          // 储存动皮相关的id和角色名字
-                                          let id = player.dynamic.id
-                                          let skinId = isPrimary ? player.dynamic.primary.id : player.dynamic.deputy.id
-                                          let key = 'card/' + id + '/' + skinId + '/' + file
-                                          skinSwitch.audioMap[key] = '../' + path + '/' + file
-                                          skinSwitch.avatarAudioSkinMap[name][key] = null
-                                      }
-                                  })
-                                } catch (error) {
-                                  let folds = [];
-                                  let files = [];
-                                  if (path === 'extension/十周年UI/assets/dynamic/神郭嘉/倚星折月/audio') {
-                                    folds = [];
-                                    files = ['bingliang.mp3','diaohulishan.mp3','guohe.mp3','huogong.mp3','jiedao.mp3','jiu.mp3','juedou.mp3','lebu.mp3','lianjunshengyan.mp3','lulitongxin.mp3','nanman.mp3','sghuishi1.mp3','sghuishi2.mp3','sha.mp3','sha_fire.mp3','sha_thunder.mp3','shan.mp3','shandian.mp3','shen_guojia.mp3','shuishi1.mp3','shuishi2.mp3','shuiyanqijun.mp3','shunshou.mp3','stianyi1.mp3','stianyi2.mp3','tao.mp3','taoyuan.mp3','tiesuo.mp3','victory.mp3','wanjian.mp3','wugu.mp3','wuxie.mp3','wuzhong.mp3','yuanjiao.mp3','zhibi.mp3','zuoxing1.mp3','zuoxing2.mp3'];
-                                  } else if (path === 'extension/十周年UI/assets/dynamic/神郭嘉/倚星折月2/audio') {
-                                    folds = [];
-                                    files = ['bingliang.mp3','diaohulishan.mp3','die.mp3','guohe.mp3','huogong.mp3','jiedao.mp3','jiu.mp3','juedou.mp3','lebu.mp3','lianjunshengyan.mp3','lulitongxin.mp3','nanman.mp3','resghuishi1.mp3','resghuishi2.mp3','sghuishi1.mp3','sghuishi2.mp3','sha.mp3','sha_fire.mp3','sha_thunder.mp3','shan.mp3','shandian.mp3','shen_guojia.mp3','shuishi1.mp3','shuishi2.mp3','shuiyanqijun.mp3','shunshou.mp3','stianyi1.mp3','stianyi2.mp3','tao.mp3','taoyuan.mp3','tiesuo.mp3','vector.mp3','victory.mp3','wanjian.mp3','wugu.mp3','wuxie.mp3','wuzhong.mp3','yuanjiao.mp3','zhibi.mp3','zuoxing1.mp3','zuoxing2.mp3'];
-                                  } else if (path === 'extension/十周年UI/assets/dynamic/钟会/潜蛟觊天/audio') {
-                                    folds = [];
-                                    files = ['bingliang.mp3','chiling.mp3','diaohulishan.mp3','guohe.mp3','gz_guguoanbang.mp3','gz_haolingtianxia','gz_kefuzhongyuan','huogong.mp3','huoshaolianying','jiedao.mp3','jiu.mp3','juedou.mp3','lebu.mp3','lianjunshengyan.mp3','lulitongxin.mp3','nanman.mp3','paiyi_re_zhonghui1.mp3','paiyi_re_zhonghui2.mp3','re_zhonghui.mp3','requanji1.mp3','requanji2.mp3','sha.mp3','sha_fire.mp3','sha_thunder.mp3','shan.mp3','shandian.mp3','shuiyanqijun.mp3','shunshou.mp3','tao.mp3','taoyuan.mp3','tiesuo.mp3','wanjian.mp3','wenhe.mp3','wugu.mp3','wuxie.mp3','wuzhong.mp3','yiyi.mp3','yuanjiao.mp3','zhibi.mp3','zili_re_zhonghui1.mp3','zili_re_zhonghui2.mp3'];
-                                  } else if (path === 'extension/十周年UI/assets/dynamic/钟会/潜蛟觊天2/audio') {
-                                    folds = [];
-                                    files = ['bingliang.mp3','chiling.mp3','diaohulishan.mp3','guohe.mp3','gz_guguoanbang.mp3','gz_haolingtianxia','gz_kefuzhongyuan','huogong.mp3','huoshaolianying','jiedao.mp3','jiu.mp3','juedou.mp3','lebu.mp3','lianjunshengyan.mp3','lulitongxin.mp3','nanman.mp3','paiyi_re_zhonghui1.mp3','paiyi_re_zhonghui2.mp3','re_zhonghui.mp3','requanji1.mp3','requanji2.mp3','sha.mp3','sha_fire.mp3','sha_thunder.mp3','shan.mp3','shandian.mp3','shuiyanqijun.mp3','shunshou.mp3','tao.mp3','taoyuan.mp3','tiesuo.mp3','wanjian.mp3','wenhe.mp3','wugu.mp3','wuxie.mp3','wuzhong.mp3','yiyi.mp3','yuanjiao.mp3','zhibi.mp3','zili_re_zhonghui1.mp3','zili_re_zhonghui2.mp3'];
-                                  } else if (path === 'extension/十周年UI/assets/dynamic/赵襄/月痕芳影/audio') {
-                                    folds = [];
-                                    files = ['fanghun1.mp3', 'fanghun2.mp3', 'fuhan1.mp3', 'fuhan2.mp3', 'dc_zhaoxiang.mp3'];
-                                  } else if (path === 'extension/十周年UI/assets/dynamic/赵襄/月痕芳影2/audio') {
-                                    folds = [];
-                                    files = ['fanghun1.mp3', 'fanghun2.mp3', 'fuhan1.mp3', 'fuhan2.mp3', 'dc_zhaoxiang.mp3'];
-                                  }
-                                  for (let file of files) {
-                                    // 储存技能映射, 规则与模仿千幻, 与千幻一致
-                                    file = qhly_earse_ext(file);
-                                    // 储存动皮相关的id和角色名字
-                                    let id = player.dynamic.id
-                                    let skinId = isPrimary ? player.dynamic.primary.id : player.dynamic.deputy.id
-                                    let key = 'card/' + id + '/' + skinId + '/' + file
-                                    skinSwitch.audioMap[key] = '../' + path + '/' + file
-                                    skinSwitch.avatarAudioSkinMap[name][key] = null
-                                  }
+                                // 如果是千幻卡牌语音路径，也使用千幻的根路径
+                                let cardRootPath = rootPath;
+                                if (cardPath.includes('sanguoaudio/')) {
+                                    cardRootPath = lib.assetURL + 'extension/千幻聆音/';
                                 }
-                                /* taffy分界线 */
+                                let path = cardRootPath + cardPath
+                                game.getFileList(path, function (folds, files) {
+                                    for (let file of files) {
+                                        // 储存技能映射, 规则与模仿千幻, 与千幻一致
+                                        file = qhly_earse_ext(file);
+                                        // 储存动皮相关的id和角色名字
+                                        let id = player.dynamic.id
+                                        let skinId = isPrimary ? player.dynamic.primary.id : player.dynamic.deputy.id
+                                        let key = 'card/' + id + '/' + skinId + '/' + file
+                                        skinSwitch.audioMap[key] = '../' + path + '/' + file
+                                        skinSwitch.avatarAudioSkinMap[name][key] = null
+                                    }
+                                })
                             }
 
                             // 添加取消替换语音映射的回调函数.
@@ -4979,17 +6377,17 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             if (!this._initAudio) {
                                 // if (false) {
                                 skinSwitch.pfqh_originPlayAudio = game.playAudio;
-                                game.playAudio = function(){
+                                game.playAudio = function () {
                                     let string = '';
                                     let others = [];
-                                    for(let arg of arguments){  //将参数拼接成一个字符串，方便查找映射
-                                        if(typeof arg == 'string' || typeof arg == 'number'){
-                                            string = string+"/"+arg;
+                                    for (let arg of arguments) {  //将参数拼接成一个字符串，方便查找映射
+                                        if (typeof arg == 'string' || typeof arg == 'number') {
+                                            string = string + "/" + arg;
                                         // taffy: 修复皮肤语音失效的问题喵
                                         } else if (get.objtype(arg) === "object") {
                                             string = string + "/" + arg.path;
                                         // taffy分界线
-                                        }else{
+                                        } else {
                                             others.push(arg);
                                         }
                                     }
@@ -5074,14 +6472,14 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                         replace = 'effect/' + id + '/' + skinId + '/' + 'victory'
                                     }
                                     console.log('string...', string)
-                                    if(replace.length){
+                                    if (replace.length) {
                                         // taffy: 修复皮肤语音失效的问题喵
                                         if (replace.split('.').length > 1) {
                                           replace = replace.substring(0, replace.lastIndexOf("."))  //截取文件名
                                         }
                                         // taffy分界线
                                         let rp = skinSwitch.audioMap[replace];
-                                        if(rp){
+                                        if (rp) {
                                             //如果存在映射，用映射的路径替换原有的路径，并调用原来的音频播放函数，以达到替换配音的效果。
                                             let args = rp.split("/");
                                             args.addArray(others);
@@ -5092,18 +6490,18 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 };
 
                                 skinSwitch.qfqh_originPlaySkillAudio = game.playSkillAudio
-                                game.playSkillAudio=function(name,index){
-                                    let replaceKey = "skill/"+name;
-                                    if(!index){
-                                        index = Math.ceil(Math.random()*2);
+                                game.playSkillAudio = function (name, index) {
+                                    let replaceKey = "skill/" + name;
+                                    if (!index) {
+                                        index = Math.ceil(Math.random() * 2);
                                     }
-                                    replaceKey = replaceKey+index;
+                                    replaceKey = replaceKey + index;
                                     let rp = skinSwitch.audioMap[replaceKey]
-                                    if(rp){
+                                    if (rp) {
                                         let args = rp.split("/");
-                                        return skinSwitch.pfqh_originPlayAudio.apply(this,args);
+                                        return skinSwitch.pfqh_originPlayAudio.apply(this, args);
                                     }
-                                    return skinSwitch.qfqh_originPlaySkillAudio.apply(this,arguments);
+                                    return skinSwitch.qfqh_originPlaySkillAudio.apply(this, arguments);
                                 };
 
                                 this._initAudio = true
@@ -5139,7 +6537,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                                 if (huanfuEffect in changeEffects) {
                                                     huanfuEffect = changeEffects[huanfuEffect]
                                                 } else {
-                                                    huanfuEffect = {name: huanfuEffect};
+                                                    huanfuEffect = { name: huanfuEffect };
                                                 }
                                             }
                                             huanfuEff = Object.assign(huanfuEff, huanfuEffect)
@@ -5165,7 +6563,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             }
                             let basic = 6000
                             if (new Date().getTime() - _this.transformInitTime < 2000) {
-                               _this.transformInitTime = _this.transformInitTime + 2000
+                                _this.transformInitTime = _this.transformInitTime + 2000
                                 basic = 6000 + _this.transformInitTime - new Date().getTime()
                             } else {
                                 _this.transformInitTime = new Date().getTime()
@@ -5192,7 +6590,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     }
 
                     if (isPlayer) {
-                        let key = isPrimary ? 'damagePrimaryTransform': 'damageDeputyTransform'
+                        let key = isPrimary ? 'damagePrimaryTransform' : 'damageDeputyTransform'
                         if (player[key]) delete player[key]
 
                     }
@@ -5216,7 +6614,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             if (exists) {
                                 let avatar = player.getElementsByClassName((isPrimary ? 'primary' : 'deputy') + '-avatar')
                                 if (avatar.length) {
-                                    avatar[0].style.backgroundImage = 'url("' + lib.assetURL + path+ '")'
+                                    avatar[0].style.backgroundImage = 'url("' + lib.assetURL + path + '")'
                                 }
                             }
                         })
@@ -5226,7 +6624,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         if (!player._inits) {
                             player._inits = []
                         }
-                        // 查看角色初始化, 发现有预留这个钩子函数等待角色初始化好完毕 做一些额外的初始化操作
+                        // 查看角色初始化, 发现有预留这个钩子函数等待角色初始化好毕完毕 做一些额外的初始化操作
                         player._inits.push(function () {
                             checkChangeSkin()
                             initPlayerAudio()
@@ -5235,8 +6633,14 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     if (isPlayer && player.name1) {
                         initPlayerAudio()
                         checkChangeSkin()
-                        // 重新覆盖一下stopDynamic函数
-                        player.stopDynamic = skinSwitch.stopDynamic
+
+                        // 检查是否需要强制重新加载语音（觉醒掉血技能专用）
+                        if (playParams._needUpdateAudio) {
+                            setTimeout(() => {
+                                // 传递audio配置，如果没有则reloadAudioForSkin会尝试从千幻获取
+                                skinSwitch.reloadAudioForSkin(player, isPrimary, playParams.audio);
+                            }, 500);
+                        }
                     }
 
                     skinSwitch.chukuangWorkerInit()
@@ -5640,10 +7044,6 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         cursor: pointer;
                     }
                     
-                    .yk-preview__closeBtn .icon-close {
-                        font-size: 32px;
-                    }
-                    
                     .yk-preview__container .yk-preview__list{
                         width: 100%;
                         height: 100%;
@@ -5813,7 +7213,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         height: 70px;
                         line-height: 70px;
                         text-align: center;
-                        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAABGCAYAAADB0cS2AAAAAXNSR0IArs4c6QAAATZJREFUWAntmMFqhDAQhs240bJsKaW3PXkQj77/c3gSEfQFSildFjTVdP6FLD2UzbrJrZOLYsYvM59zcRJrbZpEWDSOo47ASWie5wNnpUJhxJCs7/vnUBghk2VZDl3XvQ3D8PSoM9W27XFLWeu6Wq3195lXXddnpZTF+5eMtoCISHEFOs/zF1ThKtgM+n0o/DLsFX6DQIAC1jTNPhgE2J5XFJAxZhcFhA8QBYTyBAQLt5c4uu0Hu+JIHPkN+COkj8SR34A/QvpIHPkN+COkj8SR34A/Qvro3zrCn3eUz4/f9yggzACCQTxAmDFICAIBUlXVB6YRm0EQm6apmabpkyHvDFnQZTvXaqBnWXYqisK4Tbd3z/UC4hNOZVl+IcV7XvorhpBJKARgQjkhmVyzc2Ob64MHb34AS8NyNtzdbWEAAAAASUVORK5CYII=);
+                        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAATJJREFUOBGNkz1uwkAQhbMrI7mkIBJngFMkt0CKLORIdkFBRcEFKNKkoLItWb5FSp+AJlLuEIWeBv/w3rJYtuNdGMkyO7vfm7czRqRpOiuK4s1xnE/f949PD0SSJIu6ridBEOxFHMc7LLZCiB+IvNwTAbypquoDdU54xpKVCUNkDic5HD2bTLTgCswqDMOz4GFChClictKD32E/I6sE+MMmYoI7AiaRsiyX+s603VTmeUbj4LrsOpFS/gKeYm8QHhRgktdB5W/CqFojtebIuNcP2U9wrW0rGI2ly9A0nX8C7YYBXHMqthF3BNqwbtieH5dNpGniAJzBgQrbiJWADb4nIgEvbHO+CfA/4rrua+s6X9yTaNAE75O+c8akKTzP+9MiB3DjPM8ddTaKopEJMuVv8AXIBQzYmzjo8QAAAABJRU5ErkJggg==);
                         background-repeat: no-repeat;
                         background-size: cover;
                     }
@@ -5934,7 +7334,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         left: 50%;
                         margin-left: -16px;
                         width: 32px;
-                        height: 120px;
+                        height: 160px;
                         background: rgba(21,21,21,.9);
                         border-radius: 2px;
                     }
@@ -6335,11 +7735,6 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     let filesEle = document.getElementById('pfqhFilesList')
                     let curFoldEle = document.getElementById('pfqhCurFold')
 
-                    let currentFoldInfo = {
-                        curFiles: [],  // 存储当前目录下的spine文件列表
-                        curFileIndex: 0,  // 当前在文件夹的索引
-                    }
-
                     let clickName = lib.config.touchscreen ? 'touchend' : 'click'
 
                     let lastSelFile = null
@@ -6347,27 +7742,92 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         skinSwitch.nodePreviewedInfo = {};  // 保存已经预览的骨骼的相关数据
                     }
 
+                    // 添加搜索框 - 确保DOM元素已存在再添加
+                    if (foldsEle && foldsEle.parentNode) {
+                        // 创建一个新的搜索行容器
+                        let searchRow = document.createElement('div');
+                        searchRow.className = 'folder-search-row';
+                        searchRow.style.padding = '5px';
+                        searchRow.style.marginBottom = '10px';
+                        searchRow.style.width = '100%';
+                        searchRow.style.display = 'flex';
+                        searchRow.style.flexDirection = 'row';
+                        searchRow.style.alignItems = 'center';
+                        searchRow.style.borderBottom = '1px solid #ddd';
+                        searchRow.style.paddingBottom = '10px';
+                        
+                        // 搜索框内容
+                        searchRow.innerHTML = `
+                            <span style="margin-right: 10px; white-space: nowrap; font-weight: bold;">搜索文件:</span>
+                            <input type="text" placeholder="<小曦>提供搜索" id="folderSearchInput" style="flex-grow: 1; padding: 6px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box; font-size: 13px;">
+                            <button id="clearSearchBtn" style="margin-left: 10px; padding: 4px 12px; border-radius: 4px; border: 1px solid #ccc; background: #f5f5f5; cursor: pointer; box-sizing: border-box; font-size: 13px;">清除</button>
+                        `;
+                        
+                        // 获取文件内容区域的父元素，将搜索行插入到整个文件列表的顶部
+                        let fileContentContainer = document.querySelector('.nd-detail-filelist__name').parentNode;
+                        fileContentContainer.insertBefore(searchRow, fileContentContainer.firstChild);
+
+                        // 搜索功能实现 - 直接通过创建的元素获取引用
+                        let folderSearchInput = searchRow.querySelector('#folderSearchInput');
+                        let clearSearchBtn = searchRow.querySelector('#clearSearchBtn');
+
+                        if (folderSearchInput && clearSearchBtn) {
+                            folderSearchInput.addEventListener('input', function () {
+                                let searchValue = this.value;  // 不转为小写，保留中文原样
+                                let allFolders = foldsEle.querySelectorAll('.nd-detail-filename');
+
+                                // 第一个是返回上层目录按钮，从第二个开始是文件夹
+                                for (let i = 1; i < allFolders.length; i++) {
+                                    let folderName = allFolders[i].getAttribute('fold');
+                                    if (folderName) {
+                                        // 不转为小写，保留中文原样
+                                        if (searchValue === '' || folderName.indexOf(searchValue) !== -1) {
+                                            allFolders[i].style.display = 'block';
+                                            // 确保元素可交互
+                                            allFolders[i].style.pointerEvents = 'auto';
+                                        } else {
+                                            allFolders[i].style.display = 'none';
+                                            // 不要阻止其他交互
+                                            allFolders[i].style.pointerEvents = 'none';
+                                        }
+                                    }
+                                }
+                            });
+
+                            clearSearchBtn.addEventListener(clickName, function () {
+                                folderSearchInput.value = '';
+                                // 触发input事件以更新显示
+                                folderSearchInput.dispatchEvent(new Event('input'));
+                            });
+                        }
+                    }
+
+                    let currentFoldInfo = {
+                        curFiles: [],  // 存储当前目录下的spine文件列表
+                        curFileIndex: 0,  // 当前在文件夹的索引
+                    }
+
                     let contentModal = document.getElementById('unique-id').getElementsByClassName('light-modal-body')[0]
 
                     contentModal.addEventListener('touchstart', touchstart, true);
                     contentModal.addEventListener('touchmove', touchmove, true);//添加touchmove方法
                     contentModal.addEventListener('touchend', touchend, true);
-                    function touchstart(e){
+                    function touchstart(e) {
                         // console.log(e.changedTouches[0].pageY,"开始时触摸的位置")
                         this.move = false //添加一个move参数，触摸时置为false
                         // this.start = e.changedTouches[0].pageY
                         this.start = e.pageY
                     }
-                    function touchmove(){
+                    function touchmove() {
                         this.move = true // 触发滑动事件时move置为true
                     }
 
-                    function touchend(e){
+                    function touchend(e) {
                         // this.end = e.changedTouches[0].pageY
                         this.end = e.pageY
-                        if(this.move){ //只有当move为true时才会触发滑动事件
+                        if (this.move) { //只有当move为true时才会触发滑动事件
                             e.stopPropagation()
-                        }else{
+                        } else {
                             if (e.target.touchend) {
                                 e.target.touchend(e.target)
                             }
@@ -6381,7 +7841,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         // 获取之前预览的文件夹名字
                         let lastDirName
                         if (currentPath) {
-                            lastDirName = currentPath.substring(currentPath.lastIndexOf('/')+1, currentPath.length)
+                            lastDirName = currentPath.substring(currentPath.lastIndexOf('/') + 1, currentPath.length)
                         }
                         currentPath = currentPath === '' ? '' : currentPath.substring(0, currentPath.lastIndexOf('/'));
                         game.saveConfig(skinSwitch.configKey.lastPreviewPath, currentPath)
@@ -6451,9 +7911,9 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     // 只过滤出包含完整spine骨骼的文件进行预览
                     let filterSpineFile = (files) => {
                         let skinInfoMap = {}
-                        for (let f of files){
+                        for (let f of files) {
                             let name = f.substring(0, f.lastIndexOf("."))
-                            let ext = f.substring(f.lastIndexOf(".")+1)
+                            let ext = f.substring(f.lastIndexOf(".") + 1)
                             if (!(name in skinInfoMap)) {
                                 skinInfoMap[name] = {}
                             }
@@ -6485,118 +7945,132 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     let initFoldsInfo = (lastDirName) => {
                         // 获取这个文件夹下的所有合法的skel文件和所有文件夹
                         pfqhUtils.getFoldsFiles(currentPath, function (file, path) {
-                            let suffixes = ['.png', '.atlas', '.json', '.skel', '.jpg' ]
-                                for (let suf of suffixes) {
-                                    if (file.endsWith(suf)) {
-                                        return true
-                                    }
+                            let suffixes = ['.png', '.atlas', '.json', '.skel', '.jpg']
+                            for (let suf of suffixes) {
+                                if (file.endsWith(suf)) {
+                                    return true
                                 }
-                                return false
-                            }, function (folds, files) {
-                                curFoldEle.innerText = currentPath
-                                // 删除之前节点
-                                for (let i = foldsEle.childNodes.length - 1; i > 1 ; i--) {
-                                    foldsEle.childNodes[i].remove()
-                                }
-                                for (let i = filesEle.childNodes.length - 1; i > 0 ; i--) {
-                                    filesEle.childNodes[i].remove()
-                                }
-                                for (let i = 0; i < folds.length; i++) {
-                                    let div = document.createElement('div');
-                                    div.innerHTML = `
+                            }
+                            return false
+                        }, function (folds, files) {
+                            curFoldEle.innerText = currentPath
+                            // 删除之前节点
+                            for (let i = foldsEle.childNodes.length - 1; i > 1; i--) {
+                                foldsEle.childNodes[i].remove()
+                            }
+                            for (let i = filesEle.childNodes.length - 1; i > 0; i--) {
+                                filesEle.childNodes[i].remove()
+                            }
+                            for (let i = 0; i < folds.length; i++) {
+                                let div = document.createElement('div');
+                                div.innerHTML = `
                                     <img
                                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABRUExURUxpcf++Hv/ZU//OPv/DL/+9Gv/BI/+4Bf+4Ef/XcP/LOP/TSf/RRP/WTv/JM/+3Ef+9Ff/bhf+5BP/DJf+yDv/imv/kqv/bXP/w0v/fd//calQXUgwAAAAKdFJOUwB///8d3L9enl8sr20gAAACN0lEQVRYw+2Y65abIBRGE1EzVbyNSW18/wctHA6XYw4q9Ee7Vt2AgOHbcVyTOMztdnFxcXFMWf7gKHN190VRKDpFC0iNqB5ZvqpXzJRxHoF7hrAa9/hK9j2oYIA2QA/UqXeyNg5QDBrshhHbUH8xxO+uT7sOJ/tU5a4wh0eK8KmKHTxd28Bfo16pqphep5l6I+R/p8xr668kVghVceH8M5EZYnGhnBKRceGqmaZXPPw2xbO+1xU+8axwe8NfzkIV7xVZdF0AVhi+rWdxIfgmwloE6CkrDCPwJbYUeFgK61icxFcNKyxIxE+WgnllQ0y4+HffzZ8WZtJlCDtz+CzqaaFaVGiWBNEOZZ15zihsT2CFnXk4QStsLohTU3FC+Af8I8JWV1fa1jy8u+hnOUy2vnd5SkeGrJBfHZwDbxe87pfxQvejmMZZYxxdYSoyVyixSvtXFLJ7hWq5xCRNSTozczzHCj8T54kI5d8QCtvZAodDIa7DgRkJaII2hBfaJC7EOE7D076XuIoVBu8oN3kpBLVt4YXBVaUSFSbS5Akb00znSoPn9KCJCN0am7SnGhganC4kKhR2MV0vvEn4M7bFhM3GIZqtgfiPr9BdSAYnrnCX3rQeB/2xsKcHouiBBhpO+phQL9CdjmKqsRkXpkMz57dmfTY1v3k8is26zvN2A6yIbKVqm/tMjFBMp5jpxrWKbsB1dJw/AsC3Lt/YEaK7x1t5r7aLj3ned/fRj1TK3H9wXFxc/F/8BgM0jBZ4nc19AAAAAElFTkSuQmCC"
                                          alt="folder" class="category u-file-icon u-file-icon--list">
                                     <span class="nd-detail-filename__title-text inline-block-v-middle text-ellip">${folds[i]}</span>
                                 `;
-                                    div.setAttribute('fold', folds[i]);
-                                    div.classList.add('nd-detail-filename');
-                                    div.addEventListener(clickName, function (e) {
-                                        if (currentPath) {
-                                            currentPath = `${currentPath}/${this.getAttribute('fold')}`
-                                        } else {
-                                            currentPath = this.getAttribute('fold')
-                                        }
-                                        game.saveConfig(skinSwitch.configKey.lastPreviewPath, currentPath)
-
-                                        initFoldsInfo()
-                                        e.stopPropagation()
-                                    });
-                                    foldsEle.appendChild(div);
-                                }
-                                // 排序一下节点
-                                let _sorts = document.getElementById('btnSortDirFiles')._sorts
-                                if (_sorts != null) {
-                                    sortDirs(_sorts)
-                                }
-                                for (let i = 1; i < foldsEle.children.length; i++) {
-                                    let foldName = foldsEle.children[i].getAttribute('fold')
-                                    if (lastDirName && lastDirName === foldName) {
-                                        foldsEle.children[i].classList.add('previewSelect')
-                                        // 计算滚动条, 滚动到对应的文件夹位置
-                                        if (i > 5) {
-                                            foldsEle.parentNode.scrollTop = 40 * (i - 5)
-                                        }
+                                div.setAttribute('fold', folds[i]);
+                                div.classList.add('nd-detail-filename');
+                                div.style.cursor = 'pointer'; // 确保鼠标悬停时显示为可点击状态
+                                div.addEventListener(clickName, function (e) {
+                                    if (currentPath) {
+                                        currentPath = `${currentPath}/${this.getAttribute('fold')}`
                                     } else {
-                                        foldsEle.children[i].classList.remove('previewSelect')
+                                        currentPath = this.getAttribute('fold')
                                     }
+                                    game.saveConfig(skinSwitch.configKey.lastPreviewPath, currentPath)
+
+                                    // 清除搜索框内容，方便查看新目录内容
+                                    let searchInput = document.querySelector('#folderSearchInput');
+                                    if (searchInput) {
+                                        searchInput.value = '';
+                                    }
+
+                                    initFoldsInfo()
+                                    e.stopPropagation()
+                                });
+                                foldsEle.appendChild(div);
+                            }
+                            // 排序一下节点
+                            let _sorts = document.getElementById('btnSortDirFiles')._sorts
+                            if (_sorts != null) {
+                                sortDirs(_sorts)
+                            }
+
+                            // 搜索框值更新后，保持文件夹筛选状态
+                            let folderSearchInput = document.querySelector('#folderSearchInput');
+                            if (folderSearchInput && folderSearchInput.value) {
+                                folderSearchInput.dispatchEvent(new Event('input'));
+                            }
+
+                            for (let i = 1; i < foldsEle.children.length; i++) {
+                                let foldName = foldsEle.children[i].getAttribute('fold')
+                                if (lastDirName && lastDirName === foldName) {
+                                    foldsEle.children[i].classList.add('previewSelect')
+                                    // 计算滚动条, 滚动到对应的文件夹位置
+                                    if (i > 5) {
+                                        foldsEle.parentNode.scrollTop = 40 * (i - 5)
+                                    }
+                                } else {
+                                    foldsEle.children[i].classList.remove('previewSelect')
                                 }
+                            }
 
-                                // 点击文件夹时 初始化一下当前file
-                                currentFoldInfo.curFiles.length = 0
-                                currentFoldInfo.curFileIndex = -1
+                            // 点击文件夹时 初始化一下当前file
+                            currentFoldInfo.curFiles.length = 0
+                            currentFoldInfo.curFileIndex = -1
 
-                                let retFiles = filterSpineFile(files)
-                                for (let i = 0; i < retFiles.length; i++) {
-                                    let div = document.createElement('div')
-                                    div.innerHTML = `
+                            let retFiles = filterSpineFile(files)
+                            for (let i = 0; i < retFiles.length; i++) {
+                                let div = document.createElement('div')
+                                div.innerHTML = `
                                     <img
                                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABIUExURUxpcTOL+DSL+DqO+Veb/mKl/kmX+zWL+U6a+2ao/0aW+0CS+kyZ/GCk/mWn/1yi/lef/VGc/Pr9/+jz/2+s+46//b3a/4O3/AJIojgAAAAKdFJOUwDf//8d3U+en52O09RGAAACF0lEQVRYw+2Y63ajIBCAW8ZqHC5KrZv3f9MFhpuJTQfrjz1n/SDIbT4npw2pfXu7uLi4YNOP39O367rRvOKja/V9GHOqcTTmVGNnzLlGl6A2WvvWxGsqJo9ajKMuGP0dDcbxSWTShKlGfOOoebCNRTidYxynDXrb1dUU0ziGEF3ZdHHoza14xocMXzJyhLdpmme/e6ag2XeobqYCnBRvs98fm32meId56nnCErk+czfVhlub0CyfOyzaHhTa9XOX9aDQqnU/w7uyjULrcC3i+ocI4iUOVkQ7+8IVeptXWgUgMXD3xjv1UYCyCa6QUAiC0E64fMUBYBTOrUJnROmBryCEMEAsCbYKrSIkCSXS0LYLla8U6K4KSYi+H5ZsWmcJY1ohmpos3OLWmoSF9JajX9m8ckyIRfjIrzM8KERfq5J/yridZwrDx0HF6suOMF24QoXJGijCR/gZboB/TZgDYyd9lqU8mqGPlGQMJR8OfiDjZNjDEQ5S0hlDZ4ushWkqwxSWJCgezOKYIMsw7Ri4wi0g3HfBKuF55bBQTNod1WcKw9kv6yShTQgUQA6A6IsjAEmFJ4RXOF24W+gBcIUxAaiapChi/zolw5rfC+GYUKTqG1G11Vxo2Bn6AJLk8NiPC6JBKOjXLv0ZEruwN2AJe8GCnKzHgEGw4STonm/fub535rNUx8xx4D+RdsPP9Af+m3FxcfH/8hcLt2QJ3T9wuwAAAABJRU5ErkJggg=="
                                          class="category u-file-icon u-file-icon--list" alt="${retFiles[i].path}">
                                     <span class="nd-detail-filename__title-text inline-block-v-middle text-ellip">${retFiles[i].path}</span>
                                 `
-                                    div.setAttribute('path', retFiles[i].path)
-                                    div.classList.add('nd-detail-filename')
-                                    div.addEventListener(clickName, function (e) {
-                                        if (lastSelFile === this) return
+                                div.setAttribute('path', retFiles[i].path)
+                                div.classList.add('nd-detail-filename')
+                                div.addEventListener(clickName, function (e) {
+                                    if (lastSelFile === this) return
 
-                                        playSelectAsset(this.getAttribute('path'))
+                                    playSelectAsset(this.getAttribute('path'))
 
-                                        // 添加选择的样式
-                                        if (lastSelFile) {
-                                            lastSelFile.classList.remove('previewSelect')
-                                        }
-                                        lastSelFile = this
-                                        this.classList.add('previewSelect')
+                                    // 添加选择的样式
+                                    if (lastSelFile) {
+                                        lastSelFile.classList.remove('previewSelect')
+                                    }
+                                    lastSelFile = this
+                                    this.classList.add('previewSelect')
 
-                                        // 可能需要更新一下滚动条以及索引
-                                        for (let idx = 0; idx < this.parentNode.children.length; idx++) {
-                                            if (this === this.parentNode.children[idx]) {
-                                                // 清理图集相关的信息
-                                                currentFoldInfo.curFileIndex = idx
-                                                if (window.location.hash === '#unique-id') {
-                                                    let scrollTop = filesEle.parentNode.scrollTop;
-                                                    if (scrollTop > (idx * 40)) {
-                                                        filesEle.parentNode.scrollTop = 40 * (idx - 3)
-                                                    } else if ((idx * 40 - scrollTop) > 10 * 40) {
-                                                        filesEle.parentNode.scrollTop = 40 * (idx)
-                                                    }
+                                    // 可能需要更新一下滚动条以及索引
+                                    for (let idx = 0; idx < this.parentNode.children.length; idx++) {
+                                        if (this === this.parentNode.children[idx]) {
+                                            // 清理图集相关的信息
+                                            currentFoldInfo.curFileIndex = idx
+                                            if (window.location.hash === '#unique-id') {
+                                                let scrollTop = filesEle.parentNode.scrollTop;
+                                                if (scrollTop > (idx * 40)) {
+                                                    filesEle.parentNode.scrollTop = 40 * (idx - 3)
+                                                } else if ((idx * 40 - scrollTop) > 10 * 40) {
+                                                    filesEle.parentNode.scrollTop = 40 * (idx)
                                                 }
-                                                break
                                             }
+                                            break
                                         }
+                                    }
 
-                                        closeModalFunc()
-
-                                        // e.stopPropagation()
-                                    })
-                                    filesEle.appendChild(div)
-
-                                    currentFoldInfo.curFiles.push(div)
-                                    currentFoldInfo.curFileIndex = -1
                                     closeModalFunc()
-                                }
+
+                                    // e.stopPropagation()
+                                })
+                                filesEle.appendChild(div)
+
+                                currentFoldInfo.curFiles.push(div)
+                                currentFoldInfo.curFileIndex = -1
+                                closeModalFunc()
                             }
+                        }
                         )
                     }
 
@@ -6627,7 +8101,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             let dy = animationManager.getAnimation(version)
 
                             let name = path.substring(0, path.lastIndexOf("."))
-                            let ext = path.substring(path.lastIndexOf(".")+1)
+                            let ext = path.substring(path.lastIndexOf(".") + 1)
                             let filename
                             if (currentPath) {
                                 filename = currentPath + '/' + name
@@ -6725,7 +8199,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                                     // 手动设置x和y值.
                                     let xx = -(centerX - width / 2) / width
-                                    let yy = 1-(centerY + height / 2) / height
+                                    let yy = 1 - (centerY + height / 2) / height
 
                                     if (tempScale < 1) {
                                         t.scale = tempScale * height / width * 1.2
@@ -6873,7 +8347,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         let closePreviewWindow = document.getElementById('closePreviewWindow')
                         closePreviewWindow.parentNode.insertBefore(con, closePreviewWindow)
 
-                        speedSlider.onchange = function(){
+                        speedSlider.onchange = function () {
                             if (currentNode) {
                                 currentNode.speed = speedSlider.value
                             }
@@ -6886,13 +8360,13 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         // 维护一个 timer
                         let timer = null;
 
-                        return function() {
-                            // 通过 ‘this’ 和 ‘arguments’ 获取函数的作用域和变量
+                        return function () {
+                            // 通过 'this' 和 'arguments' 获取函数的作用域和变量
                             let context = this;
                             let args = arguments;
 
                             clearTimeout(timer);
-                            timer = setTimeout(function() {
+                            timer = setTimeout(function () {
                                 fn.apply(context, args);
                             }, delay);
                         }
@@ -6908,12 +8382,12 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         _status.th_swipe_right = lib.config.swipe_right;
                         lib.config.swipe_right = ''
                         _status.th_gamePause = ui.click.pause
-                        ui.click.pause = ()=>{}
+                        ui.click.pause = () => { }
                     }
 
                     let thunderAllowTouch = function () {
                         if (_status.th_swipe_up) {
-                            lib.config.swipe_up =  _status.th_swipe_up
+                            lib.config.swipe_up = _status.th_swipe_up
                             lib.config.swipe_down = _status.th_swipe_down
                             lib.config.swipe_left = _status.th_swipe_left
                             lib.config.swipe_right = _status.th_swipe_right
@@ -6943,7 +8417,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         let closePreviewWindow = document.getElementById('closePreviewWindow')
                         closePreviewWindow.parentNode.insertBefore(con, scaleSlider.parentNode)
 
-                        timeSlider.addEventListener('input', debounce(function(e){
+                        timeSlider.addEventListener('input', debounce(function (e) {
                             text.innerHTML = `进度: ${Number(timeSlider.value).toFixed(2)}`
 
                             // 修改speed为0, 并且跳转到具体的时间
@@ -6980,7 +8454,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         let closePreviewWindow = document.getElementById('closePreviewWindow')
                         closePreviewWindow.parentNode.insertBefore(con, scaleSlider.parentNode)
 
-                        angleSlider.onchange = function(){
+                        angleSlider.onchange = function () {
                             text.innerHTML = '角度: ' + angleSlider.value + '°'
                             if (currentNode) {
                                 currentNode.angle = angleSlider.value
@@ -7045,14 +8519,14 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         }
                     })
 
-                    picPreviewModeBtn.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', function (){
+                    picPreviewModeBtn.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', function () {
                         // 隐藏原来的按钮, 进入图集模式
                         picPreviewBg.classList.remove('hidden')
                         previewSpineDom.classList.add('hidden')
 
                     })
 
-                    closeImgPreview.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', function (){
+                    closeImgPreview.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', function () {
                         picPreviewBg.classList.add('hidden')
                         previewSpineDom.classList.remove('hidden')
                         previewOperateSpeedCtrl.classList.add('hidden')
@@ -7122,7 +8596,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                     skinSwitch.continuousClick(operateBtn.scaleSub, () => {
                         if (!currentNode) return
-                        let s = (Number(currentNode.scale) || 1)  - 0.02
+                        let s = (Number(currentNode.scale) || 1) - 0.02
                         if (s <= 0.01) s = 0.01
                         currentNode.scale = s
 
@@ -7131,10 +8605,10 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                     skinSwitch.continuousClick(operateBtn.AngleAdd, () => {
                         if (!currentNode) return
-                        currentNode.angle = (Number(currentNode.angle) || 0)  + 30
+                        currentNode.angle = (Number(currentNode.angle) || 0) + 30
                     })
 
-                    operateBtn.alpha.listen(function (e){
+                    operateBtn.alpha.listen(function (e) {
                         let premultipliedAlpha = document.getElementById('premultipliedAlpha')
                         let isSelect = premultipliedAlpha.checked
                         if (isSelect) {
@@ -7146,7 +8620,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         premultipliedAlpha.checked = !premultipliedAlpha.checked
                     })
 
-                    operateBtn.speed.listen(function (e){
+                    operateBtn.speed.listen(function (e) {
                         previewOperateSpeedCtrl.classList.remove('hidden')
                         const maxSpeed = 4
                         if (currentNode) {
@@ -7156,13 +8630,13 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             let percent = curSpeed / maxSpeed
                             progressData.progressBarText.innerText = curSpeed.toFixed(1)
                             progressData.progressBarWrap.style.transform = `scaleY(${percent})`
-                            progressData.progressBarThumb.style.transform = `translateY(-${percent*78}px)`
+                            progressData.progressBarThumb.style.transform = `translateY(-${percent * 78}px)`
                         }
                         closeModalFunc()
 
                     })
 
-                    operateBtn.skin.listen(function (e){
+                    operateBtn.skin.listen(function (e) {
                         if (currentNode == null) return
 
                         if (!previewImgModal.classList.contains('hidden')) {
@@ -7184,8 +8658,21 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             if (!activeSkeleton) return
                             let skeleton = activeSkeleton
 
-                            skeleton.setSkinByName(skinName);
-                            skeleton.setSlotsToSetupPose();
+                            try {
+                                skeleton.setSkinByName(skinName);
+                                skeleton.setSlotsToSetupPose();
+                            } catch (e) {
+                                console.warn('Failed to set skin:', skinName, e);
+                                // 如果设置指定皮肤失败，尝试使用默认皮肤
+                                if (skeleton.data.defaultSkin) {
+                                    try {
+                                        skeleton.setSkin(skeleton.data.defaultSkin);
+                                        skeleton.setSlotsToSetupPose();
+                                    } catch (e2) {
+                                        console.warn('Failed to set default skin:', e2);
+                                    }
+                                }
+                            }
 
                             initCurrentNodeInfo()
                         })
@@ -7221,7 +8708,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         })
                     })
 
-                    operateBtn.info.listen(function (e){
+                    operateBtn.info.listen(function (e) {
                         let isHidden = previewDetailInfo.classList.contains('hidden')
                         if (isHidden) {
                             previewDetailInfo.classList.remove('hidden')
@@ -7319,7 +8806,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     })
 
                     picPreviewBg.addEventListener(lib.config.touchscreen ? 'touchmove' : 'mousemove', function (e) {
-                        if(!progressData.isDown) return
+                        if (!progressData.isDown) return
                         let deltaY, curY
                         if (e.touches && e.touches.length) {
                             curY = e.touches[0].clientY
@@ -7336,7 +8823,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             let percent = curSpeed / maxSpeed
                             progressData.progressBarText.innerText = curSpeed.toFixed(1)
                             progressData.progressBarWrap.style.transform = `scaleY(${percent})`
-                            progressData.progressBarThumb.style.transform = `translateY(-${percent*78}px)`
+                            progressData.progressBarThumb.style.transform = `translateY(-${percent * 78}px)`
 
                             currentNode.speed = curSpeed
                         }
@@ -7391,8 +8878,8 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         let deltaY = clientY - this.posY;
                         x += deltaX
                         y -= deltaY
-                        let vx =  x / canvas.width
-                        let vy =  y / canvas.height
+                        let vx = x / canvas.width
+                        let vy = y / canvas.height
 
                         if (currentNode) {
                             currentNode.x = [0, vx]
@@ -7479,8 +8966,8 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         let deltaY = e.deltaY
                         x += deltaX
                         y -= deltaY
-                        let vx =  x / canvas.width
-                        let vy =  y / canvas.height
+                        let vx = x / canvas.width
+                        let vy = y / canvas.height
                         px.value = vx.toString()
                         py.value = vy.toString()
                         if (currentNode) {
@@ -7536,7 +9023,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         }, 200)
                     })
 
-                    function init () {
+                    function init() {
 
                         if (!activeSkeleton) {
                             return
@@ -7569,23 +9056,23 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                         document.getElementById('premultipliedAlpha').onchange = function (e) {
                             if (currentNode) {
-                                currentNode.premultipliedAlpha =  e.target.checked
+                                currentNode.premultipliedAlpha = e.target.checked
                             }
                         }
 
                         document.getElementById('flipX').onchange = function (e) {
                             if (currentNode) {
-                                currentNode.flipX =  e.target.checked
+                                currentNode.flipX = e.target.checked
                             }
                         }
                         document.getElementById('flipY').onchange = function (e) {
                             if (currentNode) {
-                                currentNode.flipY =  e.target.checked
+                                currentNode.flipY = e.target.checked
                             }
                         }
 
 
-                        scaleSlider.oninput = function(){
+                        scaleSlider.oninput = function () {
                             // let v= s1.value / 8;
                             if (currentNode) {
                                 currentNode.scale = scaleSlider.value
@@ -7611,19 +9098,19 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 option.text = name
                                 if (name === activeAnimation) {
                                     option.setAttribute('selected', 'selected')
-                                    document.getElementById('aniTime').innerText = Number(skeleton.data.animations[i].duration).toFixed( 1)
+                                    document.getElementById('aniTime').innerText = Number(skeleton.data.animations[i].duration).toFixed(1)
                                 }
                                 animationList.options.add(option)
                             }
 
-                            animationList.onchange =function() {
+                            animationList.onchange = function () {
                                 let skeleton = activeSkeleton
                                 let state = skeleton.state;
                                 let animationName = animationList.options[animationList.selectedIndex].text
                                 skeleton.setToSetupPose();
                                 state.setAnimation(0, animationName, true);
                                 let ani = skeleton.data.findAnimation(animationName)
-                                document.getElementById('aniTime').innerText =  Number(ani.duration).toFixed(1)
+                                document.getElementById('aniTime').innerText = Number(ani.duration).toFixed(1)
                             }
                         }
 
@@ -7650,11 +9137,24 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 skinList.options.add(option)
                             }
 
-                            skinList.onchange = function() {
+                            skinList.onchange = function () {
                                 let skeleton = activeSkeleton
                                 let skinName = skinList.options[skinList.selectedIndex].text
-                                skeleton.setSkinByName(skinName);
-                                skeleton.setSlotsToSetupPose();
+                                try {
+                                    skeleton.setSkinByName(skinName);
+                                    skeleton.setSlotsToSetupPose();
+                                } catch (e) {
+                                    console.warn('Failed to set skin:', skinName, e);
+                                    // 如果设置指定皮肤失败，尝试使用默认皮肤
+                                    if (skeleton.data.defaultSkin) {
+                                        try {
+                                            skeleton.setSkin(skeleton.data.defaultSkin);
+                                            skeleton.setSlotsToSetupPose();
+                                        } catch (e2) {
+                                            console.warn('Failed to set default skin:', e2);
+                                        }
+                                    }
+                                }
                             }
                         }
 
@@ -7672,970 +9172,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     }
                 },
 
-                // 手杀藏珍阁
-                cangZhenGe: function () {
-                    const div = ui.create.div("#pfqhCzg", document.body);
-                    const cangzhengeCanvasWrapper = ui.create.div('.czg-canvas-wrapper', div)
-                    const bg = ui.create.div('.czgBg', div)
 
-                    const relW = 1920  // 参考宽度
-                    const relH = 1080  // 参考高度
-
-                    const ratio = relW / relH  // 以这个比例来进行统一规划
-                    const bodyW= skinSwitch.bodySize().width
-                    const bodyH = skinSwitch.bodySize().height
-
-                    // 屏幕分辨率问题, 参考https://blog.51cto.com/u_15064642/4040771
-                    let dpr = Math.max(window.devicePixelRatio * (window.documentZoom ? window.documentZoom : 1), 1)
-                    const app = new PIXI.Application({
-                        // width: actualW/ dpr,
-                        // height: actualH/ dpr,
-                        width: bodyW/ dpr,
-                        height: bodyH/ dpr,
-                        backgroundAlpha: 0,
-                        resolution: dpr,
-                        antialias: true,     // 消除锯齿
-                        autoDensity: true,
-                    });
-                    app.renderer.resize(bodyW, bodyH);
-                    cangzhengeCanvasWrapper.appendChild(app.view);
-                    let boxbeijing = null  // 抽卡盒子动画
-
-                    // const loadResource = () => {
-                    //     if (!app.loader.resources.aar_cangbaoge) {
-                    //
-                    //     }
-                    // }
-
-                    const loadAnimations = () => {
-
-                        app.loader.onError.add((err) => {
-                            console.log('err', err)
-                        })
-
-                        app.loader
-                            .add("gongxihuode_biankuang", skinSwitch.url + "images/cangZhenGe/spineAni/gongxihuode/gongxihuode_biankuang.skel")
-                            .add("aar_cangbaoge", skinSwitch.url +"images/cangZhenGe/spineAni/aar_cangbaoge.skel")
-                            .add('item_board', skinSwitch.url + 'images/cangZhenGe/game_hist_headbg.png')
-                            .add('previewBox', skinSwitch.url + `images/cangZhenGe/奖励预览框.png`)
-                            .load(onAssetsLoaded);
-                    }
-
-                    function setDefaultAni(spineObj, loop) {
-                        const animation = spineObj.spineData.animations[0]
-                        spineObj.state.setAnimationWith(0, animation, loop)
-                    }
-
-                    function drawItem(itemInfo, count, resource, hasSpine) {
-                        // 奖励道具
-                        const rewardItem = new PIXI.Container()
-                        // 边框
-                        const board = new PIXI.Sprite.from(skinSwitch.url + 'images/cangZhenGe/game_hist_headbg.png')
-                        rewardItem.addChild(board)
-                        board.visible = false
-                        board.scale.set(boardFactor )
-
-                        let item
-                        if (itemInfo.type === 'wujiang') {
-                            item = new PIXI.Sprite.from(skinSwitch.url + `images/cangZhenGe/wujiang/${itemInfo.id}.png`);
-                        } else {
-                            item = new PIXI.Sprite.from(skinSwitch.url + `images/cangZhenGe/items/${itemInfo.id}.png`);
-                        }
-
-                        rewardItem.scale.set(0.6)
-                        item.x = boardWidth  * 0.04
-                        item.y = boardWidth * 0.03
-                        // item.scale.set(0.94)
-                        const ease = new Ease.Ease()
-                        item.scale.set(2)
-                        const scaleTime = 150
-                        ease.add(item, {scale: boardFactor * 0.92}, {repeat: false, duration: scaleTime})
-
-                        // 加上这个延时, 可以防止突然变化大小的闪屏
-                        setTimeout(() => {
-                            rewardItem.addChild(item)
-                        }, 20)
-                        setTimeout(() => {
-
-                            // ease.destroy()
-                            // item.visible = false
-                            board.visible = true
-                            if (hasSpine) {
-                                let chouzhong = new PIXI.spine.Spine(resource.gongxihuode_daojuchuxian.spineData)
-                                rewardItem.addChild(chouzhong)
-                                setDefaultAni(chouzhong, false)
-                                let localPos = chouzhong.getLocalBounds()
-                                chouzhong.position.set(
-                                    -localPos.x + (boardWidth  - localPos.width) / 2,
-                                    -localPos.y + (boardWidth- localPos.height) / 2,
-                                )
-                                chouzhong.state.timeScale = 0.7
-                                chouzhong.scale.set(1.1)
-
-                            }
-
-                            if (itemInfo.gaoji) {
-                                // 如果是高级道具, 添加边框特效
-                                let gaojidaoju = new PIXI.spine.Spine(resource.gongxihuode_gaojidaoju.spineData);
-                                rewardItem.addChild(gaojidaoju)
-                                setDefaultAni(gaojidaoju, true)
-                                let localPos = gaojidaoju.getLocalBounds()
-                                gaojidaoju.position.set(
-                                    -localPos.x + (boardWidth  - localPos.width) / 2 + 2,
-                                    -localPos.y + (boardWidth - localPos.height) / 2,
-                                )
-                                gaojidaoju.state.timeScale = 1
-                                gaojidaoju.scale.set(0.86 * boardFactor)
-                                gaojidaoju.zIndex = -1
-                            }
-                        }, scaleTime * 1.3)
-                        rewardItem.sortableChildren = true
-
-                        setTimeout(() => {
-                            // 添加宝珠物品的数量
-                            const countStyle = new PIXI.TextStyle({
-                                fontFamily: 'shousha',
-                                fontSize: parseInt(20 * boardFactor),
-                                fill: 'white',
-                                letterSpacing: 1,
-                                dropShadow: true,
-                                dropShadowColor: 'black',
-                                dropShadowBlur: 1,
-                                dropShadowDistance: 1
-                            });
-
-                            const itemCount = new PIXI.Text(`x${count}`, countStyle);
-                            itemCount.x = board.width - itemCount.width - 5;
-                            itemCount.y = board.y + board.height - itemCount.height - 5
-
-                            rewardItem.addChild(itemCount);
-
-                            // 添加宝主物品的文字显示
-                            const style = new PIXI.TextStyle({
-                                fontFamily: 'shousha',
-                                fontSize: parseInt(20 * boardFactor),
-                                fill: 'white',
-                                wordWrap: true,
-                                // wordWrapWidth: 12,
-                                align: 'center',
-                                lineJoin: 'round',
-                                leading: 0,
-
-
-                            });
-
-                            let name = itemInfo.name
-                            let newName = ''
-                            for (let i = 0; i < name.length; i+=7) {
-                                if (i > 0) {
-                                    newName += ' '
-                                }
-                                newName += name.slice(i, i + 7)
-                            }
-                            const itemName = new PIXI.Text(newName, style);
-
-                            // const itemName = new PIXI.Text(itemInfo.name, style);
-                            itemName.x = (board.width - itemName.width) / 2;
-                            itemName.y = board.y + board.height + 10
-
-                            rewardItem.addChild(itemName);
-
-                        }, 600)
-
-                        return rewardItem
-                    }
-
-                    function onAssetsLoaded(loader, resource) {
-                        boxbeijing = new PIXI.spine.Spine(resource.aar_cangbaoge.spineData);
-                        // debugger
-                        // set the position
-                        let localPos = boxbeijing.getLocalBounds()  // 骨骼的本地坐标
-                        let scale
-                        scale = app.screen.width / localPos.width * 0.4
-
-                        // 设置绝对偏移
-                        boxbeijing.scale.set(scale);  // 设置新的大小后, 本地坐标会进行偏移
-                        // 设置相对canvas的中心
-                        boxbeijing.position.set(
-                            -localPos.x + (app.screen.width  - localPos.width ) / 2 + 20,
-                            -localPos.y + (app.screen.height - localPos.height) / 2 - 10,
-                        )
-
-                        app.stage.addChild(boxbeijing)
-                        boxbeijing.state.setAnimation(0, 'play1', true)
-
-                        // 接着加载第二批资源
-                        app.loader
-                            .add("chouzhong", skinSwitch.url + "images/cangZhenGe/spineAni/Ss_M_WWJ_chouzhong.skel")
-                            .add("gongxihuode_daojuchuxian", skinSwitch.url + "images/cangZhenGe/spineAni/gongxihuode/gongxihuode_daojuchuxian.skel")
-                            .add("gongxihuode_gaojidaoju", skinSwitch.url + "images/cangZhenGe/spineAni/gongxihuode/gongxihuode_gaojidaoju.skel")
-                            .add("gongxihuode_lizi", skinSwitch.url +"images/cangZhenGe/spineAni/gongxihuode/gongxihuode_lizi.skel")
-                            .add('back', skinSwitch.url + 'images/cangZhenGe/dialog2.png')
-                            .add('rr_yuan_pan', skinSwitch.url + 'images/cangZhenGe/rewardresult/rr_yuan_pan.png')
-                            .add('title', skinSwitch.url + 'images/cangZhenGe/rewardresult/rr_title.png')
-                    }
-
-                    bg.listen = function (e) {
-                        e.stopPropagation();
-                    }
-
-                    // 藏珍阁logo
-                    ui.create.div(".czg-logo", bg);
-
-                    const statBtn = ui.create.div('.stat-btn', bg)
-
-                    const totalRewards = {
-                        totalCount: 0,
-                        items: {}
-                    }
-                    const statBg = ui.create.div('.stat-bg', bg)
-                    const closeBtn = ui.create.div('.stat-close-btn', statBg)
-                    closeBtn.innerHTML = 'X'
-                    closeBtn.listen(() => {statBg.hide()})
-                    const desc = ui.create.div('.stat-text', statBg)
-                    statBg.hide()
-
-                    const refreshStatData = () => {
-                        // 打开统计面板
-                        let title = '  累计抽取' + totalRewards.totalCount + '次\n\n'
-                        let res = []
-                        for (let k in totalRewards.items) {
-                            res.push(totalRewards.items[k])
-                        }
-                        res.sort((a, b) => {
-                            let w1 = a.weight || 3000
-                            let w2 = b.weight || 3000
-                            return w1 - w2
-                        })
-                        let textArray = [title]
-                        for (let item of res) {
-                            textArray.push(`${item.name} --- ${item.count}`)
-                        }
-                        desc.innerText = textArray.join('\n')
-                    }
-
-                    statBtn.listen(() => {
-                        statBg.show()
-                        refreshStatData()
-                    })
-
-
-                    // 返回
-                    const back1 = ui.create.div(".ret-back1", bg)
-                    setTimeout(() => {
-                        back1.listen(() => {
-                            setTimeout(() => {
-                                div.remove();
-                                // 清楚所有动画
-
-                            }, 50);
-                        })
-
-                    }, 1000)
-
-                    // 中间盒子抽卡动画的背景
-                    const choukaBg = ui.create.div('.chouka-bg', bg)
-
-                    const openOne = ui.create.div('.open-one', bg)
-                    const openAll = ui.create.div('.open-all', bg)
-
-
-                    const openAllTip = ui.create.div('.open-all-tip', bg)
-                    openAllTip.innerHTML = '<span style=\'color:#DEB887; text-shadow:0 0 1px black;font-weight:600;font-family:shousha\'>每次最多开50个</span>'
-
-                    // 盒子配置
-                    const boxSettings = skinSwitch.czgSettings.boxes.map(item => {
-                        return {
-                            name: item.name,
-                            isHot: item.isHot,
-                            tip: item.tip,
-                            count: 5000
-                        }
-                    })
-                    const boxBugTip = ui.create.div(".box-buy-tip", bg);
-                    boxBugTip.innerHTML = "<span style='color:red; text-shadow:0 0 0.5px gray,0 0 0.5px gray;font-weight:500;font-family:shousha'>2023年七夕活动首发，后续请关注每周末限时活动</span>";
-                    // 各个盒子部分
-                    const boxBg = ui.create.div('.box-bg', bg)
-                    const boxItems = []
-                    for (let i = 0; i < boxSettings.length; i++) {
-                        let boxInfo = boxSettings[i]
-                        const boxDiv = ui.create.div('.box-item', boxBg)
-                        const nameParent = ui.create.div('.name-parent', boxDiv)
-                        const boxNameDiv = ui.create.div(".box-item-name", nameParent)
-                        const boxCountDiv = ui.create.div(".box-item-count", nameParent)
-                        boxNameDiv.innerHTML = boxInfo.name
-                        boxCountDiv.innerHTML = `拥有：${boxInfo.count}`
-
-                        if (boxInfo.isHot) {
-                            const boxHotTag = ui.create.div(".box-item-hot-tag", boxDiv)
-                        }
-
-                        if (i === 0) {
-                            boxDiv.classList.add('box-item-select')
-                            boxBugTip.getElementsByTagName('span')[0].innerText = boxInfo.tip
-                        }
-                        boxItems.push(boxDiv)
-                        boxDiv.index = i
-                        boxDiv.listen(function () {
-                            skinSwitch.refreshDomList(boxItems, 'box-item-select', boxDiv)
-                            boxBugTip.getElementsByTagName('span')[0].innerText = boxInfo.tip
-                            currenBox = skinSwitch.czgSettings.boxes[this.index]
-                            setCurrentBoxUi(currenBox)
-                        })
-                    }
-
-                    // 当前抽取的盒子
-                    let currenBox = skinSwitch.czgSettings.boxes[0]
-
-                    // 稀世珍宝 右边的武将部分
-                    const xishi = ui.create.div('.xishizhenbao', bg)
-                    const xishiImg = ui.create.div('.xishizhenbao-img', xishi)
-                    const xishiText = ui.create.div('.xishizhenbao-text', xishi)  // 武将名字
-                    const xishiLabelText = ui.create.div('.xishizhenbao-label-text', xishi)  // 稀释珍宝标识
-                    const xishiRareLabel = ui.create.div('.xishizhenbao-rare-label', xishi)  // 史诗标识
-
-                    function setCurrentBoxUi(box) {
-                        xishi.style.backgroundImage = 'url("' + skinSwitch.url + `images/cangZhenGe/bskin/${box.xishizhenbao.id}.jpg")`
-                        xishiText.innerText = box.xishizhenbao.name
-                    }
-
-                    setCurrentBoxUi(currenBox)
-
-                    // 打开一个遮罩层
-                    const maskDiv = ui.create.div(div)
-                    maskDiv.style.width = '100%'
-                    maskDiv.style.height = '100%'
-                    maskDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
-                    maskDiv.hide()
-
-                    let closeRewardResultWindow = null
-                    let closeRewardPreviewWindow = null
-
-                    maskDiv.listen(() => {
-                        // 遮罩层关闭
-                        maskDiv.hide()
-                        console.log('遮罩层关闭')
-                        if (closeRewardResultWindow) {
-                            closeRewardResultWindow()
-                            closeRewardResultWindow = null // 执行一次后,置空
-                        }
-
-                        if (closeRewardPreviewWindow) {
-                            closeRewardPreviewWindow()
-                            closeRewardPreviewWindow = null
-                        }
-                    })
-
-                    function bindDragEvent(divBg, scrollView) {
-                        let mousedownEvent = function (e) {
-                            this.isDown = true
-                            if (e.touches && e.touches.length) {
-                                this.posX = e.touches[0].clientX
-                                this.posY = e.touches[0].clientY
-                            } else {
-                                this.posX = e.clientX
-                                this.posY = e.clientY
-                            }
-                        }
-
-                        let mouseupEvent = function (e) {
-                            // 清空之前的数据
-                            if (this.posX) delete this.posX
-                            if (this.posY) delete this.posY
-                            this.isDown = false
-                        }
-
-                        let mousemoveEvent = function (e) {
-                            let curX, curY
-                            if (!this.isDown) return
-                            if (e.touches && e.touches.length) {
-                                curX = e.touches[0].clientX
-                                curY = e.touches[0].clientY
-                            } else {
-                                curX = e.clientX
-                                curY = e.clientY
-                            }
-                            let contentHeight = scrollView.content.height
-                            let top = scrollView.content.top
-                            let deltaY = curY - this.posY
-
-                            // 设置阈值, 如果变化小于5, 不进行变化
-                            const threshold = 5
-                            const factor = 0.75
-                            if (Math.abs(deltaY) < threshold) {
-                                return
-                            }
-                            deltaY *= factor;  // 放缓变化速度
-
-                            if (deltaY === 0 || top >= contentHeight && deltaY < 0 || deltaY > 0 && top <= 0) {
-                                return
-                            } else {
-                                top -= deltaY
-                                if (top <= 0) top = 0
-                                else if (top >= contentHeight) {
-                                    top = contentHeight
-                                }
-                                scrollView.content.top = top
-                            }
-
-                            this.posX = curX
-                            this.posY = curY
-                        }
-
-                        divBg.addEventListener('touchstart', mousedownEvent);
-                        divBg.addEventListener('touchend', mouseupEvent);
-                        divBg.addEventListener('touchcancel', mouseupEvent);
-                        divBg.addEventListener('touchmove', mousemoveEvent);
-                        divBg.addEventListener('mousedown', mousedownEvent);
-                        divBg.addEventListener('mouseup', mouseupEvent);
-                        divBg.addEventListener('mouseleave', mouseupEvent);
-                        divBg.addEventListener('mousemove', mousemoveEvent);
-                    }
-
-                    // 定义道具的宽度
-                    const boardFactor = app.screen.width / 1588 * 1.4
-                    const boardWidth = 88 * boardFactor
-
-                    function openRewardResult(counts) {
-                        maskDiv.show()
-                        // const clickContinue = ui.create.div('.clickContinue', maskDiv)
-                        // clickContinue.innerText = '请点击屏幕空白处继续'
-
-                        // 打开奖励窗口
-                        let resource = app.loader.resources
-                        // 圆盘
-                        const yuan_pan = new PIXI.Sprite(resource.rr_yuan_pan.texture)
-                        yuan_pan.anchor.set(0.5)
-                        yuan_pan.x = app.screen.width / 2;
-                        yuan_pan.y = app.screen.height * 0.48;
-                        yuan_pan.scale.set(app.screen.width / yuan_pan.texture.orig.width * 0.25)
-                        app.stage.addChild(yuan_pan)
-
-                        yuan_pan.rotateForever = (delta) => {
-                            yuan_pan.rotation += 0.01 * delta;
-                        }
-
-                        app.ticker.add(yuan_pan.rotateForever);
-
-                        // 奖励区
-                        const back = new PIXI.Sprite(resource.back.texture)
-                        back.scale.set(app.screen.width / back.texture.orig.width * 0.62)
-                        back.anchor.set(0.5)
-                        back.x = app.screen.width / 2;
-                        back.y = app.screen.height * 0.54;
-                        app.stage.addChild(back)
-
-
-                        // 文字
-                        const title = new PIXI.Sprite(resource.title.texture)
-                        title.anchor.set(0.5)
-                        let titleSize = app.screen.width / title.texture.orig.width * 0.15
-                        title.scale.set(titleSize * 1.5)
-                        title.x = app.screen.width / 2;
-                        title.y = back.y - back.height * 0.5;
-                        app.stage.addChild(title)
-
-                        const ease = new Ease.Ease()
-                        ease.add(title, {scale: titleSize   }, {repeat: false, duration: 500})
-
-                        // 奖励道具边框
-
-
-                        // 可滑动的窗口, 滑动奖励区域
-                        let scrollBoxWidth = boardWidth * 6 + 5 * boardWidth * 0.2
-                        let scrollBoxHeight = boardWidth * 2 + 20
-                        const scrollbox = new Scrollbox.Scrollbox({
-                            boxWidth: scrollBoxWidth,
-                            boxHeight: scrollBoxHeight,
-                            overflowY: 'hidden',
-                            overflowX: 'none',
-                            // stopPropagation: false,
-                            dragScroll: false
-
-                        })
-                        scrollbox.x = back.x - (scrollBoxWidth / 2);
-                        scrollbox.y = back.y - (scrollBoxHeight / 2)
-
-                        // const scrollbox = new Scrollbox.Scrollbox({
-                        //     boxWidth: (88 * 6 + 5 * 40 + 120) * 0.6,
-                        //     boxHeight: (88 * 2 ),
-                        //     overflowY: 'hidden',
-                        //     overflowX: 'none',
-                        //     // stopPropagation: false,
-                        //     dragScroll: false
-                        //
-                        // })
-                        // scrollbox.x = back.x - (88 + 40) * 0.6 * 2 - 60 * 0.6 - 88 * 0.6;
-                        // scrollbox.y = back.y - 138 * 0.6 - 20
-                        // 抽取盒子
-                        function drawOutBox(count) {
-                            // 根据当前盒子设置的稀有度等东西, 进行抽取
-                            // 方法, 将所有权重按从小到大的顺序铺好 随机抽取一个数字, 看数字落在哪个区间里, 就表示抽取到了哪个
-                            let result = []
-                            let start = 0
-                            let total_weight = 0
-                            let current_weight = 0
-                            const weight_steps = currenBox.items.map(itemInfo => {
-                                total_weight += itemInfo.weight
-                                return total_weight
-                            })
-
-                            // 放入必中的保底
-                            skinSwitch.czgSettings.fixed.forEach(i => {
-                                result.push({
-                                    id: i.id,
-                                    name: i.name,
-                                    count: count * i.count
-                                })
-                            })
-
-                            let randomR
-                            // 模拟抽取
-                            for (let i = 0; i < count; i++) {
-                                randomR = Math.random() * total_weight
-                                for (let j = 0; j < weight_steps.length; j++) {
-                                    if (randomR < weight_steps[j]) {
-                                        let isExist = false
-                                        // 如果存在, 则返回的结果数量累计
-                                        for (let r of result) {
-                                            if (r.id === currenBox.items[j].id){
-                                                r.count = (r.count || 1) + (currenBox.items[j].count || 1)
-                                                isExist = true
-                                                if (currenBox.items[j].gaoji) {
-                                                    r.gaoji = currenBox.items[j].gaoji
-                                                }
-
-                                                if (currenBox.items[j].weight < (r.weight || 1000)) {
-                                                    r.weight = currenBox.items[j].weight
-                                                }
-                                                break;
-                                            }
-                                        }
-                                        if (!isExist) {
-                                            result.push({...currenBox.items[j]});
-                                        }
-                                        break
-                                    }
-                                }
-                            }
-                            return result
-
-                        }
-
-                        let results = drawOutBox(counts)
-
-                        // 将抽奖结果添加到统计里面
-                        for (let r of results) {
-                            let v = totalRewards.items[r.id] || {id: r.id, name: r.name, count: 0, weight: r.weight || 3000}
-                            if (v.weight && v.weight > r.weight) {
-                                v.weight = r.weight
-                            }
-                            v.count += r.count || 1
-                            totalRewards.items[r.id] = v
-                        }
-
-                        // 排序一下, 将稀有的物品放到前面
-                        if (results.length > 8) {
-                            results.sort((a, b) => {
-                                let w1 = a.weight || 1000
-                                let w2 = b.weight || 1000
-                                return w1 - w2
-                            });
-                        }
-                        // 从中间开始闪现出现items, 4个4个一起出现
-                        game.playAudio('../extension/皮肤切换/images/cangZhenGe/mp3/guo1.mp3')
-                        for (let i = 0; i < results.length; i++) {
-                            let itemInfo = results[i]
-
-                            const _drawItem = (i) => {
-                                let rewardItem = drawItem(itemInfo, itemInfo.count || 1, resource, i < 12)
-
-                                if (results.length <= 6) {
-
-                                    if (results.length <= 4) {
-                                        let startX = (scrollBoxWidth - results.length * boardWidth * 1.2) / 2
-                                        rewardItem.x = startX * 1.7  + (boardWidth * 1.1) * (i % results.length);
-                                    } else if (results.length === 5) {
-                                        let startX = (scrollBoxWidth - results.length * boardWidth * 1.1) / 2
-                                        rewardItem.x = startX * 1.5 + (boardWidth * 1.1) * (i % results.length);
-                                    } else {
-                                        let startX = (scrollBoxWidth - 6 * boardWidth) / 2
-                                        rewardItem.x = startX * 1.5   + (boardWidth * 1.05) * (i % 6);
-                                    }
-                                    rewardItem.y = 56
-                                } else if (results.length < 12) {
-                                    let startX = (scrollBoxWidth - 6 * boardWidth) / 2
-                                    rewardItem.x = startX * 1.5   + (boardWidth * 1.05) * (i % 6);
-                                    rewardItem.y = 20 + parseInt(i / 6) * boardWidth * 1.2
-                                } else {
-                                    let startX = (scrollBoxWidth - 6 * boardWidth) / 2
-                                    rewardItem.x = startX * 2   + (boardWidth * 0.96) * (i % 6);
-                                    rewardItem.y = 20 + parseInt(i / 6) * boardWidth * 1.2
-
-                                }
-
-
-                                scrollbox.content.addChild(rewardItem)
-                            }
-
-                            if (i < 12) {
-                                let firstIndex = []
-                                let secondIndex = []
-                                let lastIndex = []
-                                if (results.length === 4) {
-                                    firstIndex = [1, 2]
-                                    secondIndex = [0, 3]
-                                } else if (results.length === 5) {
-                                    firstIndex = [1, 2, 3]
-                                    secondIndex = [0, 4]
-                                } else {
-                                    firstIndex = [2, 3, 8, 9]
-                                    secondIndex = [1, 4, 7, 10]
-                                    lastIndex = [0, 5, 6, 11]
-                                }
-                                if (firstIndex.includes(i)) {
-                                    _drawItem(i)
-                                } else if (secondIndex.includes(i)){
-                                    setTimeout(() => {
-                                        _drawItem(i)
-                                    }, 350)
-                                } else {
-                                    // 最后一批出现
-                                    setTimeout(() => {
-                                        _drawItem(i)
-                                    }, 700)
-                                }
-                            } else {
-                                _drawItem(i)
-                            }
-
-                        }
-
-                        // 为了防止内容撑不开容器, 再添加一个透明的填充物
-                        const tmp = new PIXI.Sprite.from(PIXI.Texture.EMPTY)
-                        tmp.height = 100
-                        tmp.width = 50
-
-                        // 添加星星spine
-                        // debugger
-                        // set the position
-                        setTimeout(() => {
-                            const xingxingAni = new PIXI.spine.Spine(resource.gongxihuode_lizi.spineData);
-                            let localPos = xingxingAni.getLocalBounds()  // 骨骼的本地坐标
-                            let scale
-                            scale = scrollBoxWidth/ localPos.width * 0.15
-                            // 设置绝对偏移
-                            xingxingAni.scale.set(0.5 * boardFactor);  // 设置新的大小后, 本地坐标会进行偏移
-                            // 设置相对canvas的中心
-                            xingxingAni.position.set(
-                                -localPos.x + (scrollBoxWidth / 3 ) / 2,
-                                -localPos.y + (scrollBoxHeight / 2) / 2 ,
-                            )
-                            window.xingxingAni = xingxingAni
-                            xingxingAni.state.timeScale = 0.6
-                            setDefaultAni(xingxingAni, true)
-                            scrollbox.content.addChild(xingxingAni)
-                        }, 2000)
-
-                        scrollbox.content.addChild(tmp)
-
-                        // scrollbox.boxHeight = scrollbox.content.children[0].children[0].height * 1.8
-                        scrollbox.update()
-
-                        // 奖励物品可以滑动
-                        // add the viewport to the stage
-                        app.stage.addChild(scrollbox)
-
-
-                        // 页面上添加一个透明的div框来进行拖拽滑动
-                        const dragDiv = ui.create.div('.drag-div')
-                        dragDiv.style.width = scrollbox.boxWidth + 'px'
-                        dragDiv.style.height = scrollbox.boxHeight * 1.8 + 'px'
-                        div.appendChild(dragDiv)
-
-                        // 添加文字提示, 继续
-
-                        const continueTitleStyle = new PIXI.TextStyle({
-                            fontFamily: 'shousha',
-                            fontSize: parseInt(18 * boardFactor),
-                            fill: '#DEB887',
-                            letterSpacing: 1
-                        })
-                        const continueTitle = new PIXI.Text('请点击屏幕空白处继续', continueTitleStyle)
-                        continueTitle.x = back.x - continueTitle.width / 2;
-                        continueTitle.y = back.y + back.height / 2
-                        app.stage.addChild(continueTitle);
-
-                        bindDragEvent(dragDiv, scrollbox)
-                        // 定义关闭当前奖励窗口函数
-                        closeRewardResultWindow = function () {
-                            yuan_pan.destroy()
-                            app.ticker.remove(yuan_pan.rotateForever)
-                            title.destroy()
-                            back.destroy()
-                            continueTitle.destroy()
-                            scrollbox.destroy()
-                            div.removeChild(dragDiv)
-                        };
-
-                        window.pixiApp = app
-                        window.pixiBeiJing = boxbeijing
-                    }
-
-                    openAll.listen(function () {
-                        game.playAudio('../extension/皮肤切换/images/cangZhenGe/mp3/knock.mp3')
-                        if (boxbeijing) {
-                            boxbeijing.state.setAnimation(0, 'play2', false);
-                            boxbeijing.state.addAnimation(0, 'play1', true, 4);
-                            game.playAudio('../extension/皮肤切换/images/cangZhenGe/mp3/guo.mp3')
-                            let lis  =  {
-                                complete: function (track) {
-                                    boxbeijing.state.setAnimation(0, 'play1', true)
-                                    boxbeijing.state.remove
-                                    // 打开奖励窗口
-                                    let c = skinSwitch.czgSettings.drawCount || 50
-                                    openRewardResult(c)
-                                    boxbeijing.state.removeListener(lis)
-                                    totalRewards.totalCount += c
-                                    refreshStatData()
-                                }
-                            }
-
-                            boxbeijing.state.listeners = [lis]
-                        }
-                    })
-                    //
-                    openOne.listen(function () {
-                        if (boxbeijing) {
-                            boxbeijing.state.setAnimation(0, 'play2', false);
-                            boxbeijing.state.addAnimation(0, 'play1', true, 4);
-
-                            let lis  =  {
-                                complete: function (track) {
-                                    boxbeijing.state.setAnimation(0, 'play1', true)
-                                    boxbeijing.state.remove
-                                    // 打开奖励窗口
-                                    openRewardResult(1)
-                                    totalRewards.totalCount += 1
-                                    refreshStatData()
-                                    boxbeijing.state.removeListener(lis)
-                                }
-                            }
-
-                            boxbeijing.state.listeners = [lis]
-                        }
-                    })
-
-                    // 画预览的道具
-                    function drawPreviewItem(itemInfo) {
-                        let resource = app.loader.resources
-                        // 奖励道具
-                        const rewardItem = new PIXI.Container()
-                        // 边框
-                        const board = new PIXI.Sprite.from(skinSwitch.url + 'images/cangZhenGe/preview_reward.png')
-                        rewardItem.addChild(board)
-                        board.visible = true
-                        board.scale.set(boardWidth / 131)  // 盒子尺寸/素材尺寸  131/88
-
-                        let item
-                        if (itemInfo.type === 'wujiang') {
-                            item = new PIXI.Sprite.from(skinSwitch.url + `images/cangZhenGe/wujiang/${itemInfo.id}.png`);
-                        } else {
-                            item = new PIXI.Sprite.from(skinSwitch.url + `images/cangZhenGe/items/${itemInfo.id}.png`);
-                        }
-                        rewardItem.scale.set(0.6)
-                        item.x = boardWidth  * 0.025
-                        item.y = boardWidth * 0.01
-                        item.scale.set(boardFactor)
-                        rewardItem.addChild(item)
-
-                        // 高级物品的边框
-                        if (itemInfo.gaoji) {
-                            // 如果是高级道具, 添加边框特效
-                            let gaojidaoju = new PIXI.spine.Spine(resource.gongxihuode_biankuang.spineData);
-                            rewardItem.addChild(gaojidaoju)
-                            setDefaultAni(gaojidaoju, true)
-                            let localPos = gaojidaoju.getLocalBounds()
-                            gaojidaoju.position.set(
-                                -localPos.x + (boardWidth  - localPos.width) / 2 + 2,
-                                -localPos.y + (boardWidth - localPos.height) / 2,
-                            )
-                            gaojidaoju.state.timeScale = 1
-                            gaojidaoju.scale.set(0.88 * boardFactor)
-                            gaojidaoju.zIndex = -1
-                        }
-
-                        rewardItem.sortableChildren = true
-
-                        // 预览物品有点特殊, 只有宝珠物品需要区分66和单个, 也只有66宝珠需要画数量
-                        // 添加宝珠物品的数量, 只有权重少于100并且数量大于1的才显示数字
-                        if (itemInfo.count && itemInfo.count > 1 && itemInfo.weight < 100) {
-                            const countStyle = new PIXI.TextStyle({
-                                fontFamily: 'shousha',
-                                fontSize: parseInt(19 * boardFactor),
-                                fill: 'white',
-                                letterSpacing: true
-                            });
-
-                            const itemCount = new PIXI.Text(`x${itemInfo.count}`, countStyle);
-                            itemCount.x = boardWidth - itemCount.width - 5;
-                            itemCount.y = board.y + boardWidth - itemCount.height - 5
-                            rewardItem.addChild(itemCount);
-                        }
-                        // 中文的换行宽度设置可能不起作用, 需要自己手动添加换行符, 分隔符等进行换行
-                        // 添加宝主物品的文字显示
-                        const style = new PIXI.TextStyle({
-                            fontFamily: 'shousha',
-                            fontSize: parseInt(20 * boardFactor),
-                            fill: 'white',
-                            wordWrap: true,
-                            // breakWords: true,
-                            // wordWrapWidth: 20,
-                            align: 'center',
-                            lineJoin: 'round',
-                            leading: 0,
-                        });
-                        let name = itemInfo.name
-                        let newName = ''
-                        for (let i = 0; i < name.length; i+=5) {
-                            if (i > 0) {
-                                newName += ' '
-                            }
-                            newName += name.slice(i, i + 5)
-                        }
-                        const itemName = new PIXI.Text(newName, style);
-                        itemName.x = boardWidth / 2 - itemName.width / 2;
-                        itemName.y = boardWidth + 10
-
-                        rewardItem.addChild(itemName);
-
-                        return rewardItem
-
-
-                    }
-
-                    // 显示右下角的按钮组
-                    const btnGroups = ui.create.div('.cbgBtnsGroup', div)
-                    const tehui = ui.create.div('.cbgTehuiBtn', btnGroups)  // 特惠
-                    const xinyuan = ui.create.div('.cbgXinyuanBtn', btnGroups) // 心愿商城
-                    const preview = ui.create.div('.cbgYuranBtn', btnGroups)  // 预览
-                    preview.listen(() => {
-                        previewReward()
-                    })
-                    // 预览当前盒子的奖励物品
-                    function previewReward() {
-                        const resource = app.loader.resources
-                        const previewContaner = new PIXI.Container()
-                        const back = new PIXI.Sprite(resource.previewBox.texture);
-                        back.scale.set((boardWidth * 5 + boardWidth * 0.25 * 4) / 1037)
-                        back.anchor.set(0.5)
-                        back.x = app.screen.width / 2;
-                        back.y = app.screen.height * 0.54;
-                        // 添加背景框
-                        previewContaner.addChild(back)
-
-                        // 添加一个可以滑动的窗口
-                        let scrollBoxWidth = (boardWidth * 5 + 4 *boardWidth * 0.25)
-                        let scrollBoxHeight = (boardWidth * 3)
-                        const scrollbox = new Scrollbox.Scrollbox({
-                            boxWidth: scrollBoxWidth,
-                            boxHeight:scrollBoxHeight,
-                            overflowY: 'hidden',
-                            overflowX: 'none',
-                            // stopPropagation: false,
-                            dragScroll: false
-
-                        })
-
-                        scrollbox.x = back.x - (scrollBoxWidth / 2);
-                        scrollbox.y = back.y - (scrollBoxHeight / 2)
-                        // scrollbox.x = back.x - (88 + 25) * 0.6 * 2 - 60 * 0.6 - 88 * 0.6;
-                        // scrollbox.y = back.y - 88 * 1.5
-                        // 抽取盒子
-
-                        function getPreviewItems() {
-
-                            maskDiv.show()
-
-                            let idSet = new Set()
-                            let result = []
-                            // 放入必中的保底
-                            skinSwitch.czgSettings.fixed.forEach(i => {
-                                result.push({
-                                    id: i.id,
-                                    name: i.name,
-                                    weight: 3000,  // 默认保底奖励, 权重3000
-                                })
-                            })
-
-                            for (let item of currenBox.items) {
-                                if (idSet.has(item.id)) {
-                                    if (item.weight && item.weight <= 100) {
-                                        result.push({...item})
-                                        idSet.add(item.id)
-                                    }
-                                } else {
-                                    idSet.add(item.id)
-                                    result.push({...item})
-                                }
-                            }
-
-                            // 排序一下, 将稀有的物品放到前面
-                            result.sort((a, b) => {
-                                let w1 = a.weight || 1000
-                                let w2 = b.weight || 1000
-                                return w1 - w2
-                            })
-
-                            return result
-                        }
-
-                        let results = getPreviewItems()
-
-                        // 遍历所有的奖励框
-                        for (let i = 0; i < results.length; i++) {
-                            let info = results[i]
-                            // 和之前一样的逻辑将奖励物品画进去
-                            const pItem = drawPreviewItem(info)
-                            let startX = (scrollBoxWidth - 5 * boardWidth) / 2
-                            pItem.x = startX * 1   + (boardWidth * 1.05) * (i % 5);
-                            pItem.y = 6 + parseInt(i / 5) * boardWidth
-                            scrollbox.content.addChild(pItem)
-
-                        }
-                        scrollbox.content.top = 0
-
-                        previewContaner.addChild(scrollbox)
-                        scrollbox.update()
-                        window.preBox = scrollbox
-                        const dragDiv = ui.create.div('.drag-div')
-                        dragDiv.style.width = scrollbox.boxWidth + 'px'
-                        dragDiv.style.height = scrollbox.boxHeight * 1.8 + 'px'
-                        div.appendChild(dragDiv)
-                        bindDragEvent(dragDiv, scrollbox)
-
-                        // 为了防止内容撑不开容器, 再添加一个透明的填充物
-                        // const tmp = new PIXI.Sprite.from(PIXI.Texture.EMPTY)
-                        // tmp.height = 100
-                        // tmp.width = 50
-                        // scrollbox.content.addChild(tmp)
-
-                        app.stage.addChild(previewContaner)
-
-                        // 定义关闭函数
-                        closeRewardPreviewWindow = function () {
-                            console.log('销毁预览窗口')
-                            previewContaner.destroy({children: true})
-                            div.removeChild(dragDiv)
-                        }
-                    }
-
-                    // 加载动画
-                    loadAnimations()
-                    // openRewardResult(50)
-
-
-                },
 
                 // todo: 通过点击角色身上的按钮,打开设置动皮的变身事件
                 openEventBindWindow: function (player, isPrimary) {
@@ -8677,7 +9214,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                     // 初始化预览播放器, 共用十周年UI定义的播放器的canvas
                     if (!skinSwitch.animationManager) {
-                        skinSwitch.animationManager = new AnimationManager(lib.assetURL + 'extension/十周年UI/assets/animation/', dcdAnim.canvas, 988888, {offscreen: false})
+                        skinSwitch.animationManager = new AnimationManager(lib.assetURL + 'extension/十周年UI/assets/animation/', dcdAnim.canvas, 988888, { offscreen: false })
                     }
                     const am = skinSwitch.animationManager
 
@@ -8705,7 +9242,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                     // 初始化同骨骼的内容
                     const initSameSkelInfo = () => {
-                        contentArea.innerHTML= `
+                        contentArea.innerHTML = `
                             <div class="sameBox">
                                 <div class="sameBoxItem">
                                     <div class="label">标签</div>
@@ -8731,71 +9268,97 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     initOptions(transTemps, transformTempKV)
                     // 初始化不同骨骼的内容
                     const initDiffSkelInfo = () => {
-                        contentArea.innerHTML= `
-                            <div class="diffBox">
-                               <div class="dyskinSelect">
-                                   <div class="choosePlayerGroup">
-                                        <div class="playerInputGroup"> 
-                                            <div class="playerText">武将id: </div> 
-                                            <input type="text">
-                                            <div class="eventBindButton searchPlayer" id="searchPlayerIdBtn">搜索</div>
-                                         </div>    
-                                         <div class="playerAlpha" id="firstAlphaSearch">
-                                            <div style="position: relative"></div>
-                                            <div style="position: relative"></div>
-                                        </div>
-                                         <div class="wujiangIdList" id="wujiangIdList"></div>
-                                    </div>
-                                    <div class="chooseSkin">
-                                      <div class="labelText">皮肤名称</div><select id="wujiangSkinSelect"></select></div>
-                                    </div>
-                                <div class="transformEffectContent">
-                                    <div class="transEffectHead">
-                                        变换特效: <select id="transEffectSelect"></select>
-                                    </div>
-                                    <div class="transItemBox">
-                                        <div class="transSettingItem">
-                                            <div class="labelText transSettingItemText">大小</div>
-                                            <input type="number" value="0.5" placeholder="0.5" id="transItemScale">
-                                        </div>
-                                        <div class="transSettingItem">
-                                            <div class="labelText transSettingItemText">延时</div>
-                                            <input type="number" value="0.3" placeholder="0.3" id="transItemDelay">
-                                        </div>
-                                        <div class="transSettingItem">
-                                            <div class="labelText transSettingItemText">速度</div>
-                                            <input type="number" value="1" placeholder="1" id="transItemSpeed">
-                                        </div>
-                                        <div class="transSettingItem">
-                                            <div class="labelText transSettingItemText">角度</div>
-                                            <input type="number" value="0" placeholder="0" id="transItemAngle">
-                                        </div>
-                                          <div class="transSettingItem">
-                                            <div class="labelText transSettingItemText">x</div>
-                                            <input type="number" id="transItemX">
-                                        </div>
-                                          <div class="transSettingItem">
-                                            <div class="labelText transSettingItemText">y</div>
-                                            <input type="number" id="transItemY">
-                                        </div>
-                                    </div>                               
+                        contentArea.innerHTML = `
+                            <div class="adjustBox">
+                                <div class="title">角色调整</div>
+                                <div class="closeBtn">×</div>
+                                <div class="btnGroup">
+                                    <div class="btnItem" id="daijiBtn">调整待机</div>
+                                    <div class="btnItem" id="beijingBtn">调整背景</div>
+                                    <div class="btnItem" id="qianjingBtn">调整前景</div>
+                                    <div class="btnItem" id="chukuangBtn">调整出框</div>
+                                    <div class="btnItem" id="chuchangBtn">调整出场</div>
+                                    <div class="btnItem" id="teshuBtn">调整特殊</div>
+
                                 </div>
-                                
+                                <div class="bottomBtns">
+                                    <div class="btnItem" id="saveBtn">保存</div>
+                                    <div class="btnItem" id="cancelBtn">返回</div>
+                                </div>
                             </div>
                         `
-                        const letterDiv = document.getElementById('firstAlphaSearch')
-                        const wujiangIdList = document.getElementById('wujiangIdList')
-                        const wujiangSkinSelect = document.getElementById('wujiangSkinSelect')
-                        const searchPlayerIdBtn = document.getElementById('searchPlayerIdBtn')
-                        const transEffectSelect = document.getElementById('transEffectSelect')
-                        const transItemScale = document.getElementById('transItemScale')
-                        const transItemDelay = document.getElementById('transItemDelay')
-                        const transItemSpeed = document.getElementById('transItemSpeed')
-                        const transItemAngle = document.getElementById('transItemAngle')
-                        const transItemX = document.getElementById('transItemX')
-                        const transItemY = document.getElementById('transItemY')
+                        const daijiBtn = document.getElementById('daijiBtn')
+                        const beijingBtn = document.getElementById('beijingBtn')
+                        const qianjingBtn = document.getElementById('qianjingBtn')
+                        const chukuangBtn = document.getElementById('chukuangBtn')
+                        const chuchangBtn = document.getElementById('chuchangBtn')
+                        const teshuBtn = document.getElementById('teshuBtn')
 
-                        const lettersList  = ['ABCDEFGHIJKLM', 'NOPQRSTUVWXYZ']
+                        const saveBtn = document.getElementById('saveBtn')
+                        const cancelBtn = document.getElementById('cancelBtn')
+                        const closeBtn = document.querySelector('.closeBtn')
+
+                        // 当前选中的按钮
+                        let currentBtn = null
+
+                        // 按钮点击处理函数
+                        const handleBtnClick = (btn, mode) => {
+                            if (currentBtn) {
+                                currentBtn.classList.remove('btnSelect')
+                            }
+                            btn.classList.add('btnSelect')
+                            currentBtn = btn
+                            currentMode = mode  // 设置当前模式
+
+                            // 显示调整界面
+                            showAdjustBar()
+                            showShizi(true)
+                            initPosParams()
+
+                            // 播放对应动画
+                            if (mode === 'chuchang') {
+                                skinSwitch.chukuangWorkerApi.chukuangAction(player, 'chuchang')
+                            } else if (mode === 'chukuang') {
+                                skinSwitch.chukuangWorkerApi.chukuangAction(player, 'GongJi')
+                            } else if (mode === 'teshu') {
+                                skinSwitch.chukuangWorkerApi.chukuangAction(player, 'TeShu')
+                            } else if (mode === 'zhishixian') {
+                                // 播放指示线动画，需要模拟攻击事件来触发指示线
+                                playZhishixianAnimation()
+                            } else {
+                                selfLoopPlay(mode)
+                            }
+                        }
+
+                        // 保存按钮
+                        saveBtn.addEventListener('click', () => {
+                            // 保存当前调整
+                            saveCurrentModeAdjustment()
+                            
+                            // 只保存当前模式的调整参数
+                            saveToFile(true) // 传入true表示显示保存消息
+                            
+                            // 从临时调整中移除当前已保存的模式
+                            if (tempAdjustments[currentMode]) {
+                                delete tempAdjustments[currentMode]
+                            }
+                        })
+
+                        // 取消按钮
+                        cancelBtn.addEventListener('click', () => {
+                            // 隐藏调整界面
+                            hide(editBox)
+                        })
+
+                        // 关闭按钮
+                        closeBtn.addEventListener('click', () => {
+                            // 隐藏调整界面
+                            hide(editBox)
+                        })
+
+
+
+                        const lettersList = ['ABCDEFGHIJKLM', 'NOPQRSTUVWXYZ']
                         const defaultTransformDir = 'extension/皮肤切换/effects/transform'
 
                         searchPlayerIdBtn.listen(function (e) {
@@ -8877,7 +9440,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                 // 获取所有的特效
                                 for (let f of files) {
                                     let name = f.substring(0, f.lastIndexOf("."))
-                                    let ext = f.substring(f.lastIndexOf(".")+1)
+                                    let ext = f.substring(f.lastIndexOf(".") + 1)
                                     if (name in allEffects) {
 
                                     } else {
@@ -8938,10 +9501,12 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     const triggerConstant = {
                         lowhp: '血量变化',
                         jisha: '击杀',
+                        changeGroup: '改变势力',
                         juexing: '觉醒技',
                         xiandingji: '限定技',
                         zhuanhuanji: '转换技',
                         damage: '受伤次数',
+                        roundCount: '回合计数',
                     }
 
                     initOptions(triggerSelect, triggerConstant)
@@ -8963,12 +9528,12 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         _status.th_swipe_right = lib.config.swipe_right;
                         lib.config.swipe_right = ''
                         _status.th_gamePause = ui.click.pause
-                        ui.click.pause = ()=>{}
+                        ui.click.pause = () => { }
                     }
 
                     let thunderAllowTouch = function () {
                         if (_status.th_swipe_up) {
-                            lib.config.swipe_up =  _status.th_swipe_up
+                            lib.config.swipe_up = _status.th_swipe_up
                             lib.config.swipe_down = _status.th_swipe_down
                             lib.config.swipe_left = _status.th_swipe_left
                             lib.config.swipe_right = _status.th_swipe_right
@@ -8993,7 +9558,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             count--
                             newItem[k] = pfqhLive2dSettings.models[k].name || k
                         }
-                        lib.extensionMenu.extension_皮肤切换.l2dSetting.item = newItem
+
                     }
                 },
                 /**
@@ -9023,14 +9588,14 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 },
                 // 封装长按事件
                 continuousClick: function (dom, func) {
-                    const downEvent =  lib.config.touchscreen ? 'touchstart' : 'mousedown'
-                    const upEvent =  lib.config.touchscreen ? 'touchend' : 'mouseup'
-                    const cancelEvent =  lib.config.touchscreen ? 'touchcancel' : 'mouseleave'
+                    const downEvent = lib.config.touchscreen ? 'touchstart' : 'mousedown'
+                    const upEvent = lib.config.touchscreen ? 'touchend' : 'mouseup'
+                    const cancelEvent = lib.config.touchscreen ? 'touchcancel' : 'mouseleave'
 
-                    let downFunc =  function (e) {
+                    let downFunc = function (e) {
                         // 改变骨骼的位置
                         //获取鼠标按下时的时间
-                        let t = setInterval((e) => {func(e, ++downFunc._times)}, 120)
+                        let t = setInterval((e) => { func(e, ++downFunc._times) }, 120)
                         clearInterval(downFunc.timer)
                         downFunc.timer = t
                         downFunc._times = 0  // 表示触发了多少次
@@ -9063,9 +9628,11 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
             lib.init.css(skinSwitch.url + "component", "iconfont")
             lib.init.css(skinSwitch.url + "component", "message")
             lib.init.css(skinSwitch.url + "style", "light-modal")
-            lib.init.js(skinSwitch.url, 'saveSkinParams', function() {
-                window.saveFunc(lib, game, ui, get, ai, _status);
-            }, function() {
+            lib.init.js(skinSwitch.url, 'saveSkinParams', function () {
+                if (typeof window.skinSwitchLoadParams === 'function') {
+                    window.skinSwitchLoadParams(lib, game, ui, get, ai, _status);
+                }
+            }, function () {
                 skinSwitch.saveSkinParams = {}
             });
 
@@ -9082,9 +9649,11 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     lib.init.js(skinSwitch.url + 'spine-lib', 'spine_4_0_64', function () {
                         lib.init.js(skinSwitch.url + 'spine-lib', 'spine_3_8', function () {
                             lib.init.js(skinSwitch.url + 'spine-lib', 'spine_4_1', function () {
-                                lib.init.js(skinSwitch.url, 'animations', function () {})
-                                lib.init.js(skinSwitch.url + 'spine-lib', 'spine_3_5_35', function (){})
-                                lib.init.js(skinSwitch.url + 'spine-lib', 'spine_3_7', function (){})
+                                lib.init.js(skinSwitch.url + 'spine-lib', 'spine_4_2', function () {
+                                    lib.init.js(skinSwitch.url, 'animations', function () { })
+                                    lib.init.js(skinSwitch.url + 'spine-lib', 'spine_3_5_35', function () { })
+                                    lib.init.js(skinSwitch.url + 'spine-lib', 'spine_3_7', function () { })
+                                })
                             })
                         })
                     })
@@ -9093,7 +9662,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
             lib.init.js(skinSwitch.url, 'effects', function () {
                 for (let k in pfqhSkillEffect) {
-                    for (let i=0; i<pfqhSkillEffect[k].length; i++) {
+                    for (let i = 0; i < pfqhSkillEffect[k].length; i++) {
                         lib.skill[`__pfqh_${k}_${i}`] = pfqhSkillEffect[k][i]
                     }
                 }
@@ -9109,15 +9678,19 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
             function editBoxInit() {
                 if (editBox) return
 
-                const downEvent =  lib.config.touchscreen ? 'touchstart' : 'mousedown'
-                const upEvent =  lib.config.touchscreen ? 'touchend' : 'mouseup'
-                const cancelEvent =  lib.config.touchscreen ? 'touchcancel' : 'mouseleave'
+                const downEvent = lib.config.touchscreen ? 'touchstart' : 'mousedown'
+                const upEvent = lib.config.touchscreen ? 'touchend' : 'mouseup'
+                const cancelEvent = lib.config.touchscreen ? 'touchcancel' : 'mouseleave'
 
                 // 当前支持调整的模式
                 const modes = {
                     daiji: 'daiji',
                     chukuang: 'chukuang',
                     beijing: 'beijing',
+                    qianjing: 'qianjing',
+                    chuchang: 'chuchang',
+                    teshu: 'teshu',
+                    zhishixian: 'zhishixian',
                 }
                 const funcs = {
                     player: 'player',
@@ -9131,8 +9704,192 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 let adjustY   // 用于存储当前角色的位置
                 let adjustScale
                 let adjustAngle = 0 // 调整的角度
+                
+                // 用于临时存储多个调整，实现批量保存功能
+                let tempAdjustments = {}
+
+                // 循环播放功能
+                let selfLoopPlay = function (mode) {
+                    // 清除之前的定时器
+                    if (selfLoopPlay.loopTimer) {
+                        clearInterval(selfLoopPlay.loopTimer);
+                        selfLoopPlay.loopTimer = null;
+                    }
+
+                    let canvas = player.getElementsByClassName("animation-player")[0];
+                    let dynamicWrap
+                    if (player.isQhlx) {
+                        dynamicWrap = canvas.parentNode;
+                    } else {
+                        dynamicWrap = player.getElementsByClassName("dynamic-wrap")[0];
+                    }
+
+                    // 根据不同模式播放不同动画
+                    if (mode === modes.chuchang) {
+                        // 播放出场动画，添加循环播放
+                        let playChuchang = () => {
+                            skinSwitch.chukuangWorkerApi.chukuangAction(player, 'chuchang')
+                        }
+                        playChuchang(); // 立即播放一次
+                        // 设置循环播放，每1秒重复一次
+                        selfLoopPlay.loopTimer = setInterval(playChuchang, 1000);
+                        // 等待一段时间让动画开始播放
+                        setTimeout(() => {
+                            initPosParams()
+                        }, 300)
+                    } else if (mode === modes.teshu) {
+                        // 播放特殊动画，添加循环播放
+                        let playTeshu = () => {
+                            skinSwitch.chukuangWorkerApi.chukuangAction(player, 'TeShu')
+                        }
+                        playTeshu(); // 立即播放一次
+                        // 设置循环播放，每1秒重复一次
+                        selfLoopPlay.loopTimer = setInterval(playTeshu, 1000);
+                        // 等待一段时间让动画开始播放
+                        setTimeout(() => {
+                            initPosParams()
+                        }, 300)
+                    } else if (mode === modes.zhishixian) {
+                        // 播放指示线动画，添加循环播放
+                        let playZhishixian = () => {
+                            // 检查当前角色是否有指示线配置
+                            let playerParams = player.dynamic.primary.player
+                            if (!playerParams.zhishixian) {
+                                return
+                            }
+
+                            // 模拟攻击事件来触发指示线
+                            let targets = game.players.filter(p => p !== player && p.isAlive())
+                            if (targets.length === 0) {
+                                return
+                            }
+
+                            // 构造指示线参数
+                            let args = {
+                                hand: null,
+                                attack: {},
+                                targets: [],
+                                bodySize: {
+                                    bodyWidth: decadeUI.get.bodySize().width,
+                                    bodyHeight: decadeUI.get.bodySize().height
+                                }
+                            }
+
+                            // 获取攻击方位置
+                            player.checkBoundsCache(true)
+                            args.attack = player.getBoundingClientRect()
+
+                            // 获取目标位置（选择第一个目标）
+                            let target = targets[0]
+                            target.checkBoundsCache(true)
+                            args.targets.push({
+                                boundRect: target.getBoundingClientRect(),
+                            })
+
+                            // 如果是玩家，添加手牌区域
+                            if (player === game.me) {
+                                let hand = dui.boundsCaches.hand
+                                if (hand) {
+                                    hand.check()
+                                    let x1 = hand.x + hand.width / 2
+                                    let y1 = hand.y
+                                    args.hand = {
+                                        x1: x1,
+                                        y1: y1
+                                    }
+                                }
+                            }
+
+                            // 播放指示线动画
+                            skinSwitch.chukuangWorkerApi.chukuangAction(player, 'GongJi', {
+                                attackArgs: args,
+                                triggername: 'useCard'
+                            })
+                        }
+                        playZhishixian(); // 立即播放一次
+                        // 设置循环播放，每1秒重复一次
+                        selfLoopPlay.loopTimer = setInterval(playZhishixian, 1000);
+                        // 等待一段时间让动画开始播放
+                        setTimeout(() => {
+                            initPosParams()
+                        }, 300)
+                    } else {
+                        // 其他模式使用原来的debug方式
+                        skinSwitch.postMsgApi.debug(player, mode)
+                    }
+
+                    // 判断是否需要出框
+                    let needChukuang = false;
+                    if (mode === modes.chukuang || mode === modes.zhishixian) {
+                        needChukuang = true;
+                    } else if (mode === modes.chuchang || mode === modes.teshu) {
+                        // 检查当前动皮是否有对应的出框参数
+                        let playerParams = player.dynamic.primary.player
+                        if (mode === modes.chuchang && playerParams.chuchang && playerParams.chuchang.ck !== false) {
+                            needChukuang = true;
+                        } else if (mode === modes.teshu && playerParams.shizhounian) {
+                            needChukuang = true;
+                        }
+                    }
+
+                    if (needChukuang) {
+                        skinSwitch.rendererOnMessage.addListener(player, 'debugChuKuang', function (e) {
+                            dynamicWrap.style.zIndex = "100";
+                            canvas.style.position = "fixed";
+                            canvas.style.width = "100%";
+
+                            if (player.isQhlx) {
+                                let bodyHeight = decadeUI.get.bodySize().height
+                                let qhDivHeight = dynamicWrap.parentNode.parentNode.getBoundingClientRect().height
+                                let top = (bodyHeight - qhDivHeight) / 2
+                                canvas.style.top = -top + 'px'
+                                canvas.style.height = Math.round((decadeUI.get.bodySize().height / dynamicWrap.parentNode.parentNode.getBoundingClientRect().height * 100)) + '%'
+                                player.style.zIndex = 100
+                            } else {
+                                canvas.style.height = "100%";
+                                player.style.zIndex = 10;
+                            }
+
+                            canvas.classList.add('hidden')
+                            setTimeout(() => {
+                                canvas.classList.remove('hidden')
+                            }, 250)
+                        })
+                    }
+
+                    skinSwitch.rendererOnMessage.addListener(player, 'canvasRecover', function (e) {
+                        dynamicWrap.style.zIndex = "60";
+                        canvas.style.height = null;
+                        canvas.style.width = null;
+                        canvas.style.position = null;
+                        player.style.zIndex = 4;
+                        canvas.style.top = null
+                    })
+                    skinSwitch.rendererOnMessage.addListener(player, 'debugNoChuKuang', function (e) {
+                        // 没有出框动画无法调整
+                        showAdjustBar(true)
+                        show(editBox)
+
+                        skinSwitch.chukuangWorkerApi.chukuangAction(player, 'GongJi', {
+                            attackArgs: {
+                                hand: null,
+                                attack: {},
+                                targets: [],
+                                bodySize: {
+                                    bodyWidth: decadeUI.get.bodySize().width,
+                                    bodyHeight: decadeUI.get.bodySize().height
+                                }
+                            },
+                            triggername: 'useCard'
+                        })
+                    })
+                }
 
                 editBox = ui.create.div('.editDynamic', ui.window)
+
+                // 添加拖拽手柄
+                const dragHandle = ui.create.div('.skin-drag-handle', editBox)
+                dragHandle.title = '拖拽移动角色调整窗口'
 
                 const funcContent = ui.create.div('.funcContent', editBox)
                 const funcTitle = ui.create.div('.titleDiv', funcContent)
@@ -9153,10 +9910,11 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 const adjustBtnGroup = ui.create.div('.btnGroup', adjustContent)
                 const daijiBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
                 const beijingBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
+                const qianjingBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
                 const chukuangBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
-                // const slotHiddenBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
-                // const slotClipBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
-                // const showParamsBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
+                const chuchangBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
+                const teshuBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
+                const zhishixianBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
                 const saveBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
                 const retBtn = ui.create.div('.funcBtn .btnItem', adjustBtnGroup)
 
@@ -9164,19 +9922,20 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                 daijiBtn.innerText = '调整待机'
                 beijingBtn.innerText = '调整背景'
+                qianjingBtn.innerText = '调整前景'
                 chukuangBtn.innerText = '调整出框'
-                // slotHiddenBtn.innerText = '部件隐藏'
-                // slotClipBtn.innerText = '部件裁剪'
-                // showParamsBtn.innerText = '复制参数'
+                chuchangBtn.innerText = '调整出场'
+                teshuBtn.innerText = '调整特殊'
+                zhishixianBtn.innerText = '调整指示线'
                 saveBtn.innerText = '保存'
                 retBtn.innerText = '返回'
 
                 // 封装连续按事件
                 let continuousClick = function (dom, func) {
-                    let downFunc =  function (e) {
+                    let downFunc = function (e) {
                         // 改变骨骼的位置
                         //获取鼠标按下时的时间
-                        let t = setInterval((e) => {func(e, ++downFunc._times)}, 120)
+                        let t = setInterval((e) => { func(e, ++downFunc._times) }, 120)
                         clearInterval(downFunc.timer)
                         downFunc.timer = t
                         downFunc._times = 0  // 表示触发了多少次
@@ -9194,14 +9953,22 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 }
 
                 closeBtn.listen(() => {
+                    // 清除循环播放定时器
+                    if (selfLoopPlay.loopTimer) {
+                        clearInterval(selfLoopPlay.loopTimer);
+                        selfLoopPlay.loopTimer = null;
+                    }
                     hide(editBox)
                 })
 
+                // 初始化角色调整窗口拖拽功能
+                skinSwitch.initEditBoxDrag(editBox, dragHandle)
+
                 let changeInfoData = () => {
                     if (!textInfoShow) return
-                    let x = adjustX[1].toFixed(2)
-                    let y = adjustY[1].toFixed(2)
-                    let scale = adjustScale.toFixed(2)
+                    let x = adjustX[1].toFixed(3)
+                    let y = adjustY[1].toFixed(3)
+                    let scale = adjustScale.toFixed(3)
                     let angle = Number(adjustAngle) || 0
                     textInfoShow.innerHTML = `x: [${adjustX[0]}, ${x}]<br> y: [${adjustY[0]}, ${y}]<br>大小: ${scale}<br> 角度: ${angle}`
                 }
@@ -9216,13 +9983,13 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     textInfoShow.innerHTML = `x: [0, 0.5]<br> y: [0, 0.5]<br>大小: 0.5<br> 角度: 0`
 
                     copyJudgeInfo.listen(() => {
-                        adjustX[1] = Number(adjustX[1].toFixed(2))
-                        adjustY[1] = Number(adjustY[1].toFixed(2))
+                        adjustX[1] = Number(adjustX[1].toFixed(3))
+                        adjustY[1] = Number(adjustY[1].toFixed(3))
                         copyToClipboard({
                             x: adjustX,
                             y: adjustY,
                             angle: adjustAngle,
-                            scale: Number(adjustScale.toFixed(2)),
+                            scale: Number(adjustScale.toFixed(3)),
                         })
                     })
 
@@ -9242,7 +10009,23 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                         } else {
                                             adjustScale += 0.01
                                         }
-                                        skinSwitch.postMsgApi.resizePos(player, currentMode, {scale: adjustScale})
+                                        skinSwitch.postMsgApi.resizePos(player, currentMode, { scale: adjustScale })
+
+                                        // 对于出框相关模式，立即更新出框Worker
+                                        if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
+                                            let actionType;
+                                            if (currentMode === modes.chukuang || currentMode === modes.zhishixian) actionType = 'GongJi';
+                                            else if (currentMode === modes.chuchang) actionType = 'chuchang';
+                                            else if (currentMode === modes.teshu) actionType = 'TeShu';
+
+                                            skinSwitch.chukuangWorkerApi.adjust(player, {
+                                                x: adjustX,
+                                                y: adjustY,
+                                                scale: adjustScale,
+                                                angle: adjustAngle
+                                            }, actionType);
+                                        }
+
                                         changeInfoData()
                                     })
                                     break;
@@ -9256,7 +10039,23 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                             adjustScale -= 0.01
                                         }
                                         if (adjustScale <= 0) adjustScale = 0.01
-                                        skinSwitch.postMsgApi.resizePos(player, currentMode, {scale: adjustScale})
+                                        skinSwitch.postMsgApi.resizePos(player, currentMode, { scale: adjustScale })
+
+                                        // 对于出框相关模式，立即更新出框Worker
+                                        if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
+                                            let actionType;
+                                            if (currentMode === modes.chukuang || currentMode === modes.zhishixian) actionType = 'GongJi';
+                                            else if (currentMode === modes.chuchang) actionType = 'chuchang';
+                                            else if (currentMode === modes.teshu) actionType = 'TeShu';
+
+                                            skinSwitch.chukuangWorkerApi.adjust(player, {
+                                                x: adjustX,
+                                                y: adjustY,
+                                                scale: adjustScale,
+                                                angle: adjustAngle
+                                            }, actionType);
+                                        }
+
                                         changeInfoData()
                                     })
                                     break;
@@ -9268,7 +10067,23 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                         } else {
                                             adjustAngle++
                                         }
-                                        skinSwitch.postMsgApi.resizePos(player, currentMode, {angle: adjustAngle})
+                                        skinSwitch.postMsgApi.resizePos(player, currentMode, { angle: adjustAngle })
+
+                                        // 对于出框相关模式，立即更新出框Worker
+                                        if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
+                                            let actionType;
+                                            if (currentMode === modes.chukuang || currentMode === modes.zhishixian) actionType = 'GongJi';
+                                            else if (currentMode === modes.chuchang) actionType = 'chuchang';
+                                            else if (currentMode === modes.teshu) actionType = 'TeShu';
+
+                                            skinSwitch.chukuangWorkerApi.adjust(player, {
+                                                x: adjustX,
+                                                y: adjustY,
+                                                scale: adjustScale,
+                                                angle: adjustAngle
+                                            }, actionType);
+                                        }
+
                                         changeInfoData()
                                     })
                                     break;
@@ -9280,7 +10095,23 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                         } else {
                                             adjustAngle--
                                         }
-                                        skinSwitch.postMsgApi.resizePos(player, currentMode, {angle: adjustAngle})
+                                        skinSwitch.postMsgApi.resizePos(player, currentMode, { angle: adjustAngle })
+
+                                        // 对于出框相关模式，立即更新出框Worker
+                                        if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
+                                            let actionType;
+                                            if (currentMode === modes.chukuang || currentMode === modes.zhishixian) actionType = 'GongJi';
+                                            else if (currentMode === modes.chuchang) actionType = 'chuchang';
+                                            else if (currentMode === modes.teshu) actionType = 'TeShu';
+
+                                            skinSwitch.chukuangWorkerApi.adjust(player, {
+                                                x: adjustX,
+                                                y: adjustY,
+                                                scale: adjustScale,
+                                                angle: adjustAngle
+                                            }, actionType);
+                                        }
+
                                         changeInfoData()
                                     })
                                     break;
@@ -9300,8 +10131,8 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                                         showAdjustBar(true)
                                         show(editBox)
                                         // 恢复播放待机动画
-                                       // currentMode = modes.daiji
-                                       //  initPosParams()
+                                        // currentMode = modes.daiji
+                                        //  initPosParams()
                                         selfLoopPlay(modes.daiji)
                                         break;
                                     }
@@ -9344,7 +10175,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         if (!this.isTouching) return;
                         let slideX = x - this.posX;
                         let slideY = y - this.posY;
-                        if (currentMode === modes.chukuang) {
+                        if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
                             adjustX[1] += slideX * 0.0007;
                             adjustY[1] -= slideY * 0.0007;
                         } else {
@@ -9352,11 +10183,30 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             adjustY[1] -= slideY * 0.003;
                         }
                         changeInfoData()
+
+                        // 调用常规的位置更新
                         skinSwitch.postMsgApi.resizePos(player, currentMode, {
                             message: 'RESIZE',
                             x: adjustX,
                             y: adjustY,
                         })
+
+                        // 对于出框相关模式，立即更新出框Worker中正在播放的动画位置
+                        if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
+                            let actionType;
+                            if (currentMode === modes.chukuang || currentMode === modes.zhishixian) actionType = 'GongJi';
+                            else if (currentMode === modes.chuchang) actionType = 'chuchang';
+                            else if (currentMode === modes.teshu) actionType = 'TeShu';
+
+                            // 直接调用出框Worker的adjust函数，立即更新位置
+                            skinSwitch.chukuangWorkerApi.adjust(player, {
+                                x: adjustX,
+                                y: adjustY,
+                                scale: adjustScale,
+                                angle: adjustAngle
+                            }, actionType);
+                        }
+
                         this.posX = x
                         this.posY = y
                     }
@@ -9398,9 +10248,39 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                         if (adjustX[0] !== 0 || adjustY[0] !== 0) {
                             adjustX[0] = 0
                             adjustY[0] = 0
-                            skinSwitch.postMsgApi.resizePos(player, currentMode, {x: adjustX, y: adjustY})
+                            skinSwitch.postMsgApi.resizePos(player, currentMode, { x: adjustX, y: adjustY })
                             initPosParams()
                             return
+                        }
+
+                        // 如果有临时保存的调整，优先使用临时保存的
+                        if (tempAdjustments[currentMode]) {
+                            adjustX = [...tempAdjustments[currentMode].x]
+                            adjustY = [...tempAdjustments[currentMode].y]
+                            adjustScale = tempAdjustments[currentMode].scale
+                            adjustAngle = tempAdjustments[currentMode].angle || 0
+                            // 立即应用临时保存的调整
+                            skinSwitch.postMsgApi.resizePos(player, currentMode, { 
+                                x: adjustX, 
+                                y: adjustY,
+                                scale: adjustScale,
+                                angle: adjustAngle
+                            })
+                            
+                            // 对于出框相关模式，立即更新出框Worker
+                            if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
+                                let actionType;
+                                if (currentMode === modes.chukuang || currentMode === modes.zhishixian) actionType = 'GongJi';
+                                else if (currentMode === modes.chuchang) actionType = 'chuchang';
+                                else if (currentMode === modes.teshu) actionType = 'TeShu';
+
+                                skinSwitch.chukuangWorkerApi.adjust(player, {
+                                    x: adjustX,
+                                    y: adjustY,
+                                    scale: adjustScale,
+                                    angle: adjustAngle
+                                }, actionType);
+                            }
                         }
 
                         changeInfoData()
@@ -9408,7 +10288,8 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 }
 
                 let refreshBtnState = (selectDiv) => {
-                    for (let item of [daijiBtn, beijingBtn, chukuangBtn]) {
+                    let allBtns = [daijiBtn, beijingBtn, qianjingBtn, chukuangBtn, chuchangBtn, teshuBtn, zhishixianBtn]
+                    for (let item of allBtns) {
                         if (item === selectDiv) {
                             item.classList.add('btnSelect')
                         } else {
@@ -9418,6 +10299,11 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 }
 
                 retBtn.listen(() => {
+                    // 清除循环播放定时器
+                    if (selfLoopPlay.loopTimer) {
+                        clearInterval(selfLoopPlay.loopTimer);
+                        selfLoopPlay.loopTimer = null;
+                    }
                     funcContent.classList.remove('hidden')
                     adjustContent.classList.add('hidden')
                     showShizi(true)
@@ -9437,7 +10323,23 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     // 清理其他
                 })
 
+                // 在切换模式前保存当前模式的调整
+                let saveCurrentModeAdjustment = () => {
+                    if (!adjustX || !adjustY) return
+                    
+                    // 保存当前模式的调整到临时存储
+                    adjustX[1] = Number(adjustX[1].toFixed(3))
+                    adjustY[1] = Number(adjustY[1].toFixed(3))
+                    tempAdjustments[currentMode] = {
+                        x: [...adjustX],
+                        y: [...adjustY],
+                        scale: Number(adjustScale.toFixed(3)),
+                        angle: Number(adjustAngle.toFixed(3)),
+                    }
+                }
+
                 daijiBtn.listen(() => {
+                    saveCurrentModeAdjustment()
                     currentMode = modes.daiji
                     showAdjustBar()
                     showShizi(true)
@@ -9448,6 +10350,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 })
 
                 beijingBtn.listen(() => {
+                    saveCurrentModeAdjustment()
                     let playerParams = player.dynamic.primary.player
                     if (!playerParams.beijing) {
                         skinSwitchMessage.show({
@@ -9468,7 +10371,30 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     hide(editBox)
                 })
 
+                qianjingBtn.listen(() => {
+                    saveCurrentModeAdjustment()
+                    let playerParams = player.dynamic.primary.player
+                    if (!playerParams.qianjing) {
+                        skinSwitchMessage.show({
+                            type: 'warning',
+                            text: '当前皮肤没有设置动态前景',
+                            duration: 1500,    // 显示时间
+                            closeable: false, // 可手动关闭
+                        })
+                        return
+                    }
+
+                    currentMode = modes.qianjing
+                    showAdjustBar()
+                    showShizi(true)
+                    initPosParams()
+                    selfLoopPlay(currentMode)
+                    refreshBtnState(qianjingBtn)
+                    hide(editBox)
+                })
+                
                 chukuangBtn.listen(() => {
+                    saveCurrentModeAdjustment()
                     currentMode = modes.chukuang
                     showAdjustBar()
                     showShizi(true)
@@ -9478,10 +10404,65 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     hide(editBox)
                 })
 
-                saveBtn.listen(() => {
-                    saveToFile()
+                chuchangBtn.listen(() => {
+                    saveCurrentModeAdjustment()
+                    let playerParams = player.dynamic.primary.player
+                    currentMode = modes.chuchang
+                    showAdjustBar()
+                    showShizi(true)
+                    initPosParams()
+                    selfLoopPlay(currentMode)
+                    refreshBtnState(chuchangBtn)
+                    hide(editBox)
                 })
 
+                teshuBtn.listen(() => {
+                    saveCurrentModeAdjustment()
+                    let playerParams = player.dynamic.primary.player
+                    currentMode = modes.teshu
+                    showAdjustBar()
+                    showShizi(true)
+                    initPosParams()
+                    selfLoopPlay(currentMode)
+                    refreshBtnState(teshuBtn)
+                    hide(editBox)
+                })
+
+                // 添加指示线按钮的事件监听器
+                zhishixianBtn.listen(() => {
+                    saveCurrentModeAdjustment()
+                    let playerParams = player.dynamic.primary.player
+                    if (!playerParams.zhishixian) {
+                        skinSwitchMessage.show({
+                            type: 'warning',
+                            text: '当前皮肤没有设置指示线动画',
+                            duration: 1500,
+                            closeable: false,
+                        })
+                        return
+                    }
+
+                    currentMode = modes.zhishixian
+                    showAdjustBar()
+                    showShizi(true)
+                    initPosParams()
+                    selfLoopPlay(currentMode)
+                    refreshBtnState(zhishixianBtn)
+                    hide(editBox)
+                })
+
+                saveBtn.listen(() => {
+                    // 保存当前调整
+                    saveCurrentModeAdjustment()
+                    
+                    // 只保存当前模式的调整参数
+                    saveToFile(true) // 传入true表示显示保存消息
+                    
+                    // 从临时调整中移除当前已保存的模式
+                    if (tempAdjustments[currentMode]) {
+                        delete tempAdjustments[currentMode]
+                    }
+                })
 
                 let adjustDirection
                 let arena = document.getElementById('arena')
@@ -9507,25 +10488,89 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                         continuousClick(adjustDirection.querySelector('#upbtn'), () => {
                             adjustY[1] += 0.01
-                            skinSwitch.postMsgApi.resizePos(player, currentMode, {x: adjustX, y: adjustY})
+                            skinSwitch.postMsgApi.resizePos(player, currentMode, { x: adjustX, y: adjustY })
+
+                            // 对于出框相关模式，立即更新出框Worker
+                            if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
+                                let actionType;
+                                if (currentMode === modes.chukuang || currentMode === modes.zhishixian) actionType = 'GongJi';
+                                else if (currentMode === modes.chuchang) actionType = 'chuchang';
+                                else if (currentMode === modes.teshu) actionType = 'TeShu';
+
+                                skinSwitch.chukuangWorkerApi.adjust(player, {
+                                    x: adjustX,
+                                    y: adjustY,
+                                    scale: adjustScale,
+                                    angle: adjustAngle
+                                }, actionType);
+                            }
+
                             changeInfoData()
                         })
 
                         continuousClick(adjustDirection.querySelector('#bottombtn'), () => {
                             adjustY[1] -= 0.01
-                            skinSwitch.postMsgApi.resizePos(player, currentMode, {x: adjustX, y: adjustY})
+                            skinSwitch.postMsgApi.resizePos(player, currentMode, { x: adjustX, y: adjustY })
+
+                            // 对于出框相关模式，立即更新出框Worker
+                            if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
+                                let actionType;
+                                if (currentMode === modes.chukuang || currentMode === modes.zhishixian) actionType = 'GongJi';
+                                else if (currentMode === modes.chuchang) actionType = 'chuchang';
+                                else if (currentMode === modes.teshu) actionType = 'TeShu';
+
+                                skinSwitch.chukuangWorkerApi.adjust(player, {
+                                    x: adjustX,
+                                    y: adjustY,
+                                    scale: adjustScale,
+                                    angle: adjustAngle
+                                }, actionType);
+                            }
+
                             changeInfoData()
                         })
 
                         continuousClick(adjustDirection.querySelector('#leftbtn'), () => {
                             adjustX[1] -= 0.01
-                            skinSwitch.postMsgApi.resizePos(player, currentMode, {x: adjustX, y: adjustY})
+                            skinSwitch.postMsgApi.resizePos(player, currentMode, { x: adjustX, y: adjustY })
+
+                            // 对于出框相关模式，立即更新出框Worker
+                            if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
+                                let actionType;
+                                if (currentMode === modes.chukuang || currentMode === modes.zhishixian) actionType = 'GongJi';
+                                else if (currentMode === modes.chuchang) actionType = 'chuchang';
+                                else if (currentMode === modes.teshu) actionType = 'TeShu';
+
+                                skinSwitch.chukuangWorkerApi.adjust(player, {
+                                    x: adjustX,
+                                    y: adjustY,
+                                    scale: adjustScale,
+                                    angle: adjustAngle
+                                }, actionType);
+                            }
+
                             changeInfoData()
                         })
 
                         continuousClick(adjustDirection.querySelector('#rightbtn'), () => {
                             adjustX[1] += 0.01
-                            skinSwitch.postMsgApi.resizePos(player, currentMode, {x: adjustX, y: adjustY})
+                            skinSwitch.postMsgApi.resizePos(player, currentMode, { x: adjustX, y: adjustY })
+
+                            // 对于出框相关模式，立即更新出框Worker
+                            if (currentMode === modes.chukuang || currentMode === modes.chuchang || currentMode === modes.teshu || currentMode === modes.zhishixian) {
+                                let actionType;
+                                if (currentMode === modes.chukuang || currentMode === modes.zhishixian) actionType = 'GongJi';
+                                else if (currentMode === modes.chuchang) actionType = 'chuchang';
+                                else if (currentMode === modes.teshu) actionType = 'TeShu';
+
+                                skinSwitch.chukuangWorkerApi.adjust(player, {
+                                    x: adjustX,
+                                    y: adjustY,
+                                    scale: adjustScale,
+                                    angle: adjustAngle
+                                }, actionType);
+                            }
+
                             changeInfoData()
                         })
                     }
@@ -9543,7 +10588,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     if (p) {
                         let _canvas = p.getElementsByClassName('animation-player')
                         if (_canvas.length) {
-                           qhNode =  _canvas[0].parentNode.parentNode
+                            qhNode = _canvas[0].parentNode.parentNode
                         }
 
                     }
@@ -9581,7 +10626,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     if (p) {
                         let _canvas = p.getElementsByClassName('animation-player')
                         if (_canvas.length) {
-                            qhNode =  _canvas[0].parentNode.parentNode
+                            qhNode = _canvas[0].parentNode.parentNode
                         }
 
                     }
@@ -9611,177 +10656,14 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     skinSwitch.rendererOnMessage.addListener(player, 'position', func)
                 }
 
-                let selfLoopPlay = function(mode) {
 
-                    let canvas = player.getElementsByClassName("animation-player")[0];
-                    let dynamicWrap
-                    if (player.isQhlx) {
-                        dynamicWrap = canvas.parentNode;
-                    } else {
-                        dynamicWrap = player.getElementsByClassName("dynamic-wrap")[0];
-                    }
-                    skinSwitch.postMsgApi.debug(player, mode)
-                    skinSwitch.rendererOnMessage.addListener(player, 'debugChuKuang', function (e) {
-                        dynamicWrap.style.zIndex = "100";
-                        canvas.style.position = "fixed";
-                        canvas.style.width = "100%";
 
-                        if (player.isQhlx) {
-                            let bodyHeight = decadeUI.get.bodySize().height
-                            let qhDivHeight = dynamicWrap.parentNode.parentNode.getBoundingClientRect().height
-                            let top = (bodyHeight - qhDivHeight) / 2
-                            canvas.style.top = -top + 'px'
-                            canvas.style.height = Math.round((decadeUI.get.bodySize().height /  dynamicWrap.parentNode.parentNode.getBoundingClientRect().height * 100)) + '%'
-                            player.style.zIndex = 100
-                        } else {
-                            canvas.style.height = "100%";
-                            player.style.zIndex = 10;
-                        }
-
-                        canvas.classList.add('hidden')
-                        setTimeout(() => {
-                            canvas.classList.remove('hidden')
-                        }, 250)
-                    })
-
-                    skinSwitch.rendererOnMessage.addListener(player, 'canvasRecover', function (e) {
-                        dynamicWrap.style.zIndex = "60";
-                        canvas.style.height = null;
-                        canvas.style.width = null;
-                        canvas.style.position = null;
-                        player.style.zIndex = 4;
-                        canvas.style.top = null
-                    })
-                    skinSwitch.rendererOnMessage.addListener(player, 'debugNoChuKuang', function (e) {
-                        // 没有出框动画无法调整
-                        // currentMode = modes.daiji
-                        showAdjustBar(true)
-                        show(editBox)
-
-                        skinSwitchMessage.show({
-                            type: 'warning',
-                            text: '当前动皮暂无出框参数',
-                            duration: 1500,    // 显示时间
-                            closeable: false, // 可手动关闭
-                        })
-
-                    })
-                }
-
-                // 查看参数
-                // showParamsBtn.listen((e) => {
-                //     skinSwitch.postMsgApi.getNodeInfo(player)
-                //     skinSwitch.rendererOnMessage.addListener(player, 'getNodeInfo', (data) => {
-                //         console.log('dataInfo::::  ', data)
-                //         // 直接复制参数
-                //         // 弹出一个框查看参数信息, 也可以快速复制
-                //         // let modal = ui.create.div('.modalParent', document.body)
-                //         // modal.innerHTML = `
-                //         // <style>
-                //         //     .modalParent {
-                //         //       display: flex;
-                //         //       flex-direction: column;
-                //         //       align-items: center;
-                //         //       justify-content: center;
-                //         //       color: #222;
-                //         //       position: relative;
-                //         //       min-height: 100vh;
-                //         //     }
-                //         //
-                //         //     .modal {
-                //         //       display: flex;
-                //         //       flex-direction: column;
-                //         //       justify-content: center;
-                //         //       gap: 0.4rem;
-                //         //       width: 450px;
-                //         //       padding: 1.3rem;
-                //         //       min-height: 250px;
-                //         //       position: absolute;
-                //         //       top: 20%;
-                //         //       background-color: white;
-                //         //       border: 1px solid #ddd;
-                //         //       border-radius: 15px;
-                //         //     }
-                //         //
-                //         //     .modal .flex {
-                //         //       display: flex;
-                //         //       align-items: center;
-                //         //       justify-content: space-between;
-                //         //     }
-                //         //
-                //         //     .modal input {
-                //         //       padding: 0.7rem 1rem;
-                //         //       border: 1px solid #ddd;
-                //         //       border-radius: 5px;
-                //         //       font-size: 0.9em;
-                //         //     }
-                //         //
-                //         //     .modal p {
-                //         //       font-size: 0.9rem;
-                //         //       color: #777;
-                //         //       margin: 0.4rem 0 0.2rem;
-                //         //     }
-                //         //
-                //         //     button {
-                //         //       cursor: pointer;
-                //         //       border: none;
-                //         //       font-weight: 600;
-                //         //     }
-                //         //
-                //         //     .btn {
-                //         //       display: inline-block;
-                //         //       padding: 0.8rem 1.4rem;
-                //         //       font-weight: 700;
-                //         //       background-color: black;
-                //         //       color: white;
-                //         //       border-radius: 5px;
-                //         //       text-align: center;
-                //         //       font-size: 1em;
-                //         //     }
-                //         //
-                //         //     .btn-open {
-                //         //       position: absolute;
-                //         //       bottom: 150px;
-                //         //     }
-                //         //
-                //         //     .btn-close {
-                //         //       transform: translate(10px, -20px);
-                //         //       padding: 0.5rem 0.7rem;
-                //         //       background: #eee;
-                //         //       border-radius: 50%;
-                //         //     }
-                //         //
-                //         // </style>
-                //         // <section class="modal">
-                //         //   <div class="flex">
-                //         //     <img src="user.png" width="50px" height="50px" alt="user" />
-                //         //     <button class="btn-close">⨉</button>
-                //         //   </div>
-                //         //   <div>
-                //         //     <h3>Stay in touch</h3>（保持联系）
-                //         //     <p>
-                //         //       This is a dummy newsletter form so don't bother trying to test it. Not
-                //         //       that I expect you to, anyways.:)（这是一个虚拟的通讯表单，所以不要费心去测试它。反正我也不指望你这么做）
-                //         //     </p>
-                //         //   </div>
-                //         //
-                //         //   <input type="email" id="email" placeholder="brendaneich@js.com" />
-                //         //   <button class="btn">Submit</button>
-                //         // </section>
-                //         // `
-                //
-                //         // const closeModalBtn = modal.querySelector(".btn-close");
-                //         // closeModalBtn.addEventListener("click", () => {
-                //         //     modal.classList.add("hidden");
-                //         // })
-                //
-                //     })
-                // })
-
-                // 增加一个新的方法, 修改全局变量, 尤其是当皮肤也进行了变化
-                editBox.updateGlobalParams = function (){
+                // 增加一个新的方法, 修改全局参数, 尤其是当皮肤也进行了变化
+                editBox.updateGlobalParams = function () {
                     // 检查全局参数的引用是否发生变化. 如果发生变化需要进行重新初始化
-                    player = game.me
+                    // 优先使用全局设置的目标玩家，否则使用当前玩家
+                    let targetPlayer = window.qhly_editTargetPlayer || window.currentEditPlayer || player || game.me;
+                    player = targetPlayer;
                     if (!player.dynamic) return
                     renderer = player.dynamic.renderer;
                     dynamic = player.dynamic.primary  // 这个是指代主将的sprite也就是APNode对象
@@ -9818,11 +10700,9 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 
                 let saveToFile = function () {
                     let primaryDynamic = player.dynamic.primary.player
-                    // 比对两者, 看是否一样
-                    // 查找dynamicSkin, 获取对应的key
                     let playerName = player.name || player.parentNode.name
-                    if (playerName) player.name = playerName
-                    else return
+                    if (!playerName) return
+
                     let dskins = decadeUI.dynamicSkin[playerName]
                     let saveKey
                     for (let k in dskins) {
@@ -9831,72 +10711,90 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                             break
                         }
                     }
-                    // 如果当前是调整千幻雷修的情况下, 那么保存千幻雷修的相关参数
+
                     if (saveKey) {
                         let modeToKey = {
                             daiji: 'daiji',
                             chukuang: 'gongji',
-                            beijing: 'beijing'
+                            beijing: 'beijing',
+                            qianjing: 'qianjing',
+                            chuchang: 'chuchang',
+                            teshu: 'teshu',
+                            zhishixian: 'zhishixian'
                         }
 
                         // 统一初始化参数
                         if (!skinSwitch.saveSkinParams) {
                             skinSwitch.saveSkinParams = {}
                         }
-                        if (!skinSwitch.saveSkinParams[player.name]) {
-                            skinSwitch.saveSkinParams[player.name] = {}
+                        if (!skinSwitch.saveSkinParams[playerName]) {
+                            skinSwitch.saveSkinParams[playerName] = {}
                         }
-                        if (!skinSwitch.saveSkinParams[player.name][saveKey]) {
-                            skinSwitch.saveSkinParams[player.name][saveKey] = {}
+                        if (!skinSwitch.saveSkinParams[playerName][saveKey]) {
+                            skinSwitch.saveSkinParams[playerName][saveKey] = {}
                         }
+
                         let toSaveData
                         if (player.isQhlx) {
-                            if (!skinSwitch.saveSkinParams[player.name][saveKey].qhlx) {
-                                skinSwitch.saveSkinParams[player.name][saveKey].qhlx = {}
+                            if (!skinSwitch.saveSkinParams[playerName][saveKey].qhlx) {
+                                skinSwitch.saveSkinParams[playerName][saveKey].qhlx = {}
                             }
                             if (currentFunc === funcs.qhDecade) {
-                                if (!skinSwitch.saveSkinParams[player.name][saveKey].qhlx.decade) {
-                                    skinSwitch.saveSkinParams[player.name][saveKey].qhlx.decade = {}
+                                if (!skinSwitch.saveSkinParams[playerName][saveKey].qhlx.decade) {
+                                    skinSwitch.saveSkinParams[playerName][saveKey].qhlx.decade = {}
                                 }
-                                toSaveData = skinSwitch.saveSkinParams[player.name][saveKey].qhlx.decade
+                                toSaveData = skinSwitch.saveSkinParams[playerName][saveKey].qhlx.decade
                             } else {
-                                toSaveData = skinSwitch.saveSkinParams[player.name][saveKey].qhlx
+                                toSaveData = skinSwitch.saveSkinParams[playerName][saveKey].qhlx
                             }
-
                         } else {
-                            toSaveData = skinSwitch.saveSkinParams[player.name][saveKey]
+                            toSaveData = skinSwitch.saveSkinParams[playerName][saveKey]
                         }
-                        adjustX[1] = Number(adjustX[1].toFixed(2))
-                        adjustY[1] = Number(adjustY[1].toFixed(2))
+
+                        // 保存当前模式的位置数据
+                        adjustX[1] = Number(adjustX[1].toFixed(3))
+                        adjustY[1] = Number(adjustY[1].toFixed(3))
                         let modeData = {
                             x: adjustX,
                             y: adjustY,
-                            scale:  Number(adjustScale.toFixed(2)),
-                            angle: Number(adjustAngle.toFixed(2)),
+                            scale: Number(adjustScale.toFixed(3)),
+                            angle: Number(adjustAngle.toFixed(3))
                         }
 
                         let k = modeToKey[currentMode]
                         if (!player.isQhlx && currentMode === modes.daiji) {
-                            skinSwitch.saveSkinParams[player.name][saveKey] = Object.assign(skinSwitch.saveSkinParams[player.name][saveKey], modeData)
+                            skinSwitch.saveSkinParams[playerName][saveKey] = Object.assign(skinSwitch.saveSkinParams[playerName][saveKey], modeData)
                         } else {
                             toSaveData[k] = modeData
                         }
-                        // 写到文件
-                        let str = `window.saveFunc = function(lib, game, ui, get, ai, _status){window.skinSwitch.saveSkinParams =\n`
+
+                        // 立即保存到文件
+                        let str = `window.skinSwitchLoadParams = function(lib, game, ui, get, ai, _status){window.skinSwitch.saveSkinParams =\n`
                         str += JSON.stringify(skinSwitch.saveSkinParams, null, 4)
                         str += '\n}'
-                        game.writeFile(str, skinSwitch.path, 'saveSkinParams.js', function () {
-                            console.log('写入saveSkinParams.js成功')
-                            skinSwitchMessage.show({
-                                type: 'success',
-                                text: '保存成功',
-                                duration: 1500,    // 显示时间
-                                closeable: false, // 可手动关闭
+
+                        // 添加防止短时间内多次显示保存成功的逻辑
+                        if (!skinSwitch.lastSaveSuccessTime || (new Date().getTime() - skinSwitch.lastSaveSuccessTime) > 3000) {
+                            skinSwitch.lastSaveSuccessTime = new Date().getTime();
+                            game.writeFile(str, skinSwitch.path, 'saveSkinParams.js', function () {
+                                console.log('写入saveSkinParams.js成功')
+                                skinSwitchMessage.show({
+                                    type: 'success',
+                                    text: '保存成功',
+                                    duration: 1500,
+                                    closeable: false
+                                })
                             })
-                        })
+                        } else {
+                            // 短时间内重复保存，不显示消息，只写入文件
+                            game.writeFile(str, skinSwitch.path, 'saveSkinParams.js', function () {
+                                console.log('写入saveSkinParams.js成功')
+                            })
+                        }
+
                         // 修改千幻雷修版本的值
-                        if (skinSwitch.saveSkinParams[player.name][saveKey].qhlx) {
-                            decadeUI.dynamicSkin[player.name][saveKey].qhlx = skinSwitch.saveSkinParams[player.name][saveKey].qhlx
+                        if (skinSwitch.saveSkinParams[playerName][saveKey].qhlx) {
+                            decadeUI.dynamicSkin[playerName][saveKey].qhlx = skinSwitch.saveSkinParams[playerName][saveKey].qhlx
                         }
                     }
                 }
@@ -9907,16 +10805,26 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
             function editBoxShowOrHide() {
                 // 初始化一些参数
                 if (!editBox) {
-                    player = game.me
+                    // 优先使用全局设置的目标玩家
+                    let targetPlayer = window.qhly_editTargetPlayer || window.currentEditPlayer || game.me;
+                    player = targetPlayer;
                     renderer = player.dynamic.renderer;
                     dynamic = player.dynamic.primary  // 这个是指代主将的sprite也就是APNode对象
                     editBoxInit()
                     return editBox
                 } else {
-                    if (game.me !== player) {
+                    // 检查是否有新的目标玩家
+                    let targetPlayer = window.qhly_editTargetPlayer || window.currentEditPlayer;
+                    if (targetPlayer && targetPlayer !== player) {
+                        player = targetPlayer;
+                        renderer = player.dynamic.renderer;
+                        dynamic = player.dynamic.primary  // 这个是指代主将的sprite也就是APNode对象
+                        editBox.updateGlobalParams(); // 更新编辑框参数
+                    } else if (game.me !== player && !targetPlayer) {
                         player = game.me
                         renderer = player.dynamic.renderer;
                         dynamic = player.dynamic.primary  // 这个是指代主将的sprite也就是APNode对象
+                        editBox.updateGlobalParams(); // 更新编辑框参数
                     } else if (player.dynamic.primary !== dynamic) {
                         renderer = player.dynamic.renderer;
                         dynamic = player.dynamic.primary  // 这个是指代主将的sprite也就是APNode对象
@@ -9927,38 +10835,43 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
             }
 
             function isHide(dom) {
-                return dom.classList.contains('hidden-adjust')
+                return [...dom.classList].includes('hidden-adjust')
             }
 
             function hide(dom) {
-                if (!dom.classList.contains('hidden-adjust')) {
+                if (![...dom.classList].includes('hidden-adjust')) {
                     dom.classList.add('hidden-adjust')
                 }
             }
 
             function show(dom) {
-                if (dom.classList.contains('hidden-adjust')) {
+                if ([...dom.classList].includes('hidden-adjust')) {
                     dom.classList.remove('hidden-adjust')
                 }
             }
 
             function toggleShow(dom) {
-                if (dom.classList.contains('hidden-adjust')) {
+                if ([...dom.classList].includes('hidden-adjust')) {
                     dom.classList.remove('hidden-adjust')
                     skinSwitch.allowTouchEvent(false)
                 } else {
+                    // 关闭编辑窗口时，清除循环播放定时器
+                    if (typeof selfLoopPlay !== 'undefined' && selfLoopPlay.loopTimer) {
+                        clearInterval(selfLoopPlay.loopTimer);
+                        selfLoopPlay.loopTimer = null;
+                    }
                     dom.classList.add('hidden-adjust')
                     skinSwitch.allowTouchEvent(true)
                 }
             }
 
-            lib.arenaReady.push(function() { //游戏加载完成执行的内容
+            lib.arenaReady.push(function () { //游戏加载完成执行的内容
                 lib.init.js(skinSwitch.url, 'pfqhUtils', function () {
                     //顶部菜单
                     if (lib.config[skinSwitch.configKey.showEditMenu]) {
-                        // 添加编辑动皮皮肤的位置和出框位置参数
-                        ui.create.system('编辑动皮参数', function() {
-                            setTimeout(function() {
+                        // 添加编辑动皮参数
+                        ui.create.system('编辑动皮参数', function () {
+                            setTimeout(function () {
                                 if (!lib.config[skinSwitch.configKey.useDynamic]) {
                                     skinSwitchMessage.show({
                                         type: 'warning',
@@ -9999,36 +10912,15 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                     }
 
                     if (lib.config[skinSwitch.configKey.showPreviewDynamicMenu]) {
-                        ui.create.system('预览spine', function() {
+                        ui.create.system('预览spine', function () {
                             skinSwitch.previewDynamic()
                         }, true)
                     }
 
-                    // 藏珍阁
-                    if (lib.config[skinSwitch.configKey.czgEnable]) {
-                        lib.init.css(skinSwitch.url + "style", "cang-zhen-ge")
-                        if (skinSwitch.qhly_hasExtension('如真似幻')) {
-                            lib.init.js(skinSwitch.url, "czg_setting")
-                            // lib.init.js(skinSwitch.url + "spine-lib/pixi", "pixi-spine.umd")
-                            lib.init.js(skinSwitch.url + "spine-lib/pixi", "pixi_viewport_scrollbox")
-                            lib.init.js(skinSwitch.url + "spine-lib/pixi", "pixi-ease")
-                        }else {
-                            lib.init.js(skinSwitch.url + "spine-lib/pixi", "pixi.min", () => {
-                                lib.init.js(skinSwitch.url, "czg_setting")
-                                lib.init.js(skinSwitch.url + "spine-lib/pixi", "pixi-spine.umd")
-                                lib.init.js(skinSwitch.url + "spine-lib/pixi", "pixi_viewport_scrollbox")
-                                lib.init.js(skinSwitch.url + "spine-lib/pixi", "pixi-ease")
-                            });
-                        }
-
-                        ui.create.system('藏珍阁', function() {
-                            skinSwitch.cangZhenGe()
-                        }, true)
-                    }
 
                 }, function (err) {
                     console.log(err)
-                } )
+                })
 
                 // 调试, 打开编辑窗口
                 // skinSwitch.openEventBindWindow()
@@ -10053,111 +10945,10 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 })
             })
 
-            if (lib.config[skinSwitch.configKey.l2dEnable]) {
-                lib.init.js(skinSwitch.url + 'component/live2d', 'live2dcubismcore.min', () => {
 
-                    if (skinSwitch.qhly_hasExtension('如真似幻')) {
-                        lib.init.js(skinSwitch.url + 'component/live2d', 'pixi.min', () => {
-                            lib.init.js(skinSwitch.url + 'component/live2d', 'Live2dLoader', () => {
-                                // 读取l2d配置
-                                let initL2d = () => {
-                                    let curVal = lib.config[skinSwitch.configKey.l2dSetting]
-                                    if (curVal in pfqhLive2dSettings.models) {
-                                        let base = Object.assign({}, pfqhLive2dSettings.baseSetting)
-                                        for (let k in pfqhLive2dSettings.models[curVal]) {
-                                            base[k] = pfqhLive2dSettings.models[curVal][k]
-                                        }
-                                        base.role = lib.assetURL + base.basePath + base.role
-                                        base.key = curVal
-                                        skinSwitch.l2dLoader = new CustomLive2dLoader([
-                                            base
-                                        ]);
-                                    }
-                                }
-                                lib.init.js(skinSwitch.url, 'l2dSettings', function () {
-                                    // 加载l2d
-                                    lib.arenaReady.push(function() {
-                                        initL2d()
-                                    })
-                                }, () => {
-                                    skinSwitch.qhly_checkFileExist(skinSwitch.path + '/l2dSettings.js', exists => {
-                                        if (!exists) {
-                                            game.readFile(skinSwitch.path + '/l2dSettings_示例.js', function (data) {
-                                                game.writeFile(data, skinSwitch.path, 'l2dSettings.js', function () {
-                                                    console.log('初始化l2dSettings.js成功')
-                                                    setTimeout(() => {
-                                                        // 重新执行一下js内容
-                                                        lib.init.js(skinSwitch.url, 'l2dSettings', function () {
-                                                            // 加载l2d
-                                                            initL2d()
-                                                        }, () => {
-                                                            console.log('重新执行js失败')
-                                                        })
-                                                    }, 1000)
-                                                })
-                                            })
-                                        } else {
-                                            console.log('加载l2d失败')
-                                        }
-                                    })
-                                });
-                            })
-                        })
-                    }else {
-                        lib.init.js(skinSwitch.url + "spine-lib/pixi", "pixi.min", () => {
-                            lib.init.js(skinSwitch.url + 'component/live2d', 'pixi.min', () => {
-                                lib.init.js(skinSwitch.url + 'component/live2d', 'Live2dLoader', () => {
-                                    // 读取l2d配置
-                                    let initL2d = () => {
-                                        let curVal = lib.config[skinSwitch.configKey.l2dSetting]
-                                        if (curVal in pfqhLive2dSettings.models) {
-                                            let base = Object.assign({}, pfqhLive2dSettings.baseSetting)
-                                            for (let k in pfqhLive2dSettings.models[curVal]) {
-                                                base[k] = pfqhLive2dSettings.models[curVal][k]
-                                            }
-                                            base.role = lib.assetURL + base.basePath + base.role
-                                            base.key = curVal
-                                            skinSwitch.l2dLoader = new CustomLive2dLoader([
-                                                base
-                                            ]);
-                                        }
-                                    }
-                                    lib.init.js(skinSwitch.url, 'l2dSettings', function () {
-                                        // 加载l2d
-                                        lib.arenaReady.push(function() {
-                                            initL2d()
-                                        })
-                                    }, () => {
-                                        skinSwitch.qhly_checkFileExist(skinSwitch.path + '/l2dSettings.js', exists => {
-                                            if (!exists) {
-                                                game.readFile(skinSwitch.path + '/l2dSettings_示例.js', function (data) {
-                                                    game.writeFile(data, skinSwitch.path, 'l2dSettings.js', function () {
-                                                        console.log('初始化l2dSettings.js成功')
-                                                        setTimeout(() => {
-                                                            // 重新执行一下js内容
-                                                            lib.init.js(skinSwitch.url, 'l2dSettings', function () {
-                                                                // 加载l2d
-                                                                initL2d()
-                                                            }, () => {
-                                                                console.log('重新执行js失败')
-                                                            })
-                                                        }, 1000)
-                                                    })
-                                                })
-                                            } else {
-                                                console.log('加载l2d失败')
-                                            }
-                                        })
-                                    });
-                                })
-                            })
-                        });
-                    }
-                })
-            }
 
         },
-        config:{
+        config: {
             //
             "GXNR": {
                 "name": "更新内容",
@@ -10244,44 +11035,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 clear: true,
                 info: '动皮文件夹结构是 --> 武将中文名(武将id也行)/皮肤名称/骨骼  <--- 形式的话, 可以自动根据当前已填写的参数动态生成动皮模板'
             },
-            // 'modifyQhlxPreview': {
-            //     name: "调整千幻大屏预览待机大小",
-            //     init: true,
-            //     intro: '默认的千幻大屏预览大小太大了, 我调整的小一些'
-            // },
-            'l2dEnable': {
-                name: "是否开启l2d",
-                init:  false,
-                intro: '添加l2d模型'
-            },
-            'l2dSetting': {
-                "name": "live2d模型",
-                "init": "dafeng_4",
-                "item": {
-                    dafeng_4: "dafeng_4",
-                    dafeng_2: 'dafeng_2',
-                    pinghai_6: 'pinghai_6',
-                },
-                onclick: function (value) {
-                    if (!lib.config[skinSwitch.configKey.l2dEnable] || !window.pfqhLive2dSettings) {
-                        return
-                    }
-                    if (lib.config[skinSwitch.configKey.l2dSetting] === value) {
-                        return
-                    }
-                    // 获取当前的配置
-                    let base = Object.assign({}, pfqhLive2dSettings.baseSetting)
-                    for (let k in pfqhLive2dSettings.models[value]) {
-                        base[k] = pfqhLive2dSettings.models[value][k]
-                    }
-                    base.role = lib.assetURL + base.basePath + base.role
-                    base.key = value
-                    game.saveConfig(skinSwitch.configKey.l2dSetting, value)
-                    if (skinSwitch.l2dLoader) {
-                        skinSwitch.l2dLoader.changeModel(base)
-                    }
-                },
-            },
+
             'previewSkinsDynamic': {
                 name: "预览角色使用动皮",
                 "init": true,
@@ -10292,58 +11046,67 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
                 "init": true,
                 "intro": "点击角色弹出换肤功能",
             },
-            'czgEnable': {
-                name: "是否开启藏珍阁",
-                init:  false,
-                intro: '点击开启后会加入右边菜单'
+            'enableQianhuanAudio': {
+                name: "启用千幻语音集成",
+                "init": true,
+                "intro": "皮肤切换后自动读取千幻聆音的语音资源，需要安装千幻聆音扩展",
             },
-            // taffy: 提供一些额外选项
-            'taffy_cugDynamicBg': {
-              name: "非十周年动皮不裁剪背景",
-              "init": true,
-              "intro": "非十周年动皮动皮在待机处不裁剪动态背景",
+            'attackEffect': {
+                name: "启用攻击和互动出框",
+                "init": "on",
+                "intro": "是否启用攻击和互动出框效果",
+                "item": {
+                    "on": "开启",
+                    "off": "关闭"
+                }
             },
-            "taffy_open_circle_top":{
-              name: "开启十周年圆顶",
-              "init": true,
-              "intro": "设置此选项，十周年样式角色框将会显示顶部圆弧。",
+            'showTopArc': {
+                name: "显示顶部圆弧",
+                "init": true,
+                "intro": "是否显示顶部圆弧",
+                onchange: function(value) {
+                    window.showTopArc = value;
+                    // 为所有已存在的角色重新检查圆弧显示
+                    game.players.concat(game.dead).forEach(function(player) {
+                        if(player) skinSwitch.skinSwitchCheckYH(player);
+                    });
+                }
             },
-            /* taffy分界线 */
 
         },
-        help:{},
-        package:{
-            character:{
-                character:{
+        help: {},
+        package: {
+            character: {
+                character: {
 
                 },
-                translate:{
+                translate: {
 
                 },
             },
-            card:{
-                card:{
+            card: {
+                card: {
                 },
-                translate:{
+                translate: {
                 },
-                list:[],
+                list: [],
             },
-            skill:{
-                skill:{
+            skill: {
+                skill: {
                 },
-                translate:{
+                translate: {
                 },
             },
-            intro: '<br>&nbsp;&nbsp;<font color=\"green\">&nbsp;&nbsp;1. 当前扩展可以对待机动皮和出框动皮的位置参数的调整.<br>&nbsp;&nbsp;2.可以支持手杀和十周年真动皮的出框攻击,攻击附带指示线以及十周年动皮的出场动作播放.<br>&nbsp;&nbsp;3.界面内置spine骨骼动画预览.可以把骨骼文件或文件夹塞入扩展目录下的assets即可预览<br></font><br>&nbsp;&nbsp;扩展本身拥有动静皮切换功能,其中静皮切换需要配合千幻聆音是用. 如果想是用UI更好看的动静切换功能, 请使用千幻雷修版本的动静切换。<br><br>&nbsp;&nbsp;4.现在动皮支持json的骨骼以及可以添加alpha预乘参数<br><br>&nbsp;&nbsp;最后, 感谢无名杀超市群的逝去の記憶,鹰击长空帮忙测试与提出意见, 感谢默.颜提供的骨骼素材, 感谢鸭佬扒的素材',
-            // intro: '<br>&nbsp;&nbsp;<font color=\"green\">&nbsp;&nbsp;初次使用请先备份并导入十周年UI的animation.js和dynamicWorker.js文件<br>&nbsp;&nbsp;1. 当前扩展可以对待机动皮和出框动皮的位置参数的调整.<br>&nbsp;&nbsp;2.可以支持手杀和十周年真动皮的出框攻击,以及十周年动皮的出场动作播放.<br>&nbsp;&nbsp;3.界面内置spine骨骼动画预览.可以把骨骼文件或文件夹塞入扩展目录下的assets即可预览<br></font><br>&nbsp;&nbsp;扩展本身拥有搬自于EngEX扩展的动皮换肤功能,但是并不支持静态皮肤切换, 完整体验需要配合千幻聆音雷修版本,支持动态静态皮肤切换. 本扩展完全兼容千幻雷修并会保持同步更新兼容。<br>&nbsp;&nbsp;注意：由于重新定义了部分函数(logSill)，会和部分扩展的部分内容相互覆盖。<br>&nbsp;&nbsp;<font color=\"red\">每次更新扩展后, 请首先重新覆盖一下原先十周年UI的dynamicWorker文件</font>',
-            // intro:"基于EngEX扩展的动态换肤部分魔改.原来使用E佬写的EngEX插件自动出框非常好用,但是非常麻烦的是调整参数不方便, 于是就自己观摩E佬和特效测试扩展大佬的代码编写了调整参数这个简单的扩展\n" +
+            intro: '更新者：无语，微微曦子<br><br>&nbsp;&nbsp;<font color=#00FF7F>版本号:1.22<br>&nbsp;&nbsp;1.更新内容：点击查看<br>&nbsp;&nbsp;2.添加光污染（微微曦子）<br>&nbsp;&nbsp;3.当前扩展可以对待机动皮和出框动皮的位置参数的调整.<br>&nbsp;&nbsp;4.可以支持手杀和十周年真动皮的出框攻击,攻击附带指示线以及十周年动皮的出场动作播放.<br>&nbsp;&nbsp;5.界面内置spine骨骼动画预览.可以把骨骼文件或文件夹塞入扩展目录下的assets即可预览<br>&nbsp;&nbsp;6.现在动皮支持json的骨骼以及可以添加alpha预乘参数<br>&nbsp;&nbsp;7.<font color=#FF6347>新增千幻语音集成功能：皮肤切换后自动读取千幻聆音的语音资源，本次更新添加了调整特殊调整出窗以及可以点击角色自由调整动皮位置</font><br></font><br>&nbsp;&nbsp;扩展本身拥有动静皮切换功能,其中静皮切换需要配合千幻聆音是用.如果想是用UI更好看的动静切换功能,请使用千幻雷修版本的动静切换。<br><br>&nbsp;&nbsp;最后,感谢墨渊、微微曦子、//凌梦帮助前景修改，无名杀超市群的逝去の記憶,鹰击长空、逍遥自在、若水帮忙测试与提出意见,感谢默.颜提供的骨骼素材,感谢鸭佬扒的素材<br><br><img style=width:225px src=extension/皮肤切换/皮肤切换logo.png>',
+            // intro: '<br>&nbsp;&nbsp;<font color=\"green\">&nbsp;&nbsp;初次使用请先备份并导入十周年UI的animation.js和dynamicWorker.js文件<br>&nbsp;&nbsp;1. 当前扩展可以对待机动皮和出框动皮的位置参数的调整.<br>&nbsp;&nbsp;2.可以支持手杀和十周年真动皮的出框攻击,以及十周年动皮的出场动作播放.<br>&nbsp;&nbsp;3.界面内置spine骨骼动画预览.可以把骨骼文件或文件夹塞入扩展目录下的assets即可预览<br></font><br>&nbsp;&nbsp;扩展本身拥有搬自于EngEX扩展的动皮换肤部分魔改.原来使用E佬写的EngEX插件自动出框非常好用,但是非常麻烦的是调整参数不方便, 于是就自己观摩E佬和特效测试扩展大佬的代码编写了调整参数这个简单的扩展\n" +
             //     "基于本人是个后端人员,审美有限(汗),所以换肤部分样式素材基本照搬E佬的EngEX扩展. 第一次写插件,应该有挺多bug,希望见谅.",
-            author:"yscl",
-            diskURL:"",
-            forumURL:"",
-            version:"1.11",
+            author: "前更新者：yscl",
+            diskURL: "",
+            forumURL: "",
+            version: "1.24",
         },
-        files:{"character":[],"card":[],"skill":[]}}
+        files: { "character": [], "card": [], "skill": [] }
+    }
 })
 
 /** 1.02版本更新:
@@ -10352,74 +11115,71 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
  现在可以使用原来调整待机动画的方式调整大屏页面播放的大小与位置细节了.  不过需要对千幻雷修的extension.js文件做一定的修改,
  readme.md中我会详细记录如何修改以使得雷修版本比较好的进行兼容.
  2. 如果一个动皮的攻击动作有两个(比如吕绮玲的战场绝版), 可以两个动作标签都进行填写了, 这样进行攻击操作会随机播放一个动作.
- 3. spine预览页面增加α预乘选项
- 4. 简单的做了调整框的适配, 现在默认会关闭微调xy坐标的,实际上用到的比较少, 也是节省调整的空间.
- 5. 修复了保存的一些bug
- */
-
-/** 1.03版本更新:
- 增加千幻大屏动皮出框没有调整使用雷佬默认的出框参数
- 修复假动皮预览自动出框攻击的bug
- 测试了8个动皮的场景, 修改部分千幻雷修代码使得兼容.
- */
-
-
-/** 1.04版本更新:
- spine预览现在可以直接放进去文件夹进行预览
- 原来的player.logSkill技能我是copy的游戏本体比较老的版本, 所以这个会出现一些问题, 现在补充为最新的了.
- 现在支持在十周年真动皮的角色在回合开始播放出场动画, 以及十周年动皮默认原地出框和不位移(需要在dynamicSkin配置参数)
+ 3. spine预览现在可以直接放进去文件夹进行预览
+ 4. 原来的player.logSkill技能我是copy的游戏本体比较老的版本, 所以这个会出现一些问题, 现在补充为最新的了.
+ 5. 现在支持在十周年真动皮的角色在回合开始播放出场动画, 以及十周年动皮默认原地出框和不位移(需要在dynamicSkin配置参数)
 
  十周年动皮细节: 出框攻击速度会提高为1.2, 出场动作会默认提高放大scale1.2倍
 
  */
 
-/** 1.05版本更新:
+/** 1.03版本更新:
  1. 重写了动画出框的逻辑, 现在统一把所有需要出框播放的动画放到单独的worker进行工作, 不再是原来eng的出框原理了, 不会再复现一瞬间闪屏的问题.
  2. 十周年UI文件不再需要导入, 现在十周年UI版本随意, 已经测试了最新的showK版本的十周年Ui, 没有出现问题.
  3. 十周年样式下出框背景不再会被覆盖.
  4. 所有动皮的出框播放速度默认为1.2
- 5. 千幻聆音雷修版本的手杀大屏预览的播放出框动画做了优化, 默认显示的更加完美, 基本不用进行调整
+ 5. 千幻大屏预览下, 可以进行调整背景.
  */
 
-/** 1.06版本更新:
- 1. 修复了reinit函数没有传player函数导致一些会变身技能的角色初始化报错问题
+/** 1.04版本更新:
+ 1. 重置动皮存档功能, 当你更换的dynamicSkin.js与上一个版本内容差距较大时，需重置
  2. 瓜佬的限定技特效等需要读取动皮的皮肤放到框内, 适配了这一逻辑, 防止读取不到皮肤的问题.
  3. 配合千幻雷修1.64版本增加了手杀大屏播放出框允许反转的功能.
  4. 增加了出场可以使用待机皮肤进行出场代替.
-
  */
 
-/** 1.07版本更新
-  1. 修复teshu出框还是会盖住背景的bug. 其实是自己手误写错了
-  2. 修复双将模式下,更换同样动皮皮肤会导致位置偏移的问题
-  3. 基于原来做了一个简陋的更换所有人动皮的功能, 可以自由切换所有角色的动皮(千幻雷修简化版本).
-     静皮位置现在就是读取千幻存放静皮的位置. 名字与动皮一致,png,jpg皆可
-  4. 可以配合原版千幻聆音使用, 现在可以使用原版千幻聆音切换静皮. 当然使用千幻雷修版本的不受影响.
-  5. 预览界面增加了播放速度等调整功能.
-  6. 增加出框的规则, 可以连续攻击, 重置之前的攻击动作而不会回框. 如果本次的出框动作和上次不一样, 那么会等待上次出框完成才会继出框.
- */
-
-/** 1.07.1版本更新
- 1. 手杀背景标签也有多个标签, 可以由出场自动切换到待机(背景)
- 2. 可以调整手杀背景位置大小参数了.
- */
-
-/** 1.08版本更新
+/** 1.05版本更新:
  1. 修复双将模式下的背景问题. 现在双将模式下如果都有动态背景的话, 会使用各自的背景, 而不会互相覆盖.  当然静态背景还是只会使用一个
  2. 千幻大屏预览下, 可以进行调整背景.
  3. 国战双将模式下, 显示武将问题修复, 层级问题修复. (千幻雷修的手杀和十周年套装下, 动皮即使是暗将也会直接显示(千幻bug))
  */
 
-/** 1.09版本更新
- 1. 修复本体版本在1.9.117.2后logSkill问题, 需要更改十周年UI几行代码兼容.
- 2. 待机和背景标签大小写忽略.
- 3. 现在可以关闭动皮功能, 只保留骨骼预览的功能.
+/** 1.06版本更新:
+ 1. 修复logSkill bug, 让技能在释放前触发特殊动画
+ 2. 添加指示线测试. 暂时效果不算很好, 比较乱
+ 3. 预览spine添加动画时间显示
  */
+
+/** 1.07版本更新
+  1. 指示线能正确指示武将框中央.
+  2. 将十周年worker的文件放到自己这边进行管理, 以后不用进行替换十周年文件替换了
+  3. 增加将动皮音效放入十周年文件夹动皮同文件下, 也ok
+  4. 可以使用json骨骼作为待机骨骼, 可以使用需要alpha预乘的骨骼
+  6. 增加开局和回合开始结束检查角色的框是否正确. 修复界左慈这类可以变换势力的武将
+  7. 预览spine添加鼠标控制以及滑动控制大小位置, 双指捏合放大缩小
+  8. 修复动皮出框可能抽搤抖动问题
+*/
+
+/** 1.08版本更新
+ 1. 修复logSkill bug, 让技能在释放前触发特殊动画
+ 2. 添加指示线测试. 暂时效果不算很好, 比较乱
+ 3. 预览spine添加动画时间显示
+ */
+
+/** 1.09版本更新
+ 1. 指示线能正确指示武将框中央.
+ 2. 将十周年worker的文件放到自己这边进行管理, 以后不用进行替换十周年文件替换了
+ 3. 增加将动皮音效放入十周年文件夹动皮同文件下, 也ok
+ 4. 可以使用json骨骼作为待机骨骼, 可以使用需要alpha预乘的骨骼
+ 6. 增加开局和回合开始结束检查角色的框是否正确. 修复界左慈这类可以变换势力的武将
+ 7. 预览spine添加鼠标控制以及滑动控制大小位置, 双指捏合放大缩小
+ 8. 修复动皮出框可能抽搤抖动问题
+*/
 
 /** 1.10版本更新
  1. 修复logSkill bug, 让技能在释放前触发特殊动画
  2. 添加指示线测试. 暂时效果不算很好, 比较乱
- 3. 预览spine功能添加动画时间显示
+ 3. 预览spine添加动画时间显示
  */
 
 /** 1.11版本更新
@@ -10429,13 +11189,13 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
  4. 可以使用json骨骼作为待机骨骼, 可以使用需要alpha预乘的骨骼
  6. 增加开局和回合开始结束检查角色的框是否正确. 修复界左慈这类可以变换势力的武将
  7. 预览spine添加鼠标控制以及滑动控制大小位置, 双指捏合放大缩小
- 8. 修复动皮出框可能抽搐(极短时间内连续出框)的问题
+ 8. 修复动皮出框可能抽搤抖动问题
 */
 
 /** 1.11.1与1.11.2版本更新
  1. 骨骼预览判断更完整, 防止报错
  2. 骨骼预览图层关闭bug
- 3. 手杀骨骼连续出框抽搐抖动问题
+ 3. 手杀骨骼连续出框抽搤抖动问题
  4. 修复ani文件修改导致位置偏移bug
 
  */
@@ -10443,7 +11203,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
 /** 1.12版本更新
  1. 更新4.0骨骼预览
  2. 修复晋武将会显示的bug
- 3. 添加ai攻击翻转参数, 根据当前是否在屏幕中央的左侧, 是就就行翻转
+ 3. 添加ai攻击翻转参数, 根据当前是否在屏幕中央的左侧, 是就就行翻转X轴, 也可以在动皮参数处添加参数控制单个动皮的出框翻转
  4. 修复出框模糊问题 (添加dpr适配就行)
  5. 手机预览骨骼时稍微增加下间隙.
 
@@ -10490,7 +11250,7 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
  */
 
 /** 1.18版本更新
- 1. 修复觉醒与限定技能弹窗bug
+ 1. 修复觉醒与限定技弹窗bug
  2. 支持3.5-4.1版本骨骼播放
  3. 修复部分机型不能使用spine3.8骨骼的问题
  4. 增加图集预览骨骼的模式
@@ -10514,10 +11274,14 @@ game.import("extension",function(lib,game,ui,get,ai,_status) {
  1. 添加两个时机,
     1) 使命技失败和成功
     2) 添加受伤时机, 更改以前的受伤次数时机
- 2. 修复了安装特效测试使用静皮可能报错的问题.
+ 2. 修复安装特效测试使用静皮可能报错的问题.
  */
 
 /** 1.20版本更新
  1. 修复自由选将报id错误
  1) 添加藏宝阁功能
  */
+
+/**1.21版本更新
+1.添加前景、光污染、技能变身换肤
+2.删除藏珍阁*/

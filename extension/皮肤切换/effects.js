@@ -19,7 +19,7 @@ window.pfqhSkillEffect = {
                 let position = {x: [0, 0.5], y: [0, 0.5], scale: 1.3, speed: 0.8}
                 switch (trigger.result.suit) {
                     case 'spade':
-                        skinSwitch.chukuangWorkerApi.playEffect({
+                        skinSwitch.linkage.playEffect({
                             name: '../../../皮肤切换/effects/蔡文姬/jineng02',
                             json: true,
                             version: '4.0',
@@ -27,7 +27,7 @@ window.pfqhSkillEffect = {
                         }, position)
                         break;
                     case 'heart':
-                        skinSwitch.chukuangWorkerApi.playEffect({
+                        skinSwitch.linkage.playEffect({
                             name: '../../../皮肤切换/effects/蔡文姬/jineng02',
                             json: true,
                             version: '4.0',
@@ -35,7 +35,7 @@ window.pfqhSkillEffect = {
                         }, position)
                         break;
                     case 'club':
-                        skinSwitch.chukuangWorkerApi.playEffect({
+                        skinSwitch.linkage.playEffect({
                             name: '../../../皮肤切换/effects/蔡文姬/jineng02',
                             json: true,
                             version: '4.0',
@@ -43,7 +43,7 @@ window.pfqhSkillEffect = {
                         }, position)
                         break;
                     default: // diamond 方块
-                        skinSwitch.chukuangWorkerApi.playEffect({
+                        skinSwitch.linkage.playEffect({
                             name: '../../../皮肤切换/effects/蔡文姬/jineng02',
                             json: true,
                             version: '4.0',
