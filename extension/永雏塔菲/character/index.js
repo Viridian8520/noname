@@ -34,6 +34,11 @@ export const characterPackFunc = function () {
 					["pot_taishici_shadow3", ["die:pot_taishici"]],
 					["pot_taishici_shadow4", ["die:pot_taishici"]],
 				],
+				taffyold_pot_weiyan: [
+					["pot_weiyan_achieve", []],
+					["pot_weiyan_fail", []],
+				],
+				taffyold_pot_yuji: [["pot_yuji_shadow", []]],
 			},
 			characterFilter: { ...characterFilters },
 			characterTitle: {

@@ -1114,7 +1114,7 @@ const diy = {
 				"zhugeruoxue",
 				"dc_huanghao",
 				"caohong",
-				"taffydc_jiangfei", // 本体生息的发动时机是弃牌阶段结束时，故新增
+				"jiangfei",
 				"chentai",
 				// 受到伤害
 				"re_quancong",
@@ -6856,14 +6856,14 @@ const diy = {
 			},
 		},
 	},
-  // 神沙摩柯
-  taffyshen_gzjili: {
-    audio: "gzjili",
-    trigger: { player: ["useCard", "respond"] },
-    frequent: true,
-    locked: false,
-    preHidden: true,
-    filter: () => true,
+	// 神沙摩柯
+	taffyshen_gzjili: {
+		audio: "gzjili",
+		trigger: { player: ["useCard", "respond"] },
+		frequent: true,
+		locked: false,
+		preHidden: true,
+		filter: () => true,
 		prompt2(event, player) {
 			const num = player.getAttackRange() - player.countMark("taffyshen_gzjili");
 			let info = "摸" + get.cnNumber(num) + "张牌";
@@ -6871,47 +6871,47 @@ const diy = {
 			else if (num > 1) info += "，然后令你下次以此法摸的牌数-1";
 			return info;
 		},
-    async content(event, trigger, player) {
-      const { name: mark } = event;
+		async content(event, trigger, player) {
+			const { name: mark } = event;
 			let num = player.getAttackRange() - player.countMark(mark);
 			if (num > 1) {
 				player.addMark(mark, 1, false);
-        await player.draw(num);
+				await player.draw(num);
 			} else if (num === 1) {
-        await player.draw(num);
-        player.clearMark(mark, false);
+				await player.draw(num);
+				player.clearMark(mark, false);
 			} else {
-        player.clearMark(mark, false);
-        num = player.getAttackRange() - player.countMark(mark);
-        await player.draw(num);
-      }
-    },
-    onremove: true,
+				player.clearMark(mark, false);
+				num = player.getAttackRange() - player.countMark(mark);
+				await player.draw(num);
+			}
+		},
+		onremove: true,
 		mark: true,
 		intro: {
 			markcount: (storage, player) => player.getAttackRange() - player.countMark("taffyshen_gzjili"),
 			content: (storage, player) => `下次【蒺藜】摸牌数：${player.getAttackRange() - player.countMark("taffyshen_gzjili")}`,
 		},
-    group: ["taffyshen_gzjili_equip"],
-    subSkill: {
-      equip: {
-        audio: "taffyshen_gzjili",
-        trigger: {
-          player: "useCardAfter",
-        },
-        silent: true,
-        filter: function (event, player) {
-          if (get.type(event.card) != "equip") return false;
-          if (get.subtype(event.card) != "equip1") return false;
-          return true;
-        },
-        content: function () {
-          player.clearMark("taffyshen_gzjili", false);
-        },
-      },
-    },
-  },
-  // 界沙摩柯
+		group: ["taffyshen_gzjili_equip"],
+		subSkill: {
+			equip: {
+				audio: "taffyshen_gzjili",
+				trigger: {
+					player: "useCardAfter",
+				},
+				silent: true,
+				filter: function (event, player) {
+					if (get.type(event.card) != "equip") return false;
+					if (get.subtype(event.card) != "equip1") return false;
+					return true;
+				},
+				content: function () {
+					player.clearMark("taffyshen_gzjili", false);
+				},
+			},
+		},
+	},
+	// 界沙摩柯
 	taffyre_gzjili: {
 		mod: {
 			aiOrder(player, card, num) {
@@ -6947,12 +6947,12 @@ const diy = {
 		preHidden: true,
 		onremove(player) {
 			player.removeTip("taffyre_gzjili");
-      player.clearMark("taffyre_gzjili", false);
+			player.clearMark("taffyre_gzjili", false);
 		},
 		filter(event, player) {
 			let count = player.getHistory("useCard").length + player.getHistory("respond").length;
 			player.addTip("taffyre_gzjili", "蒺藜 " + count, true);
-      player.storage.taffyre_gzjili = count;
+			player.storage.taffyre_gzjili = count;
 			return count % player.getAttackRange() === 0;
 		},
 		audio: "gzjili",
@@ -7010,22 +7010,110 @@ const diy = {
 				},
 			},
 		},
-    group: "taffyre_gzjili_count",
-    intro: {
-      content: (storage, player) => `总次数：${storage}`,
-    },
-  },
-  taffyre_gzjili_count: {
-    trigger: { player: ["useCard1", "respond"] },
-    silent: true,
-    firstDo: true,
-    noHidden: true,
-    sourceSkill: "taffyre_gzjili",
-    content() {
-      player.storage.taffyre_gzjili = player.getHistory("useCard").length + player.getHistory("respond").length;
-      player.markSkill("taffyre_gzjili");
-    },
-  },
+		group: "taffyre_gzjili_count",
+		intro: {
+			content: (storage, player) => `总次数：${storage}`,
+		},
+	},
+	taffyre_gzjili_count: {
+		trigger: { player: ["useCard1", "respond"] },
+		silent: true,
+		firstDo: true,
+		noHidden: true,
+		sourceSkill: "taffyre_gzjili",
+		content() {
+			player.storage.taffyre_gzjili = player.getHistory("useCard").length + player.getHistory("respond").length;
+			player.markSkill("taffyre_gzjili");
+		},
+	},
+	// 张郃
+	taffywn_qiaobian: {
+		audio: "reqiaobian",
+		trigger: {
+			global: "phaseZhunbeiBegin",
+		},
+		filter(event, player) {
+			return event.player != player;
+		},
+		async cost(event, trigger, player) {
+			event.result = await player
+				.chooseCard(get.prompt("taffywn_qiaobian", trigger.player), "将一张牌置于武将牌上，称为“巧”", "he")
+				.set("ai", card => {
+					if (get.attitude(get.player(), get.event().target) >= 2) return 0;
+					return 6 - get.value(card);
+				})
+				.set("target", trigger.player)
+				.forResult();
+		},
+		logTarget: "player",
+		async content(event, trigger, player) {
+			const cards = event.cards;
+			const next = player.addToExpansion(cards, player, "giveAuto");
+			next.gaintag.add("taffywn_qiaobian_tag");
+			await next;
+			player.addTempSkill("taffywn_qiaobian_effect");
+			player.storage.taffywn_qiaobian_effect = trigger.player;
+		},
+		subSkill: {
+			effect: {
+				audio: "reqiaobian",
+				trigger: {
+					global: ["useCardAfter", "phaseJieshuBegin"],
+				},
+				filter(event, player) {
+					if (!player.getExpansions("taffywn_qiaobian_tag").length) return false;
+					return event.player == player.storage.taffywn_qiaobian_effect;
+				},
+				onremove: true,
+				forced: true,
+				charlotte: true,
+				async content(event, trigger, player) {
+					const cards = player.getExpansions("taffywn_qiaobian_tag");
+					const target = player.storage.taffywn_qiaobian_effect;
+					if (trigger.name == "phaseJieshu") {
+						await player.gain(cards, "give");
+						return;
+					}
+					const [card] = cards;
+					await player.showCards([card], `${get.translation(player)}的“巧”`);
+					const same = get.type2(card) == get.type2(trigger.card);
+					if (same) {
+						player.line(target);
+						await target.gain(cards, "give");
+						const evt = trigger.getParent("phaseUse");
+						if (evt.name == "phaseUse" && evt.player == target && !evt.skipped) {
+							evt.skipped = true;
+							game.log(player, "令", target, "结束了出牌阶段");
+						}
+					} else {
+						player.draw();
+					}
+				},
+				mark: true,
+				marktext: "巧",
+				intro: {
+					markcount(storage, player) {
+						const cards = player.getExpansions("taffywn_qiaobian_tag");
+						return cards.length;
+					},
+					mark(dialog, content, player) {
+						const cards = player.getExpansions("taffywn_qiaobian_tag");
+						if (cards && cards.length) {
+							if (player.isUnderControl(true)) {
+								dialog.addAuto(cards);
+								return;
+							}
+						}
+						return "共有" + get.cnNumber(cards.length) + "张“巧”";
+					},
+				},
+				ai: {
+					threaten: 4,
+					expose: 0.3,
+				},
+			},
+		},
+	},
 };
 
 export default diy;

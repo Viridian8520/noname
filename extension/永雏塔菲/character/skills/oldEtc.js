@@ -352,6 +352,104 @@ const oldEtc = {
 			},
 		},
 	},
+	taffyold_twyimou: {
+		audio: "twyimou",
+		trigger: { global: "damageEnd" },
+		filter(event, player) {
+			return event.player.isIn() && get.distance(event.player, player) <= 1;
+		},
+		logTarget: "player",
+		check(event, player) {
+			return get.attitude(player, event.player) > 0;
+		},
+		content() {
+			"step 0";
+			if (trigger.player != player) {
+				player.addExpose(0.3);
+			}
+			var target = get.translation(trigger.player);
+			var choiceList = ["令" + target + "获得牌堆里的一张【杀】", "令" + target + "将一张手牌交给另一名角色，然后" + target + "摸两张牌", "背水！" + (trigger.player != player ? "将所有手牌交给" + target + "，然后" : "") + "依次执行以上所有选项"];
+			var list = ["选项一"];
+			if (trigger.player.countCards("h") && game.hasPlayer(t => t !== trigger.player)) {
+				list.push("选项二");
+			} else {
+				choiceList[1] = '<span style="opacity:0.5">' + choiceList[1] + "</span>";
+			}
+			list.push("背水！");
+			player
+				.chooseControl(list)
+				.set("prompt", "毅谋：请选择一项")
+				.set("choiceList", choiceList)
+				.set("ai", function () {
+					var evt = _status.event.getTrigger(),
+						list = _status.event.list;
+					var player = _status.event.player;
+					var target = evt.player;
+					if ((target.hp >= target.countCards("h") + 2 || target == player) && list.includes("背水！")) {
+						return "背水！";
+					}
+					if (target.countCards("h") && list.includes("选项二")) {
+						return "选项二";
+					}
+					return "选项一";
+				})
+				.set("list", list);
+			("step 1");
+			event.choice = result.control;
+			if (event.choice == "背水！" && player != trigger.player) {
+				player.give(player.getCards("h"), trigger.player);
+			}
+			("step 2");
+			if (event.choice != "选项二") {
+				var card = get.cardPile2(function (card) {
+					return card.name == "sha";
+				});
+				if (card) {
+					trigger.player.gain(card, "gain2");
+				} else {
+					game.log("但牌堆里已经没有", "#y杀", "了！");
+				}
+				if (event.choice == "选项一") {
+					event.finish();
+				}
+			}
+			("step 3");
+			if (event.choice != "选项一") {
+				if (trigger.player.countCards("h") && game.hasPlayer(t => t !== trigger.player)) {
+					trigger.player.chooseCardTarget({
+						prompt: "将一张手牌交给另一名其他角色并摸两张牌",
+						filterCard: true,
+						forced: true,
+						filterTarget: lib.filter.notMe,
+						ai1(card) {
+							return 1 / Math.max(0.1, get.value(card));
+						},
+						ai2(target) {
+							var player = _status.event.player,
+								att = get.attitude(player, target);
+							if (target.hasSkillTag("nogain")) {
+								att /= 9;
+							}
+							return 4 + att;
+						},
+					});
+				} else {
+					event.finish();
+				}
+			}
+			("step 4");
+			if (!result?.bool || !result.cards?.length || !result.targets?.length) {
+				return;
+			}
+			var target = result.targets[0];
+			trigger.player.line(target);
+			trigger.player.give(result.cards, target);
+			trigger.player.draw(2);
+		},
+		ai: {
+			threaten: 2.5,
+		},
+	},
 	//旧海外神吕蒙
 	taffyold_twshelie: {
 		audio: "shelie",

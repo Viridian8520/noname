@@ -3879,6 +3879,114 @@ const oldOL = {
 			if (!cards.length) await player.draw(2);
 		},
 	},
+	//旧OL谋卢植
+	taffyold_olsibing: {
+		audio: "olsibing",
+		trigger: {
+			player: "useCardToPlayer",
+			global: "useCardAfter",
+		},
+		filter(event, player, name) {
+			if (name == "useCardToPlayer") return get.tag(event.card, "damage") > 0.5 && event.targets.length == 1 && player.countDiscardableCards(player, "he", card => get.color(card, player) == "red");
+			return get.tag(event.card, "damage") > 0.5 && event.targets.includes(player) && !player.hasHistory("damage", evt => evt.getParent("useCard") == event) && player.countDiscardableCards(player, "he", card => get.color(card, player) == "black") && player.hasUseTarget({ name: "sha", isCard: true }, false, false);
+		},
+		logTarget(event, player, name) {
+			if (name == "useCardToPlayer") return [event.target];
+			return [];
+		},
+		async cost(event, trigger, player) {
+			const name = event.triggername;
+			if (name == "useCardToPlayer") {
+				event.result = await player
+					.chooseToDiscard(`###${get.prompt(event.skill, trigger.target)}###弃置任意张红色牌并令其弃置等量红色手牌，否则不能响应该牌`, [1, Infinity], "he", "chooseonly", card => get.color(card, player) == "red")
+					.set("ai", card => {
+						const player = get.player(),
+							target = get.event().getTrigger().target,
+							cardx = get.event().getTrigger().card;
+						if (get.effect(target, cardx, player, player) < 0 || cardx.name == "huogong") return 0;
+						if (ui.selected.cards?.length == target.countCards("h", { color: "red" })) return 0;
+						return 7 - get.value(card);
+					})
+					.forResult();
+			} else {
+				event.result = await player
+					.chooseToDiscard(`###${get.prompt(event.skill)}###弃置一张黑色牌并视为使用一张【杀】`, "he", "chooseonly", card => get.color(card, player) == "black")
+					.set("ai", card => {
+						if (!get.player().hasValueTarget({ name: "sha", isCard: true }, false, false)) return 0;
+						return 6 - get.value(card);
+					})
+					.forResult();
+			}
+		},
+		async content(event, trigger, player) {
+			const cards = event.cards,
+				name = event.triggername;
+			await player.discard(cards);
+			if (name == "useCardToPlayer") {
+				const target = trigger.target;
+				const result = await target
+					.chooseToDiscard(`司兵：请弃置${cards.length}张红色手牌，或取消令你不可响应${get.translation(trigger.card)}`, cards.length, card => {
+						return get.color(card, get.player()) == "red";
+					})
+					.set("ai", card => {
+						const trigger = get.event().getTrigger(),
+							player = get.player();
+						if (get.event().num > 2 || !player.canRespond(trigger) || trigger.card.name == "huogong") return 0;
+						if (player.canRespond(trigger, card)) return 6 - get.value(card);
+						return 7 - get.value(card);
+					})
+					.set("num", cards.length)
+					.forResult();
+				if (result?.bool === false) {
+					trigger.getParent().directHit.add(target);
+					target.popup("不可响应");
+					game.log(target, "不可响应", trigger.card);
+				}
+			} else {
+				const card = get.autoViewAs({ name: "sha", isCard: true });
+				await player.chooseUseTarget(card, true, false, "nodistance");
+			}
+		},
+	},
+	taffyold_olliance: {
+		audio: "olliance",
+		trigger: {
+			player: "loseAfter",
+			global: ["loseAsyncAfter", "equipAfter", "addToExpansionAfter", "gainAfter", "addJudgeAfter"],
+		},
+		usable: 1,
+		filter(event, player) {
+			const bool1 = event.getg && event.getg(player)?.length,
+				bool2 = event.getl && event.getl(player)?.hs?.length;
+			return (bool1 || bool2) && player.isMinHandcard() && player.countCards("h") < player.maxHp;
+		},
+		check(event, player) {
+			return player.countCards("h") < player.maxHp;
+		},
+		async content(event, trigger, player) {
+			await player.drawTo(player.maxHp);
+			player.addTempSkill(event.name + "_damage");
+			player.addMark(event.name + "_damage", 1, false);
+		},
+		subSkill: {
+			damage: {
+				audio: "olliance",
+				charlotte: true,
+				forced: true,
+				forceDie: true,
+				onremove: true,
+				trigger: { global: "damageBegin1" },
+				content() {
+					trigger.num += player.countMark(event.name);
+					player.removeSkill(event.name);
+				},
+				mark: true,
+				intro: {
+					content: "本回合下一次有角色造成的伤害+#",
+				},
+			},
+		},
+	},
 };
 
 export default oldOL;

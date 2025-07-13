@@ -3151,6 +3151,223 @@ const oldDC = {
 			}
 		},
 	},
+	// 旧新杀诸葛均
+	taffyold_dcgumai: {
+		audio: "dcgumai",
+		trigger: {
+			player: "damageBegin3",
+			source: "damageBegin1",
+		},
+		usable: 1,
+		filter(event, player) {
+			return player.countCards("h");
+		},
+		async content(event, trigger, player) {
+			const suit = get.suit(player.getCards("h")[0], player),
+				bool = player.getCards("h").every(i => get.suit(i, player) == suit);
+			await player.showHandcards(`${get.translation(player)}发动了【孤脉】`);
+			const result = await player
+				.chooseControl("+1", "-1")
+				.set("prompt", "令此伤害+1或-1")
+				.set("ai", () => {
+					if (_status.event.eff < 0) {
+						return 1;
+					}
+					return 0;
+				})
+				.set("eff", get.damageEffect(trigger.player, trigger.source, player))
+				.forResult();
+			if (result.index == 0) {
+				trigger.num++;
+				player.popup(" +1 ", "fire");
+				game.log(player, "令此伤害+1");
+			}
+			if (result.index == 1) {
+				trigger.num--;
+				player.popup(" -1 ", "water");
+				game.log(player, "令此伤害-1");
+			}
+			if (bool) {
+				const result2 = await player
+					.chooseToDiscard("h", "是否弃置一张手牌并重置【孤脉】？")
+					.set("ai", card => {
+						const { player, eff } = get.event();
+						if (eff) {
+							return 7 - get.value(card);
+						}
+						return 0;
+					})
+					.set("eff", player.countCards("hs", card => player.hasValueTarget(card) && get.tag(card, "damage")) > 0)
+					.forResult();
+				if (result2.bool) {
+					player.storage.counttrigger.taffyold_dcgumai--;
+				}
+			}
+		},
+	},
+	// 旧新杀夏侯玄
+	taffyold_dcyizheng: {
+		audio: "dcyizheng",
+		trigger: { player: ["phaseBegin", "phaseEnd"] },
+		filter(event, player) {
+			return (
+				player.countCards("h") &&
+				game.hasPlayer(target => {
+					return target != player && target.countCards("h");
+				})
+			);
+		},
+		async cost(event, trigger, player) {
+			event.result = await player
+				.chooseTarget(get.prompt2(event.skill), [1, Infinity], (card, player, target) => {
+					return target != player && target.countCards("h");
+				})
+				.set("ai", target => {
+					if (player.hp == 1) {
+						return 0;
+					}
+					return -get.attitude(get.player(), target);
+				})
+				.forResult();
+		},
+		async content(event, trigger, player) {
+			const targets = [player].concat(event.targets).sortBySeat();
+			//先选牌
+			let showEvent = player
+				.chooseCardOL(targets, "议政：请选择要展示的牌", true)
+				.set("ai", function (card) {
+					return -get.value(card);
+				})
+				.set("source", player);
+			showEvent.aiCard = function (target) {
+				const hs = target.getCards("h");
+				return { bool: true, cards: [hs.randomGet()] };
+			};
+			showEvent._args.remove("glow_result");
+			const result = await showEvent.forResult();
+			const cards = [];
+			for (var i = 0; i < targets.length; i++) {
+				cards.push(result[i].cards[0]);
+			}
+			//新建showCards事件，不然没法兼容庞宏、OL罗宪这些角色的技能
+			let next = game.createEvent("showCards");
+			next.set("player", player);
+			next.set("targets", targets);
+			next.set("cards", cards);
+			next.set("skill", event.name);
+			next.setContent(() => {
+				//照搬showCards的事件然后改动了一下dialog
+				"step 0";
+				event.dialog = ui.create.dialog(`${get.translation(player)} 发动了〖${get.translation(event.skill)}〗`, cards);
+				event.dialogid = lib.status.videoId++;
+				event.dialog.videoId = event.dialogid;
+				game.broadcastAll(
+					function (skill, targets, cards, id, player) {
+						let dialog = ui.create.dialog(`${get.translation(player)} 发动了〖${get.translation(skill)}〗`, cards);
+						dialog.videoId = id;
+						const getName = function (target) {
+							if (target._tempTranslate) {
+								return target._tempTranslate;
+							}
+							const name = target.name;
+							if (lib.translate[name + "_ab"]) {
+								return lib.translate[name + "_ab"];
+							}
+							return get.translation(name);
+						};
+						for (let i = 0; i < targets.length; i++) {
+							dialog.buttons[i].querySelector(".info").innerHTML = getName(targets[i]) + get.translation(cards[i].suit) + cards[i].number;
+						}
+					},
+					event.skill,
+					targets,
+					cards,
+					event.dialogid,
+					player
+				);
+				for (let i = 0; i < targets.length; i++) {
+					game.log(targets[i], "展示了", cards[i]);
+				}
+				game.addCardKnower(cards, "everyone");
+				game.delay(4);
+				game.addVideo("showCards", player, [get.translation(player) + "发动了〖议政〗", get.cardsInfo(cards)]);
+				("step 1");
+				game.broadcastAll("closeDialog", event.dialogid);
+				event.dialog.close();
+			});
+			await next;
+			if (cards.map(card => get.type2(card)).unique().length == 1) {
+				player.popup("洗具");
+				const result = await player
+					.chooseTarget(true)
+					.set("createDialog", [`议政：令一名角色获得这些牌`, cards])
+					.set("ai", target => get.attitude(get.player(), target))
+					.forResult();
+				if (result?.targets) {
+					const target = result.targets[0];
+					player.line(target);
+					let gainEvent = target.gain(cards);
+					gainEvent.set(
+						"givers",
+						targets.filter(i => i != target)
+					);
+					gainEvent.set("animate", function (event) {
+						const player = event.player,
+							cards = event.cards,
+							givers = event.givers;
+						for (let i = 0; i < givers.length; i++) {
+							givers[i].$give(cards[i], player);
+						}
+						return 500;
+					});
+					await gainEvent;
+				}
+			} else {
+				player.popup("杯具");
+				await game
+					.loseAsync({
+						lose_list: targets.map((target, index) => {
+							return [target, [cards[index]]];
+						}),
+						discarder: player,
+					})
+					.setContent("discardMultiple");
+			}
+		},
+	},
+	taffyold_dcguilin: {
+		audio: "dcguilin",
+		derivation: ["dcboxuan_rewrite"],
+		limited: true,
+		unique: true,
+		skillAnimation: true,
+		animationColor: "thunder",
+		enable: "phaseUse",
+		trigger: { player: "dying" },
+		filter(event, player) {
+			if (event.name == "dying") {
+				return player.isDying();
+			}
+			return player.isDamaged();
+		},
+		async content(event, trigger, player) {
+			player.awakenSkill(event.name);
+			const num = player.getDamagedHp();
+			await player.recover(num);
+			await player.draw(num);
+			await player.removeSkills("taffyold_dcyizheng");
+			if (player.hasSkill("dcboxuan")) {
+				player.storage.dcboxuan = true;
+			}
+			game.log(player, `修改了〖博玄〗`);
+		},
+		ai: {
+			order: 5,
+			result: {
+				player: 1,
+			},
+		},
+	},
 };
 
 export default oldDC;

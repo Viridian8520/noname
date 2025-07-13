@@ -5168,6 +5168,633 @@ const oldMB = {
 			},
 		},
 	},
+	//旧势魏延
+	taffyold_potzhongao: {
+		audio: "potzhongao",
+		dutySkill: true,
+		derivation: ["potkuanggu", "potkuanggu_pot_weiyan_achieve", "kunfen"],
+		group: ["taffyold_potzhongao_start", "taffyold_potzhongao_achieve", "taffyold_potzhongao_fail"],
+		subSkill: {
+			start: {
+				audio: "potzhongao1.mp3",
+				trigger: {
+					global: "phaseBefore",
+					player: "enterGame",
+				},
+				filter(event, player) {
+					return event.name != "phase" || game.phaseNumber == 0;
+				},
+				forced: true,
+				locked: false,
+				async content(event, trigger, player) {
+					await player.addSkills("potkuanggu");
+				},
+			},
+			achieve: {
+				audio: ["potzhongao2.mp3", "potzhongao3.mp3"],
+				trigger: {
+					source: "dieAfter",
+				},
+				forced: true,
+				locked: false,
+				skillAnimation: true,
+				animationColor: "fire",
+				async content(event, trigger, player) {
+					player.awakenSkill(event.name.slice(0, -8));
+					game.log(player, "成功完成使命");
+					player.changeSkin("taffyold_potzhongao", "pot_weiyan_achieve");
+					player.setStorage("potkuanggu", 1);
+					const num = player.countMark("taffyold_potzhuangshi_limit") + player.countMark("taffyold_potzhuangshi_directHit");
+					if (num > 0) {
+						if (!player.isDamaged()) {
+							await player.draw(num);
+						} else {
+							await player.recover(num);
+						}
+						await player.draw(num);
+					}
+				},
+			},
+			fail: {
+				audio: ["potzhongao4.mp3", "potzhongao5.mp3"],
+				trigger: {
+					player: ["dying", "phaseUseBegin"],
+				},
+				filter(event, player) {
+					return event.name == "dying" || !event.usedZhuangshi;
+				},
+				lastDo: true,
+				forced: true,
+				locked: false,
+				async content(event, trigger, player) {
+					player.awakenSkill(event.name.slice(0, -5));
+					game.log(player, "使命失败");
+					player.changeSkin("taffyold_potzhongao", "pot_weiyan_fail");
+					await player.changeSkills(["kunfen"], ["taffyold_potzhuangshi"]);
+					await player.recover();
+					await player.draw(2);
+				},
+			},
+		},
+	},
+	taffyold_potzhuangshi: {
+		audio: "potzhuangshi",
+		audioname: ["pot_weiyan_achieve"],
+		trigger: {
+			player: "phaseUseBegin",
+		},
+		async cost(event, trigger, player) {
+			const result = await player
+				.chooseButton(
+					[
+						get.prompt(event.skill),
+						[
+							[
+								["losehp", "失去任意点体力，令你此阶段使用的前等量张牌不计入次数限制"],
+								["discard", "弃置任意张手牌，令你此阶段使用的前等量张牌无距离限制且不可被响应"],
+							],
+							"textbutton",
+						],
+					],
+					[1, 2]
+				)
+				.set("filterButton", button => {
+					const player = get.player();
+					if (button.link == "discard") {
+						return player.countCards("h");
+					}
+					return true;
+				})
+				.set("ai", button => {
+					const player = get.player(),
+						num = Math.floor(player.countCards("h") / 2);
+					if (button.link == "discard") {
+						return num;
+					}
+					return player.hp > 1;
+				})
+				.forResult();
+			event.result = {
+				bool: true,
+				cost_data: result.bool ? result.links : "nouse",
+			};
+		},
+		async content(event, trigger, player) {
+			const select = event.cost_data;
+			if (select == "nouse") {
+				await player.gainMaxHp();
+				await player.recover();
+			} else {
+				if (select.includes("losehp")) {
+					const { result } = await player
+						.chooseNumbers(
+							get.translation(event.name),
+							[
+								{
+									prompt: "失去任意点体力值，令你此阶段使用的前等量张牌不计入次数限制",
+									min: 1,
+									max: player.getHp(),
+								},
+							],
+							true
+						)
+						.set("processAI", () => {
+							const player = get.player();
+							let num = Math.floor(player.countCards("h") / 2);
+							return [num];
+						});
+					if (typeof result?.numbers?.[0] != "number") {
+						return;
+					}
+					const number = result.numbers[0];
+					await player.loseHp(number);
+					player.addTempSkill("taffyold_potzhuangshi_limit", "phaseChange");
+					player.addMark("taffyold_potzhuangshi_limit", number, false);
+					player.addTip("taffyold_potzhuangshi_limit", `不计次数 ${number}`);
+				}
+				if (select.includes("discard")) {
+					const { result } = await player
+						.chooseToDiscard(get.translation(event.name), [1, Infinity], "h", true)
+						.set("prompt2", "弃置任意张手牌，令你此阶段使用的前等量张牌无距离限制且不可被响应")
+						.set("ai", card => {
+							const player = get.player();
+							let num = Math.floor(player.countCards("h") / 2);
+							if (ui.selected.cards.length < num) {
+								return 7 - get.value(card);
+							}
+							return 0;
+						});
+					if (!result?.cards?.length) {
+						return;
+					}
+					const number = result.cards.length;
+					player.addTempSkill("taffyold_potzhuangshi_directHit", "phaseChange");
+					player.addMark("taffyold_potzhuangshi_directHit", number, false);
+					player.addTip("taffyold_potzhuangshi_directHit", `不可响应 ${number}`);
+				}
+				trigger.set("usedZhuangshi", true);
+			}
+		},
+		subSkill: {
+			limit: {
+				trigger: {
+					player: "useCard0",
+				},
+				charlotte: true,
+				filter(event, player) {
+					return player.hasMark("taffyold_potzhuangshi_limit");
+				},
+				forced: true,
+				popup: false,
+				firstDo: true,
+				async content(event, trigger, player) {
+					if (trigger.addCount !== false) {
+						trigger.addCount = false;
+						player.getStat("card")[trigger.card.name]--;
+					}
+					player.removeMark("taffyold_potzhuangshi_limit", 1, false);
+					const num = player.countMark("taffyold_potzhuangshi_limit");
+					if (num > 0) {
+						player.addTip("taffyold_potzhuangshi_limit", `不计次数 ${num}`);
+					} else {
+						player.removeTip("taffyold_potzhuangshi_limit");
+					}
+				},
+				onremove(player, skill) {
+					player.clearMark(skill, false);
+					player.removeTip(skill);
+				},
+			},
+			directHit: {
+				trigger: {
+					player: "useCard0",
+				},
+				charlotte: true,
+				filter(event, player) {
+					return player.hasMark("taffyold_potzhuangshi_directHit");
+				},
+				forced: true,
+				popup: false,
+				firstDo: true,
+				async content(event, trigger, player) {
+					trigger.directHit.addArray(game.players);
+					player.removeMark("taffyold_potzhuangshi_directHit", 1, false);
+					const num = player.countMark("taffyold_potzhuangshi_directHit");
+					if (num > 0) {
+						player.addTip("taffyold_potzhuangshi_directHit", `不可响应 ${num}`);
+					} else {
+						player.removeTip("taffyold_potzhuangshi_directHit");
+					}
+				},
+				onremove(player, skill) {
+					player.clearMark(skill, false);
+					player.removeTip(skill);
+				},
+				mod: {
+					targetInRange(card, player) {
+						if (player.hasMark("taffyold_potzhuangshi_directHit")) {
+							return true;
+						}
+					},
+				},
+			},
+		},
+	},
+	taffyold_potyinzhan: {
+		audio: "potyinzhan",
+		audioname: ["pot_weiyan_achieve", "pot_weiyan_fail"],
+		trigger: {
+			source: "damageBegin1",
+		},
+		forced: true,
+		filter(event, player) {
+			if (event.card?.name != "sha") {
+				return false;
+			}
+			const target = event.player;
+			if (player.hp <= target.hp || player.countCards("h") <= target.countCards("h")) {
+				return true;
+			}
+			return false;
+		},
+		logTarget: "player",
+		popup: false,
+		logAudio: (player, indexedData) => "potyinzhan" + (lib.skill.potyinzhan.audioname.includes(player.skin.name) ? "_" + player.skin.name : "") + (indexedData ? indexedData : get.rand(1, 2)) + ".mp3",
+		async content(event, trigger, player) {
+			const target = trigger.player,
+				bool1 = target.hp >= player.hp,
+				bool2 = target.countCards("h") >= player.countCards("h");
+			player.logSkill("taffyold_potyinzhan", null, null, null, [player, bool1 && bool2 ? 3 : get.rand(1, 2)]);
+			if (bool1) {
+				trigger.num++;
+			}
+			if (bool2) {
+				if (bool1) {
+					player.popup("乘势", "fire");
+					await player.recover();
+				}
+				player
+					.when("useCardAfter")
+					.filter(evt => evt == trigger.getParent(2))
+					.step(async (event, trigger, player) => {
+						if (target.isIn() && target.countCards("he")) {
+							const {
+								result: { cards },
+							} = await player.discardPlayerCard(target, "he", true);
+							if (bool1) {
+								await player.gain(cards.filterInD("od"), "gain2");
+							}
+						}
+					});
+			}
+		},
+	},
+	//旧势于吉
+	taffyold_potdaozhuan: {
+		audio: "potdaozhuan",
+		enable: "chooseToUse",
+		filter(event, player) {
+			if (event.taffyold_potdaozhuan) return false;
+			let num = game
+				.getGlobalHistory("useCard")
+				.map(evt => get.type2(evt.card))
+				.unique().length;
+			num -= player.countCards("he");
+			if (_status.currentPhase?.isIn() && _status.currentPhase !== player) num -= _status.currentPhase.countCards("he");
+			if (num > 0) return false;
+			return get
+				.inpileVCardList(info => {
+					const name = info[2];
+					if (get.type(name) !== "basic") return false;
+					return !player.getStorage("taffyold_potdaozhuan_used").includes(name);
+				})
+				.some(card => event.filterCard(new lib.element.VCard({ name: card[2], nature: card[3] }), player, event));
+		},
+		chooseButton: {
+			dialog(event, player) {
+				return ui.create.dialog("道转", [get.inpileVCardList(info => get.type(info[2]) === "basic"), "vcard"]);
+			},
+			filter(button, player) {
+				const event = get.event().getParent();
+				if (player.getStorage("taffyold_potdaozhuan_used").includes(button.link[2])) return false;
+				return event.filterCard(new lib.element.VCard({ name: button.link[2], nature: button.link[3] }), player, event);
+			},
+			check(button) {
+				const event = get.event().getParent();
+				if (event.type !== "phase") return 1;
+				return get.player().getUseValue(new lib.element.VCard({ name: button.link[2], nature: button.link[3] }));
+			},
+			prompt(links, player) {
+				const num = game
+					.getGlobalHistory("useCard")
+					.map(evt => get.type2(evt.card))
+					.unique().length;
+				let prompt = "";
+				if (num > 0) {
+					prompt += "将你";
+					if (_status.currentPhase?.isIn() && _status.currentPhase !== player) prompt += "与" + get.translation(_status.currentPhase);
+					prompt += "的共计" + get.cnNumber(num) + "张牌置入弃牌堆，";
+				}
+				return '###道转###<div class="text center">' + prompt + "视为使用" + (get.translation(links[0][3]) || "") + "【" + get.translation(links[0][2]) + "】</div>";
+			},
+			backup(links) {
+				return {
+					filterCard: () => false,
+					selectCard: -1,
+					viewAs: { name: links[0][2], nature: links[0][3] },
+					log: false,
+					async precontent(event, trigger, player) {
+						const num = game
+							.getGlobalHistory("useCard")
+							.map(evt => get.type2(evt.card))
+							.unique().length;
+						let result;
+						if (num === 0) result = { bool: true };
+						else {
+							const goon = _status.currentPhase?.isIn() && _status.currentPhase !== player;
+							let prompt = "将你";
+							if (goon) prompt += "与" + get.translation(_status.currentPhase);
+							prompt += "的共计" + get.cnNumber(num) + "张牌置入弃牌堆";
+							let dialog = ["道转：" + prompt];
+							if (player.countCards("h")) {
+								dialog.push('<div class="text center">你的手牌</div>');
+								dialog.push(player.getCards("h"));
+							}
+							if (player.countCards("e")) {
+								dialog.push('<div class="text center">你的装备牌</div>');
+								dialog.push(player.getCards("e"));
+							}
+							if (goon) {
+								const target = _status.currentPhase;
+								if (target.countCards("h")) {
+									const cards = target.getCards("h");
+									dialog.push('<div class="text center">' + get.translation(target) + "的手牌</div>");
+									if (player.hasSkillTag("viewHandcard", null, target, true)) dialog.push(cards);
+									else dialog.push([cards.slice().randomSort(), "blank"]);
+								}
+								if (target.countCards("e")) {
+									dialog.push('<div class="text center">' + get.translation(target) + "的装备牌</div>");
+									dialog.push(target.getCards("e"));
+								}
+							}
+							result = await player
+								.chooseButton(dialog, num, true)
+								.set("ai", button => {
+									const player = get.player(),
+										source = get.owner(button.link);
+									return get.value(button.link, get.owner(source)) * Math.sign(-get.attitude(player, source));
+								})
+								.forResult();
+						}
+						if (result?.bool) {
+							player.logSkill("taffyold_potdaozhuan");
+							player.addTempSkill("taffyold_potdaozhuan_used", "roundStart");
+							player.markAuto("taffyold_potdaozhuan_used", [event.result.card.name]);
+							if (result.links?.length) {
+								const target = _status.currentPhase;
+								const owners = result.links.map(i => get.owner(i)).unique();
+								if (owners.length > 1) {
+									const cards = [player.getCards("he", i => result.links.includes(i)), target.getCards("he", i => result.links.includes(i))];
+									await game
+										.loseAsync({
+											lose_list: [
+												[player, cards[0]],
+												[target, cards[1]],
+											],
+										})
+										.setContent(get.info("mbzengou").loseToDiscardpileMultiple);
+								} else {
+									await owners[0].loseToDiscardpile(result.links);
+									if (owners[0] === target) player.tempBanSkill("taffyold_potdaozhuan");
+								}
+							}
+							return;
+						}
+						const evt = event.getParent();
+						evt.set("taffyold_potdaozhuan", true);
+						evt.goto(0);
+					},
+				};
+			},
+		},
+		hiddenCard(player, name) {
+			if (player.isTempBanned("taffyold_potdaozhuan")) return false;
+			return get.type(name) === "basic" && !player.getStorage("taffyold_potdaozhuan_used").includes(name);
+		},
+		ai: {
+			fireAttack: true,
+			respondSha: true,
+			respondShan: true,
+			skillTagFilter(player, tag, arg) {
+				if (arg === "respond") return false;
+				return get.info("taffyold_potdaozhuan").hiddenCard(
+					player,
+					(() => {
+						switch (tag) {
+							case "fireAttack":
+								return "sha";
+							default:
+								return tag.slice("respond".length).toLowerCase();
+						}
+					})()
+				);
+			},
+			order(item, player) {
+				if (player && _status.event.type === "phase") {
+					let max = 0,
+						names = get.inpileVCardList(info => {
+							const name = info[2];
+							if (get.type(name) !== "basic") return false;
+							return !player.getStorage("taffyold_potdaozhuan_used").includes(name);
+						});
+					names = names.map(namex => new lib.element.VCard({ name: namex[2], nature: namex[3] }));
+					names.forEach(card => {
+						if (player.getUseValue(card) > 0) {
+							let temp = get.order(card);
+							if (temp > max) max = temp;
+						}
+					});
+					return max + (max > 0 ? 0.2 : 0);
+				}
+				return 10;
+			},
+			result: {
+				player(player) {
+					if (_status.event.dying) return get.attitude(player, _status.event.dying);
+					return 1;
+				},
+			},
+		},
+		subSkill: {
+			backup: {},
+			used: {
+				charlotte: true,
+				onremove: true,
+				intro: { content: "本轮已使用牌名：$" },
+			},
+		},
+	},
+	taffyold_potfuji: {
+		audio: "potfuji",
+		enable: "phaseUse",
+		filter(event, player) {
+			return game.countPlayer(t => t.countCards("h")) > 0 && game.hasPlayer(target => target !== player);
+		},
+		usable: 1,
+		chooseButton: {
+			dialog(event, player) {
+				const targets = game.filterPlayer(target => target.countCards("h"));
+				return ui.create.dialog(
+					"符济",
+					...targets
+						.map(target => {
+							let list = [],
+								cards = target.getCards("h");
+							list.push('<div class="text center">' + get.translation(target) + "的手牌</div>");
+							if (target === player || player.hasSkillTag("viewHandcard", null, target, true)) list.push(cards);
+							else list.push([cards.slice().randomSort(), "blank"]);
+							return list;
+						})
+						.flat(),
+					"hidden"
+				);
+			},
+			select: () => [1, game.countPlayer(target => target !== get.player())],
+			check(button) {
+				const player = get.player(),
+					owner = get.owner(button.link);
+				return get.value(button.link, owner) * Math.sign(-get.attitude(player, owner));
+			},
+			prompt(links) {
+				let prompt = "将" + get.translation(links) + "交给至多等量角色。";
+				prompt += "因此获得【杀】的角色使用【杀】造成的伤害+1直到你的下个回合开始；";
+				prompt += "因此获得【闪】的角色使用【闪】结算完毕后摸一张牌直到你的下个回合开始。";
+				prompt += "然后若你的手牌数为全场最低，则你获得摸两张牌，获得这两项效果直到你的下个回合开始。";
+				return '###符济###<div class="text center">' + prompt + "</div>";
+			},
+			backup(links) {
+				return {
+					giveCards: links,
+					logAudio: () => ["potfuji1.mp3", "potfuji2.mp3", "potfuji3.mp3"],
+					filterCard: () => false,
+					selectCard: -1,
+					filterTarget: true,
+					selectTarget: links.length,
+					targetprompt() {
+						const links = get.info("taffyold_potfuji_backup").giveCards;
+						return ["获得", get.translation(links[ui.selected.targets.length - 1])].join("<br>");
+					},
+					multiline: true,
+					multitarget: true,
+					complexSelect: true,
+					async content(event, trigger, player) {
+						const targets = event.targets;
+						const links = get.info("taffyold_potfuji_backup").giveCards;
+						let map = new Map(),
+							lose_list = [];
+						for (const link of links) {
+							const owner = get.owner(link);
+							map.set(owner, (map.get(owner) || []).concat([link]));
+						}
+						for (const [owner, cards] of Array.from(map.entries())) {
+							owner.$throw(cards.length, 500);
+							game.log(owner, "将", get.cnNumber(cards.length), "张牌置入了处理区");
+							lose_list.push([owner, cards]);
+						}
+						await game
+							.loseAsync({
+								lose_list: lose_list,
+							})
+							.setContent("chooseToCompareLose");
+						await game.delayx();
+						const gain_list = links.map((link, i) => [targets[i], [link]]);
+						await game
+							.loseAsync({
+								gain_list: gain_list,
+								giver: player,
+								animate: "gain2",
+							})
+							.setContent("gaincardMultiple");
+						for (const [target, [link]] of gain_list) {
+							const name = get.name(link, false);
+							if (["sha", "shan"].includes(name)) {
+								player.addTempSkill("taffyold_potfuji_clear", { player: "phaseBegin" });
+								await target.addAdditionalSkills("taffyold_potfuji_" + player.playerid, "taffyold_potfuji_" + name, true);
+							}
+						}
+						if (player.isMinHandcard()) {
+							player.changeSkin({ characterName: "taffyold_pot_yuji" }, "pot_yuji_shadow");
+							await player.draw(2);
+							player.addTempSkill("taffyold_potfuji_clear", { player: "phaseBegin" });
+							await player.addAdditionalSkills("taffyold_potfuji_" + player.playerid, ["taffyold_potfuji_sha", "taffyold_potfuji_shan"], true);
+						}
+						player.when({ player: "phaseBegin" }).then(() => {
+							player.changeSkin({ characterName: "taffyold_pot_yuji" }, "pot_yuji");
+						});
+					},
+					ai: {
+						result: {
+							player(player, target) {
+								const links = get.info("taffyold_potfuji_backup").giveCards;
+								return get.value(links[ui.selected.targets.length], target) * get.attitude(player, target);
+							},
+						},
+					},
+				};
+			},
+		},
+		ai: {
+			order: 10,
+			threaten: 4,
+			result: { player: 1 },
+		},
+		subSkill: {
+			backup: {},
+			clear: {
+				charlotte: true,
+				onremove(player) {
+					game.countPlayer(current => current.removeAdditionalSkills("taffyold_potfuji_" + player.playerid));
+				},
+			},
+			sha: {
+				audio: ["potfuji4.mp3", "potfuji5.mp3"],
+				charlotte: true,
+				mark: true,
+				marktext: "杀",
+				intro: {
+					name: "符济 - 杀",
+					content: "使用【杀】造成的伤害+1",
+				},
+				trigger: { source: "damageBegin1" },
+				filter(event, player) {
+					return event.card && event.card.name === "sha";
+				},
+				forced: true,
+				logTarget: "player",
+				content() {
+					trigger.num++;
+				},
+			},
+			shan: {
+				audio: ["potfuji4.mp3", "potfuji5.mp3"],
+				charlotte: true,
+				mark: true,
+				marktext: "闪",
+				intro: {
+					name: "符济 - 闪",
+					content: "使用【闪】结算完毕后摸一张牌",
+				},
+				trigger: { player: "useCardAfter" },
+				filter(event, player) {
+					return event.card.name === "shan";
+				},
+				forced: true,
+				content() {
+					player.draw();
+				},
+			},
+		},
+	},
 };
 
 export default oldMB;

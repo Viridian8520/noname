@@ -828,7 +828,9 @@ var newDuilib;
 		};
 		
 		AnimationPlayer.prototype.playSpine = function (sprite, position){
-			if (self.duicfg && !self.duicfg.gameAnimationEffect) return;
+      // taffy: 注释animation.js原版代码
+			// if (self.duicfg && !self.duicfg.gameAnimationEffect) return;
+			/* taffy分界线 */
 			if (sprite == undefined) return console.error('playSpine: parameter undefined');
 			if (typeof sprite == 'string') sprite = { name: sprite };
 			if (!this.hasSpine(sprite.name)) return console.error('playSpine: [' + sprite.name + '] 骨骼没有加载');
