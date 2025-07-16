@@ -214,7 +214,7 @@ const packs = function () {
                     result: {
                         target(player, target) {
                             if (player.hp <= 1 && !player.countCards('hs', { name: ['tao', 'jiu'] })) return 0;
-                            var att = get.attitude(player, target), sgn = get.sgn(att);
+                            var att = get.attitude(player, target), sgn = Math.sign(att);
                             return get.damageEffect(target, player, player) * sgn * (2 - sgn);
                         },
                     },
@@ -483,8 +483,12 @@ const packs = function () {
             },
         },
     };
-    for (var i in FaDongCharacter.character) {
-        if (!FaDongCharacter.character[i][4]) FaDongCharacter.character[i][4] = [];
+    for (let i in FaDongCharacter.character) {
+        FaDongCharacter.character[i][4] ??= [];
+        if (_status['extension_活动武将_files']?.audio.die.files.includes(`${i}.mp3`)) {
+            FaDongCharacter.character[i][4].push('die:ext:活动武将/audio/die:true');
+            FaDongCharacter.translate[`#ext:活动武将/audio/die/${i}:die`] = '点击播放阵亡配音';
+        }
         // taffy: 注释FaDongCharacter.js原版代码
         // FaDongCharacter.character[i][4].push(((lib.device || lib.node) ? 'ext:' : 'db:extension-') + '活动武将/image/character/' + i + '.jpg');
         /* taffy分界线 */

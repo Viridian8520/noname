@@ -1,4 +1,4 @@
-import { lib, game, ui, get, ai, _status } from '../../../noname.js'
+import { lib, game, ui, get, ai, _status } from '../../../noname.js';
 export let config = {
 	/*
 	//总有一天会维护好的功能
@@ -16,7 +16,25 @@ export let config = {
 	*/
 	FenJieXianA: {
 		clear: true,
-		name: '<li>功能杂项',
+		name: '<li>功能杂项（点击折叠）',
+		onclick() {
+			const innerHTML = get.plainText(this.innerHTML);
+			const goon = innerHTML.endsWith('（点击折叠）'), config = `hdwj_config_${innerHTML.slice(0, -6)}}`;
+			this.innerHTML = `<li>${this.textContent.slice(0, -6)}${goon ? '（点击展开）' : '（点击折叠）'}`;
+			if (goon) {
+				_status[config] ??= [];
+				let item = this.nextSibling;
+				while (item && ['（点击折叠）', '（点击展开）', '删除此扩展'].every(i => !item.innerHTML.includes(i))) {
+					item.hide();
+					_status[config].add(item);
+					item = item.nextSibling;
+				}
+			}
+			else {
+				for (const item of _status[config]) item.show();
+				delete _status[config];
+			}
+		},
 	},
 	HD_shanshan: {
 		name: '牌堆加入【闪闪】',
@@ -157,7 +175,7 @@ export let config = {
 			'<br><li>二阶：起始手牌+1。' +
 			'<br><li>三阶：体力上限+1，起始手牌+1，出【杀】次数+1。' +
 			'<br><li>四阶：体力上限+1，起始手牌+2，出【杀】次数+1，摸牌阶段摸牌数+1。' +
-			'<br><li>五阶：体力上限+2，起始手牌+2，出【杀】次数+1，摸牌阶段摸牌数+1，获得技能【重生】。',
+			'<br><li>五阶：体力上限+2，起始手牌+2，出【杀】次数+1，摸牌阶段摸牌数+1，获得【重生】。',
 		init: '1',
 		item: {
 			'1': '一阶',
@@ -174,7 +192,7 @@ export let config = {
 			'<br><li>二阶：体力上限+1，起始手牌+1，登场时随机使用一张装备牌。' +
 			'<br><li>三阶：体力上限+2，起始手牌+1，出【杀】次数+2。' +
 			'<br><li>四阶：体力上限+3，起始手牌+2，出【杀】次数+1，摸牌阶段摸牌数+1。' +
-			'<br><li>五阶：体力上限+5，起始手牌+2，出【杀】次数+1，获得技能【困兽】。',
+			'<br><li>五阶：体力上限+5，起始手牌+2，出【杀】次数+1，获得【困兽】。',
 		init: '1',
 		item: {
 			'1': '一阶',
@@ -263,7 +281,25 @@ export let config = {
 	},
 	FenJieXianB: {
 		clear: true,
-		name: '<li>关于特效',
+		name: '<li>关于特效（点击折叠）',
+		onclick() {
+			const innerHTML = get.plainText(this.innerHTML);
+			const goon = innerHTML.endsWith('（点击折叠）'), config = `hdwj_config_${innerHTML.slice(0, -6)}}`;
+			this.innerHTML = `<li>${this.textContent.slice(0, -6)}${goon ? '（点击展开）' : '（点击折叠）'}`;
+			if (goon) {
+				_status[config] ??= [];
+				let item = this.nextSibling;
+				while (item && ['（点击折叠）', '（点击展开）', '删除此扩展'].every(i => !item.innerHTML.includes(i))) {
+					item.hide();
+					_status[config].add(item);
+					item = item.nextSibling;
+				}
+			}
+			else {
+				for (const item of _status[config]) item.show();
+				delete _status[config];
+			}
+		},
 	},
 	HDdamageAudio: {
 		name: '失去上限音效',
@@ -311,7 +347,25 @@ export let config = {
 	},
 	FenJieXianD: {
 		clear: true,
-		name: '<li>关于国战',
+		name: '<li>关于国战（点击折叠）',
+		onclick() {
+			const innerHTML = get.plainText(this.innerHTML);
+			const goon = innerHTML.endsWith('（点击折叠）'), config = `hdwj_config_${innerHTML.slice(0, -6)}}`;
+			this.innerHTML = `<li>${this.textContent.slice(0, -6)}${goon ? '（点击展开）' : '（点击折叠）'}`;
+			if (goon) {
+				_status[config] ??= [];
+				let item = this.nextSibling;
+				while (item && ['（点击折叠）', '（点击展开）', '删除此扩展'].every(i => !item.innerHTML.includes(i))) {
+					item.hide();
+					_status[config].add(item);
+					item = item.nextSibling;
+				}
+			}
+			else {
+				for (const item of _status[config]) item.show();
+				delete _status[config];
+			}
+		},
 	},
 	HD_gzfazheng: {
 		name: '法正修改',
@@ -323,14 +377,27 @@ export let config = {
 		intro: '开启此选项后，国战卞夫人【挽危】调整为OL/十周年版本（重启生效）',
 		init: false,
 	},
-	keymove: {
-		name: 'key社角色移动',
-		intro: '将国战武将包中的key武将（冈崎汐）移至DIY包（重启生效）',
-		init: true,
-	},
 	FenJieXianE: {
 		clear: true,
-		name: '<li>扩展彩蛋',
+		name: '<li>扩展彩蛋（点击折叠）',
+		onclick() {
+			const innerHTML = get.plainText(this.innerHTML);
+			const goon = innerHTML.endsWith('（点击折叠）'), config = `hdwj_config_${innerHTML.slice(0, -6)}}`;
+			this.innerHTML = `<li>${this.textContent.slice(0, -6)}${goon ? '（点击展开）' : '（点击折叠）'}`;
+			if (goon) {
+				_status[config] ??= [];
+				let item = this.nextSibling;
+				while (item && ['（点击折叠）', '（点击展开）', '删除此扩展'].every(i => !item.innerHTML.includes(i))) {
+					item.hide();
+					_status[config].add(item);
+					item = item.nextSibling;
+				}
+			}
+			else {
+				for (const item of _status[config]) item.show();
+				delete _status[config];
+			}
+		},
 	},
 	ShenLvBu: {
 		name: '彩蛋·神吕布',
@@ -339,7 +406,7 @@ export let config = {
 	},
 	XvXiang: {
 		name: '彩蛋·虚像',
-		intro: '开启此选项后，线下包的五个虚拟偶像将获得技能【虚像】',
+		intro: '开启此选项后，线下包的五个虚拟偶像将获得【虚像】',
 		init: false,
 	},
 	DanJi: {

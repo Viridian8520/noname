@@ -725,7 +725,7 @@ const translates = {
 	taffywn_zhanghe_prefix: "渭南",
 	taffywn_qiaobian: "巧变",
 	taffywn_qiaobian_tag: "巧",
-	taffywn_qiaobian_info: "其他角色的准备阶段，你可以将一张牌扣置于武将牌上，称为“巧”，然后你获得如下效果：１其使用牌后，你展示“巧”，若“巧”的类别与此牌：不同，你摸一张牌；相同，其获得“巧”，然后若此时处于其出牌阶段，结束此阶段。２其的结束阶段，你获得所有“巧”。",
+	taffywn_qiaobian_info: "其他角色的准备阶段，你可以将一张牌扣置于武将牌上，称为“巧”，然后你获得如下效果：1.其使用牌后，你展示“巧”，若“巧”的类别与此牌：不同，你摸一张牌；相同，其获得“巧”，然后若此时处于其出牌阶段，结束此阶段。2.其的结束阶段，你获得所有“巧”。",
 	taffyold_dc_zhugejun: "旧新杀诸葛均",
 	taffyold_dc_zhugejun_prefix: "旧新杀",
 	taffyold_dcgumai: "孤脉",
@@ -756,6 +756,12 @@ const translates = {
 	taffyold_olsibing_info: "①当你使用伤害牌指定唯一目标时，你可以弃置任意张红色牌令目标弃置等量红色手牌，否则不能响应该牌；②以你为目标的伤害牌结算完成后，若未对你造成伤害，你可以弃置一张黑色牌并视为使用一张【杀】。",
 	taffyold_olliance: "敛策",
 	taffyold_olliance_info: "每回合限一次，当你的手牌数变化后，若为全场最少，你可将手牌摸至体力上限，然后本回合下一次有角色造成伤害时，此伤害+1",
+	taffyzunxiang_xiahouxuan: "尊享版夏侯玄",
+	taffyzunxiang_xiahouxuan_prefix: "尊享版",
+	taffyzunxiang_olhuanfu: "宦浮",
+	taffyzunxiang_olhuanfu_info: "当你使用【杀】指定目标，或成为【杀】的目标后，你可以弃置至多等于你体力上限的牌，然后摸2X张牌，若如此做，此【杀】对目标角色造成的伤害改为X（X为你弃置的牌数）。",
+	taffyzunxiang_olzeyue: "迮阅",
+	taffyzunxiang_olzeyue_info: "限定技，回合开始时，你可以令一名于你上个回合结束后对你造成过伤害的其他角色获得“逆节”标记，并选择其一个武将技能，该技能失效直到其移去“逆节”。",
 	aruijier: "瑞吉儿",
 };
 

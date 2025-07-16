@@ -297,6 +297,14 @@ export const PRECONTENT = function (config) {
 					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("新杀")}`,
 				},
 			],
+			[
+				"尊享版",
+				{
+					color: "#c3f9ff",
+					nature: "thundermm",
+					showName: "尊",
+				},
+			],
 		];
 		prefixList.forEach(i => {
 			lib.namePrefix.set(i[0], i[1]);

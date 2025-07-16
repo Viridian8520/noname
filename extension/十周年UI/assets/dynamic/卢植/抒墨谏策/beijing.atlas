@@ -1,0 +1,160 @@
+
+beijing.png
+size: 1799,1799
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bj
+  rotate: false
+  xy: 2, 1110
+  size: 1128, 687
+  orig: 1128, 687
+  offset: 0, 0
+  index: -1
+bj_dl1
+  rotate: true
+  xy: 2, 12
+  size: 63, 86
+  orig: 68, 92
+  offset: 5, 6
+  index: -1
+bj_dl2
+  rotate: false
+  xy: 1553, 52
+  size: 117, 135
+  orig: 121, 135
+  offset: 4, 0
+  index: -1
+bj_dldiaosui1
+  rotate: false
+  xy: 1673, 687
+  size: 79, 53
+  orig: 81, 55
+  offset: 1, 2
+  index: -1
+bj_dldiaosui2
+  rotate: false
+  xy: 151, 23
+  size: 50, 52
+  orig: 50, 54
+  offset: 0, 1
+  index: -1
+bj_dlguang1
+  rotate: false
+  xy: 1470, 349
+  size: 154, 76
+  orig: 162, 81
+  offset: 4, 5
+  index: -1
+bj_dlguang2
+  rotate: false
+  xy: 90, 15
+  size: 59, 60
+  orig: 76, 71
+  offset: 8, 8
+  index: -1
+bj_guahua1
+  rotate: true
+  xy: 1656, 443
+  size: 218, 107
+  orig: 223, 108
+  offset: 5, 1
+  index: -1
+bj_guahua2
+  rotate: false
+  xy: 1470, 427
+  size: 184, 234
+  orig: 190, 242
+  offset: 0, 8
+  index: -1
+bj_guahua3
+  rotate: true
+  xy: 1130, 340
+  size: 258, 338
+  orig: 258, 338
+  offset: 0, 0
+  index: -1
+bj_juanzhou1
+  rotate: true
+  xy: 1113, 54
+  size: 284, 316
+  orig: 287, 318
+  offset: 3, 2
+  index: -1
+bj_juanzhou2
+  rotate: true
+  xy: 1553, 189
+  size: 158, 143
+  orig: 159, 143
+  offset: 0, 0
+  index: -1
+bj_juanzhou3
+  rotate: false
+  xy: 1673, 742
+  size: 108, 293
+  orig: 120, 294
+  offset: 2, 0
+  index: -1
+bj_juanzhou4
+  rotate: true
+  xy: 1431, 52
+  size: 286, 120
+  orig: 286, 120
+  offset: 0, 0
+  index: -1
+bj_pinfeng
+  rotate: true
+  xy: 682, 72
+  size: 347, 429
+  orig: 347, 429
+  offset: 0, 0
+  index: -1
+bj_shugui
+  rotate: true
+  xy: 1456, 663
+  size: 372, 215
+  orig: 372, 215
+  offset: 0, 0
+  index: -1
+bj_yanwu
+  rotate: false
+  xy: 2, 421
+  size: 1126, 687
+  orig: 1126, 687
+  offset: 0, 0
+  index: -1
+bj_zhuguang1
+  rotate: false
+  xy: 1130, 600
+  size: 324, 468
+  orig: 335, 486
+  offset: 0, 4
+  index: -1
+bj_zhuguang2
+  rotate: true
+  xy: 1595, 1457
+  size: 340, 202
+  orig: 376, 203
+  offset: 36, 1
+  index: -1
+bj_zhuguang3
+  rotate: true
+  xy: 1595, 1037
+  size: 418, 193
+  orig: 421, 208
+  offset: 3, 15
+  index: -1
+bj_zhuguang4
+  rotate: true
+  xy: 1132, 1070
+  size: 727, 461
+  orig: 730, 473
+  offset: 0, 0
+  index: -1
+bj_zhutai
+  rotate: false
+  xy: 2, 77
+  size: 678, 342
+  orig: 680, 348
+  offset: 0, 0
+  index: -1

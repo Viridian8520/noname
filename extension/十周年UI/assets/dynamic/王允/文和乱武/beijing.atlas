@@ -1,0 +1,181 @@
+
+beijing.png
+size: 1999,1999
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+B01
+  rotate: false
+  xy: 434, 666
+  size: 240, 465
+  orig: 240, 465
+  offset: 0, 0
+  index: -1
+B02
+  rotate: true
+  xy: 967, 17
+  size: 334, 288
+  orig: 334, 288
+  offset: 0, 0
+  index: -1
+B03
+  rotate: false
+  xy: 680, 1006
+  size: 291, 603
+  orig: 291, 603
+  offset: 0, 0
+  index: -1
+B04
+  rotate: false
+  xy: 2, 1611
+  size: 1072, 386
+  orig: 1072, 386
+  offset: 0, 0
+  index: -1
+B05
+  rotate: true
+  xy: 1659, 203
+  size: 246, 284
+  orig: 246, 284
+  offset: 0, 0
+  index: -1
+B06
+  rotate: false
+  xy: 2, 1133
+  size: 676, 476
+  orig: 676, 476
+  offset: 0, 0
+  index: -1
+B07
+  rotate: true
+  xy: 1800, 1313
+  size: 684, 197
+  orig: 685, 197
+  offset: 1, 0
+  index: -1
+B08
+  rotate: false
+  xy: 433, 31
+  size: 377, 202
+  orig: 389, 211
+  offset: 5, 9
+  index: -1
+B09
+  rotate: false
+  xy: 973, 1561
+  size: 56, 48
+  orig: 56, 48
+  offset: 0, 0
+  index: -1
+B10
+  rotate: false
+  xy: 1076, 1476
+  size: 722, 521
+  orig: 722, 521
+  offset: 0, 0
+  index: -1
+TX_yunyan_0001
+  rotate: false
+  xy: 2, 59
+  size: 429, 265
+  orig: 456, 283
+  offset: 16, 8
+  index: -1
+TX_yunyan_0003
+  rotate: false
+  xy: 676, 739
+  size: 429, 265
+  orig: 456, 283
+  offset: 16, 8
+  index: -1
+TX_yunyan_0005
+  rotate: true
+  xy: 1672, 882
+  size: 429, 263
+  orig: 456, 283
+  offset: 16, 9
+  index: -1
+TX_yunyan_0007
+  rotate: true
+  xy: 1404, 616
+  size: 429, 263
+  orig: 456, 283
+  offset: 16, 9
+  index: -1
+TX_yunyan_0009
+  rotate: true
+  xy: 702, 309
+  size: 428, 263
+  orig: 456, 283
+  offset: 16, 9
+  index: -1
+TX_yunyan_0011
+  rotate: true
+  xy: 1669, 451
+  size: 429, 263
+  orig: 456, 283
+  offset: 16, 9
+  index: -1
+TX_yunyan_0013
+  rotate: false
+  xy: 973, 1046
+  size: 429, 265
+  orig: 456, 283
+  offset: 16, 9
+  index: -1
+TX_yunyan_0015
+  rotate: false
+  xy: 2, 595
+  size: 429, 267
+  orig: 456, 283
+  offset: 16, 9
+  index: -1
+TX_yunyan_0017
+  rotate: false
+  xy: 2, 864
+  size: 430, 267
+  orig: 456, 283
+  offset: 15, 9
+  index: -1
+TX_yunyan_0019
+  rotate: true
+  xy: 433, 235
+  size: 429, 267
+  orig: 456, 283
+  offset: 15, 9
+  index: -1
+TX_yunyan_0021
+  rotate: false
+  xy: 2, 326
+  size: 426, 267
+  orig: 456, 283
+  offset: 17, 9
+  index: -1
+TX_yunyan_0023
+  rotate: true
+  xy: 1404, 1047
+  size: 427, 266
+  orig: 456, 283
+  offset: 16, 9
+  index: -1
+TX_yunyan_0025
+  rotate: false
+  xy: 967, 353
+  size: 427, 262
+  orig: 456, 283
+  offset: 16, 9
+  index: -1
+TX_yunyan_0027
+  rotate: true
+  xy: 1396, 187
+  size: 427, 261
+  orig: 456, 283
+  offset: 16, 9
+  index: -1
+TX_yunyan_0029
+  rotate: true
+  xy: 1107, 617
+  size: 427, 264
+  orig: 456, 283
+  offset: 16, 8
+  index: -1

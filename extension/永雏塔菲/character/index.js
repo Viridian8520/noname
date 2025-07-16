@@ -70,6 +70,7 @@ export const characterPackFunc = function () {
 				mortis: "#gViridian",
 				taffyshen_shamoke: "#gViridian",
 				taffyre_shamoke: "#gViridian",
+				taffyzunxiang_xiahouxuan: "#gViridian",
 				limulu: "#gLazysun Viridian",
 			},
 			dynamicTranslate: { ...dynamicTranslates },

@@ -14,7 +14,7 @@ const packs = function () {
                 Cothers: ['bilibili_kuailiangkuaiyue', 'bilibili_nanhualaoxian', 'bilibili_daxiao', 'bilibili_wangtao', 'bilibili_wangyue', 'bilibili_x_wangtao', 'bilibili_x_wangyue', 'bilibili_xushao', 'bilibili_shen_guojia', 'bilibili_re_xusheng', 'bilibili_kuangshen04', 'bilibili_adong', 'bilibili_zhangrang', 'bilibili_litiansuo', 'decade_huangwudie', 'bilibili_huanggai', 'bilibili_ekeshaoge', 'bilibili_guanning', 'bilibili_wangwang', 'bilibili_zhouxiaomei', 'diy_lvmeng'],
                 CDanJi: ['DJ_caiyang', 'DJ_pujing', 'DJ_huban'],
                 CSCS: ['biliscs_shichangshi', 'biliscs_zhangrang', 'biliscs_zhaozhong', 'biliscs_sunzhang', 'biliscs_bilan', 'biliscs_xiayun', 'biliscs_hankui', 'biliscs_lisong', 'biliscs_duangui', 'biliscs_guosheng', 'biliscs_gaowang'],
-                CXuanDie: ['bfake_jiananfeng', 'bfake_shen_zhangjiao', 'bfake_shen_zhangfei', 'bfake_shen_jiaxu', 'bfake_huanwen'],
+                CXuanDie: ['bfake_jiananfeng', 'bfake_shen_zhangjiao', 'bfake_shen_zhangfei', 'bfake_shen_jiaxu', 'bfake_huanwen', 'bfake_miheng'],
             },
         },
         character: {
@@ -81,6 +81,7 @@ const packs = function () {
             bfake_shen_zhangfei: ['male', 'shen', 5, ['bolbaohe', 'bolrenhai', 'boltiandong'], ['shu', 'character:shen_zhangfei']],
             bfake_shen_zhangjiao: ['male', 'shen', 3, ['bolyifu', 'boltianjie'], ['qun', 'character:shen_zhangjiao']],
             bfake_huanwen: ['male', 'jin', 3, ['bolyuba', 'bolxingjiang']],
+            bfake_miheng: ['male', 'qun', 3, ['bolhuaici', 'boljianling'], ['character:gz_miheng']],
             //憋笑--牢戏专属
             smile1: ['', '', 0, [], ['unseen', 'forbidai', 'ext:活动武将/image/default/smile1.jpg']],
             smile2: ['', '', 0, [], ['unseen', 'forbidai', 'ext:活动武将/image/default/smile2.jpg']],
@@ -162,18 +163,6 @@ const packs = function () {
                         value: [6, 4, 3],
                     },
                     result: { player: 1 },
-                },
-            },
-            //三首
-            bol_sanshou: {
-                fullskin: true,
-                image: 'ext:活动武将/image/card/bol_sanshou.png',
-                derivation: 'junk_zhangjiao',
-                type: 'equip',
-                subtype: 'equip2',
-                skills: ['bol_sanshou_skill'],
-                ai: {
-                    basic: { equipValue: 7.5 },
                 },
             },
             //化身牌
@@ -495,38 +484,6 @@ const packs = function () {
                     });
                     'step 1'
                     if (result.bool && trigger.name == 'phaseJudge' && [trigger.card].filterInD().length) player.gain([trigger.card].filterInD(), 'gain2');
-                },
-            },
-            //三首
-            bol_sanshou_skill: {
-                audio: 'sanshou',
-                inherit: 'sanshou',
-                filter(event, player) {
-                    if (player.hasSkillTag('unequip2')) return false;
-                    if (event.source && event.source.hasSkillTag('unequip', false, {
-                        name: event.card ? event.card.name : null,
-                        target: player,
-                        card: event.card
-                    })) return false;
-                    return true;
-                },
-                ai: {
-                    effect: {
-                        target(card, player, target) {
-                            if (target.hasSkillTag('unequip2')) return;
-                            if (player.hasSkillTag('unequip', false, {
-                                name: card ? card.name : null,
-                                target: target,
-                                card: card
-                            })) return;
-                            if (card.name == 'shandian' || card.name == 'fulei') return [0, 0.1];
-                            if (!get.tag(card, 'damage')) return;
-                            var types = [], bool = 0;
-                            types.addArray(game.getGlobalHistory('useCard').map(evt => get.type2(evt.card)));
-                            if (!types.includes(get.type2(card))) bool = 1;
-                            if (types.length < 2) return Math.min(1, 0.4 + (types.length + bool) * 0.2);
-                        },
-                    },
                 },
             },
             //水 果 忍 者
@@ -907,17 +864,35 @@ const packs = function () {
             //SP许攸
             bilibili_fushi: {
                 derivation: ['bilibili_zezhu', 'bilibili_chenggong'],
-                trigger: { global: ['dieAfter', 'phaseBefore', 'showCharacterAfter'] },
+                trigger: {
+                    player: 'enterGame',
+                    global: ['dieAfter', 'changeSkillsAfter', 'changeGroupAfter', 'phaseBefore', 'showCharacterAfter'],
+                },
                 filter(event, player) {
-                    var weis = 0;
-                    var quns = 0;
-                    for (var i of game.players) {
-                        if (i.group == 'wei') weis++;
-                        if (i.group == 'qun') quns++;
+                    switch (event.name) {
+                        case 'die':
+                            if (event.name === 'die' && !['wei', 'qun'].includes(event.player.group)) return false;
+                            break;
+                        case 'changeSkills':
+                            if (event.name === 'changeSkills' && !event.addSkill.includes('bilibili_shicai')) return false;
+                            break;
+                        case 'changeGroup':
+                            if (event.name === 'changeGroup' && (event.originGroup === event.group || [event.originGroup, event.group].every(i => !['wei', 'qun'].includes(i)))) return false;
+                            break;
+                        case 'phase':
+                            if (game.phaseNumber > 0) return false;
+                            break;
+                        case 'showCharacter':
+                            if (get.mode() === 'guozhan' && !['wei', 'qun'].includes(event.player.identity)) return false;
+                            break;
                     }
-                    var skills = player.additionalSkills.bilibili_fushi;
-                    if (!skills || !skills.length) return weis != quns;
-                    if (weis == quns) return true;
+                    let weis = 0, quns = 0, group = get.mode() === 'guozhan' ? 'identity' : 'group';
+                    game.countPlayer(i => {
+                        if (i[group] == 'wei') weis++;
+                        if (i[group] == 'qun') quns++;
+                    });
+                    const skills = player.additionalSkills.bilibili_fushi;
+                    if ((weis === quns) === (Array.isArray(skills) && skills.length > 0)) return true;
                     if (quns > weis && !skills.includes('bilibili_zezhu')) return true;
                     if (weis > quns && !skills.includes('bilibili_chenggong')) return true;
                     return false;
@@ -925,13 +900,12 @@ const packs = function () {
                 noHidden: true,
                 forced: true,
                 content() {
-                    var weis = 0;
-                    var quns = 0;
-                    for (var i of game.players) {
-                        if (i.group == 'wei') weis++;
-                        if (i.group == 'qun') quns++;
-                    }
-                    var skills = player.additionalSkills.bilibili_fushi;
+                    let weis = 0, quns = 0, group = get.mode() === 'guozhan' ? 'identity' : 'group';
+                    game.countPlayer(i => {
+                        if (i[group] == 'wei') weis++;
+                        if (i[group] == 'qun') quns++;
+                    });
+                    const skills = player.additionalSkills.bilibili_fushi;
                     if (skills?.length) {
                         if (weis > quns && !skills.includes('bilibili_chenggong')) player.addAdditionalSkills('bilibili_fushi', ['bilibili_chenggong']);
                         else if (quns > weis && !skills.includes('bilibili_zezhu')) player.addAdditionalSkills('bilibili_fushi', ['bilibili_zezhu']);
@@ -947,7 +921,7 @@ const packs = function () {
                 audio: 'chenggong',
                 trigger: { global: 'useCard' },
                 filter(event, player) {
-                    return event.targets && event.targets.length > 1;
+                    return event.targets?.length > 1;
                 },
                 logTarget: 'player',
                 check(event, player) {
@@ -998,7 +972,7 @@ const packs = function () {
                         target(player, target) {
                             var att = get.attitude(player, target);
                             if (att > 0 && !target.countCards('he')) return 10;
-                            return get.sgn(att) * get.effect(target, { name: 'shunshou_copy2' }, player, player);
+                            return Math.sign(att) * get.effect(target, { name: 'shunshou_copy2' }, player, player);
                         },
                     },
                 },
@@ -1648,7 +1622,7 @@ const packs = function () {
                 },
                 subSkill: {
                     cancel: {
-                        audio: 'tspowei3',
+                        audio: 'tspowei3.mp3',
                         trigger: { source: 'damageBegin3' },
                         logTarget: 'player',
                         filter(event, player) {
@@ -1662,7 +1636,7 @@ const packs = function () {
                         },
                     },
                     achieve: {
-                        audio: 'tspowei1',
+                        audio: 'tspowei1.mp3',
                         trigger: { player: 'useCardAfter' },
                         forced: true,
                         skillAnimation: true,
@@ -1679,7 +1653,7 @@ const packs = function () {
                         },
                     },
                     fail: {
-                        audio: 'tspowei2',
+                        audio: 'tspowei2.mp3',
                         trigger: { player: 'dying' },
                         forced: true,
                         content() {
@@ -2913,7 +2887,7 @@ const packs = function () {
                     });
                     var num = 0;
                     for (var i = 0; i < targets.length; i++) {
-                        var eff = get.sgn(get.effect(targets[i], { name: 'wanjian' }, player, player));
+                        var eff = Math.sign(get.effect(targets[i], { name: 'wanjian' }, player, player));
                         if (targets[i].hp == 1) {
                             eff *= 1.5;
                         }
@@ -2992,7 +2966,7 @@ const packs = function () {
                         return 0;
                     });
                     'step 1'
-                    switch (get.sgn(result.judge)) {
+                    switch (Math.sign(result.judge)) {
                         case 1: player.recover(); break;
                         case -1: player.loseHp(); break;
                     }
@@ -5941,7 +5915,7 @@ const packs = function () {
             },
             //张宝
             old_zhoufu: {
-                audio: 'zhoufu',
+                audio: 'rezhoufu',
                 enable: 'phaseUse',
                 filter(event, player) {
                     return player.countCards('h') && game.hasPlayer(function (target) {
@@ -5972,7 +5946,7 @@ const packs = function () {
                 subSkill: {
                     judge: {
                         charlotte: true,
-                        audio: 'zhoufu',
+                        audio: 'rezhoufu',
                         trigger: { global: 'judgeBefore' },
                         filter(event, player) {
                             return !event.directresult && event.player.getExpansions('old_zhoufu2').length;
@@ -5988,7 +5962,7 @@ const packs = function () {
                     },
                     gain: {
                         charlotte: true,
-                        audio: 'zhoufu',
+                        audio: 'rezhoufu',
                         trigger: { global: 'phaseEnd' },
                         filter(event, player) {
                             return event.player.getExpansions('old_zhoufu2').length;
@@ -6008,7 +5982,7 @@ const packs = function () {
                 intro: { content: 'expansion' },
             },
             old_yingbing: {
-                audio: 'yingbin',
+                audio: 'reyingbin',
                 trigger: { global: 'old_zhoufu_judgeAfter' },
                 frequent: true,
                 content() {
@@ -6999,7 +6973,7 @@ const packs = function () {
                     return get.translation(event.player) + '对你发动了' + '【' + get.translation(skill) + '】，是否令【' + get.translation(skill) + '】对你无效？';
                 },
                 check(event, player) {
-                    var att = get.sgn(get.attitude(player, event.player));
+                    var att = Math.sign(get.attitude(player, event.player));
                     if (att < 0) return true;
                     if (att == 0) return get.attitude(event.player, player) <= 0;
                     return false;
@@ -7264,7 +7238,7 @@ const packs = function () {
                                 },
                             };
                             lib.translate[card] = '雷の制卡·' + lib.translate[skill];
-                            lib.translate[card + '_info'] = '<li>使用此牌，获得技能【' + lib.translate[skill] + '】' + '<br><li>' + lib.translate[skill + '_info'];
+                            lib.translate[card + '_info'] = '<li>使用此牌，获得【' + lib.translate[skill] + '】' + '<br><li>' + lib.translate[skill + '_info'];
                             player.gain(game.createCard2(card, lib.suit.randomGet(), get.rand(1, 13)), 'gain2');
                         },
                     },
@@ -7489,7 +7463,7 @@ const packs = function () {
                                     var target = game.findPlayer(function (current) {
                                         return current.hasSkill('bilibili_meihua');
                                     });
-                                    if (target) return 2 + get.sgn(get.attitude(player, target));
+                                    if (target) return 2 + Math.sign(get.attitude(player, target));
                                 },
                             },
                         },
@@ -7679,7 +7653,7 @@ const packs = function () {
                     for (var target of game.filterPlayer()) {
                         if (target == player || !target.countDiscardableCards(target, 'h')) continue;
                         for (var i in map) {
-                            if (target.countCards('h', { color: i })) map[i] += get.sgn(get.attitude(player, target));
+                            if (target.countCards('h', { color: i })) map[i] += Math.sign(get.attitude(player, target));
                         }
                     }
                     var colors = Object.keys(map).filter(color => map[color] >= 0);
@@ -7744,7 +7718,7 @@ const packs = function () {
                             for (var target of game.filterPlayer()) {
                                 if (target == player || !target.countDiscardableCards(target, 'h')) continue;
                                 for (var i in map) {
-                                    if (target.countCards('h', { color: i })) map[i] += get.sgn(get.attitude(player, target));
+                                    if (target.countCards('h', { color: i })) map[i] += Math.sign(get.attitude(player, target));
                                 }
                             }
                             var colors = Object.keys(map).filter(color => map[color] >= 0);
@@ -7905,7 +7879,7 @@ const packs = function () {
                         return lib.skill.bolliaoyi.getList(target).length;
                     }).set('ai', function (target) {
                         var player = _status.event.player;
-                        return lib.skill.bolliaoyi.getList(target).length * get.sgn(get.attitude(player, target));
+                        return lib.skill.bolliaoyi.getList(target).length * Math.sign(get.attitude(player, target));
                     });
                     'step 1'
                     if (result.bool) {
@@ -9781,6 +9755,92 @@ const packs = function () {
                     },
                 },
             },
+            // 祢衡
+            _boljianlingCheck: {
+                charlotte: true,
+                trigger: { player: 'loseBefore' },
+                filter(event, player) {
+                    if (event.getParent().name != 'useCard') return false;
+                    return event.cards?.some(card => get.is.shownCard(card));
+                },
+                firstDo: true,
+                silent: true,
+                async content(event, trigger, player) {
+                    const { card } = trigger.getParent();
+                    card.storage ??= {};
+                    card.storage.boljianling = true;
+                },
+            },
+            bolhuaici: {
+                trigger: { global: ['roundStart', 'roundEnd', 'useCard2'] },
+                filter(event, player, name) {
+                    if (name == 'roundStart') return true;
+                    if (name == 'roundEnd') return game.roundNumber == game.countPlayer2(null, true);
+                    const { card } = event;
+                    const info = get.info(card);
+                    if (!['basic', 'trick'].includes(get.type(card))) return false;
+                    if (!player.hasCard(cardx => get.is.shownCard(cardx) && get.suit(card) == get.suit(cardx), 'h')) return false;
+                    if (info.allowMultiple == false) return false;
+                    if (event.targets && !info.multitarget) return lib.filter.targetEnabled2(card, event.player, player) && !event.targets.includes(player);
+                    return false;
+                },
+                forced: true,
+                async content(event, trigger, player) {
+                    switch (event.triggername) {
+                        case 'roundStart': {
+                            const num = game.countPlayer2(null, true);
+                            const cards = get.cards(num);
+                            await game.cardsGotoOrdering(cards);
+                            await player.showCards(cards, `${get.translation(player)}发动了【怀刺】`);
+                            const { result } = await player.chooseButton(['怀刺：你可以获得并明置其中任意张牌', cards], [1, Infinity]);
+                            if (result?.bool && result?.links?.length) {
+                                const { links } = result;
+                                await player.gain(links, 'gain2');
+                                await player.addShownCards(links, `visible_${event.name}`);
+                                await player.showCards(links, `${get.translation(player)}发动了【怀刺】`);
+                            }
+                            break;
+                        }
+                        case 'roundEnd': {
+                            await player.die();
+                            break;
+                        }
+                        default: {
+                            trigger.targets.add(player);
+                            await game.delayex();
+                        }
+                    }
+                },
+            },
+            boljianling: {
+                mark: true,
+                zhuanhuanji: true,
+                marktext: '☯',
+                intro: {
+                    content(storage, player, skill) {
+                        let str = '你仅使用明置牌造成伤害的回合结束后，';
+                        if (storage) str += '你令所有角色将武将牌翻至背面';
+                        else str += '你执行一个额外回合';
+                        return str;
+                    },
+                },
+                trigger: { global: 'phaseAfter' },
+                filter(event, player) {
+                    if (!player.hasHistory('sourceDamage') || !player.getHistory('sourceDamage').every(evt => evt.card?.storage?.boljianling)) return false;
+                    if (!player.storage.boljianling) return true;
+                    return game.hasPlayer(current => !current.isTurnedOver());
+                },
+                forced: true,
+                async content(event, trigger, player) {
+                    player.changeZhuanhuanji(event.name);
+                    if (player.storage[event.name]) player.insertPhase();
+                    else {
+                        for (const target of game.filterPlayer().sortBySeat()) {
+                            await target.turnOver(true);
+                        }
+                    }
+                },
+            },
             //宁静致远
             bilibili_xiezhi: {
                 trigger: { global: 'phaseBegin' },
@@ -10006,7 +10066,7 @@ const packs = function () {
                                 },
                                 ai2(target) {
                                     var player = _status.event.player;
-                                    return (2 - get.sgn(get.attitude(player, target))) / (target.countCards('he') + 1);
+                                    return (2 - Math.sign(get.attitude(player, target))) / (target.countCards('he') + 1);
                                 },
                             });
                             'step 1'
@@ -11154,6 +11214,14 @@ const packs = function () {
                 if (!storage) str += '当你令其他角色进入濒死状态后，你可以将此技能描述中的“摸”改为“弃置”。';
                 return str;
             },
+            boljianling(player) {
+                const bool = player.storage.boljianling;
+                let yang = '你执行一个额外回合', yin = '你令所有角色将武将牌翻至背面';
+                if (bool) yin = `<span class='bluetext'>${yin}</span>`;
+                else yang = `<span class='firetext'>${yang}</span>`;
+                let start = '锁定技，转换技。你仅使用明置牌造成伤害的回合结束后，', end = '。';
+                return `${start}阳：${yang}；阴：${yin}${end}`;
+            },
         },
         translate: {
             CLongZhou: '龙舟武将',
@@ -11201,7 +11269,7 @@ const packs = function () {
             olddulie: '笃烈',
             olddulie_info: '锁定技。①游戏开始时，你令X名其他角色获得“围”（X为游戏人数的一半且向下取整）。②你对没有“围”的角色使用【杀】无距离限制。③当你成为【杀】的目标时，若使用者没有“围”，则你进行判定。若结果为红色，则取消此目标。',
             oldpowei: '破围',
-            oldpowei_info: '使命技。①当你因使用【杀】而对有“围”的角色造成伤害时，你防止此伤害并移去该角色的“围”。②使命：当你使用【杀】结算完成后，若场上没有“围”，则你获得技能〖神著〗。③失败：当你进入濒死状态时，你弃置装备区的所有牌，然后将体力值回复至1点。',
+            oldpowei_info: '使命技。①当你因使用【杀】而对有“围”的角色造成伤害时，你防止此伤害并移去该角色的“围”。②使命：当你使用【杀】结算完成后，若场上没有“围”，则你获得〖神著〗。③失败：当你进入濒死状态时，你弃置装备区的所有牌，然后将体力值回复至1点。',
             old_shenzhu: '神著',
             old_shenzhu_info: '锁定技，你使用【杀】无次数限制。当你使用有对应实体牌的非转化【杀】结算结束后，你摸一张牌。',
             old_yingba: '英霸',
@@ -11245,7 +11313,7 @@ const packs = function () {
             BTxinsheng_1: '新生·2级',
             BTxinsheng_1_info: '当你造成或受到1点伤害后，你可以获得一张化身牌。',
             BTxinsheng_2: '新生·3级',
-            BTxinsheng_2_info: '当你造成或受到1点伤害后，你可以获得一张化身牌，然后若你的化身牌数不小于场上人数，你获得技能〖幻化〗。',
+            BTxinsheng_2_info: '当你造成或受到1点伤害后，你可以获得一张化身牌，然后若你的化身牌数不小于场上人数，你获得〖幻化〗。',
             BThuanhua: '幻化',
             BThuanhua_backup: '幻化',
             BThuanhua_info: '出牌阶段限一次，你可以弃置一张未展示的化身牌，然后将一张手牌视为一张基本牌或普通锦囊牌使用。',
@@ -11286,7 +11354,7 @@ const packs = function () {
             old_jiebing: '借兵',
             old_jiebing_info: '出牌阶段限一次，你可以获得一名有手牌的其他角色的三张手牌，然后受到1点伤害。若如此做，此阶段结束时，你交给其以此法获得的牌。',
             old_kuzhan: '苦战',
-            old_kuzhan_info: '使命技。成功：准备阶段，若你本局游戏受到的伤害不少于5点，你获得技能〖退敌〗。失败：结束阶段，若你本回合和上回合均发动过〖借兵〗且均未于当前回合造成过伤害，则使命失败。',
+            old_kuzhan_info: '使命技。成功：准备阶段，若你本局游戏受到的伤害不少于5点，你获得〖退敌〗。失败：结束阶段，若你本回合和上回合均发动过〖借兵〗且均未于当前回合造成过伤害，则使命失败。',
             old_tuidi: '退敌',
             old_tuidi_info: '当你对一名其他角色造成伤害后，你可以随机废除其一种装备栏。',
             old_qixi: '奇袭',
@@ -11355,9 +11423,9 @@ const packs = function () {
             boss_yz_draw: '摸牌',
             boss_yz_draw_info: '摸牌阶段摸牌数+1。',
             boss_yz_kunshou: '困兽',
-            boss_yz_kunshou_info: '觉醒技，当你进入濒死状态时，你将体力回复至5，将手牌数补至5，然后获得技能〖崩坏〗。',
+            boss_yz_kunshou_info: '觉醒技，当你进入濒死状态时，你将体力回复至5，将手牌数补至5，然后获得〖崩坏〗。',
             wzdanji: '单骑',
-            wzdanji_info: '觉醒技，准备阶段开始时，若你的手牌数大于你的体力值且本局游戏的主公为曹操，你减1点体力上限，然后获得技能〖马术〗。',
+            wzdanji_info: '觉醒技，准备阶段开始时，若你的手牌数大于你的体力值且本局游戏的主公为曹操，你减1点体力上限，然后获得〖马术〗。',
             old_shenjun: '神君',
             old_shenjun_info: '锁定技，一名角色使用【杀】或普通锦囊牌时，你展示你手牌中所有的同名牌，此阶段结束时，你须选择一项：①将X张牌当作你本阶段发动〖神君〗响应的牌名使用（X为你手牌中已展示的〖神君〗牌数）；②失去1点体力。',
             old_balong: '八龙',
@@ -11405,10 +11473,6 @@ const packs = function () {
             bolkuangbi_info: '出牌阶段限一次，你可以与一名其他角色将任意张牌置于其武将牌上。若如此做，当你进入濒死状态时或下X个回合开始时，你获得其武将牌上的“匡弼”牌，其摸X张牌（X为其武将牌上的“匡弼”牌数）。',
             bol_shanshan: '闪闪',
             bol_shanshan_info: '当一张基本牌或锦囊牌即将对你生效前，对此牌使用，抵消此牌的效果，然后获得此牌对应的所有实体牌。',
-            bol_sanshou: '三首',
-            bol_sanshou_skill: '三首',
-            bol_sanshou_info: '当你受到伤害时，你可以亮出牌堆顶三张牌。若其中有本回合未被使用过的牌的类型，防止此伤害。',
-            bol_sanshou_skill_info: '当你受到伤害时，你可以亮出牌堆顶三张牌。若其中有本回合未被使用过的牌的类型，防止此伤害。',
             old_zhoufu: '咒缚',
             old_zhoufu2: '咒缚',
             old_zhoufu_info: '出牌阶段限一次，你可以将一张手牌置于一名武将牌旁没有“咒”的其他角色的武将牌旁，称为“咒”。当有“咒”的角色判定时，将“咒”作为判定牌。有“咒”的角色的回合结束时，你获得其武将牌旁的“咒”。',
@@ -11582,6 +11646,13 @@ const packs = function () {
             bolyuba_info: '当你造成或受到伤害后，你可以将手牌摸至X张牌（X为此技能发动的次数+1），然后弃置一张点数为X的牌或失去一个技能。',
             bolxingjiang: '行将',
             bolxingjiang_info: '出牌阶段限一次，你可以弃置至少两张同名基本牌或普通锦囊牌，若如此做，你获得一个技能效果为“每回合限一次，你可以视为使用一张【XXX】”的技能（XXX为你本次弃置牌的牌名）。',
+            bfake_miheng: '蝶设祢衡',
+            bfake_miheng_prefix: '蝶设',
+            visible_bolhuaici: '怀刺',
+            bolhuaici: '怀刺',
+            bolhuaici_info: '锁定技。①每轮开始时，你亮出牌堆顶X张牌，获得其中任意张并明置之。②你成为与你的明置手牌花色相同的基本牌或普通锦囊牌的额外目标。③你于第X轮结束时死亡。（X为场上角色数）',
+            boljianling: '剪翎',
+            boljianling_info: '锁定技，转换技。你仅使用明置牌造成伤害的回合结束后，阳：你执行一个额外回合；阴：你令所有角色将武将牌翻至背面。',
             bilibili_ningjingzhiyuan: '宁静致远',
             bilibili_xiezhi: '协治',
             bilibili_xiezhi_info: '锁定技，其他角色的回合开始时，你选择X次牌的类别，其本回合至多使用选择类别次数的对应类别的牌（X为其手牌数且至少为3，仅限选择基本、锦囊、装备且每种类别至少选择一次）。',
@@ -11684,8 +11755,12 @@ const packs = function () {
             bilibili_chouhua_append: '<li>本技能由梦婉清投稿<br><li>真是数数又值值口阿',
         },
     };
-    for (var i in huodongcharacter.character) {
-        if (!huodongcharacter.character[i][4]) huodongcharacter.character[i][4] = [];
+    for (let i in huodongcharacter.character) {
+        huodongcharacter.character[i][4] ??= [];
+        if (_status['extension_活动武将_files']?.audio.die.files.includes(`${i}.mp3`)) {
+            huodongcharacter.character[i][4].push('die:ext:活动武将/audio/die:true');
+            huodongcharacter.translate[`#ext:活动武将/audio/die/${i}:die`] = '点击播放阵亡配音';
+        }
         if (huodongcharacter.characterSort.huodongcharacter.Cothers.includes(i) && (_status.connectMode || lib.config.connect_nickname !== '萌新（转型中）')) huodongcharacter.character[i][4].push('unseen');
         // taffy: 注释huodongcharacter.js原版代码
         // huodongcharacter.character[i][4].push(((lib.device || lib.node) ? 'ext:' : 'db:extension-') + '活动武将/image/character/' + i + '.jpg');

@@ -633,7 +633,7 @@ const packs = function () {
             kuiba_jinghong: '惊虹',
             kuiba_jinghong_info: '锁定技，当你使用黑色/红色锦囊牌时，你从牌堆中随机获得一张红色/黑色牌。',
             kuiba_wenjia: '纹甲',
-            kuiba_wenjia_info: '锁定技，其他角色死亡后，你获得1枚“击毁”标记。摸牌阶段，你多摸X张牌（X为你拥有的“击毁”标记数）。若你拥有1个“击毁”标记，你获得技能〖武娘〗；若你拥有2个“击毁”标记，你获得技能〖无双〗；若你拥有3个“击毁”标记，则当你造成伤害时，此伤害+1。',
+            kuiba_wenjia_info: '锁定技，其他角色死亡后，你获得1枚“击毁”标记。摸牌阶段，你多摸X张牌（X为你拥有的“击毁”标记数）。若你拥有1个“击毁”标记，你获得〖武娘〗；若你拥有2个“击毁”标记，你获得〖无双〗；若你拥有3个“击毁”标记，则当你造成伤害时，此伤害+1。',
             kuiba_huanguang: '幻光',
             kuiba_huanguang_info: '出牌阶段，你使用的前四张普通锦囊牌可以多指定一个目标或少指定一个目标。',
             kuiba_kalaxiaokepan: '卡拉肖克潘',
@@ -686,8 +686,12 @@ const packs = function () {
             kuiba_shengzhu_info: '锁定技，己方角色结束阶段开始时，其摸两张牌。',
         },
     };
-    for (var i in decadeKuiBa.character) {
-        if (!decadeKuiBa.character[i][4]) decadeKuiBa.character[i][4] = [];
+    for (let i in decadeKuiBa.character) {
+        decadeKuiBa.character[i][4] ??= [];
+        if (_status['extension_活动武将_files']?.audio.die.files.includes(`${i}.mp3`)) {
+            decadeKuiBa.character[i][4].push('die:ext:活动武将/audio/die:true');
+            decadeKuiBa.translate[`#ext:活动武将/audio/die/${i}:die`] = '点击播放阵亡配音';
+        }
         // taffy: 注释decadeKuiBa.js原版代码
         // decadeKuiBa.character[i][4].push(((lib.device || lib.node) ? 'ext:' : 'db:extension-') + '活动武将/image/character/' + i + '.jpg');
         /* taffy分界线 */

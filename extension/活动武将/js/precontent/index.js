@@ -11,7 +11,22 @@ import WeChatkill from './WeChatkill.js';
 import MX_feihongyinxue from './MX_feihongyinxue.js';
 import huodongcharacter from './huodongcharacter.js';
 
-export function precontent(bilibilicharacter) {
+export async function precontent(bilibilicharacter) {
+    _status['extension_活动武将_files'] = await (async () => {
+        const getFileList = async function (path = 'extension/活动武将') {
+            const [folders, files] = await game.promises.getFileList(path);
+            const map = { files };
+            if (Array.isArray(folders) && folders.length > 0) {
+                for (const folder of folders) {
+                    const subPath = path + '/' + folder;
+                    map[folder] = await getFileList(subPath);
+                }
+            }
+            return map;
+        };
+        return await getFileList();
+    })();
+
     //判断是否有XX扩展
     game.TrueHasExtension = game.TrueHasExtension || function (ext) {
         return lib.config.extensions && lib.config.extensions.includes(ext);
@@ -19,42 +34,18 @@ export function precontent(bilibilicharacter) {
     game.HasExtension = game.HasExtension || function (ext) {
         return game.TrueHasExtension(ext) && lib.config['extension_' + ext + '_enable'];
     };
-    //阵亡配音
-    lib.hooks['checkDie'].push(function HD_die(trigger) {
-        const target = trigger.player, name = target?.name;
-        if (name && lib.config.background_speak) {
-            game.broadcastAll(name => {
-                game.playAudio('..', 'extension', '活动武将/audio/die', name);
-            }, name);
-        }
-    });
-    //困难年兽体力上限和体力值为所有其他角色的体力上限和
-    lib.skill._YJplusmaxHp = {
-        charlotte: true,
-        ruleSkill: true,
-        trigger: { global: 'gameStart', player: 'enterGame' },
-        filter(event, player) {
-            return player.name == 'NS_nianshouC' || player.name2 == 'NS_nianshouC';
-        },
-        priority: 114514,//恶臭(划掉)
-        direct: true,
-        content() {
-            for (var i = 0; i < game.players.length; i++) {
-                if (game.players[i] == player) continue;
-                player.maxHp += game.players[i].maxHp;
-            }
-            player.hp = player.maxHp;
-            player.update();
-        },
-    };
     //闪闪节
     lib.arenaReady.push(() => {
         if (lib.config.extension_活动武将_HD_shanshan) {
-            for (var i = 0; i < lib.card.list.length; i++) {
+            let num = 0;
+            for (let i = 0; i < lib.card.list.length; i++) {
                 if (lib.card.list[i][2] != 'shan' || lib.card.list[i][0] != 'diamond') continue;
-                if ([5, 6, 7].includes(lib.card.list[i][1])) lib.card.list[i][2] = 'bol_shanshan';
+                if ([5, 6, 7].includes(lib.card.list[i][1])) {
+                    num++;
+                    lib.card.list[i][2] = 'bol_shanshan';
+                }
             }
-            game.log('三张', '#g【闪闪】', '已加入牌堆');
+            if (num > 0) game.log(`${get.cnNumber(num)}张`, '#g【闪闪】', '已加入牌堆');
         }
     });
     //合纵抗秦、官渡之战模式特殊规则
@@ -177,53 +168,19 @@ export function precontent(bilibilicharacter) {
         },
     };
     //座位号显示
-    lib.skill._firstPlayer = {
-        charlotte: true,
-        ruleSkill: true,
-        trigger: { global: 'phaseBefore' },
-        filter(event, player) {
-            if (!lib.config.extension_活动武将_ShowSeatNum) return false;
-            return !game.firstPlayer && game.phaseNumber == 0;
-        },
-        direct: true,
-        priority: 1145141919810,
-        content() {
-            game.firstPlayer = true;
-            game.players.forEach(i => {
-                if (i.getSeatNum() != 0) i.setNickname(get.cnNumber(i.getSeatNum(), true) + '号位');
-            });
-            var originSwapSeat = game.swapSeat;
-            game.swapSeat = function (player1, player2, prompt, behind, noanimate) {
-                originSwapSeat.apply(this, arguments);
-                if (player1.getSeatNum() != 0) player1.setNickname(get.cnNumber(player1.getSeatNum(), true) + '号位');
-                if (player2.getSeatNum() != 0) player2.setNickname(get.cnNumber(player2.getSeatNum(), true) + '号位');
-            };
-        },
-    };
-    //弃牌阶段相关技能
-    lib.skill._bilibili_phaseDiscard_audio = {
-        charlotte: true,
-        ruleSkill: true,
-        trigger: { player: 'phaseDiscardBegin' },
-        filter(event, player) {
-            return player.countCards('h') > player.hp;
-        },
-        direct: true,
-        firstDo: true,
-        priority: 15,
-        content() {
-            if (player.hasSkill('zongshi')) player.logSkill('zongshi');
-            if (player.hasSkill('rezongshi')) player.logSkill('rezongshi');
-            if (player.hasSkill('decadezongshi')) player.logSkill('decadezongshi');
-            if (player.hasSkill('huaibi') && player.storage.yinlang && game.hasPlayer(function (current) {
-                return current.group == player.storage.yinlang;
-            })) player.logSkill('huaibi');
-            if (player.hasSkill('rehuaibi') && player.storage.yaohu && game.hasPlayer(function (current) {
-                return current.group == player.storage.yaohu;
-            })) player.logSkill('rehuaibi');
-            if (player.hasSkill('sbxueyi') && game.hasPlayer(current => player != current && current.group == 'qun')) player.logSkill('sbxueyi');
-        },
-    };
+    if (lib.config.extension_活动武将_ShowSeatNum) {
+        const originSetSeatNum = lib.element.player.setSeatNum;
+        lib.element.player.setSeatNum = function () {
+            originSetSeatNum.apply(this, arguments);
+            if (this.getSeatNum() != 0) this.setNickname(get.cnNumber(this.getSeatNum(), true) + '号位');
+        };
+        const originSwapSeat = game.swapSeat;
+        game.swapSeat = function (player1, player2) {
+            originSwapSeat.apply(this, arguments);
+            if (player1.getSeatNum() != 0) player1.setNickname(get.cnNumber(player1.getSeatNum(), true) + '号位');
+            if (player2.getSeatNum() != 0) player2.setNickname(get.cnNumber(player2.getSeatNum(), true) + '号位');
+        };
+    }
     //失去体力上限配音
     lib.skill._bilibili_loseMaxHp = {
         charlotte: true,
@@ -557,41 +514,6 @@ export function precontent(bilibilicharacter) {
     };
     //----------------游戏播报·末----------------
 
-    //设定势力+颜色显示
-    game.bolAddGroupNature = function (name, mapping, gradient, push) {
-        var n;
-        if (!name || !Array.isArray(name)) return;
-        n = name[0];
-        if (!mapping || !Array.isArray(mapping) || mapping.length != 3) mapping = [199, 21, 133];
-        var y = "(" + mapping[0] + "," + mapping[1] + "," + mapping[2];
-        var y1 = y + ",1)", y2 = y + ")";
-        var s = document.createElement('style');
-        var l = ".player .identity[data-color='diy" + n + "'],";
-        l += "div[data-nature='diy" + n + "'],";
-        l += "span[data-nature='diy" + n + "'] {text-shadow: black 0 0 1px,rgba" + y1 + " 0 0 2px,rgba" + y1 + " 0 0 5px,rgba" + y1 + " 0 0 10px,rgba" + y1 + " 0 0 10px}";
-        l += "div[data-nature='diy" + n + "m'],";
-        l += "span[data-nature='diy" + n + "m'] {text-shadow: black 0 0 1px,rgba" + y1 + " 0 0 2px,rgba" + y1 + " 0 0 5px,rgba" + y1 + " 0 0 5px,rgba" + y1 + " 0 0 5px,black 0 0 1px;}";
-        l += "div[data-nature='diy" + n + "mm'],";
-        l += "span[data-nature='diy" + n + "mm'] {text-shadow: black 0 0 1px,rgba" + y1 + " 0 0 2px,rgba" + y1 + " 0 0 2px,rgba" + y1 + " 0 0 2px,rgba" + y1 + " 0 0 2px,black 0 0 1px;}";
-        s.innerHTML = l;
-        document.head.appendChild(s);
-        if (gradient && Array.isArray(gradient) && Array.isArray(gradient[0]) && gradient[0].length == 3) {
-            var str = "", st2 = [];
-            for (var i = 0; i < gradient.length; i++) {
-                str += ",rgb(" + gradient[i][0] + "," + gradient[i][1] + "," + gradient[i][2] + ")";
-                if (i < 2) st2[i] = "rgb(" + gradient[i][0] + "," + gradient[i][1] + "," + gradient[i][2] + ")";
-            }
-            var tenUi = document.createElement('style');
-            tenUi.innerHTML = ".player>.camp-zone[data-camp='" + n + "']>.camp-back {background: linear-gradient(to bottom" + str + ");}";
-            tenUi.innerHTML += ".player>.camp-zone[data-camp='" + n + "']>.camp-name {text-shadow: 0 0 5px " + st2[0] + ", 0 0 10px " + st2[1] + ";}";
-            document.head.appendChild(tenUi);
-        }
-        if (push === true) lib.group.add(n);
-        if (!_status.mx_group) _status.mx_group = '夏商周秦汉晋南北隋唐宋元明清';
-        lib.translate[n] = name[1];
-        lib.translate[n + '2'] = (name[2] ? name[2] : (name[1] + (_status.mx_group.includes(name[1]) ? '朝' : '国')));
-        lib.groupnature[n] = "diy" + n;
-    };
     //武将包和卡包
     if (bilibilicharacter.enable) {
         //--------------------武将包--------------------//

@@ -7114,6 +7114,215 @@ const diy = {
 			},
 		},
 	},
+	//夏侯玄
+	taffyzunxiang_olhuanfu: {
+		audio: "olhuanfu",
+		trigger: {
+			player: "useCardToPlayered",
+			target: "useCardToTargeted",
+		},
+		filter(event, player) {
+			if (event.card.name != "sha") {
+				return false;
+			}
+			if (player == event.player && !event.isFirstTarget) {
+				return false;
+			}
+			return player.maxHp > 0 && player.countCards("he") > 0;
+		},
+		direct: true,
+		content() {
+			"step 0";
+			player.chooseToDiscard("he", [1, player.maxHp], get.prompt("taffyzunxiang_olhuanfu")).set("ai", function (card) {
+				return 6 + num - get.value(card);
+			}).logSkill = "taffyzunxiang_olhuanfu";
+			("step 1");
+			if (result.bool) {
+				player.draw(2 * result.cards.length);
+				var evt = trigger.getParent();
+				evt.baseDamage = result.cards.length;
+			}
+		},
+		ai: {
+			effect: {
+				target_use(card, player, target, current) {
+					if (card.name == "sha" && target.hp > 0 && current < 0 && target.countCards("he") > 0) {
+						return 0.7;
+					}
+				},
+			},
+		},
+	},
+	taffyzunxiang_olzeyue: {
+		audio: "olzeyue",
+		trigger: { player: "phaseZhunbeiBegin" },
+		limited: true,
+		skillAnimation: true,
+		animationColor: "water",
+		direct: true,
+		filter(event, player) {
+			var sources = [],
+				history = player.actionHistory;
+			for (var i = history.length - 1; i >= 0; i--) {
+				if (i < history.length - 1 && history[i].isMe) {
+					break;
+				}
+				for (var evt of history[i].damage) {
+					if (evt.source && evt.source != player && evt.source.isIn()) {
+						sources.add(evt.source);
+					}
+				}
+			}
+			for (var source of sources) {
+				var skills = source.getStockSkills("一！", "五！");
+				for (var skill of skills) {
+					var info = get.info(skill);
+					if (info && !info.persevereSkill && !info.charlotte && source.hasSkill(skill, null, null, false)) {
+						return true;
+					}
+				}
+			}
+			return false;
+		},
+		content() {
+			"step 0";
+			var sources = [],
+				history = player.actionHistory;
+			for (var i = history.length - 1; i >= 0; i--) {
+				if (i < history.length - 1 && history[i].isMe) {
+					break;
+				}
+				for (var evt of history[i].damage) {
+					if (evt.source && evt.source != player && evt.source.isIn()) {
+						sources.add(evt.source);
+					}
+				}
+			}
+			sources = sources.filter(function (source) {
+				var skills = source.getStockSkills("一！", "五！");
+				for (var skill of skills) {
+					var info = get.info(skill);
+					if (info && !info.persevereSkill && !info.charlotte && source.hasSkill(skill, null, null, false)) {
+						return true;
+					}
+				}
+				return false;
+			});
+			player
+				.chooseTarget(get.prompt("taffyzunxiang_olzeyue"), "令一名可选角色的一个技能失效", function (card, player, target) {
+					return _status.event.sources.includes(target);
+				})
+				.set("sources", sources)
+				.set("ai", function (target) {
+					var player = _status.event.player,
+						att = get.attitude(player, target);
+					if (att >= 0) {
+						return 0;
+					}
+					return get.threaten(target, player);
+				});
+			("step 1");
+			if (result.bool) {
+				var target = result.targets[0];
+				player.logSkill("taffyzunxiang_olzeyue", target);
+				player.awakenSkill(event.name);
+				event.target = target;
+				var skills = target.getStockSkills("一！", "五！");
+				skills = skills.filter(function (skill) {
+					var info = get.info(skill);
+					if (info && !info.charlotte && target.hasSkill(skill, null, null, false)) {
+						return true;
+					}
+				});
+				if (skills.length == 1) {
+					event._result = { control: skills[0] };
+				} else {
+					player.chooseControl(skills).set("prompt", "令" + get.translation(target) + "的一个技能失效");
+				}
+			} else {
+				event.finish();
+			}
+			("step 2");
+			var skill = result.control;
+			target.disableSkill("taffyzunxiang_olzeyue_" + player.playerid, skill);
+			target.storage["taffyzunxiang_olzeyue_" + player.playerid] = true;
+			target.addSkill("taffyzunxiang_olzeyue_round");
+			target.markAuto("taffyzunxiang_olzeyue_round", [player]);
+			if (!target.storage.taffyzunxiang_olzeyue_map) {
+				target.storage.taffyzunxiang_olzeyue_map = {};
+			}
+			target.storage.taffyzunxiang_olzeyue_map[player.playerid] = 0;
+			game.log(target, "的技能", "#g【" + get.translation(skill) + "】", "被失效了");
+		},
+		ai: { threaten: 3 },
+		subSkill: {
+			round: {
+				charlotte: true,
+				marktext: "逆",
+				intro: {
+					name: "逆节",
+					name2: "逆",
+					content: "每轮结束时，你视为对令你获得“逆节”标记的角色依次使用X张无距离限制的【杀】，若此【杀】对其造成过伤害，所有结算完成后，你移去“逆节（X为你获得该标记的轮数）。",
+					onunmark: true,
+				},
+				trigger: { global: "roundEnd" },
+				filter(event, player) {
+					var storage = player.getStorage("taffyzunxiang_olzeyue_round");
+					for (var source of storage) {
+						if (player.isIn() && player.canUse("sha", source, false)) {
+							return true;
+						}
+					}
+					return false;
+				},
+				forced: true,
+				popup: false,
+				content() {
+					"step 0";
+					event.targets = player.storage.taffyzunxiang_olzeyue_round.slice(0).sortBySeat();
+					event.target = event.targets.shift();
+					event.forceDie = true;
+					("step 1");
+					var map = player.storage.taffyzunxiang_olzeyue_map;
+					console.log("taffy storage", player.storage, player.storage["taffyzunxiang_olzeyue_" + target.playerid], target.playerid);
+
+					if (player.storage["taffyzunxiang_olzeyue_" + target.playerid]) {
+						map[target.playerid]++;
+					}
+					event.num = map[target.playerid] - 1;
+					if (event.num <= 0) {
+						event.finish();
+					}
+					("step 2");
+					event.num--;
+					player.useCard(target, { name: "sha", isCard: true }, false, "taffyzunxiang_olzeyue_round");
+					("step 3");
+					var key = "taffyzunxiang_olzeyue_" + target.playerid;
+					if (
+						player.storage[key] &&
+						target.hasHistory("damage", function (evt) {
+							return evt.card.name == "sha" && evt.getParent().type == "card" && evt.getParent(3) == event;
+						})
+					) {
+						for (var skill in player.disabledSkills) {
+							if (player.disabledSkills[skill].includes(key)) {
+								game.log(target, "恢复了技能", "#g【" + get.translation(skill) + "】");
+							}
+						}
+						delete player.storage[key];
+						player.enableSkill(key);
+						player.removeSkill("taffyzunxiang_olzeyue_round");
+					}
+					if (event.num > 0 && target.isIn() && player.isIn() && player.canUse("sha", target, false)) {
+						event.goto(2);
+					} else if (event.targets.length > 0) {
+						event.target = event.targets.shift();
+						event.goto(1);
+					}
+				},
+			},
+		},
+	},
 };
 
 export default diy;

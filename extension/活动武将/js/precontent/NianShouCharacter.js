@@ -19,6 +19,25 @@ const packs = function () {
             NS_nianshouyin: ['female', 'shen', 6, ['NSyinshou', 'NSbeimingyin', 'NShuihun', 'NShundunyin']],
         },
         skill: {
+            _YJplusmaxHp: {
+                charlotte: true,
+                ruleSkill: true,
+                trigger: { global: 'gameStart', player: 'enterGame' },
+                filter(event, player) {
+                    return player.name == 'NS_nianshouC' || player.name2 == 'NS_nianshouC';
+                },
+                priority: 114514,//恶臭(划掉)
+                direct: true,
+                forceLoad: true,
+                content() {
+                    for (var i = 0; i < game.players.length; i++) {
+                        if (game.players[i] == player) continue;
+                        player.maxHp += game.players[i].maxHp;
+                    }
+                    player.hp = player.maxHp;
+                    player.update();
+                },
+            },
             YJjinzhu: {
                 mod: {
                     maxHandcard(player, num) {
@@ -559,7 +578,7 @@ const packs = function () {
             cxy_RuiShou: '瑞兽',
             YJjinzhu: '金猪',
             'cxy_RuiShou_info': ' 锁定技，你只会受到与你势力相同的角色造成的伤害且你只能对其造成伤害；一名生肖死亡后，与该生肖势力相同的角色也能对你造成伤害。',
-            'YJjinzhu_info': '锁定技，你的手牌上限和额定摸牌数+1。锁定技，当你死亡时，你失去技能〖金猪〗，复活并将体力回复至三点(其他区域的牌均不会发生改变)。',
+            'YJjinzhu_info': '锁定技，你的手牌上限和额定摸牌数+1。锁定技，当你死亡时，你失去〖金猪〗，复活并将体力回复至三点(其他区域的牌均不会发生改变)。',
             cxy_JiYuan: '汲源',
             cxy_SuiZhongN: '岁终',
             cxy_SuiZhongE: '岁终',
@@ -592,13 +611,17 @@ const packs = function () {
             NShuihun: '回魂',
             NShuihun_info: '出牌阶段限一次，你可以弃置一张黑色手牌并失去1点体力，令一名角色回复2点体力。',
             NShundunyang: '混沌',
-            NShundunyang_info: '觉醒技，出牌阶段开始时，若年兽阴已阵亡，你增加1点体力上限，回复1点体力，然后获得技能〖回魂〗。',
+            NShundunyang_info: '觉醒技，出牌阶段开始时，若年兽阴已阵亡，你增加1点体力上限，回复1点体力，然后获得〖回魂〗。',
             NShundunyin: '混沌',
-            NShundunyin_info: '觉醒技，出牌阶段开始时，若年兽阳已阵亡，你增加1点体力上限，回复1点体力，然后获得技能〖怒焰〗。',
+            NShundunyin_info: '觉醒技，出牌阶段开始时，若年兽阳已阵亡，你增加1点体力上限，回复1点体力，然后获得〖怒焰〗。',
         },
     };
-    for (var i in NianShouCharacter.character) {
-        if (!NianShouCharacter.character[i][4]) NianShouCharacter.character[i][4] = [];
+    for (let i in NianShouCharacter.character) {
+        NianShouCharacter.character[i][4] ??= [];
+        if (_status['extension_活动武将_files']?.audio.die.files.includes(`${i}.mp3`)) {
+            NianShouCharacter.character[i][4].push('die:ext:活动武将/audio/die:true');
+            NianShouCharacter.translate[`#ext:活动武将/audio/die/${i}:die`] = '点击播放阵亡配音';
+        }
         // taffy: 注释NianShouCharacter.js原版代码
         // NianShouCharacter.character[i][4].push(((lib.device || lib.node) ? 'ext:' : 'db:extension-') + '活动武将/image/character/' + i + '.jpg');
         /* taffy分界线 */

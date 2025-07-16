@@ -1,0 +1,146 @@
+
+shouji.png
+size: 1694,1694
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+images/texiao/shouji00
+  rotate: false
+  xy: 139, 25
+  size: 691, 214
+  orig: 1103, 322
+  offset: 79, 11
+  index: -1
+images/texiao/shouji01
+  rotate: true
+  xy: 813, 660
+  size: 804, 230
+  orig: 1103, 322
+  offset: 0, 0
+  index: -1
+images/texiao/shouji02
+  rotate: false
+  xy: 2, 1466
+  size: 1055, 226
+  orig: 1103, 322
+  offset: 48, 3
+  index: -1
+images/texiao/shouji03
+  rotate: false
+  xy: 2, 956
+  size: 809, 227
+  orig: 1103, 322
+  offset: 102, 38
+  index: -1
+images/texiao/shouji04
+  rotate: false
+  xy: 2, 1185
+  size: 809, 279
+  orig: 1103, 322
+  offset: 119, 20
+  index: -1
+images/texiao/shouji05
+  rotate: false
+  xy: 2, 651
+  size: 773, 303
+  orig: 1103, 322
+  offset: 135, 13
+  index: -1
+images/texiao/shouji06
+  rotate: true
+  xy: 1045, 85
+  size: 704, 307
+  orig: 1103, 322
+  offset: 154, 15
+  index: -1
+images/texiao/shouji07
+  rotate: true
+  xy: 1354, 119
+  size: 670, 285
+  orig: 1103, 322
+  offset: 181, 31
+  index: -1
+images/texiao/shouji08
+  rotate: false
+  xy: 1045, 1139
+  size: 647, 190
+  orig: 1103, 322
+  offset: 195, 55
+  index: -1
+images/texiao/shouji09
+  rotate: false
+  xy: 1059, 1513
+  size: 630, 179
+  orig: 1103, 322
+  offset: 210, 52
+  index: -1
+images/texiao/shouji10
+  rotate: false
+  xy: 1059, 1331
+  size: 615, 180
+  orig: 1103, 322
+  offset: 223, 50
+  index: -1
+images/texiao/shouji11
+  rotate: false
+  xy: 1045, 961
+  size: 603, 176
+  orig: 1103, 322
+  offset: 226, 49
+  index: -1
+images/texiao/shouji12
+  rotate: false
+  xy: 1045, 791
+  size: 594, 168
+  orig: 1103, 322
+  offset: 234, 50
+  index: -1
+images/texiao/shouji13
+  rotate: true
+  xy: 2, 103
+  size: 546, 135
+  orig: 1103, 322
+  offset: 280, 57
+  index: -1
+images/texiao/shouji14
+  rotate: true
+  xy: 777, 241
+  size: 417, 127
+  orig: 1103, 322
+  offset: 286, 65
+  index: -1
+images/texiao/shouji15
+  rotate: true
+  xy: 906, 258
+  size: 400, 126
+  orig: 1103, 322
+  offset: 298, 67
+  index: -1
+images/texiao/shouji16
+  rotate: true
+  xy: 139, 257
+  size: 392, 124
+  orig: 1103, 322
+  offset: 306, 69
+  index: -1
+images/texiao/shouji17
+  rotate: false
+  xy: 387, 529
+  size: 386, 120
+  orig: 1103, 322
+  offset: 310, 73
+  index: -1
+images/texiao/shouji18
+  rotate: true
+  xy: 265, 262
+  size: 387, 120
+  orig: 1103, 322
+  offset: 310, 73
+  index: -1
+images/texiao/shouji19
+  rotate: false
+  xy: 387, 408
+  size: 384, 119
+  orig: 1103, 322
+  offset: 311, 73
+  index: -1

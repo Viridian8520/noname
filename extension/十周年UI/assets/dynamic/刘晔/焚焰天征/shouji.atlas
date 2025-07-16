@@ -1,0 +1,90 @@
+
+shouji.png
+size: 831,831
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+effect/GongJi/hit/hit_00000
+  rotate: false
+  xy: 2, 709
+  size: 440, 120
+  orig: 460, 160
+  offset: 20, 24
+  index: -1
+effect/GongJi/hit/hit_00001
+  rotate: false
+  xy: 397, 398
+  size: 397, 138
+  orig: 460, 160
+  offset: 63, 21
+  index: -1
+effect/GongJi/hit/hit_00002
+  rotate: true
+  xy: 2, 2
+  size: 393, 152
+  orig: 460, 160
+  offset: 67, 8
+  index: -1
+effect/GongJi/hit/hit_00003
+  rotate: false
+  xy: 2, 553
+  size: 393, 154
+  orig: 460, 160
+  offset: 67, 6
+  index: -1
+effect/GongJi/hit/hit_00004
+  rotate: false
+  xy: 2, 397
+  size: 393, 154
+  orig: 460, 160
+  offset: 67, 5
+  index: -1
+effect/GongJi/hit/hit_00005
+  rotate: false
+  xy: 397, 538
+  size: 393, 147
+  orig: 460, 160
+  offset: 67, 5
+  index: -1
+effect/GongJi/hit/hit_00006
+  rotate: true
+  xy: 460, 3
+  size: 393, 147
+  orig: 460, 160
+  offset: 67, 5
+  index: -1
+effect/GongJi/hit/hit_00007
+  rotate: true
+  xy: 156, 2
+  size: 393, 150
+  orig: 460, 160
+  offset: 67, 4
+  index: -1
+effect/GongJi/hit/hit_00008
+  rotate: true
+  xy: 308, 2
+  size: 393, 150
+  orig: 460, 160
+  offset: 67, 4
+  index: -1
+effect/GongJi/hit/hit_00009
+  rotate: true
+  xy: 609, 190
+  size: 206, 146
+  orig: 460, 160
+  offset: 212, 7
+  index: -1
+effect/GongJi/hit/hit_00010
+  rotate: false
+  xy: 444, 687
+  size: 208, 142
+  orig: 460, 160
+  offset: 214, 9
+  index: -1
+effect/GongJi/hit/hit_00011
+  rotate: false
+  xy: 654, 713
+  size: 148, 116
+  orig: 460, 160
+  offset: 253, 30
+  index: -1

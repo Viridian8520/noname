@@ -1,0 +1,383 @@
+
+BeiJing.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BJ
+  rotate: false
+  xy: 2, 797
+  size: 1839, 1234
+  orig: 1839, 1234
+  offset: 0, 0
+  index: -1
+baixinga_34
+  rotate: false
+  xy: 2, 189
+  size: 724, 606
+  orig: 764, 628
+  offset: 10, 0
+  index: -1
+texture/glow_00000
+  rotate: false
+  xy: 2003, 743
+  size: 38, 38
+  orig: 46, 46
+  offset: 4, 4
+  index: -1
+texture/sd/sd1_00000
+  rotate: true
+  xy: 1990, 243
+  size: 105, 52
+  orig: 468, 540
+  offset: 341, 458
+  index: -1
+texture/sd/sd1_00002
+  rotate: true
+  xy: 1843, 1534
+  size: 224, 190
+  orig: 468, 540
+  offset: 222, 320
+  index: -1
+texture/sd/sd1_00004
+  rotate: false
+  xy: 1653, 26
+  size: 335, 322
+  orig: 468, 540
+  offset: 111, 188
+  index: -1
+texture/sd/sd1_00011
+  rotate: false
+  xy: 1657, 350
+  size: 344, 431
+  orig: 468, 540
+  offset: 18, 30
+  index: -1
+texture/sd/sd1_00012
+  rotate: true
+  xy: 728, 33
+  size: 337, 423
+  orig: 468, 540
+  offset: 18, 30
+  index: -1
+texture/sd/sd1_00013
+  rotate: true
+  xy: 1153, 47
+  size: 323, 412
+  orig: 468, 540
+  offset: 18, 29
+  index: -1
+texture/sd/sd1_00018
+  rotate: true
+  xy: 240, 29
+  size: 158, 228
+  orig: 468, 540
+  offset: 22, 30
+  index: -1
+texture/sd/sd1_00020
+  rotate: false
+  xy: 1567, 258
+  size: 84, 112
+  orig: 468, 540
+  offset: 96, 31
+  index: -1
+texture/sd/sd1_00021
+  rotate: false
+  xy: 1567, 154
+  size: 84, 102
+  orig: 468, 540
+  offset: 95, 32
+  index: -1
+texture/sd/sd1_00022
+  rotate: false
+  xy: 1567, 62
+  size: 83, 90
+  orig: 468, 540
+  offset: 95, 35
+  index: -1
+texture/sd/sd1_00023
+  rotate: false
+  xy: 2003, 674
+  size: 33, 67
+  orig: 468, 540
+  offset: 143, 42
+  index: -1
+texture/sd/sd1_00024
+  rotate: false
+  xy: 2028, 1189
+  size: 15, 25
+  orig: 468, 540
+  offset: 154, 54
+  index: -1
+texture/sd/sd2_00000
+  rotate: false
+  xy: 1567, 2
+  size: 67, 58
+  orig: 324, 468
+  offset: 233, 359
+  index: -1
+texture/sd/sd2_00003
+  rotate: false
+  xy: 1843, 1056
+  size: 183, 203
+  orig: 324, 468
+  offset: 117, 214
+  index: -1
+texture/sd/sd2_00011
+  rotate: true
+  xy: 1843, 1760
+  size: 271, 197
+  orig: 324, 468
+  offset: 24, 98
+  index: -1
+texture/sd/sd2_00012
+  rotate: true
+  xy: 1843, 1261
+  size: 271, 189
+  orig: 324, 468
+  offset: 24, 97
+  index: -1
+texture/sd/sd2_00013
+  rotate: true
+  xy: 1843, 783
+  size: 271, 175
+  orig: 324, 468
+  offset: 24, 97
+  index: -1
+texture/sd/sd2_00014
+  rotate: false
+  xy: 2, 19
+  size: 236, 168
+  orig: 324, 468
+  offset: 51, 96
+  index: -1
+texture/sd/sd2_00015
+  rotate: false
+  xy: 470, 30
+  size: 196, 157
+  orig: 324, 468
+  offset: 89, 96
+  index: -1
+texture/sd/sd2_00017
+  rotate: false
+  xy: 2020, 1001
+  size: 24, 53
+  orig: 324, 468
+  offset: 251, 95
+  index: -1
+texture/sd/sd2_00018
+  rotate: false
+  xy: 2028, 1216
+  size: 18, 43
+  orig: 324, 468
+  offset: 255, 97
+  index: -1
+texture/sd/sd2_00019
+  rotate: false
+  xy: 2028, 1183
+  size: 3, 4
+  orig: 324, 468
+  offset: 265, 125
+  index: -1
+texture/sd/sd2_00020
+  rotate: false
+  xy: 2028, 1180
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+texture/sd/sd2_00021
+  rotate: false
+  xy: 2028, 1177
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+texture/yun2
+  rotate: false
+  xy: 728, 372
+  size: 927, 423
+  orig: 936, 457
+  offset: 9, 6
+  index: -1
+
+BeiJing2.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+TX_guangdunhou
+  rotate: false
+  xy: 432, 1282
+  size: 447, 452
+  orig: 456, 462
+  offset: 8, 3
+  index: -1
+texture/sd/sd1_00001
+  rotate: false
+  xy: 555, 894
+  size: 153, 110
+  orig: 468, 540
+  offset: 293, 400
+  index: -1
+texture/sd/sd1_00003
+  rotate: false
+  xy: 1613, 1065
+  size: 265, 237
+  orig: 468, 540
+  offset: 180, 273
+  index: -1
+texture/sd/sd1_00005
+  rotate: true
+  xy: 881, 1194
+  size: 423, 426
+  orig: 468, 540
+  offset: 24, 84
+  index: -1
+texture/sd/sd1_00006
+  rotate: false
+  xy: 2, 1258
+  size: 428, 476
+  orig: 468, 540
+  offset: 18, 32
+  index: -1
+texture/sd/sd1_00007
+  rotate: false
+  xy: 2, 799
+  size: 412, 457
+  orig: 468, 540
+  offset: 18, 32
+  index: -1
+texture/sd/sd1_00008
+  rotate: false
+  xy: 2, 348
+  size: 413, 449
+  orig: 468, 540
+  offset: 18, 31
+  index: -1
+texture/sd/sd1_00009
+  rotate: true
+  xy: 952, 1619
+  size: 412, 445
+  orig: 468, 540
+  offset: 18, 31
+  index: -1
+texture/sd/sd1_00010
+  rotate: true
+  xy: 1399, 1621
+  size: 410, 439
+  orig: 468, 540
+  offset: 18, 30
+  index: -1
+texture/sd/sd1_00014
+  rotate: false
+  xy: 2, 2
+  size: 277, 344
+  orig: 468, 540
+  offset: 19, 29
+  index: -1
+texture/sd/sd1_00015
+  rotate: false
+  xy: 1309, 1302
+  size: 273, 315
+  orig: 468, 540
+  offset: 19, 30
+  index: -1
+texture/sd/sd1_00016
+  rotate: true
+  xy: 1309, 1073
+  size: 227, 302
+  orig: 468, 540
+  offset: 19, 30
+  index: -1
+texture/sd/sd1_00017
+  rotate: true
+  xy: 1585, 846
+  size: 217, 288
+  orig: 468, 540
+  offset: 20, 30
+  index: -1
+texture/sd/sd1_00019
+  rotate: false
+  xy: 416, 844
+  size: 137, 160
+  orig: 468, 540
+  offset: 43, 31
+  index: -1
+texture/sd/sd2_00001
+  rotate: false
+  xy: 1840, 1644
+  size: 108, 102
+  orig: 324, 468
+  offset: 192, 314
+  index: -1
+texture/sd/sd2_00002
+  rotate: false
+  xy: 1840, 1748
+  size: 148, 155
+  orig: 324, 468
+  offset: 152, 262
+  index: -1
+texture/sd/sd2_00004
+  rotate: true
+  xy: 1585, 624
+  size: 220, 249
+  orig: 324, 468
+  offset: 80, 169
+  index: -1
+texture/sd/sd2_00005
+  rotate: true
+  xy: 743, 928
+  size: 264, 303
+  orig: 324, 468
+  offset: 36, 113
+  index: -1
+texture/sd/sd2_00006
+  rotate: false
+  xy: 281, 27
+  size: 276, 319
+  orig: 324, 468
+  offset: 24, 98
+  index: -1
+texture/sd/sd2_00007
+  rotate: false
+  xy: 1584, 1304
+  size: 276, 315
+  orig: 324, 468
+  offset: 24, 98
+  index: -1
+texture/sd/sd2_00008
+  rotate: true
+  xy: 432, 1006
+  size: 274, 309
+  orig: 324, 468
+  offset: 24, 98
+  index: -1
+texture/sd/sd2_00009
+  rotate: true
+  xy: 1283, 800
+  size: 271, 300
+  orig: 324, 468
+  offset: 24, 98
+  index: -1
+texture/sd/sd2_00010
+  rotate: true
+  xy: 1048, 922
+  size: 270, 233
+  orig: 324, 468
+  offset: 24, 98
+  index: -1
+texture/sd/sd2_00016
+  rotate: false
+  xy: 1840, 1905
+  size: 189, 126
+  orig: 324, 468
+  offset: 92, 95
+  index: -1
+texture/yun1
+  rotate: false
+  xy: 2, 1736
+  size: 948, 295
+  orig: 948, 295
+  offset: 0, 0
+  index: -1

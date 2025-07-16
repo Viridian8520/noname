@@ -1,0 +1,215 @@
+
+BeiJing.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BG_hou
+  rotate: false
+  xy: 2, 1236
+  size: 1719, 808
+  orig: 1719, 808
+  offset: 0, 0
+  index: -1
+BG_jian1
+  rotate: false
+  xy: 631, 54
+  size: 345, 103
+  orig: 345, 103
+  offset: 0, 0
+  index: -1
+BG_jian2
+  rotate: false
+  xy: 631, 9
+  size: 161, 43
+  orig: 161, 43
+  offset: 0, 0
+  index: -1
+BG_jian2_1
+  rotate: false
+  xy: 794, 2
+  size: 115, 50
+  orig: 115, 50
+  offset: 0, 0
+  index: -1
+BG_qian
+  rotate: false
+  xy: 2, 626
+  size: 1719, 608
+  orig: 1719, 608
+  offset: 0, 0
+  index: -1
+BG_qian2
+  rotate: true
+  xy: 1723, 1204
+  size: 840, 309
+  orig: 840, 309
+  offset: 0, 0
+  index: -1
+BG_ta1
+  rotate: true
+  xy: 1787, 38
+  size: 298, 223
+  orig: 298, 224
+  offset: 0, 0
+  index: -1
+BG_yun2
+  rotate: false
+  xy: 1108, 41
+  size: 646, 204
+  orig: 648, 204
+  offset: 0, 0
+  index: -1
+BG_yun3
+  rotate: false
+  xy: 2, 159
+  size: 1104, 465
+  orig: 1105, 466
+  offset: 0, 1
+  index: -1
+BG_yun4
+  rotate: true
+  xy: 1108, 247
+  size: 377, 677
+  orig: 378, 734
+  offset: 0, 56
+  index: -1
+BG_yun5
+  rotate: false
+  xy: 1723, 708
+  size: 242, 494
+  orig: 242, 495
+  offset: 0, 1
+  index: -1
+GN_shachen
+  rotate: true
+  xy: 1787, 338
+  size: 368, 189
+  orig: 368, 190
+  offset: 0, 0
+  index: -1
+GN_shitou1
+  rotate: false
+  xy: 1723, 666
+  size: 58, 40
+  orig: 58, 40
+  offset: 0, 0
+  index: -1
+GN_shitou2
+  rotate: true
+  xy: 1756, 147
+  size: 98, 24
+  orig: 98, 24
+  offset: 0, 0
+  index: -1
+GN_shitou3
+  rotate: true
+  xy: 1967, 916
+  size: 286, 44
+  orig: 286, 53
+  offset: 0, 0
+  index: -1
+GN_shitou4
+  rotate: true
+  xy: 1967, 713
+  size: 201, 48
+  orig: 201, 48
+  offset: 0, 0
+  index: -1
+GN_shitou5
+  rotate: true
+  xy: 1978, 601
+  size: 110, 66
+  orig: 110, 66
+  offset: 0, 0
+  index: -1
+TX_shizi2
+  rotate: true
+  xy: 2, 9
+  size: 148, 627
+  orig: 148, 627
+  offset: 0, 0
+  index: -1
+yanwu
+  rotate: true
+  xy: 978, 49
+  size: 108, 109
+  orig: 108, 109
+  offset: 0, 0
+  index: -1
+
+BeiJing2.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BG_qian1
+  rotate: false
+  xy: 1343, 137
+  size: 414, 470
+  orig: 414, 470
+  offset: 0, 0
+  index: -1
+BG_qian3
+  rotate: false
+  xy: 862, 105
+  size: 269, 101
+  orig: 269, 104
+  offset: 0, 0
+  index: -1
+BG_ta2
+  rotate: false
+  xy: 643, 52
+  size: 217, 154
+  orig: 217, 154
+  offset: 0, 0
+  index: -1
+BG_ta3
+  rotate: false
+  xy: 1133, 119
+  size: 111, 87
+  orig: 111, 87
+  offset: 0, 0
+  index: -1
+BG_ta4
+  rotate: true
+  xy: 1011, 8
+  size: 95, 151
+  orig: 96, 151
+  offset: 1, 0
+  index: -1
+BG_ta5
+  rotate: false
+  xy: 862, 2
+  size: 147, 101
+  orig: 149, 102
+  offset: 1, 0
+  index: -1
+BG_yun1
+  rotate: false
+  xy: 1343, 609
+  size: 574, 408
+  orig: 574, 410
+  offset: 0, 1
+  index: -1
+BG_yun16
+  rotate: true
+  xy: 643, 208
+  size: 809, 698
+  orig: 809, 698
+  offset: 0, 0
+  index: -1
+BG_yun6
+  rotate: true
+  xy: 2, 41
+  size: 976, 639
+  orig: 976, 639
+  offset: 0, 0
+  index: -1
+TX_shizi1
+  rotate: true
+  xy: 1759, 245
+  size: 362, 262
+  orig: 362, 262
+  offset: 0, 0
+  index: -1

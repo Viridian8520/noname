@@ -82,6 +82,8 @@ const packs = function () {
             },
         },
         skill: {
+            //永久标记
+            eternal_fh_tag: { charlotte: true },
             //银月枪
             fh_yinyueqiang_skill: {
                 equipSkill: true,
@@ -262,12 +264,26 @@ const packs = function () {
             },
             //费祎
             fh_shengxi: {
-                init(player) {
-                    if (_status.fh_cardPile && !get.fh_cardPile('tiaojiyanmei') && !_status.fh_tiaojiyanmei) {
+                init() {
+                    if (_status.fh_cardPile && !get.fh_cardPile('tiaojiyanmei')) {
                         var card = game.createCard2('tiaojiyanmei', 'heart', 6);
-                        card.fh_extra = true;
-                        _status.fh_tiaojiyanmei = true;
-                        _status.fh_cardPile.push(card);
+                        card.destroyed = (card, position, player, event) => {
+                            if (position === "discardPile") {
+                                if (!_status.fh_cardPile.includes(card)) {
+                                    game.broadcastAll(card => _status.fh_cardPile.add(card), card);
+                                    game.log(card, '被放回了', '#g额外牌堆');
+                                }
+                            }
+                            else {
+                                if (_status.fh_cardPile.includes(card)) {
+                                    game.broadcastAll(card => _status.fh_cardPile.remove(card), card);
+                                    game.log('#g额外牌堆', '失去了', card);
+                                }
+                            }
+                            return false;
+                        };
+                        card.addGaintag('eternal_fh_tag');
+                        game.broadcastAll(card => _status.fh_cardPile.add(card), card);
                         game.log(card, '已加入额外牌堆');
                     }
                 },
@@ -408,7 +424,7 @@ const packs = function () {
                                 var player = _status.event.player, targets = _status.event.targets;
                                 var num = 1;
                                 if (!_status.event.gained.includes(target)) num = 3;
-                                return get.sgn(get.attitude(player, target)) * num;
+                                return Math.sign(get.attitude(player, target)) * num;
                             }).set('targets', targets).set('gained', map);
                             if (result2.bool) {
                                 var target = result2.targets[0];
@@ -441,9 +457,9 @@ const packs = function () {
                 trigger: { global: ['gainAfter', 'loseAsyncAfter', 'equipAfter', 'addToExpansionAfter', 'addJudgeAfter', 'cardsGotoSpecialAfter'] },
                 filter(event, player) {
                     if (get.fh_cardPile(card => get.type(card) == 'basic')) return false;
-                    if (event.name == 'equip') return event.card.fh_extra && get.type(event.card) == 'basic';
-                    if (event.getg) return game.hasPlayer(target => event.getg(target).some(card => card.fh_extra && get.type(card) == 'basic'));
-                    return event.cards.some(card => card.fh_extra && get.type(card) == 'basic');
+                    if (event.name === 'equip') return event.card.hasGaintag('eternal_fh_tag') && get.type(event.card) == 'basic';
+                    if (event.getg) return game.hasPlayer(target => event.getg(target).some(card => card.hasGaintag('eternal_fh_tag') && get.type(card) == 'basic'));
+                    return event.cards.some(card => card.hasGaintag('eternal_fh_tag') && get.type(card) == 'basic');
                 },
                 usable: 1,
                 frequent: true,
@@ -734,12 +750,26 @@ const packs = function () {
             },
             //荀谌
             fh_weipo: {
-                init(player) {
-                    if (_status.fh_cardPile && !get.fh_cardPile('binglinchengxiax') && !_status.fh_binglinchengxiax) {
+                init() {
+                    if (_status.fh_cardPile && !get.fh_cardPile('binglinchengxiax')) {
                         var card = game.createCard2('binglinchengxiax', 'spade', 7);
-                        card.fh_extra = true;
-                        _status.fh_binglinchengxiax = true;
-                        _status.fh_cardPile.push(card);
+                        card.destroyed = (card, position, player, event) => {
+                            if (position === "discardPile") {
+                                if (!_status.fh_cardPile.includes(card)) {
+                                    game.broadcastAll(card => _status.fh_cardPile.add(card), card);
+                                    game.log(card, '被放回了', '#g额外牌堆');
+                                }
+                            }
+                            else {
+                                if (_status.fh_cardPile.includes(card)) {
+                                    game.broadcastAll(card => _status.fh_cardPile.remove(card), card);
+                                    game.log('#g额外牌堆', '失去了', card);
+                                }
+                            }
+                            return false;
+                        };
+                        card.addGaintag('eternal_fh_tag');
+                        game.broadcastAll(card => _status.fh_cardPile.add(card), card);
                         game.log(card, '已加入额外牌堆');
                     }
                 },
@@ -837,7 +867,7 @@ const packs = function () {
                             'step 2'
                             var cards = get.cards(3, true);
                             player.chooseButton(['陈势：请选择弃置的牌', cards], [1, cards.length], true).set('ai', function (button) {
-                                var eff = get.sgn(_status.event.effect);
+                                var eff = Math.sign(_status.event.effect);
                                 switch (eff) {
                                     case 0:
                                         return -0.5 + Math.random();
@@ -907,7 +937,7 @@ const packs = function () {
                             'step 2'
                             var cards = get.cards(3, true);
                             player.chooseButton(['陈势：请选择弃置的牌', cards], [1, cards.length], true).set('ai', function (button) {
-                                var eff = get.sgn(_status.event.effect);
+                                var eff = Math.sign(_status.event.effect);
                                 switch (eff) {
                                     case 0:
                                         return -0.5 + Math.random();
@@ -1630,7 +1660,7 @@ const packs = function () {
                         if (cards.length < target.countCards('h')) return -get.value(card);
                         var num1 = cards.reduce((sum, card) => sum += target.getUseValue(card), 0);
                         var num2 = target.getCards('hs').reduce((sum, card) => sum += target.getUseValue(card), 0);
-                        return (num1 - num2) * get.sgn(get.attitude(player, target));
+                        return (num1 - num2) * Math.sign(get.attitude(player, target));
                     }).set('target', target);
                     if (result.bool) {
                         player.logSkill('fh_songshu');
@@ -2160,13 +2190,13 @@ const packs = function () {
                             var num2 = lib.skill.fh_jincui.getSeatNum(player, target);
                             var num3 = player.countCards('hs', card => player.canSaveCard(card, player));
                             while (true) {
-                                num -= get.sgn(get.attitude(player, current));
+                                num -= Math.sign(get.attitude(player, current));
                                 if (current == target) break;
                                 current = current.next;
                             }
                             while (true) {
                                 if (current == player) break;
-                                num += get.sgn(get.attitude(player, current)) * 1.1;
+                                num += Math.sign(get.attitude(player, current)) * 1.1;
                                 current = current.next;
                             }
                             if (num < num2 - num3) return 0;
@@ -2213,7 +2243,7 @@ const packs = function () {
                     else target.chooseCard('he', true, '请重铸一张牌', lib.filter.cardRecastable).set('ai', card => {
                         var player = _status.event.player;
                         var source = _status.event.source;
-                        var num = get.sgn(get.attitude(player, source));
+                        var num = Math.sign(get.attitude(player, source));
                         if (source.awakenedSkills.includes('duanbi') && source.hasSkill('tongduo', null, false, false) && get.name(card) == 'wuzhong') {
                             if (num == 1) return 10;
                             return 0;
@@ -2390,7 +2420,7 @@ const packs = function () {
                     player.awakenSkill('fh_tianyi');
                     if (player.maxHp < 10) player.gainMaxHp(10 - player.maxHp);
                     'step 1'
-                    player.chooseTarget('令一名角色获得技能〖佐幸〗', true).set('ai', target => {
+                    player.chooseTarget('令一名角色获得〖佐幸〗', true).set('ai', target => {
                         return get.attitude(_status.event.player, target);
                     });
                     'step 2'
@@ -2887,33 +2917,50 @@ const packs = function () {
             //辛宪英
             fh_caishi: {
                 inherit: 'recaishi',
-                *content(event, map) {
-                    var player = map.player, cards = [], trigger = map.trigger;
-                    player.getHistory('gain', function (evt) {
+                async cost(event, trigger, player) {
+                    const cards = [];
+                    player.getHistory('gain', evt => {
                         if (evt.getParent().name == 'draw' && evt.getParent('phaseDraw') == trigger) cards.addArray(evt.cards);
                     });
-                    var str = '展示本阶段获得的牌，然后';
+                    const isSame = lib.skill.recaishi.isSame(trigger);
+                    let str = `展示${get.translation(cards)}，然后`;
                     if (lib.skill.recaishi.isSame(trigger)) str += '本回合你修改〖忠鉴〗为“出牌阶段限两次”';
-                    else str += '回复1点体力，然后本回合内不能对自己使用牌';
-                    var result = yield player.chooseBool(get.prompt('fh_caishi'), str).set('ai', function () {
-                        if (_status.event.goon) return true;
-                        var player = _status.event.player;
-                        if (player.countCards('hs', { name: 'tao' })) return false;
+                    else if (player.isDamaged()) str += '回复1点体力，然后本回合内不能对自己使用牌';
+                    event.result = await player.chooseBool(get.prompt(event.skill), str).set('choice', (() => {
+                        if (isSame) return true;
+                        if (player.countCards('h', 'tao')) return false;
                         if (player.hp < 2) return true;
-                        return !player.countCards('h', card => {
-                            var info = get.info(card);
+                        return player.countCards('h', card => {
+                            const info = get.info(card);
                             return info && (info.toself || info.selectTarget == -1) && player.canUse(card, player) && player.getUseValue(card) > 0;
-                        });
-                    }).set('goon', lib.skill.recaishi.isSame(trigger));
-                    if (result.bool) {
-                        player.logSkill('fh_caishi');
-                        player.show(cards, get.translation(player) + '发动了技能【才识】');
-                        if (lib.skill.recaishi.isSame(trigger)) player.addTempSkill('recaishi2');
-                        else {
-                            player.recover();
-                            player.addTempSkill('recaishi3');
-                        }
+                        }) == 0;
+                    })()).forResult();
+                    if (event.result.bool) event.result = {
+                        bool: true,
+                        cards,
+                        cost_data: isSame ? 'rewrite' : 'recver',
                     }
+                },
+                async content(event, trigger, player) {
+                    await player.showCards(event.cards, get.translation(player) + '发动了技能【才识】');
+                    if (event.cost_data === 'rewrite') {
+                        player.addTempSkill('rezhongjian_rewrite');
+                    } else {
+                        await player.recover();
+                        player.addTempSkill(event.name + '_effect');
+                    }
+                },
+                subSkill: {
+                    effect: {
+                        charlotte: true,
+                        mark: true,
+                        intro: { content: '本回合内不能对自己使用牌' },
+                        mod: {
+                            targetEnabled(card, player, target) {
+                                if (player == target) return false;
+                            },
+                        },
+                    },
                 },
             },
             //吴苋
@@ -3189,7 +3236,7 @@ const packs = function () {
                         player.chooseControl().set('ai', () => _status.event.index).set('choiceList', [
                             '令' + get.translation(target) + '失去1点体力，从额外牌堆随机使用一张装备牌',
                             '令' + get.translation(target) + '回复1点体力，弃置一张装备牌',
-                        ]).set('index', Math.max(0, get.sgn(get.attitude(player, target))));
+                        ]).set('index', Math.max(0, Math.sign(get.attitude(player, target))));
                     }
                     'step 1'
                     if (result.index == 0) {
@@ -4377,6 +4424,7 @@ const packs = function () {
             },
         },
         translate: {
+            eternal_fh_tag: '额外牌堆',
             fh_zhi: '飞鸿·智',
             fh_xin: '飞鸿·信',
             fh_ren: '飞鸿·仁',
@@ -4435,7 +4483,7 @@ const packs = function () {
             fh_zifu: '自缚',
             fh_zifu_info: '锁定技，出牌阶段结束时，若你本阶段内未使用牌，则你移去所有“备”且本回合的手牌上限-1。',
             fh_mibei: '秘备',
-            fh_mibei_info: '使命技，使命：当你使用的牌结算完成后，若你的“备”中包含的基本牌，锦囊牌，装备牌数量均不少于两张，则你从额外牌堆中随机获得这三种类型的牌各一张并获得技能〖谋立〗。失败：结束阶段开始时，若你没有“备”，且你于本回合的准备阶段开始时也没有“备”，则你减1点体力上限。',
+            fh_mibei_info: '使命技，使命：当你使用的牌结算完成后，若你的“备”中包含的基本牌，锦囊牌，装备牌数量均不少于两张，则你从额外牌堆中随机获得这三种类型的牌各一张并获得〖谋立〗。失败：结束阶段开始时，若你没有“备”，且你于本回合的准备阶段开始时也没有“备”，则你减1点体力上限。',
             fh_mouli: '谋立',
             fh_mouli_info: '出牌阶段限一次，你可以令一名其他角色获得你的一张“备”。',
             fh_guixiu: '闺秀',
@@ -4505,7 +4553,7 @@ const packs = function () {
             fh_shuishi: '慧识',
             fh_shuishi_info: '出牌阶段限一次，你可进行重复判定牌直到有已有判定花色的牌，然后你可以将所有判定牌交给一名角色。',
             fh_tianyi: '天翊',
-            fh_tianyi_info: '觉醒技，准备阶段，若场上的所有存活角色均于本局游戏内受到过伤害，则你将体力上限增加至10点，然后令一名角色获得技能〖佐幸〗。',
+            fh_tianyi_info: '觉醒技，准备阶段，若场上的所有存活角色均于本局游戏内受到过伤害，则你将体力上限增加至10点，然后令一名角色获得〖佐幸〗。',
             fh_sghuishi: '辉逝',
             fh_sghuishi_info: '限定技，当你进入濒死状态时，你可以选择一名角色。若其有未发动的觉醒技，则你令其中一个技能无视发动条件；否则其摸四张牌。',
             fh_lingce: '灵策',
@@ -4513,7 +4561,7 @@ const packs = function () {
             fh_dinghan: '定汉',
             fh_dinghan_info: '准备阶段，你可以更换智囊牌中的一张锦囊牌。',
             fh_powei: '破围',
-            fh_powei_info: '使命技，游戏开始时，你令所有其他角色获得一个“围”。一名角色受到伤害后，若其有“围”，则其移去“围”。回合开始时，所有有“围”的角色失去“围”，然后这些角色的第一个不为你的下家获得等量的“围”。一名其他角色的回合开始时，若其有“围”，则你可以选择一项：⒈弃置一张手牌并对其造成1点伤害。⒉若其体力值不大于你，则你获得其一张手牌。选择完成后，你视为在其攻击范围内直到回合结束。使命：回合开始时，若场上没有“围”，则你获得技能〖神著〗。失败：当你受到大于等于你的体力值的伤害时，你取消之，然后移去场上所有“围”，弃置装备区的所有牌。',
+            fh_powei_info: '使命技，游戏开始时，你令所有其他角色获得一个“围”。一名角色受到伤害后，若其有“围”，则其移去“围”。回合开始时，所有有“围”的角色失去“围”，然后这些角色的第一个不为你的下家获得等量的“围”。一名其他角色的回合开始时，若其有“围”，则你可以选择一项：⒈弃置一张手牌并对其造成1点伤害。⒉若其体力值不大于你，则你获得其一张手牌。选择完成后，你视为在其攻击范围内直到回合结束。使命：回合开始时，若场上没有“围”，则你获得〖神著〗。失败：当你受到大于等于你的体力值的伤害时，你取消之，然后移去场上所有“围”，弃置装备区的所有牌。',
             fh_qiexie: '挈挟',
             fh_qiexie_info: '锁定技，准备阶段，你在剩余武将牌堆中随机观看五张牌，选择其中的任意张置入武器栏，这些牌具有以下效果：⒈此牌不具有花色，且其攻击范围和点数等于此武将牌的体力上限。⒉此武器牌的技能为该武将牌上所有描述中包含“【杀】”且不具有锁定技以外的标签的技能。⒊此武器牌离开你的装备区时，改为放回武将牌堆。',
             fh_qiexie_faq: '【挈挟】将池',
@@ -4626,9 +4674,13 @@ const packs = function () {
             fh_anguo_info: '出牌阶段限一次，你可以选择一名其他角色，若其手牌数为全场最少，其摸一张牌；体力值为全场最低，回复1点体力；装备区内牌数为全场最少，从额外牌堆种随机使用一张装备牌。然后若该角色有未执行的效果且你满足条件，你执行之。',
         },
     };
-    for (var i in MX_feihongyinxue.character) {
-        if (!MX_feihongyinxue.character[i][4]) MX_feihongyinxue.character[i][4] = [];
+    for (let i in MX_feihongyinxue.character) {
+        MX_feihongyinxue.character[i][4] ??= [];
         MX_feihongyinxue.character[i][4].add('character:' + i.slice(6));
+        if (_status['extension_活动武将_files']?.audio.die.files.includes(`${i}.mp3`)) {
+            MX_feihongyinxue.character[i][4].push('die:ext:活动武将/audio/die:true');
+            MX_feihongyinxue.translate[`#ext:活动武将/audio/die/${i}:die`] = '点击播放阵亡配音';
+        }
         if (!MX_feihongyinxue.character[i][4].some(tag => tag.indexOf('die:') == 0)) MX_feihongyinxue.character[i][4].add('die:' + i.slice(6));
         //MX_feihongyinxue.translate[i+'_ab']=MX_feihongyinxue.translate[i].slice(2);
         var trans = MX_feihongyinxue.translate[i];
@@ -4706,8 +4758,26 @@ const packs = function () {
                     var card = lib.card.list.find(card => card[2] == name);
                     if (card) _status.fh_cardPile.push(card);
                 });
-                _status.fh_cardPile = _status.fh_cardPile.map(card => game.createCard2(card[2], card[0], card[1], card[3]));
-                _status.fh_cardPile.forEach(card => card.fh_extra = true);
+                _status.fh_cardPile = _status.fh_cardPile.map(info => {
+                    const card = game.createCard2(info[2], info[0], info[1], info[3]);
+                    card.destroyed = (card, position, player, event) => {
+                        if (position === "discardPile") {
+                            if (!_status.fh_cardPile.includes(card)) {
+                                game.broadcastAll(card => _status.fh_cardPile.add(card), card);
+                                game.log(card, '被放回了', '#g额外牌堆');
+                            }
+                        }
+                        else {
+                            if (_status.fh_cardPile.includes(card)) {
+                                game.broadcastAll(card => _status.fh_cardPile.remove(card), card);
+                                game.log('#g额外牌堆', '失去了', card);
+                            }
+                        }
+                        return false;
+                    };
+                    card.addGaintag('eternal_fh_tag');
+                    return card;
+                });
                 ui.fh_linfo = ui.create.system('飞鸿·额外牌堆', null, true);
                 lib.setPopped(ui.fh_linfo, function () {
                     var uiintro = ui.create.dialog('hidden');
@@ -4737,70 +4807,6 @@ const packs = function () {
             var cards = _status.fh_cardPile.filter(card => filter(card));
             if (cards.length) return cards.randomGet();
             return false;
-        };
-        //移除额外牌堆的牌
-        lib.skill._fh_remove = {
-            ruleSkill: true,
-            charlotte: true,
-            trigger: {
-                player: ['gainEnd', 'equipEnd', 'addToExpansionEnd', 'addJudgeEnd'],
-                global: ['loseAsyncEnd', 'cardsGotoSpecialEnd'],
-            },
-            filter(event, player) {
-                if (event.name == 'equip') return event.card?.fh_extra;
-                if (event.getg) return event.getg(player).some(card => card.fh_extra);
-                return event.cards?.some(card => card.fh_extra);
-            },
-            priority: 114514,
-            forced: true,
-            popup: false,
-            content() {
-                var cards = [];
-                if (trigger.name == 'equip') cards.push(trigger.card);
-                else if (trigger.getg) cards.addArray(trigger.getg(player).filter(card => card.fh_extra));
-                else cards.addArray(trigger.cards.filter(card => card.fh_extra));
-                var cardx = cards.filter(card => _status.fh_cardPile.includes(card));
-                if (cardx.length) {
-                    _status.fh_cardPile.removeArray(cardx);
-                    game.log('#g额外牌堆', '失去了', cardx);
-                }
-                game.broadcastAll(cards => {
-                    cards.forEach(card => card.addGaintag('fh_tag'));
-                }, cards.filter(card => get.owner(card)));
-            },
-        };
-        lib.skill.fh_tag = { charlotte: true };
-        lib.translate.fh_tag = '额外牌堆';
-        //把牌放回额外牌堆
-        lib.skill._fh_lose_trigger = {
-            charlotte: true,
-            ruleSkill: true,
-            trigger: {
-                player: 'loseAfter',
-                global: ['cardsDiscardAfter', 'equipAfter', 'addJudgeAfter', 'gainAfter', 'loseAsyncAfter', 'addToExpansionAfter'],
-            },
-            filter(event, player) {
-                if (event.name != 'cardsDiscard') return event.getl && event.getl(player).cards.filter(card => get.position(card, true) == 'd' && card.fh_extra).length > 0;
-                if (!event.cards.filterInD('d').some(card => card.fh_extra)) return false;
-                var evt = event.getParent();
-                if (evt.name != 'orderingDiscard') return false;
-                var evtx = (evt.relatedEvent || evt.getParent());
-                var history = player.getHistory('useCard').concat(player.getHistory('respond'));
-                return evtx.player == player && history.some(evtxx => evtx.getParent() == (evtxx.relatedEvent || evtxx.getParent()));
-            },
-            forceDie: true,
-            priority: -1919810,
-            forced: true,
-            popup: false,
-            content() {
-                var cards;
-                if (trigger.name != 'cardsDiscard') cards = trigger.getl(player).cards.filter(card => get.position(card, true) == 'd' && card.fh_extra);
-                else cards = trigger.cards.filterInD('d');
-                cards = cards.filter(card => card.fh_extra);
-                _status.fh_cardPile.addArray(cards);
-                game.cardsGotoSpecial(cards)._triggered = null;
-                game.log(cards, '被放回了', '#g额外牌堆');
-            },
         };
     }
     else lib.config.characters.remove('MX_feihongyinxue');

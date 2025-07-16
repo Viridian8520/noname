@@ -417,7 +417,7 @@ const packs = function () {
                 audio: 'ext:活动武将/audio/skill:true',
                 trigger: { global: 'useCard' },
                 filter(event, player) {
-                    return event.player == _status.currentPhase && event.player != player && get.type(event.card) == 'trick' && event.getHistory('useCard', evt => get.type(evt.card) == 'trick').indexOf(event) == 0;
+                    return event.player == _status.currentPhase && event.player != player && get.type(event.card) == 'trick' && event.player.getHistory('useCard', evt => get.type(evt.card) == 'trick').indexOf(event) == 0;
                 },
                 check(event, player) {
                     return get.attitude(player, event.player) < 0;
@@ -1460,7 +1460,7 @@ const packs = function () {
             qin_chunqiu: '春秋',
             qin_chunqiu_info: '锁定技，你于每个回合使用或打出第一张牌时，摸一张牌。',
             qin_baixiang: '拜相',
-            qin_baixiang_info: '觉醒技，准备阶段，若你的手牌数不小于你当前体力值的三倍，则你将体力回复至体力上限，然后获得技能〖仲父〗。',
+            qin_baixiang_info: '觉醒技，准备阶段，若你的手牌数不小于你当前体力值的三倍，则你将体力回复至体力上限，然后获得〖仲父〗。',
             qin_zhongfu: '仲父',
             qin_zhongfu_info: '锁定技，准备阶段，你随机获得『〖奸雄〗、〖仁德〗、〖制衡〗』中的一个直到你的下个回合开始。',
             qin_shanwu: '善舞',
@@ -1504,8 +1504,12 @@ const packs = function () {
             qin_chuanguoyuxi_info: '出牌阶段开始时，你可以从【南蛮入侵】、【万箭齐发】、【桃园结义】、【五谷丰登】中选择一张使用。',
         },
     };
-    for (var i in hezongkangqincharacter.character) {
-        if (!hezongkangqincharacter.character[i][4]) hezongkangqincharacter.character[i][4] = [];
+    for (let i in hezongkangqincharacter.character) {
+        hezongkangqincharacter.character[i][4] ??= [];
+        if (_status['extension_活动武将_files']?.audio.die.files.includes(`${i}.mp3`)) {
+            hezongkangqincharacter.character[i][4].push('die:ext:活动武将/audio/die:true');
+            hezongkangqincharacter.translate[`#ext:活动武将/audio/die/${i}:die`] = '点击播放阵亡配音';
+        }
         // taffy: 注释hezongkangqincharacter.js原版代码
         // hezongkangqincharacter.character[i][4].push(((lib.device || lib.node) ? 'ext:' : 'db:extension-') + '活动武将/image/character/' + i + '.jpg');
         /* taffy分界线 */
@@ -1513,10 +1517,13 @@ const packs = function () {
         hezongkangqincharacter.character[i][4].push('ext:活动武将/image/character/' + i + '.jpg');
         /* taffy分界线 */
     }
-    game.bolAddGroupNature(['daqin', '秦'], [255, 165, 0]);
+    game.addGroup('daqin', '秦', '秦朝', { color: '#FFA500', image: 'ext:活动武将/image/default/daqin.png' });
     lib.config.all.characters.push('hezongkangqincharacter');
     lib.config.all.sgscharacters.push('hezongkangqincharacter');
-    if (!lib.config.characters.includes('hezongkangqincharacter')) lib.config.characters.remove('hezongkangqincharacter');
+    if (!lib.config.characters.includes('hezongkangqincharacter')) {
+        lib.group.remove('daqin');
+        lib.config.characters.remove('hezongkangqincharacter');
+    }
     lib.translate['hezongkangqincharacter_character_config'] = '<span style="font-family: xingkai">合纵抗秦</span>';
     return hezongkangqincharacter;
 };

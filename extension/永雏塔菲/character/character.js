@@ -114,6 +114,7 @@ const characters = {
 	taffyold_pot_weiyan: ["male", "shu", 4, ["taffyold_potzhongao", "taffyold_potzhuangshi", "taffyold_potyinzhan"], ["character:pot_weiyan", "die:pot_weiyan"]],
 	taffyold_pot_yuji: ["male", "qun", 3, ["taffyold_potdaozhuan", "taffyold_potfuji"], ["character:pot_yuji", "die:pot_yuji"]],
 	taffyold_ol_sb_yl_luzhi: ["male", "qun", 4, ["taffyold_olsibing", "taffyold_olliance"], ["character:ol_sb_yl_luzhi", "die:ol_sb_yl_luzhi"]],
+	taffyzunxiang_xiahouxuan: ["male", "wei", 3, ["taffyzunxiang_olhuanfu", "olqingyi", "taffyzunxiang_olzeyue"], ["name:夏侯|玄,", "character:xiahouxuan", "die:xiahouxuan"]],
 	aruijier: ["female", "shen", "", [], ["unseen", "qun"]],
 };
 
