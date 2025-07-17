@@ -4675,8 +4675,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				// speed: 1,
 				// action: 'DaiJi',
 				audio: {
-					skill: "孙策/傲凌绝顶2/audio",
-					card: "孙策/傲凌绝顶2/audio",
+					skill: "孙策/傲凌绝顶/audio",
+					card: "孙策/傲凌绝顶/audio",
 				},
 				beijing: {
 					name: "孙策/傲凌绝顶2/BeiJing",
@@ -4689,8 +4689,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						hp: 2,
 						name: "sunce/傲凌绝顶4",
 						audio: {
-							skill: "孙策/傲凌绝顶4/audio",
-							card: "孙策/傲凌绝顶4/audio",
+							skill: "孙策/傲凌绝顶3/audio",
+							card: "孙策/傲凌绝顶3/audio",
 						},
 					},
 					condition: {
@@ -4729,8 +4729,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				// speed: 1,
 				// action: 'DaiJi',
 				audio: {
-					skill: "孙策/傲凌绝顶4/audio",
-					card: "孙策/傲凌绝顶4/audio",
+					skill: "孙策/傲凌绝顶3/audio",
+					card: "孙策/傲凌绝顶3/audio",
 				},
 				beijing: {
 					name: "孙策/傲凌绝顶4/BeiJing",
@@ -8543,10 +8543,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 
 		// 甄姬
 		re_zhenji: decadeUI.dynamicSkin.zhenji,
-		sp_zhenji: decadeUI.dynamicSkin.zhenji,
 		sb_zhenji: decadeUI.dynamicSkin.zhenji,
-		mb_sp_zhenji: decadeUI.dynamicSkin.zhenji,
-		jsrg_zhenji: decadeUI.dynamicSkin.zhenji,
 		yj_zhenji: decadeUI.dynamicSkin.zhenji,
 		diy_zhenji: decadeUI.dynamicSkin.zhenji,
 		ddd_zhenji: decadeUI.dynamicSkin.zhenji,
