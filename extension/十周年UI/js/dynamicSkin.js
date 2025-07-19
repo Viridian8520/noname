@@ -6737,9 +6737,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			// 张角
 			黄天当立: {
 				name: "张角/黄天当立/XingXiang",
-				x: [0, 0.5],
-				y: [0, 0.5],
-				scale: 0.7,
+				x: [0, 0.3],
+				y: [0, 0.4],
+				scale: 0.6,
 				angle: 0,
 				// speed: 1,
 				// action: 'DaiJi',
