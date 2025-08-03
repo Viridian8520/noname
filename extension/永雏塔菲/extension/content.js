@@ -103,6 +103,11 @@ export const CONTENT = function (config, pack) {
 			addCharacter("boss_lvbu3", ["male", "shen", 6, ["wushuang", "shenqu", "jiwu"], ["qun", "mode:boss"]], "taffy_character");
 		});
 	}
+	// 修正本体武将的技能
+	// 曲阿小将
+	lib.skill.peaoyong.filter = function (event, player) {
+		return event.getParent(2, true)?.name != "peaoyong" && event.getg(player)?.length;
+	};
 	// 一些全局技能
 	lib.skill._taffy_dieKillEffect = {
 		trigger: {

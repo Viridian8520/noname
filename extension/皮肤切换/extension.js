@@ -520,7 +520,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
                                     if (!player.doubleAvatar) {
                                         let teshu = player.dynamic.primary && player.dynamic.primary.player && player.dynamic.primary.player.teshu
                                         if (typeof teshu === 'object') {
-                                            if (teshu.whitelist) {
+                                            // taffy: 注释extension.js原版代码
+                                            // if (teshu.whitelist) {
+                                            /* taffy分界线 */
+                                            // taffy: 修复长安神贾诩尸变动皮角色报错的问题喵
+                                            if (teshu !== null && teshu.whitelist) {
+                                            /* taffy分界线 */
                                                 if (teshu.whitelist.includes(triggerSkill)) {
                                                     skinSwitch.chukuangWorkerApi.chukuangAction(player, 'TeShu');
                                                 }
