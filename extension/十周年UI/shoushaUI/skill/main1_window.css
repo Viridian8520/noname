@@ -9,7 +9,6 @@
 	/*border: 3px solid rgb(255, 255, 255);/*调试用*/
 	z-index: 6;
 }
-
 .skill-control div {
 	position: relative;
 	height: 40px;
@@ -18,7 +17,6 @@
 	justify-content: center;
 	align-items: center;
 }
-
 .skill-control .trigger,
 .skill-control .enable {
 	height: auto;
@@ -26,7 +24,6 @@
 	justify-content: right;
 	/*自动向右对齐*/
 }
-
 .skill-control {
 	float: right;
 	white-space: nowrap;
@@ -36,13 +33,11 @@
 	font-size: 24px;
 	/*字体渐变色，色调*/
 }
-
 .skill-control>div {
 	display: flex;
 	flex-wrap: wrap-reverse;
 	flex-direction: row-reverse;
 }
-
 /*伪类*/
 .skill-control>div::after {
 	content: "";
@@ -50,14 +45,12 @@
 	display: block;
 	clear: both;
 }
-
 .skill-control>.enable {
 	margin: 0 0 0 auto;
 	font-size: 20.5px;
 	font-weight: 500;
 	font-family: "HYZLSJ";
 }
-
 .skill-control>.trigger>* .skillitem-child {
 	position: absolute;
 	-webkit-text-stroke: 4.3px #102030;
@@ -65,7 +58,6 @@
 	opacity: 0.5;
 	z-index: -1;
 }
-
 .skill-control>.enable>* .skillitem-child {
 	position: absolute;
 	-webkit-text-stroke: 4.3px rgba(2, 3, 2);
@@ -73,7 +65,6 @@
 	opacity: 0.35;
 	z-index: -1;
 }
-
 .skill-control>.trigger>div {
 	margin: -6px 2px;
 	font-family: "HYZLSJ";
@@ -90,7 +81,6 @@
 	font-size: 22px;
 	width: auto;
 }
-
 .skill-control>.enable>* {
 	/*-webkit-text-stroke: 0.8px rgba(38,37,34,0.5);
 	text-shadow: none;*/
@@ -115,7 +105,6 @@
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
-
 /*---司马徽按钮分离--*/
 .skill-control>.enable>.skillitem_smh_lianhuan::before {
 	z-index: -1;
@@ -126,20 +115,16 @@
 	margin: 1px 12px;
 	width: 147%;
 	height: 170%;
-
 	font-family: "HanYiZhongLiShuFan", "HYZLSJ";
 	background-image: url("./shousha/feng.png");
 	background-size: 100% 100%;
 }
-
 .skill-control>.enable>*.select:not(.skillitem_smh_yeyan):not(.skillitem_smh_huoji)::before {
 	background-image: url("./shousha/feng_selected.png");
 }
-
 .skill-control>.enable>.skillitem_smh_lianhuan:not(.usable):not(.select)::before {
 	background-image: url("./shousha/feng_no.png");
 }
-
 /*司马徽火计*/
 .skill-control>.enable>.skillitem_smh_huoji::before {
 	z-index: -1;
@@ -154,15 +139,12 @@
 	background-image: url("./shousha/long.png");
 	background-size: 100% 100%;
 }
-
 .skill-control>.enable>*.select:not(.skillitem_smh_yeyan):not(.skillitem_smh_lianhuan)::before {
 	background-image: url("./shousha/long_selected.png");
 }
-
 .skill-control>.enable>.skillitem_smh_huoji:not(.usable):not(.select)::before {
 	background-image: url("./shousha/long_no.png");
 }
-
 /*司马徽业炎*/
 .skill-control>.enable>.skillitem_smh_yeyan::before {
 	z-index: -1;
@@ -180,17 +162,13 @@
 	background-image: url("./shousha/longfeng.png");
 	background-size: 100% 100%;
 }
-
 .skill-control>.enable>*.select:not(.skillitem_smh_huoji):not(.skillitem_smh_lianhuan)::before {
 	background-image: url("./shousha/longfeng_selected.png");
 }
-
 .skill-control>.enable>.skillitem_smh_yeyan:not(.usable):not(.select)::before {
 	background-image: url("./shousha/longfeng_no.png");
 }
-
 /*-----*/
-
 .skill-control>.enable>.skillitem::before {
 	z-index: -1;
 	content: "";
@@ -208,13 +186,11 @@
 	background-size: 100% 100%;
 	/*border: 1px solid rgb(3,4,5);/*调试用*/
 }
-
 .skill-control>.enable>*.select:not(.skillitem_smh_yeyan):not(.skillitem_smh_huoji):not(.skillitem_smh_lianhuan)::before {
 	background-image: url("./shousha/btn1.png");
 	/*filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);*/
 }
-
 /*鹿鹿修改 技能失效按钮变灰*/
 .skill-control>.enable>.skillitem.shixiao::before,
 .skill-control>.enable>.skillitem:not(.usable):not(.select)::before {
@@ -222,7 +198,6 @@
 	/*filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);*/
 }
-
 .skillMarks {
 	max-height: 80px;
 	overflow-y: auto;
@@ -232,7 +207,6 @@
 	justify-content: center;
 	align-items: center;
 }
-
 .skillMarks>.skillMarkItem {
 	--h: 19px;
 	width: 34px;
@@ -250,7 +224,6 @@
 	font-family: "HYZLSJ";
 	font-size: 16px;
 }
-
 .skillMarkItem.xiandingji {
 	background-image: url("./shousha/xianding.png");
 	background-size: 100% 100%;
@@ -270,7 +243,6 @@
 	/* 添加轻微模糊效果 */
 	filter: blur(0.2px);
 }
-
 /*转换技*/
 .skillMarkItem.zhuanhuanji {
 	background-size: 100% 100%;
@@ -286,7 +258,6 @@
 	/*按比例调节*/
 	height: var(--h);
 }
-
 .skillMarkItem.xiandingji.used {
 	position: relative;
 	--w: 35px;
@@ -307,7 +278,6 @@
 	/* 添加轻微模糊效果 */
 	filter: blur(0.2px);
 }
-
 .skillMarkItem.xiandingji.used::before {
 	content: "";
 	z-index: 102;
@@ -326,7 +296,6 @@
 	top: -3px;
 	pointer-events: none;
 }
-
 .skillMarkItem.juexingji {
 	/*background-image: linear-gradient(to bottom right, #437cbe 27%, #5183bc 50%, #012a3a 68%);
 	box-shadow: 0px -2px 3px #5a4a31  , 0px 2px 3px #5a4a31  ,2px 0px 3px #5a4a31  ,2px 0px 3px #5a4a31, 0.6px 0.6px 1.5px #a1fafa inset, 0.3px -0.5px 1px #a1fafa inset , 1px 1px 1.5px #a1fafa inset;*/
@@ -348,7 +317,6 @@
 	/* 添加轻微模糊效果 */
 	filter: blur(0.2px);
 }
-
 .skillMarkItem.duty {
 	/*background-image: linear-gradient(to bottom right, #437cbe 27%, #5183bc 50%, #012a3a 68%);
 	box-shadow: 0px -2px 3px #5a4a31  , 0px 2px 3px #5a4a31  ,2px 0px 3px #5a4a31  ,2px 0px 3px #5a4a31, 0.6px 0.6px 1.5px #a1fafa inset, 0.3px -0.5px 1px #a1fafa inset , 1px 1px 1.5px #a1fafa inset;*/
@@ -370,7 +338,6 @@
 	/* 添加轻微模糊效果 */
 	filter: blur(0.2px);
 }
-
 .skillMarkItem.duty.fail {
 	position: relative;
 	--w: 35px;
@@ -391,7 +358,6 @@
 	/* 添加轻微模糊效果 */
 	filter: blur(0.2px);
 }
-
 .skillMarkItem.duty.fail::before {
 	content: "";
 	z-index: 102;
@@ -410,11 +376,9 @@
 	top: -3px;
 	pointer-events: none;
 }
-
 .skillMarkItem+.skillMarkItem {
 	margin-top: 2px;
 }
-
 /*技能失效*/
 .skillitem .suo {
 	height: 30px;
@@ -425,7 +389,6 @@
 	left: 20px;
 	z-index: 6;
 }
-
 .skillitem .suo1 {
 	height: 35px;
 	width: 35px;
@@ -438,7 +401,6 @@
 	-webkit-filter: grayscale(100%);
 	/*按钮变灰*/
 }
-
 .skillitem .yang {
 	/*	height: 80px;*/
 	width: 90px;
@@ -448,7 +410,6 @@
 	/*left: 20px;*/
 	z-index: 6;
 }
-
 .skillitem .ying {
 	/*	height: 80px;*/
 	width: 90px;
@@ -458,7 +419,6 @@
 	/*left: 20px;*/
 	z-index: 6;
 }
-
 .trigger .yang {
 	height: 20px;
 	width: 60px;
@@ -468,7 +428,6 @@
 	left: -7px;
 	z-index: -1;
 }
-
 .trigger .ying {
 	height: 20px;
 	width: 60px;
@@ -478,7 +437,6 @@
 	left: -7px;
 	z-index: -1;
 }
-
 .trigger .suo1 {
 	height: 35px;
 	width: 35px;
@@ -492,7 +450,6 @@
 	-webkit-filter: grayscale(100%);
 	/*按钮变灰*/
 }
-
 .skill-control>.enable>.skillitem_smh_huoji>.numText {
 	font-size: 16px;
 	right: 3px;
@@ -509,7 +466,6 @@
 	white-space: nowrap;
 	position: absolute;
 }
-
 /* 技能剩余次数 */
 .skill-control>.enable>.skillitem>.numText {
 	font-size: 16px;
@@ -527,7 +483,6 @@
 	white-space: nowrap;
 	position: absolute;
 }
-
 .skill-control>.trigger>.skillitem>.numText {
 	font-size: 16px;
 	right: -9px;
@@ -544,7 +499,6 @@
 	white-space: nowrap;
 	position: absolute;
 }
-
 .skill-control>.enable>.skillitemxianding>.numText {
 	font-size: 16px;
 	right: 3px;
@@ -561,7 +515,6 @@
 	white-space: nowrap;
 	position: absolute;
 }
-
 .skill-control>.trigger>.skillitemxianding>.numText {
 	font-size: 16px;
 	right: -9px;
@@ -578,7 +531,6 @@
 	white-space: nowrap;
 	position: absolute;
 }
-
 .skill-control>.enable>.skillitem>.numText-child {
 	font-size: 16px;
 	right: 3px;
@@ -596,7 +548,6 @@
 	white-space: nowrap;
 	position: absolute;
 }
-
 .skill-control>.enable>.skillitem_smh_huoji>.numText-child {
 	font-size: 16px;
 	right: 3px;
@@ -614,7 +565,6 @@
 	white-space: nowrap;
 	position: absolute;
 }
-
 .skill-control>.trigger>.skillitem>.numText-child {
 	font-size: 16px;
 	right: 3px;
@@ -632,7 +582,6 @@
 	white-space: nowrap;
 	position: absolute;
 }
-
 .skill-control>.enable>.skillitemxianding>.numText-child {
 	font-size: 16px;
 	right: 3px;
@@ -650,7 +599,6 @@
 	white-space: nowrap;
 	position: absolute;
 }
-
 .skill-control>.trigger>.skillitemxianding>.numText-child {
 	font-size: 16px;
 	right: 3px;
@@ -668,7 +616,6 @@
 	white-space: nowrap;
 	position: absolute;
 }
-
 /*以下左手布局*/
 .skill-controlzuoshou {
 	/*技能按钮*/
@@ -681,7 +628,6 @@
 	/*border: 3px solid rgb(255, 255, 255);/*调试用*/
 	z-index: 5;
 }
-
 .skill-controlzuoshou div {
 	position: relative;
 	height: 40px;
@@ -690,7 +636,6 @@
 	justify-content: center;
 	align-items: center;
 }
-
 .skill-controlzuoshou .trigger,
 .skill-controlzuoshou .enable {
 	height: auto;
@@ -698,7 +643,6 @@
 	justify-content: left;
 	/*自动向右对齐*/
 }
-
 .skill-controlzuoshou {
 	float: right;
 	white-space: nowrap;
@@ -708,13 +652,11 @@
 	font-size: 24px;
 	/*字体渐变色，色调*/
 }
-
 .skill-controlzuoshou>div {
 	display: flex;
 	flex-wrap: wrap-reverse;
 	flex-direction: row-reverse;
 }
-
 /*伪类*/
 .skill-controlzuoshou>div::after {
 	content: "";
@@ -722,7 +664,6 @@
 	display: block;
 	clear: both;
 }
-
 .skill-controlzuoshou>.enable {
 	margin: 0 0 0 auto;
 	max-width: 120px;
@@ -731,7 +672,6 @@
 	font-weight: bold;
 	font-family: "HYZLSJ";
 }
-
 .skill-controlzuoshou>.trigger>* .skillitem-child {
 	position: absolute;
 	-webkit-text-stroke: 4.3px #102030;
@@ -739,7 +679,6 @@
 	opacity: 0.5;
 	z-index: -1;
 }
-
 .skill-controlzuoshou>.enable>* .skillitem-child {
 	position: absolute;
 	-webkit-text-stroke: 4.3px rgba(2, 3, 2);
@@ -747,7 +686,6 @@
 	opacity: 0.35;
 	z-index: -1;
 }
-
 .skill-controlzuoshou>.trigger>div {
 	margin: -6px 2px;
 	font-family: "HYZLSJ";
@@ -764,7 +702,6 @@
 	font-size: 22px;
 	width: auto;
 }
-
 .skill-controlzuoshou>.enable>* {
 	/*-webkit-text-stroke: 0.8px rgba(38,37,34,0.5);
 	text-shadow: none;*/
@@ -789,7 +726,6 @@
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
-
 /*---司马徽按钮分离--*/
 .skill-controlzuoshou>.enable>.skillitem_smh_lianhuan::before {
 	z-index: -1;
@@ -800,20 +736,16 @@
 	margin: 1px 12px;
 	width: 147%;
 	height: 170%;
-
 	font-family: "HanYiZhongLiShuFan", "HYZLSJ";
 	background-image: url("./shousha/feng.png");
 	background-size: 100% 100%;
 }
-
 .skill-controlzuoshou>.enable>*.select:not(.skillitem_smh_yeyan):not(.skillitem_smh_huoji)::before {
 	background-image: url("./shousha/feng_selected.png");
 }
-
 .skill-controlzuoshou>.enable>.skillitem_smh_lianhuan:not(.usable):not(.select)::before {
 	background-image: url("./shousha/feng_no.png");
 }
-
 /*司马徽火计*/
 .skill-controlzuoshou>.enable>.skillitem_smh_huoji::before {
 	z-index: -1;
@@ -824,20 +756,16 @@
 	margin: 1px 12px;
 	width: 147%;
 	height: 170%;
-
 	font-family: "HanYiZhongLiShuFan", "HYZLSJ";
 	background-image: url("./shousha/long.png");
 	background-size: 100% 100%;
 }
-
 .skill-controlzuoshou>.enable>*.select:not(.skillitem_smh_yeyan):not(.skillitem_smh_lianhuan)::before {
 	background-image: url("./shousha/long_selected.png");
 }
-
 .skill-controlzuoshou>.enable>.skillitem_smh_huoji:not(.usable):not(.select)::before {
 	background-image: url("./shousha/long_no.png");
 }
-
 /*司马徽业炎*/
 .skill-controlzuoshou>.enable>.skillitem_smh_yeyan::before {
 	z-index: -1;
@@ -855,17 +783,13 @@
 	background-image: url("./shousha/longfeng.png");
 	background-size: 100% 100%;
 }
-
 .skill-controlzuoshou>.enable>*.select:not(.skillitem_smh_huoji):not(.skillitem_smh_lianhuan)::before {
 	background-image: url("./shousha/longfeng_selected.png");
 }
-
 .skill-controlzuoshou>.enable>.skillitem_smh_yeyan:not(.usable):not(.select)::before {
 	background-image: url("./shousha/longfeng_no.png");
 }
-
 /*-----*/
-
 .skill-controlzuoshou>.enable>.skillitem::before {
 	z-index: -1;
 	content: "";
@@ -883,13 +807,11 @@
 	background-size: 100% 100%;
 	/*border: 1px solid rgb(3,4,5);/*调试用*/
 }
-
 .skill-controlzuoshou>.enable>*.select:not(.skillitem_smh_yeyan):not(.skillitem_smh_huoji):not(.skillitem_smh_lianhuan)::before {
 	background-image: url("./shousha/btn1.png");
 	/*filter: grayscale(100%);
 	-webkit-filter: grayscale(100%);*/
 }
-
 .skill-controlzuoshou>.enable>.skillitem:not(.usable):not(.select)::before {
 	background-image: url("./shousha/btn2.png");
 	/*filter: grayscale(100%);

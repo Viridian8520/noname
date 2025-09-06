@@ -7,9 +7,7 @@ var duilib;
 		var previous;
 		return function () {
 			if (timer) clearTimeout(timer);
-
 			if (previous == null) previous = performance.now();
-
 			args = arguments;
 			var timestamp = performance.now() - previous;
 			if (timestamp >= timeout) {
@@ -25,17 +23,14 @@ var duilib;
 			}
 		};
 	};
-
 	duilib.observeSize = (function () {
 		if (!self.ResizeObserver) return null;
-
 		var observer = new ResizeObserver(function (entries) {
 			var rect;
 			var callback;
 			for (var i = 0; i < entries.length; i++) {
 				callback = observer.callbacks[entries[i].target.observeId];
 				if (callback == null) continue;
-
 				rect = entries[i].contentRect;
 				callback({
 					width: rect.width,
@@ -43,7 +38,6 @@ var duilib;
 				});
 			}
 		});
-
 		observer.observeId = 0;
 		observer.callbacks = {};
 		return function (target, callback) {
@@ -53,11 +47,9 @@ var duilib;
 			obs.callbacks[target.observeId] = callback;
 		};
 	})();
-
 	duilib.lerp = function (min, max, fraction) {
 		return (max - min) * fraction + min;
 	};
-
 	(duilib.ease = function (fraction) {
 		if (!duilib.b3ease) duilib.b3ease = new duilib.CubicBezierEase(0.25, 0.1, 0.25, 1);
 		return duilib.b3ease.ease(fraction);
@@ -67,20 +59,16 @@ var duilib;
 				this.cX = 3 * p1x;
 				this.bX = 3 * (p2x - p1x) - this.cX;
 				this.aX = 1 - this.cX - this.bX;
-
 				this.cY = 3 * p1y;
 				this.bY = 3 * (p2y - p1y) - this.cY;
 				this.aY = 1 - this.cY - this.bY;
 			}
-
 			CubicBezierEase.prototype.getX = function (t) {
 				return t * (this.cX + t * (this.bX + t * this.aX));
 			};
-
 			CubicBezierEase.prototype.getXDerivative = function (t) {
 				return this.cX + t * (2 * this.bX + 3 * this.aX * t);
 			};
-
 			CubicBezierEase.prototype.ease = function (x) {
 				var prev,
 					t = x;
@@ -88,13 +76,10 @@ var duilib;
 					prev = t;
 					t = t - (this.getX(t) - x) / this.getXDerivative(t);
 				} while (Math.abs(t - prev) > 1e-4);
-
 				return t * (this.cY + t * (this.bY + t * this.aY));
 			};
-
 			return CubicBezierEase;
 		})());
-
 	duilib.TimeStep = (function () {
 		function TimeStep(initParam) {
 			this.start = initParam.start;
@@ -105,11 +90,9 @@ var duilib;
 			this.duration = initParam.duration;
 			this.completed = false;
 		}
-
 		TimeStep.prototype.update = function (delta) {
 			this.time += delta;
 			this.percent = duilib.ease(Math.min(this.time / this.duration, 1));
-
 			var start, end;
 			var isArray = false;
 			if (Array.isArray(this.start)) {
@@ -118,26 +101,21 @@ var duilib;
 			} else {
 				start = [this.start, 0];
 			}
-
 			if (Array.isArray(this.end)) {
 				isArray = true;
 				end = this.end;
 			} else {
 				end = [this.end, 0];
 			}
-
 			if (isArray) {
 				this.current = [duilib.lerp(start[0], end[0], this.percent), duilib.lerp(start[1], end[1], this.percent)];
 			} else {
 				this.current = duilib.lerp(start[0], end[0], this.percent);
 			}
-
 			if (this.time >= this.duration) this.completed = true;
 		};
-
 		return TimeStep;
 	})();
-
 	duilib.APNode = (function () {
 		function APNode(initParam) {
 			if (initParam == undefined) initParam = {};
@@ -176,48 +154,38 @@ var duilib;
 			this.flipX = initParam.flipX;
 			this.flipY = initParam.flipY;
 		}
-
 		APNode.prototype.fadeTo = function (opacity, duration) {
 			if (opacity != undefined) {
 				this.updateTimeStep("opacity", this.opacity == undefined ? 1 : this.opacity, opacity, duration);
 				this.opacity = opacity;
 			}
-
 			return this;
 		};
-
 		APNode.prototype.moveTo = function (x, y, duration) {
 			if (x != undefined) {
 				this.updateTimeStep("x", this.x == undefined ? [0, 0.5] : this.x, x, duration);
 				this.x = x;
 			}
-
 			if (y != undefined) {
 				this.updateTimeStep("y", this.y == undefined ? [0, 0.5] : this.y, y, duration);
 				this.y = y;
 			}
-
 			return this;
 		};
-
 		APNode.prototype.scaleTo = function (scale, duration) {
 			if (scale != undefined) {
 				this.updateTimeStep("scale", this.scale == undefined ? 1 : this.scale, scale, duration);
 				this.scale = scale;
 			}
-
 			return this;
 		};
-
 		APNode.prototype.rotateTo = function (angle, duration) {
 			if (angle != undefined) {
 				this.updateTimeStep("angle", this.angle == undefined ? 0 : this.angle, angle, duration);
 				this.angle = angle;
 			}
-
 			return this;
 		};
-
 		APNode.prototype.update = function (e) {
 			function calc(value, refer, dpr) {
 				if (Array.isArray(value)) {
@@ -258,15 +226,12 @@ var duilib;
 						height: rect.height,
 					};
 				}
-
 				referSize.height = this.referBounds.height * dpr;
 				referSize.width = this.referBounds.width * dpr;
 			}
-
 			var timestep, percent;
 			var renderX, renderY, renderScale, renderScaleX, renderScaleY;
 			var skeletonSize = this.skeleton.bounds.size;
-
 			timestep = this.timestepMap.x;
 			if (timestep != undefined && !timestep.completed) {
 				timestep.update(e.delta);
@@ -274,7 +239,6 @@ var duilib;
 			} else if (this.x != undefined) {
 				renderX = calc(this.x, referSize.width, dpr);
 			}
-
 			timestep = this.timestepMap.y;
 			if (timestep != undefined && !timestep.completed) {
 				timestep.update(e.delta);
@@ -282,24 +246,20 @@ var duilib;
 			} else if (this.y != undefined) {
 				renderY = calc(this.y, referSize.height, dpr);
 			}
-
 			if (this.width != undefined) renderScaleX = calc(this.width, referSize.width, dpr) / skeletonSize.x;
 			if (this.height != undefined) renderScaleY = calc(this.height, referSize.height, dpr) / skeletonSize.y;
-
 			if (domNode) {
 				if (renderX == undefined) {
 					renderX = (this.referBounds.x + this.referBounds.width / 2) * dpr;
 				} else {
 					renderX += this.referBounds.x * dpr;
 				}
-
 				if (renderY == undefined) {
 					renderY = (this.referBounds.y + this.referBounds.height / 2) * dpr;
 				} else {
 					renderY += this.referBounds.y * dpr;
 				}
 			}
-
 			this.mvp.ortho2d(0, 0, e.canvas.width, e.canvas.height);
 			if (renderX != void 0 && renderY == void 0) {
 				this.mvp.translate(renderX, 0, 0);
@@ -312,7 +272,6 @@ var duilib;
 			} else {
 				this.mvp.setPos2D(0, 0);
 			}
-
 			timestep = this.timestepMap.scale;
 			if (timestep != undefined && !timestep.completed) {
 				timestep.update(e.delta);
@@ -320,7 +279,6 @@ var duilib;
 			} else {
 				renderScale = this.scale == undefined ? 1 : this.scale;
 			}
-
 			if (renderScaleX && !renderScaleY) {
 				renderScale *= renderScaleX;
 			} else if (!renderScaleX && renderScaleY) {
@@ -330,11 +288,9 @@ var duilib;
 			} else {
 				renderScale *= dpr * (useNewDpr ? parseFloat(window.getComputedStyle(document.body).zoom) : 1);
 			}
-
 			if (renderScale != 1) {
 				this.mvp.scale(renderScale, renderScale, 0);
 			}
-
 			timestep = this.timestepMap.angle;
 			if (timestep != undefined && !timestep.completed) {
 				timestep.update(e.delta);
@@ -342,11 +298,9 @@ var duilib;
 			} else {
 				this.renderAngle = this.angle;
 			}
-
 			if (this.renderAngle) {
 				this.mvp.rotate(this.renderAngle, 0, 0, 1);
 			}
-
 			timestep = this.timestepMap.opacity;
 			if (timestep != undefined && !timestep.completed) {
 				timestep.update(e.delta);
@@ -354,7 +308,6 @@ var duilib;
 			} else {
 				this.renderOpacity = this.opacity;
 			}
-
 			this.renderX = renderX;
 			this.renderY = renderY;
 			this.renderScale = renderScale;
@@ -366,10 +319,8 @@ var duilib;
 					height: calc(this.clip.height, e.canvas.height, dpr),
 				};
 			}
-
 			if (this.onupdate) this.onupdate();
 		};
-
 		APNode.prototype.setAction = function (action, transtion) {
 			if (this.skeleton && this.skeleton.node == this) {
 				if (this.skeleton.data.findAnimation(action) == null) return console.error("setAction: 未找到对应骨骼动作");
@@ -380,7 +331,6 @@ var duilib;
 				console.error("setAction: 节点失去关联");
 			}
 		};
-
 		APNode.prototype.resetAction = function (transtion) {
 			if (this.skeleton && this.skeleton.node == this) {
 				transtion = transtion == undefined ? 0.5 : transtion / 1000;
@@ -390,10 +340,8 @@ var duilib;
 				console.error("resetAction: 节点失去关联");
 			}
 		};
-
 		APNode.prototype.complete = function () {
 			if (!this.oncomplete) return;
-
 			if (typeof this.oncomplete == "string") {
 				var code = this.oncomplete;
 				var a = code.indexOf("{");
@@ -402,16 +350,12 @@ var duilib;
 					this.oncomplete = undefined;
 					return console.error(this.name + " 的oncomplete函数语法错误");
 				}
-
 				this.oncomplete = new Function(code.substring(a + 1, b));
 			}
-
 			if (typeof this.oncomplete == "function") this.oncomplete();
 		};
-
 		APNode.prototype.updateTimeStep = function (key, start, end, duration) {
 			if (duration == undefined || duration == 0) return;
-
 			var timestep = this.timestepMap[key];
 			if (timestep) {
 				timestep.start = timestep.completed ? start : timestep.current;
@@ -427,17 +371,13 @@ var duilib;
 					duration: duration,
 				});
 			}
-
 			return timestep;
 		};
-
 		return APNode;
 	})();
-
 	duilib.AnimationPlayer = (function () {
 		function AnimationPlayer(pathPrefix, parentNode, elementId) {
 			if (!window.spine) return console.error("spine 未定义.");
-
 			var canvas;
 			if (parentNode === "offscreen") {
 				canvas = elementId;
@@ -448,7 +388,6 @@ var duilib;
 				if (elementId != undefined) canvas.id = elementId;
 				if (parentNode != undefined) parentNode.appendChild(canvas);
 			}
-
 			var config = {
 				alpha: true,
 			};
@@ -458,7 +397,6 @@ var duilib;
 			} else {
 				gl.isWebgl2 = true;
 			}
-
 			if (gl) {
 				this.spine = {
 					shader: spine.webgl.Shader.newTwoColoredTextured(gl),
@@ -474,7 +412,6 @@ var duilib;
 				};
 				console.error("当前设备不支持 WebGL.");
 			}
-
 			this.gl = gl;
 			this.canvas = canvas;
 			this.$canvas = canvas;
@@ -485,7 +422,6 @@ var duilib;
 			this.nodes = [];
 			this.BUILT_ID = 0;
 			this._dprAdaptive = false;
-
 			Object.defineProperties(this, {
 				dprAdaptive: {
 					get() {
@@ -508,12 +444,10 @@ var duilib;
 					},
 				},
 			});
-
 			if (!this.offscreen) {
 				this.canvas.width = canvas.clientWidth;
 				this.canvas.height = canvas.clientHeight;
 			}
-
 			this.check = function () {
 				if (!this.gl) {
 					function empty() {}
@@ -523,7 +457,6 @@ var duilib;
 							this.__proto__[key] = empty;
 						}
 					}
-
 					for (key in this) {
 						if (typeof this[key] == "function" && key != "check") {
 							this[key] = empty;
@@ -531,10 +464,8 @@ var duilib;
 					}
 				}
 			};
-
 			this.check();
 		}
-
 		AnimationPlayer.prototype.createTextureRegion = function (image, name) {
 			var page = new spine.TextureAtlasPage();
 			page.name = name;
@@ -544,7 +475,6 @@ var duilib;
 			page.texture.setWraps(page.uWrap, page.vWrap);
 			page.width = page.texture.getImage().width;
 			page.height = page.texture.getImage().height;
-
 			var region = new spine.TextureAtlasRegion();
 			region.page = page;
 			region.rotate = false;
@@ -561,20 +491,16 @@ var duilib;
 				region.u2 = (region.x + region.width) / page.width;
 				region.v2 = (region.y + region.height) / page.height;
 			}
-
 			region.originalWidth = page.width;
 			region.originalHeight = page.height;
 			region.index = -1;
 			region.texture = page.texture;
 			region.renderObject = region;
-
 			return region;
 		};
-
 		AnimationPlayer.prototype.hasSpine = function (filename) {
 			return this.spine.assets[filename] != undefined;
 		};
-
 		AnimationPlayer.prototype.loadSpine = function (filename, skelType, onload, onerror) {
 			skelType = skelType == undefined ? "skel" : skelType.toLowerCase();
 			var thisAnim = this;
@@ -624,12 +550,10 @@ var duilib;
 						if (a > b) prefix = _this.name.substring(0, a + 1);
 						else prefix = _this.name.substring(0, b + 1);
 					}
-
 					while (true) {
 						var line = atlasReader.readLine();
 						if (line == null) break;
 						line = line.trim();
-
 						if (line.length == 0) {
 							imageName = null;
 						} else if (!imageName) {
@@ -640,20 +564,16 @@ var duilib;
 							continue;
 						}
 					}
-
 					_this.onload(path, data);
 				},
 			};
-
 			if (skelType == "json") {
 				thisAnim.spine.assetManager.loadText(filename + ".json", reader.onload, reader.onerror);
 			} else {
 				thisAnim.spine.assetManager.loadBinary(filename + ".skel", reader.onload, reader.onerror);
 			}
-
 			thisAnim.spine.assetManager.loadText(filename + ".atlas", reader.ontextLoad, reader.onerror);
 		};
-
 		AnimationPlayer.prototype.prepSpine = function (filename, autoLoad) {
 			var _this = this;
 			var spineAssets = _this.spine.assets;
@@ -666,14 +586,12 @@ var duilib;
 				}
 				return console.error("prepSpine: [" + filename + "] 骨骼没有加载");
 			}
-
 			var skeleton;
 			var skeletons = _this.spine.skeletons;
 			for (var i = 0; i < skeletons.length; i++) {
 				skeleton = skeletons[i];
 				if (skeleton.name == filename && skeleton.completed) return skeleton;
 			}
-
 			var asset = spineAssets[filename];
 			var manager = _this.spine.assetManager;
 			var skelRawData = asset.skelRawData;
@@ -688,21 +606,17 @@ var duilib;
 				var atlas = new spine.TextureAtlas(manager.get(filename + ".atlas"), function (path) {
 					return manager.get(prefix + path);
 				});
-
 				var atlasLoader = new spine.AtlasAttachmentLoader(atlas);
 				if (asset.skelType.toLowerCase() == "json") {
 					skelRawData = new spine.SkeletonJson(atlasLoader);
 				} else {
 					skelRawData = new spine.SkeletonBinary(atlasLoader);
 				}
-
 				spineAssets[filename].skelRawData = skelRawData;
 				spineAssets[filename].ready = true;
 			}
-
 			var data = skelRawData.readSkeletonData(manager.get(filename + "." + asset.skelType));
 			skeleton = new spine.Skeleton(data);
-
 			skeleton.name = filename;
 			skeleton.completed = true;
 			skeleton.setSkinByName("default");
@@ -736,7 +650,6 @@ var duilib;
 			skeletons.push(skeleton);
 			return skeleton;
 		};
-
 		AnimationPlayer.prototype.playSpine = function (sprite, position) {
 			if (sprite == undefined) return console.error("playSpine: parameter undefined");
 			if (typeof sprite == "string")
@@ -744,10 +657,8 @@ var duilib;
 					name: sprite,
 				};
 			if (!this.hasSpine(sprite.name)) return console.error("playSpine: [" + sprite.name + "] 骨骼没有加载");
-
 			var skeletons = this.spine.skeletons;
 			var skeleton;
-
 			if (!(sprite instanceof duilib.APNode && sprite.skeleton.completed)) {
 				for (var i = 0; i < skeletons.length; i++) {
 					skeleton = skeletons[i];
@@ -755,21 +666,17 @@ var duilib;
 					skeleton = null;
 				}
 				if (!skeleton) skeleton = this.prepSpine(sprite.name);
-
 				if (!(sprite instanceof duilib.APNode)) {
 					var param = sprite;
 					sprite = new duilib.APNode(sprite);
 					sprite.id = param.id == undefined ? this.BUILT_ID++ : param.id;
 					this.nodes.push(sprite);
 				}
-
 				sprite.skeleton = skeleton;
 				skeleton.node = sprite;
 			}
-
 			sprite.completed = false;
 			skeleton.completed = false;
-
 			if (position != undefined) {
 				sprite.x = position.x;
 				sprite.y = position.y;
@@ -780,7 +687,6 @@ var duilib;
 				sprite.referNode = position.parent;
 				sprite.referFollow = position.follow;
 			}
-
 			var entry = skeleton.state.setAnimation(0, sprite.action ? sprite.action : skeleton.defaultAction, sprite.loop);
 			entry.mixDuration = 0;
 			if (this.requestId == undefined) {
@@ -788,11 +694,9 @@ var duilib;
 				if (!this.offscreen) this.canvas.style.visibility = "visible";
 				this.requestId = requestAnimationFrame(this.render.bind(this));
 			}
-
 			sprite.referBounds = undefined;
 			return sprite;
 		};
-
 		AnimationPlayer.prototype.loopSpine = function (sprite, position) {
 			if (typeof sprite == "string") {
 				sprite = {
@@ -802,14 +706,11 @@ var duilib;
 			} else {
 				sprite.loop = true;
 			}
-
 			return this.playSpine(sprite, position);
 		};
-
 		AnimationPlayer.prototype.stopSpine = function (sprite) {
 			var nodes = this.nodes;
 			var id = sprite.id == undefined ? sprite : sprite.id;
-
 			for (var i = 0; i < nodes.length; i++) {
 				sprite = nodes[i];
 				if (sprite.id == id) {
@@ -820,10 +721,8 @@ var duilib;
 					return sprite;
 				}
 			}
-
 			return null;
 		};
-
 		AnimationPlayer.prototype.stopSpineAll = function () {
 			var sprite;
 			var nodes = this.nodes;
@@ -835,10 +734,8 @@ var duilib;
 				}
 			}
 		};
-
 		AnimationPlayer.prototype.getSpineActions = function (filename) {
 			if (!this.hasSpine(filename)) return console.error("getSpineActions: [" + filename + "] 骨骼没有加载");
-
 			var skeleton;
 			var skeletons = this.spine.skeletons;
 			for (var i = 0; i < skeletons.length; i++) {
@@ -846,7 +743,6 @@ var duilib;
 				if (skeleton.name == filename) break;
 				skeleton = undefined;
 			}
-
 			if (skeleton == undefined) skeleton = this.prepSpine(filename);
 			var actions = skeleton.data.animations;
 			var result = new Array(actions.length);
@@ -857,20 +753,16 @@ var duilib;
 				};
 			return result;
 		};
-
 		AnimationPlayer.prototype.getSpineBounds = function (filename) {
 			if (!this.hasSpine(filename)) return console.error("getSpineBounds: [" + filename + "] 骨骼没有加载");
-
 			if (!this.resized) {
 				var dpr = 1;
 				if (this.dprAdaptive == true) dpr = Math.max(window.devicePixelRatio * (window.documentZoom ? window.documentZoom : 1), 1);
-
 				canvas.elementHeight = canvas.clientHeight;
 				canvas.elementWidth = canvas.clientWidth;
 				canvas.height = canvas.elementHeight * dpr;
 				canvas.width = canvas.elementWidth * dpr;
 			}
-
 			var skeleton;
 			var skeletons = this.spine.skeletons;
 			for (var i = 0; i < skeletons.length; i++) {
@@ -878,11 +770,9 @@ var duilib;
 				if (skeleton.name == filename) break;
 				skeleton = undefined;
 			}
-
 			if (skeleton == undefined) skeleton = this.prepSpine(filename);
 			return skeleton.bounds;
 		};
-
 		AnimationPlayer.prototype.render = function (timestamp) {
 			var canvas = this.canvas;
 			var offscreen = this.offscreen;
@@ -893,7 +783,6 @@ var duilib;
 			}
 			var delta = timestamp - (this.frameTime == undefined ? timestamp : this.frameTime);
 			this.frameTime = timestamp;
-
 			var erase = true;
 			var resize = !this.resized || canvas.width == 0 || canvas.height == 0;
 			if (resize) {
@@ -913,14 +802,12 @@ var duilib;
 					}
 				}
 			}
-
 			var ea = {
 				dpr: dpr,
 				delta: delta,
 				canvas: canvas,
 				frameTime: timestamp,
 			};
-
 			var nodes = this.nodes;
 			for (var i = 0; i < nodes.length; i++) {
 				if (!nodes[i].completed) {
@@ -930,14 +817,12 @@ var duilib;
 					i--;
 				}
 			}
-
 			var gl = this.gl;
 			gl.viewport(0, 0, canvas.width, canvas.height);
 			if (erase) {
 				gl.clearColor(0, 0, 0, 0);
 				gl.clear(gl.COLOR_BUFFER_BIT);
 			}
-
 			if (nodes.length == 0) {
 				this.frameTime = void 0;
 				this.requestId = void 0;
@@ -945,21 +830,17 @@ var duilib;
 				if (!offscreen) this.canvas.style.visibility = "hidden";
 				return;
 			}
-
 			var sprite, state, skeleton;
 			var shader = this.spine.shader;
 			var batcher = this.spine.batcher;
 			var renderer = this.spine.skeletonRenderer;
-
 			gl.enable(gl.SCISSOR_TEST);
 			gl.scissor(0, 0, canvas.width, canvas.height);
-
 			if (this.bindShader == undefined) {
 				this.bindShader = shader;
 				shader.bind();
 				shader.setUniformi(spine.webgl.Shader.SAMPLER, 0);
 			}
-
 			var speed;
 			for (var i = 0; i < nodes.length; i++) {
 				sprite = nodes[i];
@@ -967,7 +848,6 @@ var duilib;
 					gl.clipping = sprite.renderClip;
 					gl.scissor(gl.clipping.x, gl.clipping.y, gl.clipping.width, gl.clipping.height);
 				}
-
 				skeleton = sprite.skeleton;
 				state = skeleton.state;
 				speed = sprite.speed == undefined ? 1 : sprite.speed;
@@ -978,7 +858,6 @@ var duilib;
 				state.update((delta / 1000) * speed);
 				state.apply(skeleton);
 				skeleton.updateWorldTransform();
-
 				shader.setUniform4x4f(spine.webgl.Shader.MVP_MATRIX, sprite.mvp.values);
 				batcher.begin(shader);
 				renderer.premultipliedAlpha = sprite.premultipliedAlpha;
@@ -990,35 +869,27 @@ var duilib;
 					renderer.outcropAngle = sprite.renderAngle;
 					renderer.clipSlots = sprite.clipSlots;
 				}
-
 				renderer.hideSlots = sprite.hideSlots;
 				renderer.disableMask = sprite.disableMask;
 				renderer.draw(batcher, skeleton);
 				batcher.end();
-
 				if (gl.clipping) {
 					gl.clipping = undefined;
 					gl.scissor(0, 0, canvas.width, canvas.height);
 				}
 			}
-
 			gl.disable(gl.SCISSOR_TEST);
-
 			this.requestId = requestAnimationFrame(this.render.bind(this));
 		};
-
 		return AnimationPlayer;
 	})();
-
 	duilib.AnimationPlayerPool = (function () {
 		function AnimationPlayerPool(size, pathPrefix, thisName) {
 			if (!self.spine) return console.error("spine 未定义.");
-
 			this.name = thisName;
 			this.animations = new Array(size ? size : 1);
 			for (var i = 0; i < this.animations.length; i++) this.animations[i] = new duilib.AnimationPlayer(pathPrefix);
 		}
-
 		AnimationPlayerPool.prototype.loadSpine = function (filename, skelType, onload, onerror) {
 			var thisAnim = this;
 			thisAnim.animations[0].loadSpine(
@@ -1027,7 +898,6 @@ var duilib;
 				function () {
 					var ap;
 					var aps = thisAnim.animations;
-
 					for (var i = 1; i < aps.length; i++) {
 						ap = aps[i];
 						if (window.requestIdleCallback) {
@@ -1045,13 +915,11 @@ var duilib;
 							);
 						}
 					}
-
 					if (onload) onload();
 				},
 				onerror
 			);
 		};
-
 		AnimationPlayerPool.prototype.playSpineTo = function (element, animation, position) {
 			var animations = this.animations;
 			if (position && position.parent) {
@@ -1062,7 +930,6 @@ var duilib;
 				element._ap.playSpine(animation, position);
 				return;
 			}
-
 			for (var i = 0; i < animations.length; i++) {
 				if (!animations[i].running) {
 					if (animations[i].canvas.parentNode != element) {
@@ -1073,13 +940,10 @@ var duilib;
 					return;
 				}
 			}
-
 			console.error("spine:" + (this.name != null ? this.name : "" + "可用动画播放组件不足"));
 		};
-
 		return AnimationPlayerPool;
 	})();
-
 	duilib.BUILT_ID = 0;
 	duilib.DynamicWorkers = new Array(2);
 	duilib.DynamicPlayer = (function () {
@@ -1090,7 +954,6 @@ var duilib;
 			this.height = 180;
 			this.dprAdaptive = false;
 			this.BUILT_ID = 0;
-
 			var offscreen = self.OffscreenCanvas != undefined;
 			if (offscreen) {
 				offscreen = false;
@@ -1102,7 +965,6 @@ var duilib;
 					} else if (workers[i].capacity >= 4) {
 						continue;
 					}
-
 					this.renderer = workers[i];
 					this.canvas = document.createElement("canvas");
 					this.canvas.className = "animation-player";
@@ -1118,7 +980,6 @@ var duilib;
 							this
 						)
 					);
-
 					var canvas = this.canvas.transferControlToOffscreen();
 					workers[i].postMessage(
 						{
@@ -1129,13 +990,11 @@ var duilib;
 						},
 						[canvas]
 					);
-
 					workers[i].capacity++;
 					this.offscreen = offscreen = true;
 					break;
 				}
 			}
-
 			if (!offscreen) {
 				var renderer = new duilib.AnimationPlayer(decadeUIPath + pathPrefix);
 				this.canvas = renderer.canvas;
@@ -1152,7 +1011,6 @@ var duilib;
 				);
 			}
 		}
-
 		DynamicPlayer.prototype.play = function (sprite) {
 			var sprite =
 				typeof sprite == "string"
@@ -1162,7 +1020,6 @@ var duilib;
 					: sprite;
 			sprite.id = this.BUILT_ID++;
 			sprite.loop = true;
-
 			if (this.offscreen) {
 				if (!this.initialized) {
 					this.initialized = true;
@@ -1170,9 +1027,7 @@ var duilib;
 					this.height = this.canvas.clientHeight;
 					this.width = this.canvas.clientWidth;
 				}
-
 				if (typeof sprite.oncomplete == "function") sprite.oncomplete = sprite.oncomplete.toString();
-
 				this.renderer.postMessage({
 					message: "PLAY",
 					id: this.id,
@@ -1194,17 +1049,14 @@ var duilib;
 					t.opacity = 0;
 					t.fadeTo(1, 600);
 				};
-
 				if (dynamic.hasSpine(sprite.name)) {
 					run();
 				} else {
 					dynamic.loadSpine(sprite.name, "skel", run);
 				}
 			}
-
 			return sprite;
 		};
-
 		DynamicPlayer.prototype.stop = function (sprite) {
 			if (this.offscreen) {
 				this.renderer.postMessage({
@@ -1214,10 +1066,8 @@ var duilib;
 				});
 				return;
 			}
-
 			this.renderer.stopSpine(sprite);
 		};
-
 		DynamicPlayer.prototype.stopAll = function () {
 			if (this.offscreen) {
 				this.renderer.postMessage({
@@ -1226,10 +1076,8 @@ var duilib;
 				});
 				return;
 			}
-
 			this.renderer.stopSpineAll();
 		};
-
 		DynamicPlayer.prototype.update = function (force) {
 			if (!this.offscreen) {
 				this.renderer.resized = false;
@@ -1238,10 +1086,8 @@ var duilib;
 				this.renderer.outcropMask = this.outcropMask;
 				return;
 			}
-
 			this.dpr = Math.max(window.devicePixelRatio * (window.documentZoom ? window.documentZoom : 1), 1);
 			if (force === false) return;
-
 			this.renderer.postMessage({
 				message: "UPDATE",
 				id: this.id,
@@ -1253,7 +1099,6 @@ var duilib;
 				height: this.height,
 			});
 		};
-
 		return DynamicPlayer;
 	})();
 	function caesarCipher(str, shift) {
@@ -1270,7 +1115,6 @@ var duilib;
 			})
 			.join("");
 	}
-
 	function getInfo() {
 		if (typeof window?.process?.versions == "object") {
 			if (window.process.versions.chrome) {
@@ -1283,7 +1127,6 @@ var duilib;
 				];
 			}
 		}
-
 		if (typeof navigator.userAgentData != "undefined") {
 			var userAgentData = navigator.userAgentData;
 			if (userAgentData.brands && userAgentData.brands.length) {
@@ -1291,21 +1134,17 @@ var duilib;
 					var str = brand.toLowerCase();
 					return str.includes("chrome") || str.includes("chromium");
 				});
-
 				return brand ? ["chrome", parseInt(brand.version), 0, 0] : ["other", NaN, NaN, NaN];
 			}
 		}
-
 		var regex = /(firefox|chrome|safari)\/(\d+(?:\.\d+)+)/;
 		var result,
 			userAgent = navigator.userAgent;
 		if (!(result = userAgent.match(regex))) return ["other", NaN, NaN, NaN];
-
 		if (result[1] !== "safari") {
 			var [major, minor, patch] = result[2].split(".");
 			return [result[1], parseInt(major), parseInt(minor), parseInt(patch)];
 		}
-
 		if (/macintosh/.test(userAgent)) {
 			result = userAgent.match(/version\/(\d+(?:\.\d+)+).*safari/);
 			if (!result) return ["other", NaN, NaN, NaN];
@@ -1317,11 +1156,9 @@ var duilib;
 		var [major, minor, patch] = result[1].split(".");
 		return ["safari", parseInt(major), parseInt(minor), parseInt(patch)];
 	}
-
 	var info = getInfo();
 	var useNewDpr = (info[0] == (caesarCipher("Fkurplxp", -3).slice(0, Math.floor(114514 / Math.pow(10, 2)) % 10) + "e").toLowerCase() && info[1] >= 114514 - 114386) || (info[0] == ((caesarCipher("Iluh", -3) + "." + caesarCipher("zlq", -3)).slice(0, Math.floor(114514 / Math.pow(10, 0)) % 10) + "fox").toLowerCase() && info[1] >= 20 + 6 + 49 + 51);
 })(duilib || (duilib = {}));
-
 var decadeModule;
 if (decadeModule)
 	decadeModule.import(function (lib, game, ui, get, ai, _status) {
@@ -1331,7 +1168,6 @@ if (decadeModule)
 				animation.resized = false;
 			}, true);
 			animation.cap = new decadeUI.AnimationPlayerPool(4, decadeUIPath + "assets/animation/", "decadeUI.animation");
-
 			var fileList = [
 				{
 					name: "aar_chupaizhishiX",
@@ -1575,9 +1411,7 @@ if (decadeModule)
 					follow: true,
 				},
 			];
-
 			var fileNameList = fileList.concat();
-
 			var read = function () {
 				if (fileNameList.length) {
 					var file = fileNameList.shift();
@@ -1598,7 +1432,6 @@ if (decadeModule)
 			};
 			read();
 			read();
-
 			var skillAnimation = (function () {
 				var defines = {
 					skill: {
@@ -1823,7 +1656,6 @@ if (decadeModule)
 						},
 					},
 				};
-
 				var cardAnimate = function (card) {
 					var anim = defines.card[card.name];
 					if (!anim) return console.error("cardAnimate:" + card.name);
@@ -1833,11 +1665,9 @@ if (decadeModule)
 						scale: anim.scale,
 					});
 				};
-
 				for (var key in defines.card) {
 					lib.animate.card[defines.card[key].card] = cardAnimate;
 				}
-
 				var skillAnimate = function (name) {
 					var anim = defines.skill[name];
 					if (!anim) return console.error("skillAnimate:" + name);
@@ -1848,11 +1678,9 @@ if (decadeModule)
 						parent: this,
 					});
 				};
-
 				for (var key in defines.skill) {
 					lib.animate.skill[defines.skill[key].skill] = skillAnimate;
 				}
-
 				var trigger = {
 					card: {
 						nvzhuang: {
@@ -1933,7 +1761,6 @@ if (decadeModule)
 						},
 					},
 				};
-
 				for (var j in trigger.card) {
 					if (lib.card[j]) {
 						for (var k in trigger.card[j]) {
@@ -1942,16 +1769,13 @@ if (decadeModule)
 					}
 				}
 			})();
-
 			return animation;
 		})();
-
 		decadeUI.backgroundAnimation = (function () {
 			var animation = new decadeUI.AnimationPlayer(decadeUIPath + "assets/dynamic/", document.body, "decadeUI-canvas-background");
 			decadeUI.bodySensor.addListener(function () {
 				animation.resized = false;
 			}, true);
-
 			animation.dprAdaptive = true;
 			animation.definedAssets = {
 				skin_xiaosha: {
@@ -2404,14 +2228,11 @@ if (decadeModule)
 					},
 				},
 			};
-
 			animation.stop = animation.stopSpineAll;
 			animation.play = function (name, skin) {
 				var definedAssets = this.definedAssets;
 				if (definedAssets[name] == void 0 || definedAssets[name][skin] == void 0) return console.log("没有预定义[asset:" + name + ", skin:" + skin + "]的动态背景.");
-
 				if (this.current && this.current.name == name) return;
-
 				this.stopSpineAll();
 				var playAsset = definedAssets[name][skin];
 				if (!this.hasSpine(playAsset.name)) {
@@ -2424,7 +2245,6 @@ if (decadeModule)
 					this.current = this.loopSpine(playAsset);
 				}
 			};
-
 			animation.check();
 			var background = duicfg.dynamicBackground;
 			if (background != void 0 && background != "off") {
@@ -2432,10 +2252,8 @@ if (decadeModule)
 				var skin = name.splice(name.length - 1, 1)[0];
 				animation.play(name.join("_"), skin);
 			}
-
 			return animation;
 		})();
-
 		// 下面是我自用的，可能会删掉
 		window.dcdAnim = decadeUI.animation;
 		window.dcdBackAnim = decadeUI.backgroundAnimation;

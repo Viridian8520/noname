@@ -12,26 +12,24 @@ import MX_feihongyinxue from './MX_feihongyinxue.js';
 import huodongcharacter from './huodongcharacter.js';
 
 export async function precontent(bilibilicharacter) {
+    //存储活动武将扩展的文件和文件夹分布
     _status['extension_活动武将_files'] = await (async () => {
         const getFileList = async function (path = 'extension/活动武将') {
             const [folders, files] = await game.promises.getFileList(path);
             const map = { files };
             if (Array.isArray(folders) && folders.length > 0) {
-                for (const folder of folders) {
-                    const subPath = path + '/' + folder;
-                    map[folder] = await getFileList(subPath);
-                }
+                for (const folder of folders) map[folder] = await getFileList(`${path}/${folder}`);
             }
             return map;
         };
         return await getFileList();
     })();
-
     //判断是否有XX扩展
-    game.TrueHasExtension = game.TrueHasExtension || function (ext) {
-        return lib.config.extensions && lib.config.extensions.includes(ext);
+    game.TrueHasExtension = function (ext) {
+        const extensionMenu = Object.keys(lib.extensionMenu);
+        return extensionMenu.includes(ext) || extensionMenu.includes(`extension_${ext}`);
     };
-    game.HasExtension = game.HasExtension || function (ext) {
+    game.HasExtension = function (ext) {
         return game.TrueHasExtension(ext) && lib.config['extension_' + ext + '_enable'];
     };
     //闪闪节
@@ -233,12 +231,6 @@ export async function precontent(bilibilicharacter) {
         },
     };
     //点击显示
-    //低配+仅限电脑版
-    get.bolInform = function (str1, str2) {
-        return '<abbr title=\"' + str2 + '\"><ins>' + str1 + '</ins></abbr>';
-    };
-    //高配
-    //感谢 雷 的技术支持
     game.getBolPhone = function () {
         //获取浏览器navigator对象的userAgent属性（浏览器用于HTTP请求的用户代理头的值）
         var info = navigator.userAgent;
@@ -247,6 +239,19 @@ export async function precontent(bilibilicharacter) {
         //如果包含“Mobile”（是手机设备）则返回true
         return isPhone;
     };
+    //低配
+    get.bolInform = function (str1, str2) {
+        if ((() => {
+            return game.getBolPhone();
+            //const info = navigator.userAgent;
+            //return /mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(info);
+        })()) {
+            return `<span onclick="alert('${str2}')"style="text-decoration:underline; cursor:pointer;">${str1}</span>`;
+        }
+        return `<abbr title=\"${str2}\"><ins>${str1}</ins></abbr>`;
+    };
+    //高配
+    //感谢 雷 的技术支持
     get.bolskillTips = function (tipname, id) {
         var dibeijing = ui.create.div('.bol-dibeijing', document.body);
         dibeijing.style.zIndex = 16;
@@ -297,10 +302,10 @@ export async function precontent(bilibilicharacter) {
     lib.skill._bilibili_miaoshou = {
         charlotte: true,
         ruleSkill: true,
-        trigger: { global: 'xmiaoshou' },
+        trigger: { player: 'xmiaoshou' },
         filter(event, player) {
             const config = lib.config.extension_活动武将_HDfightAudio;
-            return config && config !== 'off' && event.player == player;
+            return config && config !== 'off';
         },
         direct: true,
         firstDo: true,
@@ -316,10 +321,10 @@ export async function precontent(bilibilicharacter) {
     lib.skill._bilibili_yishu = {
         charlotte: true,
         ruleSkill: true,
-        trigger: { global: 'xyishu' },
+        trigger: { player: 'xyishu' },
         filter(event, player) {
             const config = lib.config.extension_活动武将_HDfightAudio;
-            return config && config !== 'off' && event.player == player;
+            return config && config !== 'off';
         },
         direct: true,
         firstDo: true,
@@ -363,16 +368,16 @@ export async function precontent(bilibilicharacter) {
     lib.skill._jishaAudio = {
         charlotte: true,
         ruleSkill: true,
-        trigger: { global: 'dieBegin' },
+        trigger: { source: 'dieBegin' },
         filter(event, player) {
             const config = lib.config.extension_活动武将_HDfightAudio;
-            return config && config !== 'off' && event.source == player && event.player != player;
+            return config && config !== 'off' && event.player != player;
         },
         direct: true,
         firstDo: true,
         content() {
             'step 0'
-            if (!player.storage.bilibili_kill) player.storage.bilibili_kill = 0;
+            player.storage.bilibili_kill ??= 0;
             player.storage.bilibili_kill++;
             'step 1'
             let config = lib.config.extension_活动武将_HDfightAudio;

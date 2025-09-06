@@ -14,7 +14,7 @@
 	text-align: center;
 	color: #ac9a82;
 	text-shadow: -1.3px 0px 2.2px #000, 0px -1.3px 2.2px #000, 1.3px 0px 2.2px #000, 0px 1.3px 2.2px #000;
-	font-family: shousha;
+	font-family: "shousha";
 	font-size: 18px;
 	font-weight: 700;
 	z-index: 8 !important;
@@ -36,7 +36,7 @@
 	text-align: center;
 	color: #ac9a82;
 	text-shadow: -1.3px 0px 2.2px #000, 0px -1.3px 2.2px #000, 1.3px 0px 2.2px #000, 0px 1.3px 2.2px #000;
-	font-family: shousha;
+	font-family: "shousha";
 	font-size: 17px;
 	font-weight: 500;
 	z-index: 8 !important;
@@ -58,7 +58,7 @@
 	text-align: center;
 	color: #ac9a82;
 	text-shadow: -1.3px 0px 2.2px #000, 0px -1.3px 2.2px #000, 1.3px 0px 2.2px #000, 0px 1.3px 2.2px #000;
-	font-family: shousha;
+	font-family: "shousha";
 	font-size: 17px;
 	font-weight: 500;
 	z-index: 8 !important;
@@ -85,7 +85,7 @@
 	text-align: center;
 	color: #e2e0dc;
 	text-shadow: -1.3px 0px 2.2px #000, 0px -1.3px 2.2px #000, 1.3px 0px 2.2px #000, 0px 1.3px 2.2px #000;
-	font-family: shousha;
+	font-family: "shousha";
 	font-size: 17px;
 	font-weight: 900;
 	z-index: 8 !important;
@@ -255,4 +255,76 @@ td.dengjie-game > .button.character > .score.lose {
 .button.card.tazhen {
 	width: 108px !important;
 	height: 150px !important;
+}
+
+.dingluan-tube-container {
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+	gap: 20px;
+	flex-wrap: wrap;
+	padding: 20px;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.dingluan-tube {
+	width: 60px;
+	height: 200px;
+	background: #221a0f;
+	border: 2px solid #8b6f45;
+	border-radius: 10px;
+	position: relative;
+	display: block;
+	padding: 0 5px;
+	margin: 0 10px;
+	box-sizing: border-box;
+	cursor: pointer;
+	transition: border-color 0.2s;
+	flex-shrink: 0;
+	overflow: visible;
+}
+
+.dingluan-tube.selected {
+	border-color: #ffdf66;
+	box-shadow: 0 0 10px #ffdf66;
+}
+
+.dingluan-piece {
+	display: block;
+	width: 48px;
+	height: 24px;
+	background: #ccb183;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	margin: 0;
+	text-align: center;
+	line-height: 24px;
+	font-size: 14px;
+	font-family: "shousha";
+	color: #000;
+	border-radius: 6px;
+	box-shadow: inset 0 0 3px #000;
+	pointer-events: none;
+	box-sizing: border-box;
+	/*transition: bottom 0.3s ease;移除动画，懒得加*/
+}
+
+/*神左慈幻术卡牌颜色*/
+.card.minihuanshu-glow:before {
+	opacity: 0.2;
+	box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px, rgb(255, 109, 12) 0 0 5px, rgb(255, 0, 0) 0 0 10px;
+	background-color: #0000ff;
+	-webkit-filter: blur(5px);
+	filter: blur(5px);
+}
+
+/*神左慈幻化卡牌颜色*/
+.card.minihuanhua-glow:before {
+	opacity: 0.2;
+	box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px, rgb(255, 109, 12) 0 0 5px, rgb(255, 0, 0) 0 0 10px;
+	background-color: yellow;
+	-webkit-filter: blur(5px);
+	filter: blur(5px);
 }

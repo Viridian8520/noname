@@ -6,18 +6,21 @@
 	right: 86px;
 	top: auto;
 }
-
-#arena[data-right-layout="on"]>.equips-wrap {
-	/*右手布局*/
+#arena[data-right-layout="on"][data-phonelayout="on"]>.equips-wrap {
 	left: 90px;
 	right: auto;
 }
-
+#arena[data-right-layout="on"][data-phonelayout="off"]>.equips-wrap {
+	left: 0px;
+	right: auto;
+}
+#arena[data-right-layout="on"]>.equips-wrap {
+	right: auto;
+}
 #arena[data-alone-equip="off"]>.equips-wrap {
 	opacity: 0;
 	left: auto;
 }
-
 .equips-wrap>.equips-back {
 	align-content: center;
 	align-items: center;
@@ -29,7 +32,6 @@
 	row-gap: 3px;
 	width: 100%;
 }
-
 .equips-wrap>.equips {
 	align-items: center;
 	bottom: 0px;
@@ -44,7 +46,6 @@
 	top: 0px;
 	width: 100%;
 }
-
 .equips-wrap>.equips-back>div {
 	/*background: rgba(0, 0, 0, 0.4);
 	box-shadow: 0 0 6px rgb(200, 150, 80) inset;*/
@@ -54,27 +55,21 @@
 	right: 3px;
 	width: 100%;
 }
-
 .equips-wrap>.equips-back>div[data-type="0"] {
 	background-image: url("../image/decoration/equip1.png");
 }
-
 .equips-wrap>.equips-back>div[data-type="1"] {
 	background-image: url("../image/decoration/equip2.png");
 }
-
 .equips-wrap>.equips-back>div[data-type="2"] {
 	background-image: url("../image/decoration/equip3.png");
 }
-
 .equips-wrap>.equips-back>div[data-type="3"] {
 	background-image: url("../image/decoration/equip4.png");
 }
-
 .equips-wrap>.equips-back>div[data-type="4"] {
 	background-image: url("../image/decoration/equip5.png");
 }
-
 .equips-wrap>.equips>div {
 	left: 3px;
 	right: 3px;
@@ -91,7 +86,6 @@
 	-webkit-text-size-adjust: none;
 	z-index: 1;
 }
-
 .equips-wrap>.equips>div::before {
 	border: initial;
 	height: inherit;
@@ -99,7 +93,6 @@
 	top: auto;
 	width: inherit;
 }
-
 .equips-wrap>.equips>div::after {
 	background: linear-gradient(to left, yellow, yellow) left top no-repeat, linear-gradient(to bottom, yellow, yellow) left top no-repeat, linear-gradient(to left, yellow, yellow) right top no-repeat, linear-gradient(to bottom, yellow, yellow) right top no-repeat, linear-gradient(to left, yellow, yellow) left bottom no-repeat, linear-gradient(to bottom, yellow, yellow) left bottom no-repeat, linear-gradient(to left, yellow, yellow) right bottom no-repeat, linear-gradient(to left, yellow, yellow) right bottom no-repeat !important;
 	background-size: 2px 8px, 10px 2px, 2px 8px, 10px 2px !important;
@@ -113,32 +106,25 @@
 	width: inherit;
 	z-index: auto;
 }
-
 .equips-wrap>.equips>div.selected {
 	box-shadow: 0 0 10px yellow;
 }
-
 .equips-wrap>.equips>div.selectable {
 	cursor: pointer;
 	transform: translateX(-10px);
 }
-
 .equips-wrap>.equips>div.selectable::before {
 	animation: fade-in-out-selectable 1s infinite;
 }
-
 #arena[data-right-layout="on"]>.equips-wrap>.equips>div.selectable {
 	transform: translateX(10px);
 }
-
 .mobile-phone .equips-wrap>.equips>div.selected {
 	box-shadow: 0 0 2px yellow, 0 0 4px yellow, 0 0 8px yellow;
 }
-
 .equips-wrap .equips>div[data-card-subype="equip5"] .equips-wrap>.equips-back>div.equip0 {
 	opacity: 1;
 }
-
 .equips-wrap>.equips-back>div>.icon,
 .equips-wrap>.equips>div>.icon {
 	display: block;
@@ -148,12 +134,10 @@
 	height: 20px;
 	transition: opacity 0.5s;
 }
-
 .equips-wrap>.equips>.card>div {
 	position: absolute;
 	text-shadow: none;
 }
-
 .equips-wrap>.equips>.card>.name2 {
 	display: flex;
 	align-items: center;
@@ -176,31 +160,26 @@
 	pointer-events: none;
 	z-index: 1;
 }
-
 /*红色装备牌颜色显示*/
 .equips-wrap>.equips>.card[data-suit="heart"]>.name2,
 .equips-wrap>.equips>.card[data-suit="diamond"]>.name2 {
 	color: #8b0000;
 }
-
 /*黑色装备牌颜色显示*/
 .equips-wrap>.equips>.card[data-suit="spade"]>.name2,
 .equips-wrap>.equips>.card[data-suit="club"]>.name2 {
 	color: #181818;
 }
-
 /*无色装备牌颜色显示*/
 .equips-wrap>.equips>.card[data-suit="none"]>.name2 {
 	background-color: black;
 	color: white;
 }
-
 .equips-wrap>.equips>.card.feichu>.name2 {
 	background-color: rgb(57, 48, 33);
 	color: white;
 	font-weight: normal;
 }
-
 .equips-wrap>.equips>.card>.image {
 	bottom: auto;
 	display: block;
@@ -211,11 +190,9 @@
 	width: 20px;
 	z-index: 2;
 }
-
 .equips-wrap>.equips>.card:not(.fullskin)>.image {
 	display: block !important;
 }
-
 /*其他玩家装备栏*/
 .player>.equips,
 #arena>.player:not(.minskin)>.equips {
@@ -236,7 +213,6 @@
 	display: flex;
 	flex-direction: column;
 }
-
 #arena.decadeUI:not(.long).mobile:not(.oldlayout) .player.unseen:not([data-position="0"]) .equips:not(*:empty),
 #arena.decadeUI:not(.long):not(.mobile):not(.oldlayout) .player.unseen .equips:not(*:empty),
 #arena.decadeUI.long.mobile:not(.oldlayout) .player.unseen2:not([data-position="0"]) .equips:not(*:empty),
@@ -246,7 +222,6 @@
 	overflow: hidden;
 	box-shadow: none;
 }
-
 .player>.equips>.card,
 .player.unseen>.equips>.card,
 .player.unseen2>.equips>.card {
@@ -263,23 +238,19 @@
 	height: 16px;
 	text-shadow: none;
 }
-
 #arena.decadeUI:not(.long).mobile:not(.oldlayout) .player.unseen:not([data-position="0"]) .equips:not(*:empty)>.card,
 #arena.decadeUI:not(.long):not(.mobile):not(.oldlayout) .player.unseen .equips:not(*:empty)>.card:not(.selected),
 #arena.decadeUI.long.mobile:not(.oldlayout) .player.unseen2:not([data-position="0"]) .equips:not(*:empty)>.card,
 #arena.decadeUI.long:not(.mobile):not(.oldlayout) .player.unseen2 .equips:not(*:empty)>.card:not(.selected) {
 	background: rgba(228, 207, 166, 0.8) !important;
 }
-
 .player:not(.selectable)>.equips>.card,
 .player:not(.selectable)>.equips>.card>div {
 	pointer-events: auto;
 }
-
 .player>.equips>.card>div {
 	position: static;
 }
-
 .player>.equips>.card>.name2 {
 	position: absolute;
 	left: 0;
@@ -303,7 +274,6 @@
 	margin-bottom: 0px;
 	pointer-events: none;
 }
-
 .player>.equips>.card[data-suit="heart"]>.name2,
 .player>.equips>.card[data-suit="diamond"]>.name2 {
 	color: #8b0000;

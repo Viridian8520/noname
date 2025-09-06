@@ -4,7 +4,6 @@
 @import "icon.css";
 @import "effect.css";
 /*@import 'equip.css';*/
-
 /*龙框美化*/
 /*龙头*/
 /*-----------------分割线-----------------*/
@@ -25,12 +24,10 @@
 #arena[data-long-level="one"] > .player > .long {
 	background-image: url("../assets/image/long_silver1.png");
 }
-
 /*金龙框*/
 #arena[data-long-level="two"] > .player > .long {
 	background-image: url("../assets/image/long_gold1.png");
 }
-
 /*玉龙框*/
 #arena[data-long-level="three"] > .player > .long {
 	background-image: url("../assets/image/long1_yu.png");
@@ -39,7 +36,6 @@
 	left: -25px;
 	top: -40px;
 }
-
 /*炎龙框*/
 #arena[data-long-level="five"] > .player > .long {
 	background-image: url("../assets/image/long1_yan.png");
@@ -48,7 +44,6 @@
 	left: -23px;
 	top: -88px;
 }
-
 /*龙尾巴*/
 /***********************分割线**********************/
 .player > .wei {
@@ -70,45 +65,36 @@
 #arena[data-long-level="one"] > .player > .wei {
 	background-image: url("../assets/image/long_silver2.png");
 }
-
 /*金龙框*/
 #arena[data-long-level="two"] > .player > .wei {
 	background-image: url("../assets/image/long_gold2.png");
 }
-
 /*玉龙框*/
 #arena[data-long-level="three"] > .player > .wei {
 	/* background-image: url("../assets/image/long_yu2.png"); */
 }
-
 /*炎龙框*/
 #arena[data-long-level="five"] > .player > .wei {
 	/* background-image: url("../assets/image/long_yan2.png"); */
 }
 /*-----------------分割线-----------------*/
-
 html {
 	background: rgb(60, 60, 60);
 }
-
 /* #arena>.dialog { */
 /* display: none; */
 /* } */
-
 body > .background {
 	animation: anime-opacity 1s ease-in-out;
 }
-
 @keyframes anime-opacity {
 	0% {
 		opacity: 0;
 	}
-
 	100% {
 		opacity: 1;
 	}
 }
-
 #decadeUI-canvas,
 #decadeUI-canvas-background {
 	display: block;
@@ -120,12 +106,10 @@ body > .background {
 	z-index: 15;
 	pointer-events: none;
 }
-
 #decadeUI-canvas-background {
 	z-index: -1;
 	/* 动态背景显示层级*/
 }
-
 #decadeUI-canvas-arena {
 	display: block;
 	position: absolute;
@@ -134,7 +118,6 @@ body > .background {
 	z-index: 4;
 	pointer-events: none;
 }
-
 #decadeUI-body-sensor {
 	display: block;
 	position: absolute;
@@ -145,7 +128,6 @@ body > .background {
 	height: 100%;
 	pointer-events: none;
 }
-
 #arena {
 	left: 22px;
 	right: 25px;
@@ -156,29 +138,23 @@ body > .background {
 	/* pointer-events: none; */
 	transition-property: opacity;
 }
-
 #arena.phone {
 	top: 2%;
 }
-
 /* #arena.dragging { */
 /* cursor: default; */
 /* } */
-
 #window.leftbar #arena:not(.chess) {
 	width: auto;
 	left: calc(2% + 50px);
 }
-
 #window.rightbar #arena:not(.chess) {
 	width: auto;
 	right: calc(2% + 50px);
 }
-
 #arena:not(.chess).decadeUI > #mebg {
 	display: none;
 }
-
 #arena.decadeUI:not(.single-handcard):not(.chess) > #autonode {
 	display: flex !important;
 	align-items: center;
@@ -190,16 +166,13 @@ body > .background {
 	height: calc(2% + 180px);
 	background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
 }
-
 #autonode > div {
 	position: static;
 	text-shadow: 0 0 20px red;
 }
-
 #shortcut.hidden {
 	z-index: -1;
 }
-
 #window > #time {
 	left: 50px;
 	right: 50px;
@@ -207,7 +180,6 @@ body > .background {
 	font-family: xinwei;
 	text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black;
 }
-
 #arena > .hand-wrap,
 #arena > .hand-back {
 	/*手牌区*/
@@ -222,15 +194,13 @@ body > .background {
 	z-index: 3;
 	/* border: 3px solid rgb(3,4,5); /*调试用*/
 }
-
 #arena[data-right-layout="on"] > .hand-wrap,
 #arena[data-right-layout="on"] > .hand-back {
 	/*右手布局+单独装备栏*/
 	left: 230px;
 	right: 320px;
-	bottom: 1%;
+	bottom: 0%;
 }
-
 #arena[data-alone-equip="off"][data-right-layout="off"] > .hand-wrap,
 #arena[data-alone-equip="off"][data-right-layout="off"] > .hand-back {
 	/*左手布局+非单独装备栏*/
@@ -238,7 +208,6 @@ body > .background {
 	right: 95px;
 	bottom: 1%;
 }
-
 #arena[data-alone-equip="off"][data-right-layout="on"] > .hand-wrap,
 #arena[data-alone-equip="off"][data-right-layout="on"] > .hand-back {
 	/*右手布局+非单独装备栏*/
@@ -246,12 +215,10 @@ body > .background {
 	right: 320px;
 	bottom: 0%;
 }
-
 .discard-zone {
 	width: 100%;
 	height: 10%;
 }
-
 /*挑战模式小头像*/
 .hand-wrap > .fakeme.avatar {
 	left: -270px;
@@ -263,12 +230,10 @@ body > .background {
 	border-radius: 8px;
 	background-size: cover;
 }
-
 #arena[data-right-layout="on"] > .hand-wrap > .fakeme.avatar {
 	left: auto;
 	right: -320px;
 }
-
 .hand-cards {
 	display: inline-block;
 	width: 100%;
@@ -276,7 +241,6 @@ body > .background {
 	transition: none;
 	z-index: 3;
 }
-
 .hand-cards > .handcards {
 	display: inline-block;
 	padding: 0;
@@ -287,7 +251,6 @@ body > .background {
 	min-width: 100%;
 	transition: none;
 }
-
 .hand-cards > .handcards > .card {
 	margin: 0px;
 	width: 108px;
@@ -296,21 +259,17 @@ body > .background {
 	transition-property: transform, opacity, left, top;
 	z-index: 1;
 }
-
 .hand-cards > .handcards > .card.display-none {
 	display: none;
 	transition: none;
 }
-
 .hand-cards > .handcards > .card.selected {
 	boder-radius: 2px;
 }
-
 .hand-cards > .handcards > .card.selectable {
 	boder-radius: 2px;
 	cursor: pointer;
 }
-
 .hand-special {
 	left: auto;
 	right: calc(-1% + 3px);
@@ -321,7 +280,6 @@ body > .background {
 	box-shadow: 0 0 6px rgb(200, 150, 80) inset;
 	background: rgba(0, 0, 0, 0.4);
 }
-
 .hand-special > .cards {
 	display: flex;
 	flex-direction: row-reverse;
@@ -332,43 +290,36 @@ body > .background {
 	height: auto;
 	zoom: 0.5;
 }
-
 .hand-special > .cards > .card {
 	margin-top: 0;
 	margin-left: 0;
 	margin-right: 0;
 	transform: none !important;
 }
-
 .hand-special > .cards > .card::after {
 	border-radius: inherit !important;
 	box-shadow: 0px -1px 2px yellow, 0px -1px 5px yellow, 0px 0px 15px yellow;
 	transition: opacity 0.5s;
 }
-
 #arena > .card,
 #arena.oblongcard:not(.chess) > .card,
 #arena.oblongcard:not(.chess) .handcards > .card {
 	width: 108px;
 	height: 150px;
 }
-
 .button.card {
 	width: 108px;
 	height: 150px;
 	background-size: 100% 100%;
 	z-index: 1;
 }
-
 .dialog.addNewRow .button.card {
 	zoom: 0.7;
 }
-
 .card,
 #window:not(*[data-radius_size=""]) .card {
 	border-radius: 2px;
 }
-
 .card {
 	width: 108px;
 	height: 150px;
@@ -380,19 +331,15 @@ body > .background {
 	transition: all 0.46s;
 	/*新增*/
 }
-
 .dui-mobile .card {
 	box-shadow: 0 1px 2px black;
 }
-
 #arena.decadeUI.selecting:not(.video) > .dialog:not(.noselect) .buttons > .card.button:not(.selectable):not(.noclick):not(.replaceButton) {
 	opacity: 1;
 }
-
 #arena.decadeUI.selecting:not(.video) > .dialog:not(.noselect) .buttons > .card.button:not(.selected):not(.selectable) > .card-mask {
 	opacity: 1;
 }
-
 .card > .background,
 .card.button > .background {
 	top: auto;
@@ -401,11 +348,9 @@ body > .background {
 	line-height: 80px;
 	padding-top: 0;
 }
-
 .card.mark > .background {
 	line-height: 100%;
 }
-
 .card > .top-name {
 	left: 30%;
 	top: 7%;
@@ -418,7 +363,6 @@ body > .background {
 	text-shadow: 0.3px 0px 1.8px white, 0.3px 0px 1.8px white, 0.3px 0px 1.8px white;
 	z-index: 1;
 }
-
 .card:not(.fullskin) > .top-name {
 	left: 7.5px;
 	width: calc(100% - 15px);
@@ -430,16 +374,13 @@ body > .background {
 	text-shadow: 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18,
 		0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18, 0.3px 0px 1.8px #332c18;
 }
-
 .card.decade-card > .top-name {
 	display: none;
 }
-
 .card.decade-card > .image {
 	display: none;
 	visibility: hidden !important;
 }
-
 .card > .image,
 #arena:not(.chess) > .card > .image,
 #arena:not(.chess) .handcards > .card > .image,
@@ -454,7 +395,6 @@ body > .background {
 	bottom: 8%;
 	background-position-x: 0;
 }
-
 .card > .suit-num {
 	font-size: 25px;
 	color: black;
@@ -470,16 +410,13 @@ body > .background {
 	z-index: 1;
 	-webkit-text-size-adjust: none;
 }
-
 .dui-mobile .card > .suit-num > .suit {
 	font-size: 16px;
 }
-
 .card[data-suit="heart"] > .suit-num,
 .card[data-suit="diamond"] > .suit-num {
 	color: red;
 }
-
 .card > .range {
 	right: 5px;
 	bottom: 5px;
@@ -492,11 +429,9 @@ body > .background {
 	border: 1px solid black;
 	border-radius: 2px;
 }
-
 .card > .range:empty {
 	display: none;
 }
-
 .card > .range.card-tag {
 	left: 4px;
 	top: calc(50% + 8px);
@@ -511,7 +446,6 @@ body > .background {
 	white-space: normal;
 	background: rgba(230, 210, 166, 0.8);
 }
-
 /* 询问无懈时界面/卡牌虚化*/
 .card > .card-mask {
 	opacity: 0;
@@ -526,18 +460,15 @@ body > .background {
 	pointer-events: none;
 	z-index: 8;
 }
-
 .card.invalided > .card-mask,
 #arena.selecting:not(.video) .handcards > .card:not(.selectable) > .card-mask,
 #arena.thrownhighlight > .card.thrown:not(.thrownhighlight):not(.drawingcard),
 #arena.thrownhighlight > .card.thrown:not(.thrownhighlight):not(.drawingcard) > .card-mask {
 	opacity: 1;
 }
-
 .transition-none {
 	transition: none !important;
 }
-
 /*牌堆牌数 游戏时间*/
 .touchinfo {
 	top: 1%;
@@ -547,27 +478,21 @@ body > .background {
 	/* background: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black; */
 	z-index: 4;
 }
-
 .touchinfo.left {
 	left: 2%;
 }
-
 .touchinfo.right {
 	right: 2%;
 }
-
 #window.leftbar > .touchinfo.left {
 	left: calc(2% + 50px);
 }
-
 #window.rightbar > .touchinfo.right {
 	right: calc(2% + 50px);
 }
-
 #arena > .dialog {
 	z-index: 7;
 }
-
 /*界面操作按钮*/
 #arena > #dui-controls {
 	position: absolute;
@@ -590,21 +515,18 @@ body > .background {
 	pointer-events: none;
 	z-index: 8;
 }
-
 #arena > #dui-controls > * {
 	height: 44px;
 	font-size: 24px;
 	overflow: inherit;
 	pointer-events: auto;
 }
-
 #arena > #dui-controls.bosslist,
 #arena.choose-character > #dui-controls {
 	bottom: 20px;
 	left: -5px;
 	right: -5px;
 }
-
 #arena.dui-mobile:not(.choose-character) > #dui-controls {
 	bottom: calc(23% + 40px);
 	left: 10px;
@@ -616,7 +538,6 @@ body > .background {
 	flex-wrap: wrap !important;
 	/*换行方式*/
 }
-
 #arena > #dui-controls > .control {
 	overflow: visible;
 	/*别动*/
@@ -634,19 +555,16 @@ body > .background {
 	font-size: inherit;
 	cursor: pointer;
 }
-
 #arena.decadeUI.dui-mobile > #dui-controls > .control.stayleft {
 	position: absolute;
 	left: 120px !important;
 	order: 0;
 }
-
 #arena > #dui-controls > .control.stayleft {
 	position: absolute;
 	left: -25px;
 	order: 0;
 }
-
 #arena > #dui-controls > .control > div {
 	display: flex;
 	align-items: center;
@@ -661,7 +579,6 @@ body > .background {
 	margin-right: 5px;
 	opacity: 1;
 }
-
 #arena > #dui-controls > .control > div:only-child {
 	position: static;
 	padding-left: 0px;
@@ -669,7 +586,6 @@ body > .background {
 	padding-top: 0;
 	padding-bottom: 0;
 }
-
 #arena > #dui-controls > .control.combo-control {
 	flex-direction: row;
 	padding-left: 0;
@@ -677,21 +593,17 @@ body > .background {
 	box-shadow: none;
 	background: none;
 }
-
 #arena > #dui-controls > .control:not(.disabled) > div:active,
 #arena > #dui-controls > .control:not(.disabled):not(.combo-control):active {
 	transform: scale(0.96);
 }
-
 #arena > #dui-controls > .control.combo-control > div {
 	font-size: inherit;
 }
-
 /*暂停记录栏*/
 .pausedbg > #sidebar {
 	width: auto;
 }
-
 .dialog .buttons > .button.character.decadeUI,
 .button.character.longcharacter.decadeUI {
 	width: 90px;
@@ -699,14 +611,12 @@ body > .background {
 	background-position: 666px 666px;
 	background-size: 0 0 !important;
 }
-
 .button.character {
 	position: relative;
 	width: 90px;
 	height: 120px;
 	margin: 6px;
 }
-
 .button.character::before {
 	left: -15px;
 	top: -15px;
@@ -720,15 +630,12 @@ body > .background {
 	border-image-source: url("../assets/image/glow_orange.png");
 	border-image-slice: 42 46 32 46 fill;
 }
-
 .button.character.selected::before {
 	opacity: 1;
 }
-
 .button.character::after {
 	display: none;
 }
-
 .button.character > .showintro.rarity {
 	font-family: yuanli;
 	font-size: 16px;
@@ -740,7 +647,6 @@ body > .background {
 	background-repeat: no-repeat;
 	background-size: contain;
 }
-
 .button.character > .character {
 	display: block;
 	position: absolute;
@@ -755,7 +661,6 @@ body > .background {
 	pointer-events: none;
 	transition: none;
 }
-
 /* 游戏开局前选将框露头高度调整 */
 /* 十周年露头*/
 #arena[data-outcrop-skin="shizhounian"] .button.character > .character {
@@ -763,14 +668,12 @@ body > .background {
 	clip-path: url(#solo-clip);
 	-webkit-clip-path: url(#solo-clip);
 }
-
 /* 手杀露头 */
 #arena[data-outcrop-skin="shousha"] .button.character > .character {
 	height: 140px;
 	clip-path: url(#soloss-clip);
 	-webkit-clip-path: url(#soloss-clip);
 }
-
 #arena > .card > .judge-mark {
 	visibility: hidden;
 }

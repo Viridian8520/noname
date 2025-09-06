@@ -6085,43 +6085,44 @@ const packs = function () {
                 onremove: true,
                 intro: { content: '已对$产生怨恨' },
                 audio: 'bolchouyou',
-                trigger: { global: ['useCardBefore', 'respondBefore', 'useSkillBefore'] },
+                trigger: { global: ['useSkill', 'logSkillBegin'] },
                 filter(event, player) {
                     if (!player.getStorage('bolchouyou2').includes(event.player)) return false;
-                    return get.info('bolchouyou2').getFilter(event[(event.name == 'useCard' || event.name == 'respond' || event.name == 'useSkill') ? 'skill' : 'name'], player);
+                    if (!event.player.getSkills(null, false, false).includes(get.sourceSkillFor(event.skill))) return false;
+                    const info = get.info(event.skill);
+                    return info && !info.charlotte && !get.is.locked(event.skill, event.player);
                 },
-                forced: true,
                 logTarget: 'player',
-                content() {
-                    'step 0'
-                    var skill = ((trigger.name == 'useCard' || trigger.name == 'respond' || trigger.name == 'useSkill') ? trigger.skill : trigger.name);
-                    if (get.info(skill).sourceSkill) skill = get.info(skill).sourceSkill;
-                    if (skill.indexOf('_backup') == skill.length - 7) skill = skill.slice(0, skill.length - 7);
-                    player.chooseBool('仇幽：是否同意' + get.translation(trigger.player) + '发动【' + get.translation(skill) + '】?').set('choice', get.attitude(player, trigger.player) > 0);
-                    'step 1'
-                    var skill = ((trigger.name == 'useCard' || trigger.name == 'respond' || trigger.name == 'useSkill') ? trigger.skill : trigger.name);
-                    if (get.info(skill).sourceSkill) skill = get.info(skill).sourceSkill;
-                    player.chat(result.bool ? '同意' : '拒绝');
-                    game.log(player, result.bool ? '#g同意' : '#y拒绝', trigger.player, '发动', '#g【' + get.translation(skill) + '】');
-                    if (!result.bool) {
-                        var info = get.info(skill);
-                        if (info.limited || info.juexingji) trigger.player.restoreSkill(skill);
-                        if (info.usable) {
-                            if (player.storage.counttrigger?.counttrigger[skill]) player.storage.counttrigger[skill]--;
-                            if (player.getStat('skill')[skill]) player.getStat('skill')[skill]--;
+                prompt2(event, player) {
+                    return `阻止${get.translation(event.player)}发动【${get.translation(event.skill)}】`;
+                },
+                check(event, player) {
+                    return get.attitude(player, event.player) < 0;
+                },
+                async content(event, trigger, player) {
+                    trigger.player.tempBanSkill(get.sourceSkillFor(trigger.skill), {
+                        player: ['useCard1', 'useSkillBegin'],
+                        global: ['phaseChange', 'phaseBefore', 'phaseAfter'],
+                    });
+                    player.chat('拒绝');
+                    game.log(player, '#y拒绝', trigger.player, '发动', '#g【' + get.translation(trigger.skill) + '】');
+                    if (trigger.name === 'useSkill') {
+                        if (!trigger._finished) {
+                            trigger.finish();
+                            trigger._triggered = 5;
                         }
-                        trigger.cancel();
-                        if (trigger.name == 'useCard' || trigger.name == 'respond') trigger.getParent().goto(0);
-                        trigger.player.addTempSkill('bolchouyou4', ['phaseBefore', 'phaseChange', 'phaseAfter']);
-                        trigger.player.storage.bolchouyou4.push(skill);
-                        trigger.player.disableSkill('bolchouyou4', trigger.player.storage.bolchouyou4);
+                    }
+                    else {
+                        const evt = trigger.getParent();
+                        if (!evt._finished) {
+                            evt.finish();
+                            evt._triggered = 5;
+                        }
+                        if (['useCard', 'respond'].includes(evt.name) || evt.name.startsWith('pre_')) evt.getParent().goto(0);
+                        evt.next = [];
                     }
                 },
-                group: ['bolchouyou3', 'bolchouyou5'],
-                getFilter(skill, player, info) {
-                    if (skill.indexOf('_') == 0 || !info || info.equipSkill || info.charlotte || info.silent || info.nopop || info.popup === false) return false;
-                    return !lib.skill.global.includes(skill) && !get.is.locked(skill, player);
-                },
+                group: ['bolchouyou3'],
             },
             bolchouyou3: {
                 charlotte: true,
@@ -6133,29 +6134,6 @@ const packs = function () {
                 firstDo: true,
                 content() {
                     player.unmarkAuto('bolchouyou2', [trigger.source]);
-                },
-            },
-            bolchouyou4: {
-                charlotte: true,
-                init(player) {
-                    if (!player.storage.bolchouyou4) player.storage.bolchouyou4 = [];
-                },
-                onremove(player) {
-                    player.enableSkill('bolchouyou4');
-                    delete player.storage.bolchouyou4;
-                },
-            },
-            bolchouyou5: {
-                charlotte: true,
-                trigger: { global: 'logSkillBegin' },
-                filter(event, player) {
-                    const { skill } = event, info = get.info(skill);
-                    return get.info('bolchouyou2').getFilter(skill, player, info);
-                },
-                forced: true,
-                popup: false,
-                content() {
-                    lib.skill.bolchouyou2.trigger.global.push(trigger.skill + 'Before');
                 },
             },
             //张仲景
@@ -10649,51 +10627,59 @@ const packs = function () {
                     if (!froms?.length) return;
                     const [from] = froms;
                     const ToItems = lib.skill.olhedao.tianshuContent.filter(item => !item.filter || item.filter(from.name));
-                    const tos = await player.chooseButton(['###青书：请选择“天书”效果###<div class="text center">' + from.name + '</div>', [ToItems.randomGets(3).map(item => [item, item.name]), 'textbutton']], true).set('ai', () => 1 + Math.random()).forResult('links');
+                    const tos = await player.chooseButton([`###青书：请选择“天书”效果###<div class="text center">${from.name}</div>`, [ToItems.randomGets(3).map(item => [item, item.name]), 'textbutton']], true).set('ai', () => 1 + Math.random()).forResult('links');
                     if (!tos?.length) return;
                     const [to] = tos;
                     let skill;
                     while (true) {
-                        skill = 'olhedao_tianshu_' + Math.random().toString(36).slice(-8);
+                        skill = `olhedao_tianshu_${Math.random().toString(36).slice(-8)}`;
                         if (!lib.skill[skill]) break;
                     }
                     game.broadcastAll((skill, from, to) => {
                         const { filter: filterFrom, ...otherFrom } = from.effect;
                         const { filter: filterTo, ...otherTo } = to.effect;
-                        lib.skill[skill] = { nopop: true, olhedao: true, charlotte: true, onremove: true, ...otherFrom, ...otherTo };
-                        lib.skill[skill].filter = function (...args) {
-                            return (filterFrom ? filterFrom(...args) : true) && (filterTo ? filterTo(...args) : true);
-                        };
-                        lib.skill[skill].init = (player, skill) => (player.storage[skill] = player.storage[skill] || [0, skill]);
-                        lib.skill[skill].intro = {
-                            markcount: (storage = [0]) => storage[0],
-                            content(storage, player) {
-                                const book = storage?.[1];
-                                if (!book) return '查无此书';
-                                return [
-                                    '此书还可使用' + storage[0] + '次',
-                                    (() => {
-                                        if (!player.isUnderControl(true) && get.info(book)?.nopop) return '未翻开的天书，效果不可见';
-                                        return lib.translate[book + '_info'];
-                                    })(),
-                                ].map(str => '<li>' + str).join('<br>');
+                        lib.skill[skill] = {
+                            nopop: true,
+                            olhedao: true,
+                            charlotte: true,
+                            init(player, skill) {
+                                player.storage[skill] ??= [0, []];
                             },
+                            onremove: true,
+                            filter(...args) {
+                                return (filterFrom ? filterFrom(...args) : true) && (filterTo ? filterTo(...args) : true);
+                            },
+                            markimage: 'image/card/tianshu2.png',
+                            intro: {
+                                markcount: (storage = [0]) => storage[0],
+                                content(storage = [0, []], player, book) {
+                                    const [count, targets] = storage;
+                                    if (!book) return '查无此书';
+                                    return [
+                                        `此书还可使用${count}次`,
+                                        (() => {
+                                            if (!get.info(book)?.nopop || [player, ...targets].some(i => i.isUnderControl(true))) return lib.translate[`${book}_info`];
+                                            return '此书仍是个秘密';
+                                        })(),
+                                    ].map(str => `<li>${str}`).join('<br>');
+                                },
+                            },
+                            ...otherFrom,
+                            ...otherTo,
                         };
-                        lib.skill[skill].markimage = 'image/card/tianshu2.png';
                         lib.translate[skill] = '天书';
-                        lib.translate[skill + '_info'] = from.name + '，' + to.name + '。';
+                        lib.translate[`${skill}_info`] = `${from.name}，${to.name}。`;
                         game.finishSkill(skill);
                     }, skill, from, to);
                     player.addSkill(skill);
                     lib.skill.olhedao.tianshuClear(skill, player, -3);
                     const skills = player.getSkills(null, false, false).filter(skill => get.info(skill)?.olhedao);
-                    const num = skills.length - get.info('olhedao').getLimit(player);
+                    const num = skills.length - lib.skill.olhedao.getLimit(player);
                     if (num > 0) {
-                        const result = num < skills.length ? await player.chooseButton(['青书：选择失去' + get.cnNumber(num) + '册多余的“天书”', [skills.map(item => [item, '（剩余' + player.storage[item][0] + '次）' + lib.translate[item + '_info']]), 'textbutton']], true, num).set('ai', () => 1 + Math.random()).forResult() : { bool: true, links: skills };
+                        const result = num < skills.length ? await player.chooseButton([`青书：选择失去${get.cnNumber(num)}册多余的“天书”`, [skills.map(item => [item, `（剩余${player.storage[item][0]}次）${lib.translate[`${item}_info`]}`]), 'textbutton']], true, num).set('ai', () => 1 + Math.random()).forResult() : { bool: true, links: skills };
                         if (result?.bool && result.links?.length) player.removeSkill(result.links);
                     }
                 },
-                derivation: 'bilibili_qingshu_faq',
             },
             //逍遥如云
             bilibili_chuandu: {
@@ -11725,8 +11711,6 @@ const packs = function () {
             bolshicai_info: '出牌阶段，牌堆顶的一张牌对你可见。你可以弃置一张牌，然后获得牌堆顶的一张牌，且不能再发动〖恃才〗直到此牌离开你的手牌区。',
             bilibili_nanhualaoxian: '南华老仙',
             bilibili_qingshu: '青书',
-            bilibili_qingshu_faq: '关于天书',
-            bilibili_qingshu_faq_info: '<br>书写“天书”时，系统先从30个“天书”时机中随机筛选出三个，角色选择时机后，系统再从30个“天书”效果中随机筛选出三个可以和选择的时机匹配的效果，然后角色获得技能为你选择的“天书”时机+“天书”效果的〖天书〗，此技能被发动前对其余玩家不可见，发动三次时失去此〖天书〗。',
             bilibili_xiaoyaoruyun: '逍遥如云',
             bilibili_chuandu: '传毒',
             bilibili_chuandu_info: '锁定技，准备阶段/结束阶段，你令你与场上所有拥有“染”标记的相邻其他角色获得“染”标记，然后你摸一张牌/拥有“染”标记的角色各失去1点体力。',

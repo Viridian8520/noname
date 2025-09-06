@@ -2,12 +2,10 @@
 #arena > .player.xplayer {
 	--width: 120px;
 }
-
 .popup-container > .character-dialog {
 	top: calc(50% - var(--h) / 2 + var(--bt));
 	left: calc(50% - var(--w) / 2 + var(--bl));
 }
-
 /* .character-dialog {
 	--w: 660px;
 	--h: 450px;
@@ -16,7 +14,6 @@
 	--bb: calc(var(--h) * 17 / 290);
 	--dw: calc(var(--w) - 2 * var(--bl));
 	--dh: calc(var(--h) - var(--bt) - var(--bb));
-
 	width: var(--dw);
 	height: var(--dh);
 	position: absolute;
@@ -135,7 +132,6 @@
 	text-align: center;
 	color: #e6e6e6;
 }
-
 .character-dialog.dialog2 {
 	--bt: calc(var(--h) * 10 / 280);
 	--bl: calc(var(--w) * 12 / 287);
@@ -163,7 +159,6 @@
 	height: 100%;
 	position: absolute;
 }
-
 .character-dialog > div.biankuang {
 	width: 21%;
 	height: 40%;
@@ -173,7 +168,6 @@
 	z-index: 68;
 	position: relative;
 }
-
 .character-dialog > .blackBg.two > div.biankuang2 {
 	width: 120px;
 	height: 160px;
@@ -183,7 +177,6 @@
 	z-index: 68;
 	position: absolute;
 }
-
 .xing {
 	position: absolute;
 	width: 15px;
@@ -202,7 +195,6 @@
 	height: 16px;
 	z-index: 99;
 }
-
 .xing2 {
 	position: relative;
 	width: 15px;
@@ -222,7 +214,6 @@
 	top: -16%;
 	z-index: 99;
 }
-
 .bigdialog {
 	position: relative;
 	background: url("./images/shousha/bigdialog.png");
@@ -233,7 +224,6 @@
 	top: 0;
 	z-index: 99;
 }
-
 .shanchang1 {
 	left: 30.5%;
 	top: 42.6%;
@@ -247,7 +237,6 @@
 	transition-property: opacity, transform;
 	z-index: 69;
 }
-
 .shanchang2 {
 	left: 45%;
 	top: 42.6%;
@@ -261,7 +250,6 @@
 	transition-property: opacity, transform;
 	z-index: 69;
 }
-
 .shanchang3 {
 	left: 59.5%;
 	top: 42.6%;
@@ -275,7 +263,6 @@
 	transition-property: opacity, transform;
 	z-index: 69;
 }
-
 .shanchang4 {
 	left: 74%;
 	top: 42.6%;
@@ -289,7 +276,6 @@
 	transition-property: opacity, transform;
 	z-index: 69;
 }
-
 .useless {
 	left: 40%;
 	top: 80%;
@@ -298,7 +284,6 @@
 	background-size: 100% 100%;
 	z-index: 69;
 }
-
 .useless2 {
 	left: 65%;
 	top: 80%;
@@ -327,7 +312,6 @@
 	transition-property: opacity, transform;
 	z-index: 69;
 }
-
 .xingbie {
 	left: 9.5%;
 	top: 48%;
@@ -336,7 +320,6 @@
 	background-size: 100% 100%;
 	z-index: 69;
 }
-
 .jingji {
 	left: 9.7%;
 	top: 57%;
@@ -345,7 +328,6 @@
 	background-size: 100% 100%;
 	z-index: 69;
 }
-
 /*大资料页名称*/
 .wanjiaming {
 	font-size: 22px;
@@ -357,7 +339,6 @@
 	text-shadow: 0.1px 0.1px 0.25px rgba(0, 0, 0, 0.1);
 	z-index: 99;
 }
-
 /*分享*/
 .fenxiang {
 	font-size: 18px;
@@ -369,7 +350,6 @@
 	text-shadow: 0.1px 0.1px 0.25px rgba(0, 0, 0, 0.1);
 	z-index: 99;
 }
-
 /*展示*/
 .zhanshi {
 	font-size: 18px;
@@ -381,7 +361,6 @@
 	text-shadow: 0.1px 0.1px 0.25px rgba(0, 0, 0, 0.1);
 	z-index: 99;
 }
-
 /*公会*/
 .gonghui {
 	font-size: 15px;
@@ -393,7 +372,6 @@
 	text-shadow: 0.1px 0.1px 0.25px rgba(0, 0, 0, 0.1);
 	z-index: 99;
 }
-
 /*鲜花*/
 .xianhua {
 	font-size: 10px !important;
@@ -405,7 +383,6 @@
 	text-shadow: 0.1px 0.1px 0.25px rgba(0, 0, 0, 0.1);
 	z-index: 99;
 }
-
 /*鸡蛋*/
 .jidan {
 	font-size: 10px;
@@ -427,7 +404,6 @@
 	font-family: shousha;
 	z-index: 99;
 }
-
 .character-dialog > div.biankuangname2 {
 	position: absolute;
 	width: 15px;
@@ -437,7 +413,6 @@
 	font-family: shousha;
 	z-index: 99;
 }
-
 .character-dialog > div.dengji {
 	z-index: 68;
 }
@@ -457,7 +432,6 @@
 	transition-property: opacity, transform;
 	z-index: 69;
 }
-
 /*武将牌不露头*/
 .character-dialog .biankuang2 > div.left2 {
 	left: 19%;
@@ -473,7 +447,6 @@
 	transition-property: opacity, transform;
 	z-index: 69;
 }
-
 .character-dialog div.right {
 	left: 50%;
 	width: 50%;
@@ -522,12 +495,10 @@
 	padding: 10px 0;
 	font-family: "shousha";
 }
-
 .character-dialog div.right .xskill {
 	width: 100%;
 	bottom: 0%;
 }
-
 .character-dialog div.right .xskill > div {
 	display: inline;
 	color: #52432d;

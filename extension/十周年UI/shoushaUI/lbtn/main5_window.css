@@ -10,21 +10,17 @@
 	/*整体上移*/
 	z-index: 3;
 }
-
 #arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#mebg,
 #arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#me {
 	left: 40px !important;
 }
-
 .lbtn-controls~#me #handcards1 {
 	--lessw: 40px;
 }
-
 .lbtn-controls>div {
 	display: block;
 	position: relative;
 }
-
 .buttonyjcm {
 	--w: 56px;
 	--h: calc(var(--w) * 275 / 71);
@@ -40,7 +36,6 @@
 	left: calc(100% - 112.5px);
 	background-color: rgba(0, 0, 0, 0.5);
 }
-
 .buttonyjcm>.controls {
 	--w: 56px;
 	--h: calc(var(--w) * 55 / 71);
@@ -60,23 +55,22 @@
 	/* border: 1px solid #624f42; /* 添加边框 */
 	/* box-shadow: 8px 8px 8px #624f42; /* 添加阴影，值可以根据需要调整 */
 }
-
 /*---------新版小配件--------*/
 .jiluButton_new {
 	display: block;
-	--w: 50px;
-	--h: 50px;
+	--w: 47px;
+	--h: 47px;
 	width: var(--w);
 	height: var(--h);
 	position: absolute;
 	bottom: 2%;
-	left: 4%;
+	left: 45px;
+	right: auto;
 	background-image: url("./images/uibutton/jiaoliuhs.png");
 	background-size: 100% 100%;
 	z-index: 3;
 	margin-left: 10px;
 }
-
 .huanfuButton_new {
 	display: block;
 	--w: 50px;
@@ -92,13 +86,10 @@
 	z-index: 3;
 	margin-left: 10px;
 }
-
 /*-----------------------------*/
-
 .lbtn-confirm:not(.closing).removing {
 	opacity: 1 !important;
 }
-
 .control {
 	--height: 32px;
 	width: auto !important;
@@ -107,7 +98,6 @@
 	line-height: normal;
 	padding: 0;
 }
-
 .control>div {
 	background-image: url("./images/uibutton/new_btnnHS.png");
 	background-size: 100% 100%;
@@ -125,14 +115,12 @@
 	font-family: "yuanli";
 	font-size: 20px;
 }
-
 /*无懈按钮位置*/
 #arena>#dui-controls>.control.stayleft {
 	left: calc(50% - 420px) !important;
 	margin-bottom: 5px !important;
 	order: 3;
 }
-
 .control>div.primary2 {
 	/*取消按钮*/
 	bottom: 1.8px;
@@ -153,7 +141,6 @@
 	overflow: visible;
 	transition: none;
 }
-
 .control>div.primary {
 	/*确认按钮*/
 	color: #000000;
@@ -172,23 +159,18 @@
 	background-size: 100% 100%;
 	background-image: url("./images/uibutton/new_btnnHS.png");
 }
-
 .control>div.disabled:not([data-type="endButton"]) {
 	background-size: 100% 100%;
 }
-
 .control>div.disabled:not([data-type="endButton"]) {
 	/*-webkit-filter: grayscale(100%);*/
 	filter: grayscale(100%);
 	/*-webkit-filter: brightness(100%);*/
 }
-
 .lbtn-confirm[data-skill]>[data-type="skill2"] {
 	display: none;
 }
-
 /*------有点懒具体看main1.css---------------*/
-
 .handcardNumber {
 	bottom: 0px;
 	right: 255px;
@@ -197,7 +179,6 @@
 	color: #f5d78e;
 	z-index: 3;
 }
-
 /*手牌数参数*/
 .handcardNumber>.cardNumber {
 	left: -85px;
@@ -211,7 +192,6 @@
 	letter-spacing: 0.35px;
 	/*字体间距*/
 }
-
 .cardRoundNumber {
 	top: 16px;
 	left: 65px;
@@ -220,7 +200,6 @@
 	text-shadow: #b4a993 0.2px 0.2px 0.2px, #b4a993 0.2px -0.2px 0.2px, #b4a993 -0.2px 0.2px 0.2px, #b4a993 -0.2px -0.2px 0.2px;
 	z-index: 3;
 }
-
 .cardRoundNumber>.cardPileNumber {
 	top: -15px;
 	--w: 150px;
@@ -233,7 +212,6 @@
 	position: relative;
 	z-index: 1;
 }
-
 .cardRoundNumber>.cardPileNumber>span {
 	left: 55px;
 	/*牌堆数右移，越大越靠右*/
@@ -246,7 +224,6 @@
 	color: #433c32;
 	font-size: 18px;
 }
-
 .cardRoundNumber>.roundNumber,
 .cardRoundNumber>.time {
 	/*游戏时间*/
@@ -260,7 +237,6 @@
 	color: #433c32;
 	z-index: 3;
 }
-
 .cardRoundNumber>.time {
 	/*游戏时间*/
 	top: -3px;
@@ -269,9 +245,7 @@
 	font-size: 17px;
 	color: #433c32;
 }
-
 /*托管中图片（）*/
-
 #autonode>div:last-child {
 	z-index: 10;
 	margin-bottom: -75px !important;
@@ -291,7 +265,6 @@
 	-webkit-text-fill-color: transparent;
 	text-shadow: none !important;
 }
-
 /*左手模式*/
 /*换肤*/
 .huanfuButton_new1 {
@@ -308,7 +281,6 @@
 	border-radius: 1px;
 	z-index: 3;
 }
-
 .jiluButton_new1 {
 	display: block;
 	--w: 47px;
@@ -323,7 +295,6 @@
 	border-radius: 1px;
 	z-index: 4;
 }
-
 .xiaolianButton_new1 {
 	display: block;
 	--w: 47px;
@@ -337,7 +308,6 @@
 	background-size: 100% 100%;
 	z-index: 3;
 }
-
 /*------左手手牌显示---------------*/
 .handcardNumber1 {
 	bottom: 0px;
@@ -347,7 +317,6 @@
 	color: #f5d78e;
 	z-index: 1;
 }
-
 .handcardNumber1>.cardPicture {
 	left: 130px;
 	bottom: -6px;
@@ -362,7 +331,6 @@
 	transform: scaleX(-1);
 	z-index: -1;
 }
-
 /*手牌数参数*/
 .handcardNumber1>.cardNumber {
 	left: 160px;

@@ -6,7 +6,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 	} else {
 		game.saveConfig("enable_drag", true);
 	}
-
 	//OL随机框 by柳下跖
 	if (lib.config.extension_十周年UI_newDecadeStyle && lib.config.extension_十周年UI_newDecadeStyle == "onlineUI") {
 		//给龙头添加OL等阶框
@@ -28,10 +27,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					bing: { k: "k8", border: "border_campOL4", top: "-6px", right: "-5.5px", height: "109%", width: "113%" },
 					yan: { k: "k2", border: "border_campOL5", top: "-20.5px", right: "-5px", height: "115%", width: "120%" },
 				};
-
 				// 稀有度映射
 				const rarityMap = ["silver", "gold", "yu", "bing", "yan"];
-
 				let rarity;
 				if (lib.config.extension_十周年UI_longLevel == "ten") {
 					const rarityTypes = {
@@ -45,16 +42,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				} else if (lib.config.extension_十周年UI_longLevel == "eleven") {
 					rarity = rarityMap.randomGet();
 				}
-
 				if (rarity && rarityConfig[rarity]) {
 					const config = rarityConfig[rarity];
-
 					// 创建龙头图片
 					const longtou = document.createElement("img");
 					longtou.src = decadeUIPath + "/assets/image/OL/" + config.k + ".png";
 					longtou.style.cssText = "pointer-events:none;position:absolute;display:block;top:" + config.top + ";right:" + config.right + ";height:" + config.height + ";width:" + config.width + ";z-index:60";
 					player.appendChild(longtou);
-
 					// 创建龙尾边框
 					const longwei = document.createElement("img");
 					longwei.src = decadeUIPath + "/assets/image/OL/" + config.border + ".png";
@@ -64,7 +58,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		};
 	}
-
 	//势力选择
 	if (lib.config["extension_十周年UI_shiliyouhua"]) {
 		Object.defineProperty(lib, "group", {
@@ -101,7 +94,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		};
 	}
-
 	//武将背景
 	if (lib.config["extension_十周年UI_wujiangbeijing"]) {
 		lib.skill._wjBackground = {
@@ -138,34 +130,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			}
 		});
 	}
-
-	// 全选按钮功能 by奇妙工具做修改
-	lib.hooks.checkBegin.add("Selectall", () => {
-		const event = get.event();
-		const needMultiSelect = event.selectCard?.[1] > 1 && event.player == game.me;
-		const isDiscardPhase = event.name === "phaseDiscard" || event.parent?.name === "phaseDiscard";
-		if (needMultiSelect && !ui.Selectall && !isDiscardPhase) {
-			ui.Selectall = ui.create.control("全选", () => {
-				ai.basic.chooseCard(card => (get.position(card) === "h" ? 114514 : 0));
-				event.custom?.add?.card?.();
-				ui.selected.cards?.forEach(card => card.updateTransform(true));
-			});
-		} else if (!needMultiSelect || isDiscardPhase) {
-			removeCardQX();
-		}
-	});
-	lib.hooks.uncheckBegin.add("Selectall", () => {
-		if (get.event().result?.bool) {
-			removeCardQX();
-		}
-	});
-	const removeCardQX = () => {
-		if (ui.Selectall) {
-			ui.Selectall.remove();
-			delete ui.Selectall;
-		}
-	};
-
 	// 局内交互优化
 	if (lib.config["extension_十周年UI_jiaohuyinxiao"]) {
 		lib.skill._useCardAudio = {
@@ -179,7 +143,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				const card = trigger.card;
 				const cardType = get.type(card);
 				let audioName;
-
 				if (cardType === "basic" || cardType === "trick") {
 					audioName = "GameShowCard";
 				} else if (cardType === "equip") {
@@ -193,7 +156,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					};
 					audioName = audioMap[equipType];
 				}
-
 				if (audioName) {
 					game.playAudio("..", "extension", "十周年UI", `audio/${audioName}`);
 				}
@@ -202,19 +164,16 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		document.body.addEventListener("mousedown", function (e) {
 			const target = e.target;
 			let audioToPlay = null;
-
 			if (target.closest("#dui-controls") && (target.classList.contains("control") || target.parentElement.classList.contains("control"))) {
 				audioToPlay = "BtnSure";
 			} else if (target.matches(".menubutton, .button, .card")) {
 				audioToPlay = "card_click";
 			}
-
 			if (audioToPlay) {
 				game.playAudio("..", "extension", "十周年UI", `audio/${audioToPlay}`);
 			}
 		});
 	}
-
 	//手气卡美化
 	if (lib.config["extension_十周年UI_shouqikamh"]) {
 		lib.element.content.gameDraw = async function () {
@@ -246,7 +205,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				} else {
 					currentPlayer.directgain(cards);
 				}
-
 				if (currentPlayer.singleHp && get.mode() !== "guozhan" && (lib.config.mode !== "doudizhu" || _status.mode !== "online")) {
 					currentPlayer.doubleDraw();
 				}
@@ -255,7 +213,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			} while (currentPlayer !== end);
 			let changeCard = get.config("change_card");
 			const isDisabled = _status.connectMode || (lib.config.mode === "single" && _status.mode !== "wuxianhuoli") || (lib.config.mode === "doudizhu" && _status.mode === "online") || !["identity", "guozhan", "doudizhu", "single"].includes(lib.config.mode);
-
 			if (isDisabled) {
 				changeCard = "disabled";
 			}
@@ -304,7 +261,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						const otherGetCards = event.otherPile?.[game.me.playerid]?.getCards;
 						if (otherGetCards) cards.addArray(otherGetCards(count));
 						if (cards.length < count) cards.addArray(get.cards(count - cards.length));
-
 						if (event.gaintag?.[game.me.playerid]) {
 							const gaintag = event.gaintag[game.me.playerid];
 							const list = typeof gaintag === "function" ? gaintag(count, cards) : [[cards, gaintag]];
@@ -326,7 +282,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			setTimeout(decadeUI.effect.gameStart, 51);
 		};
 	}
-
 	// 卡牌边框
 	const borderImageName = lib.config.extension_十周年UI_cardkmh;
 	if (borderImageName && borderImageName !== "off") {
@@ -334,9 +289,9 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		const borderImageUrl = `${lib.assetURL}extension/十周年UI/assets/image/${borderImageName}.png`;
 		const commonBorderStyles = `
 				border: 1px solid;
-				border-radius: 6px;
+				border-radius: 10px;
 				border-image-source: url('${borderImageUrl}');
-				border-image-slice: 20 20 20 20;
+				border-image-slice: 17 17 17 17;
 			`;
 		const handCardStyles = `
 				.hand-cards > .handcards > .card {
@@ -363,14 +318,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		style.innerHTML = `${handCardStyles}${playedCardStyles}`;
 		document.head.appendChild(style);
 	}
-
 	//卡牌背景
 	if (lib.config.extension_十周年UI_cardbj && lib.config.extension_十周年UI_cardbj !== "kb1") {
 		const style = document.createElement("style");
 		style.innerHTML = `.card:empty,.card.infohidden{background:url('${lib.assetURL}extension/十周年UI/assets/image/${lib.config.extension_十周年UI_cardbj}.png');background-size:100% 100% !important;}`;
 		document.head.appendChild(style);
 	}
-
 	//阶段提示
 	if (lib.config.extension_十周年UI_JDTS) {
 		game.showJDTsImage = (imageName, durationOrPersistent) => {
@@ -378,7 +331,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			const extMap = { 2: "png", 3: "webp", 4: "jpeg" };
 			const ext = extMap[style] || "jpg";
 			const imgPath = `extension/十周年UI/shoushaUI/lbtn/images/JDTS/${imageName}.${ext}`;
-
 			let position;
 			if (style == "1") {
 				const isSpecialMode = get.mode() === "taixuhuanjing" || lib.config.extension_EngEX_SSServant;
@@ -386,10 +338,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			} else {
 				position = [18, 65, 8, 4.4];
 			}
-
 			game.as_showImage(imgPath, position, durationOrPersistent);
 		};
-
 		//游戏结束消失
 		lib.onover.push(function (bool) {
 			game.as_removeImage();
@@ -828,7 +778,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		};
 	}
-
 	// 数字特效
 	if (lib.config.extension_十周年UI_newDecadeStyle === "othersOff" || lib.config.extension_十周年UI_newDecadeStyle === "on") {
 		window._WJMHHUIFUSHUZITEXIAO = { shuzi2: { name: "../../../十周年UI/assets/animation/globaltexiao/huifushuzi/shuzi2" } };
@@ -886,7 +835,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		};
 	}
-
 	//目标指示特效
 	lib.element.player.inits = [].concat(lib.element.player.inits || []).concat(player => {
 		if (player.ChupaizhishiXObserver) return;
@@ -904,14 +852,12 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		let timer = null;
 		const startAnimation = element => {
 			if (element.ChupaizhishiXid || timer) return;
-
 			if (!window.chupaiload) {
 				window.chupaiload = true;
 			}
 			timer = setTimeout(() => {
 				const config = decadeUI.config.chupaizhishi;
 				const animationConfig = ANIMATION_CONFIG[config];
-
 				if (config !== "off" && animationConfig) {
 					element.ChupaizhishiXid = dcdAnim.playSpine(
 						{
@@ -940,10 +886,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		const observer = new globalThis.MutationObserver(mutations => {
 			for (const mutation of mutations) {
 				if (mutation.attributeName !== "class") continue;
-
 				const target = mutation.target;
 				const isSelectable = target.classList.contains("selectable");
-
 				if (isSelectable) {
 					startAnimation(target);
 				} else {
@@ -957,7 +901,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 		player.ChupaizhishiXObserver = observer;
 	});
-
 	// 技能外显-仅在babysha样式下且场上人物小于5人时生效
 	if (lib.config.extension_十周年UI_newDecadeStyle === "babysha" && game.players.length < 5) {
 		const getAllPlayersCount = () => game.players.length + (game.dead ? game.dead.length : 0);
@@ -1044,7 +987,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		})();
 		lib.refreshPlayerSkills = skillDisplayManager.refreshPlayerSkills;
 	}
-
 	// 清理所有技能外显
 	function clearAllSkillDisplay() {
 		[...game.players, ...(game.dead || [])].forEach(player => {

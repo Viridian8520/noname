@@ -10,7 +10,6 @@
 	transition-timing-function: ease-in;
 	z-index: 9;
 }
-
 /*击杀特效*/
 .effect-window > .killer-warpper {
 	display: block;
@@ -24,7 +23,6 @@
 	animation-fill-mode: forwards;
 	z-index: 2;
 }
-
 .effect-window > .killer-warpper::before {
 	content: "";
 	display: block;
@@ -38,7 +36,6 @@
 	background-image: url("../assets/image/shine.png");
 	z-index: -1;
 }
-
 .effect-window > .killer-warpper > .killer {
 	display: block;
 	position: absolute;
@@ -52,7 +49,6 @@
 	/* filter: drop-shadow(0 0 30px yellow); */
 	/* -webkit-filter: drop-shadow(0 0 30px yellow); */
 }
-
 .effect-window > .victim {
 	display: block;
 	left: 100%;
@@ -65,12 +61,10 @@
 	animation-fill-mode: forwards;
 	z-index: 1;
 }
-
 .effect-window > .victim > div {
 	filter: drop-shadow(0 0 3px black) grayscale(1);
 	-webkit-filter: drop-shadow(0 0 3px black) grayscale(1);
 }
-
 .effect-window > .victim > .back {
 	display: block;
 	position: absolute;
@@ -79,7 +73,6 @@
 	width: 100%;
 	height: 100%;
 }
-
 .effect-window > .victim > .back > .part1,
 .effect-window > .victim > .back > .part2 {
 	display: block;
@@ -95,19 +88,16 @@
 	animation-duration: 0.6s;
 	animation-fill-mode: forwards;
 }
-
 .effect-window > .victim > .back > .part1 {
 	animation-name: split-part1;
 	clip-path: polygon(0 0, 100% 0, 100% 70%, 0 30%);
 	-webkit-clip-path: polygon(0 0, 100% 0, 100% 70%, 0 30%);
 }
-
 .effect-window > .victim > .back > .part2 {
 	animation-name: split-part2;
 	clip-path: polygon(0 30%, 100% 70%, 100% 100%, 0 100%);
 	-webkit-clip-path: polygon(0 30%, 100% 70%, 100% 100%, 0 100%);
 }
-
 .effect-window > .victim > .rout {
 	display: flex;
 	align-items: center;
@@ -128,12 +118,10 @@
 	filter: none;
 	-webkit-filter: none;
 }
-
 .effect-window > .victim > .rout.shadow {
 	animation: scale-rout-shadow 1s forwards;
 	animation-delay: 0.8s;
 }
-
 .effect-window > .li {
 	display: block;
 	left: 100%;
@@ -148,7 +136,6 @@
 	animation: moveout-left 0.4s forwards;
 	animation-iteration-count: 2;
 }
-
 .effect-window > .li-big {
 	display: block;
 	left: 100%;
@@ -160,7 +147,6 @@
 	-webkit-filter: blur(10px) drop-shadow(0 0 50px yellow);
 	animation: moveout-left-li-big 0.8s linear forwards;
 }
-
 .skill-name {
 	display: block;
 	position: absolute;
@@ -174,77 +160,62 @@
 	z-index: 99 !important;
 	animation: scale-skill-name 2.18s linear forwards;
 }
-
 @keyframes moveout-left-killer {
 	0% {
 		left: 100%;
 	}
-
 	10% {
 		left: calc(32% - 120px);
 	}
-
 	60% {
 		left: calc(32% - 120px);
 		opacity: 1;
 	}
-
 	100% {
 		left: calc(32% - 120px);
 		opacity: 0;
 	}
 }
-
 @keyframes moveout-left-victim {
 	0% {
 		left: 100%;
 	}
-
 	6% {
 		left: calc(67% - 90px);
 	}
-
 	60% {
 		left: calc(67% - 90px);
 		opacity: 1;
 	}
-
 	100% {
 		left: calc(67% - 90px);
 		opacity: 0;
 	}
 }
-
 @keyframes moveout-left-li-big {
 	0% {
 		left: 100%;
 	}
-
 	100% {
 		left: -120%;
 	}
 }
-
 @keyframes split-part1 {
 	0% {
 		transform: translateZ(0);
 	}
-
 	100% {
 		transform: translate(20px, -20px);
 	}
 }
-
 @keyframes split-part2 {
 	0% {
 		transform: translateZ(0);
 	}
-
 	100% {
 		transform: translate(-20px, 20px);
 	}
 }
-
 @keyframes scale-rout {
 	0% {
 		opacity: 1;
@@ -255,7 +226,6 @@
 		transform: scale(1);
 	}
 }
-
 @keyframes scale-rout-shadow {
 	0% {
 		opacity: 1;
@@ -266,38 +236,31 @@
 		transform: scale(1.8);
 	}
 }
-
 @keyframes scale-skill-name {
 	0% {
 		opacity: 0;
 		transform: translateX(-50%) scale(5);
 	}
-
 	18% {
 		opacity: 0;
 		transform: translateX(-50%) scale(5);
 	}
-
 	20% {
 		opacity: 1;
 		transform: translateX(-50%) scale(4.5);
 	}
-
 	23% {
 		opacity: 1;
 		transform: translateX(-50%) scale(0.95);
 	}
-
 	27% {
 		opacity: 1;
 		transform: translateX(-50%) scale(1);
 	}
-
 	92% {
 		opacity: 1;
 		transform: translateX(-50%) scale(1);
 	}
-
 	100% {
 		opacity: 0;
 		transform: translateX(-50%) scale(1);

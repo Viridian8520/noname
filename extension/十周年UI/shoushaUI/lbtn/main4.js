@@ -104,25 +104,21 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 		},
 	};
-
 	// 工具函数
 	const Utils = {
 		// 播放音频
 		playAudio(path) {
 			game.playAudio(path);
 		},
-
 		// 创建元素并设置样式
 		createElementWithStyle(className, content, parent, clickHandler) {
 			const element = ui.create.div(className, content, parent, clickHandler);
 			return element;
 		},
-
 		// 设置背景图片
 		setBackgroundImage(element, path) {
 			element.setBackgroundImage(path);
 		},
-
 		// 获取当前游戏模式
 		getCurrentMode() {
 			if (lib.configOL.doudizhu_mode || lib.config.mode == "doudizhu") return "doudizhu";
@@ -132,7 +128,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (lib.configOL.versus_mode || lib.config.mode == "versus") return "versus";
 			return "identity";
 		},
-
 		// 格式化时间
 		formatTime(seconds) {
 			const hours = Math.floor(seconds / 3600);
@@ -141,7 +136,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			return (hours > 0 ? (hours < 10 ? "0" + hours : hours) + ":" : "") + (minutes < 10 ? "0" + minutes : minutes) + ":" + (secs < 10 ? "0" + secs : secs);
 		},
 	};
-
 	/*预留的接口
     ui.huanfubutton   武将头像上面的换肤按钮
     ui.identityShow    左上角的牌局记录及胜利条件
@@ -240,7 +234,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		player_list.sort(function (a, b) {
 			return a.getSeatNum() - b.getSeatNum();
 		});
-
 		function changeall(event) {
 			event.stopPropagation();
 			document.querySelectorAll(".gou").forEach(gou => {
@@ -267,7 +260,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			let namebg = ui.create.div(".namebg", columnbox);
 			if (game.dead.includes(tar)) namebg.style.filter = "grayscale(0%)";
 			let namebgbg = ui.create.div(".namebgbg", namebg);
-
 			function change(event) {
 				event.stopPropagation();
 				document.querySelectorAll(".gou").forEach(gou => {
@@ -343,7 +335,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			clonedSidebar.scrollTop = clonedSidebar.scrollHeight - clonedSidebar.clientHeight;
 		}
 	};
-
 	function huanfu() {
 		ui.huanfubutton = ui.create.div(".huanfubutton", ui.window);
 		ui.huanfubutton.onclick = function () {
@@ -369,7 +360,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		ui.updateHuanfuButton();
 		setInterval(ui.updateHuanfuButton, 1000);
 	}
-
 	function shenfenrenwu() {
 		//身份任务
 		const setupModeConfigs = () => {
@@ -410,10 +400,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					return {};
 				},
 			};
-
 			// 确定当前游戏模式
 			const currentMode = Utils.getCurrentMode();
-
 			// 设置翻译文本
 			if (currentMode) {
 				const config = typeof modeConfigs[currentMode] === "function" ? modeConfigs[currentMode]() : modeConfigs[currentMode];
@@ -422,20 +410,17 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 			}
 		};
-
 		const updatePlayerNicknames = () => {
 			game.countPlayer(current => {
 				const namex = current === game.me ? lib.config.connect_nickname : ["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "无语", "小曦", "墨渊", "k9", "扶苏", "皇叔"].randomGet();
 				if (!game.hasPlayer(current => {})) if (!current.nickname) current.nickname = namex;
 			});
 		};
-
 		const buildIdentityString = () => {
 			let str = "";
 			if (lib.config.mode == "guozhan" || (lib.config.mode == "versus" && get.config("versus_mode") == "siguo") || (lib.config.mode == "versus" && get.config("versus_mode") == "jiange")) {
 				const identities = ["unknown", "wei", "shu", "wu", "qun", "jin", "ye", "key"];
 				const identityCounts = {};
-
 				for (let identity of identities) {
 					identityCounts[identity] = game.countPlayer(current => {
 						return current.identity === identity;
@@ -454,14 +439,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			return str;
 		};
-
 		const updateIdentityShow = () => {
 			updatePlayerNicknames();
-
 			//左上角整体（身份任务及牌局记录）
 			var identityShow = ui.identityShow;
 			var str = buildIdentityString();
-
 			if (game.me) str += '<span style="color: orange;"><center>' + get.translation(game.me.identity + "_win_option") + "</span>";
 			if (lib.config.mode == "taixuhuanjing") {
 				game.gamePremise = function () {
@@ -472,29 +454,23 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			identityShow.innerHTML = '<span style="font-family:shousha;font-size:16px;font-weight:500;text-align:right;line-height:20px;color:#C1AD92;text-shadow:none;max-width:20px;word-wrap:break-word;">' + str + "</span>";
 			let jiluShow = ui.create.div(".jiluButton", identityShow, ui.click.pause);
 		};
-
 		// 初始化
 		setupModeConfigs();
-
 		if (ui.identityShow == undefined) {
 			ui.identityShow = ui.create.div(".identityShow", "身份加载中......", ui.window);
 		}
-
 		ui.identityShow_update = updateIdentityShow;
-
 		setInterval(function () {
 			//更新身份任务
 			ui.identityShow_update();
 		}, 1000);
 	}
-
 	function createcaidan() {
 		//菜单按钮
 		const createMenuButton = () => {
 			ui.caidanbutton = ui.create.div(".ui.caidanbutton", ui.window);
 			ui.caidanbutton.onclick = openMenuPopup;
 		};
-
 		const openMenuPopup = () => {
 			Utils.playAudio(CONSTANTS.AUDIO.CLICK);
 			var popuperContainer = ui.create.div(".popup-container", ui.window);
@@ -503,16 +479,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				event.stopPropagation();
 				popuperContainer.delete(200);
 			});
-
 			const caidanHOME = ui.create.div(".caidanopen", popuperContainer);
 			createMenuItems(caidanHOME);
 		};
-
 		const createMenuItems = container => {
 			// 展开后的菜单按钮
 			const caidan2 = Utils.createElementWithStyle(".controls", container);
 			Utils.setBackgroundImage(caidan2, CONSTANTS.IMAGES.CAIDAN2);
-
 			// 设置按钮
 			const SZ = Utils.createElementWithStyle(".controls", container);
 			Utils.setBackgroundImage(SZ, CONSTANTS.IMAGES.SHEZHI);
@@ -525,7 +498,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.system1.classList.remove("shown");
 				ui.system2.classList.remove("shown");
 			});
-
 			// 背景按钮
 			const BJ = Utils.createElementWithStyle(".controls", container);
 			Utils.setBackgroundImage(BJ, CONSTANTS.IMAGES.BEIJING);
@@ -533,25 +505,21 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				Utils.playAudio(CONSTANTS.AUDIO.BUTTON);
 				openBackgroundSelector();
 			});
-
 			// 托管按钮
 			const TG = Utils.createElementWithStyle(".controls", container);
 			Utils.setBackgroundImage(TG, CONSTANTS.IMAGES.TUOGUAN);
 			TG.addEventListener("click", event => {
 				ui.click.auto();
 			});
-
 			// 离开按钮
 			const TC = Utils.createElementWithStyle(".controls", container);
 			Utils.setBackgroundImage(TC, CONSTANTS.IMAGES.LIKAI);
 			TC.addEventListener("click", event => {
 				window.location.reload();
 			});
-
 			// 动态添加系统菜单项
 			addSystemMenuItems(container);
 		};
-
 		const openBackgroundSelector = () => {
 			var popuperContainer = ui.create.div(
 				".popup-container",
@@ -567,22 +535,37 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			});
 			var bigdialog = ui.create.div(".bgdialog", popuperContainer);
 			var bgbg = ui.create.div(".backgroundsbg", bigdialog);
-
 			loadBackgroundImages(bgbg);
 		};
-
 		const loadBackgroundImages = container => {
 			let path = "image/background/";
 			game.getFileList(path, function (folders, files) {
+				// 系统在前，自定义（cdv_bg_ / custom_bg_）在后
+				let systemFiles = [];
+				let customFiles = [];
+				// 获取隐藏的系统背景列表
+				let hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
 				for (let tempbackground of files) {
 					let fileName = tempbackground.replace(/\.[^/.]+$/, "");
 					let fileExtension = tempbackground.split(".").pop();
 					if (!fileExtension || fileName.startsWith("oltianhou_")) continue;
-
+					// 检查系统背景是否被隐藏
+					if (fileName.startsWith("cdv_bg_") || fileName.startsWith("custom_bg_")) {
+						customFiles.push(tempbackground);
+					} else {
+						// 系统背景：检查是否在隐藏列表中
+						if (!hiddenBgs.includes(fileName)) {
+							systemFiles.push(tempbackground);
+						}
+					}
+				}
+				let orderedFiles = systemFiles.concat(customFiles);
+				for (let tempbackground of orderedFiles) {
+					let fileName = tempbackground.replace(/\.[^/.]+$/, "");
 					let img = ui.create.div(".backgrounds", container);
+					img.dataset.name = fileName;
 					img.setBackgroundImage(path + tempbackground);
 					if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
-
 					img.addEventListener("click", function () {
 						let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
 						allSelectedElements.forEach(function (selectedElement) {
@@ -593,19 +576,125 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						lib.init.background();
 						game.updateBackground();
 					});
-
-					let backgroundName = lib.configMenu.appearence.config.image_background.item[fileName] ? lib.configMenu.appearence.config.image_background.item[fileName] : fileName;
+					let customNameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
+					let backgroundName = lib.configMenu.appearence.config.image_background.item[fileName] ? lib.configMenu.appearence.config.image_background.item[fileName] : (customNameMap[fileName] || fileName);
 					ui.create.div(".buttontext", backgroundName, img);
 				}
+				// 添加 "添加背景" 项
+				(function(container){
+					var addItem = ui.create.div(".backgrounds", container);
+					ui.create.div(".buttontext", "添加背景", addItem);
+					var input = document.createElement("input");
+					input.type = "file";
+					input.accept = "image/*";
+					input.multiple = true; // 支持多选
+					input.style.display = "none";
+					document.body.appendChild(input);
+					var write = (data, dir, name) => (game.promises && game.promises.writeFile) ? game.promises.writeFile(data, dir, name) : new Promise(resolve => game.writeFile(data, dir, name, resolve));
+					addItem.addEventListener("click", function(){
+						Utils.playAudio(CONSTANTS.AUDIO.BUTTON);
+						input.click();
+					});
+					input.onchange = function(e){
+						var files = e.target.files;
+						if(!files || files.length === 0) return;
+						var processFiles = async function() {
+							var nameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
+							for(var i = 0; i < files.length; i++) {
+								var file = files[i];
+								if(!file) continue;
+								var base = (game.writeFile ? "cdv_" : "custom_") + "bg_" + Date.now() + "_" + i;
+								var targetName = base + ".jpg";
+								var originName = (file.name || "").replace(/\.[^/.]+$/, "");
+								nameMap[base] = originName || base;
+								try {
+									await write(file, "image/background", targetName);
+									if(i === 0) {
+										game.saveConfig("image_background", base);
+										lib.init.background();
+										game.updateBackground();
+									}
+								} catch(err) {
+									console && console.error && console.error("导入背景失败:", err);
+								}
+							}
+							lib.config.extension_十周年UI_customBackgroundNames = nameMap;
+							game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap);
+							while(container.firstChild){ container.removeChild(container.firstChild); }
+							loadBackgroundImages(container);
+						};
+						processFiles();
+					};
+					// 删除背景（紧随添加背景后）
+					var delItem = ui.create.div(".backgrounds", container);
+					ui.create.div(".buttontext", "删除背景", delItem);
+					delItem.addEventListener("click", function(){
+						Utils.playAudio(CONSTANTS.AUDIO.BUTTON);
+						var tips = ui.create.div(".buttontext", "点击要删除的自定义背景或隐藏系统背景", delItem);
+						var onClickToDelete = function(ev){
+							var target = ev.currentTarget;
+							var fname = target && target.dataset && target.dataset.name;
+							if(!fname){ return; }
+							// 检查是否为系统背景
+							if(!(fname.startsWith("cdv_bg_") || fname.startsWith("custom_bg_"))){
+								// 系统背景：隐藏而不是删除
+								if(confirm("是否隐藏此系统背景？")){
+									// 获取隐藏背景列表
+									var hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
+									if(!hiddenBgs.includes(fname)){
+										hiddenBgs.push(fname);
+										lib.config.extension_十周年UI_hiddenSystemBackgrounds = hiddenBgs;
+										game.saveConfig("extension_十周年UI_hiddenSystemBackgrounds", hiddenBgs);
+									}
+									// 如果当前背景被隐藏，切换到默认背景
+									if(lib.config.image_background == fname){
+										game.saveConfig("image_background", "default");
+										lib.init.background();
+										game.updateBackground();
+									}
+									// 重新加载背景列表
+									while(container.firstChild){ container.removeChild(container.firstChild); }
+									loadBackgroundImages(container);
+								}
+								cleanup();
+								return;
+							}
+							// 自定义背景：删除
+							if(confirm("是否删除此背景？（此操作不可撤销）")){
+								var nameMap2 = lib.config.extension_十周年UI_customBackgroundNames || {};
+								if(nameMap2[fname]){
+									delete nameMap2[fname];
+									lib.config.extension_十周年UI_customBackgroundNames = nameMap2;
+									game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap2);
+								}
+								if(fname.startsWith("cdv_bg_")){
+									game.removeFile("image/background/" + fname + ".jpg");
+								}else{
+									game.deleteDB("image", fname);
+								}
+								if(lib.config.image_background == fname){
+									game.saveConfig("image_background", "default");
+									lib.init.background();
+									game.updateBackground();
+								}
+								while(container.firstChild){ container.removeChild(container.firstChild); }
+								loadBackgroundImages(container);
+							}
+							cleanup();
+						};
+						var items = Array.from(container.querySelectorAll('.backgrounds'));
+						items.slice(0, Math.max(0, items.length - 2)).forEach(function(n){
+							n.addEventListener('click', onClickToDelete, { once: true });
+						});
+						function cleanup(){ if(tips && tips.remove) tips.remove(); }
+					});
+				})(container);
 			});
 		};
-
 		const addSystemMenuItems = container => {
 			const excludedItems = ["聊天", "联机大厅", "最近连接", "投降", "重来", "选项", "暂停", "不询问无懈", "托管", "♫", "整理手牌", "收藏", "牌堆"];
-
 			for (let i in game.system) {
 				if (excludedItems.includes(game.system[i].name)) continue;
-
 				let node = ui.create.div(".controls", game.system[i].name, container);
 				if (game.system[i].click) {
 					node.addEventListener(
@@ -619,11 +708,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			}
 		};
-
 		// 初始化菜单按钮
 		createMenuButton();
 	}
-
 	function xiaopeijian() {
 		//小配件
 		const GIFT_CONFIG = {
@@ -652,7 +739,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				show: "shoe",
 			},
 		};
-
 		const buttonConfigs = {
 			gift: {
 				//送花
@@ -670,7 +756,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				click: createSortCardFunction,
 			},
 		};
-
 		function createGiftFunction() {
 			let container = ui.create.div(".popup-container", ui.window, function (e) {
 				if (e.target === container) container.hide();
@@ -678,7 +763,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			let giftbg = ui.create.div(".giftbg", container);
 			ui.create.div(".giftbgtext", "点击道具使用", giftbg);
 			let giftes = ui.create.div(".giftes", giftbg);
-
 			for (let i in GIFT_CONFIG) {
 				let gift = ui.create.div(".gift", giftes, function (event) {
 					giftbg.hide();
@@ -689,7 +773,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.create.div(".giftcost", GIFT_CONFIG[i].cost, gift);
 			}
 		}
-
 		function createGiftSelection(container, giftType, giftbg) {
 			let container2 = ui.create.div(".popup-container", ui.window, function (e) {
 				if (e.target === container2) {
@@ -702,7 +785,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			ui.create.div(".giftbgtext", "点击框外区域可退出", giftbg2);
 			let gift2 = ui.create.div(".gift2", giftbg2);
 			gift2.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/OL_line/gift/" + giftType.image);
-
 			game.countPlayer(current => {
 				if (current !== game.me) {
 					let player = current.node.avatar;
@@ -712,7 +794,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							game.send("throwEmotion", current, giftType.show);
 						} else game.me.throwEmotion(current, giftType.show);
 					});
-
 					let playerRect = player.getBoundingClientRect();
 					let containerRect = container.getBoundingClientRect();
 					giftgive.style.position = "absolute";
@@ -723,10 +804,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			});
 		}
-
 		function createTalkFunction() {
 			if (!game.me) return;
-
 			let container = ui.create.div(".popup-container", ui.window, function (e) {
 				if (e.target === container) container.hide();
 				if (shuru) {
@@ -734,11 +813,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					shuru.style.display = "none";
 				}
 			});
-
 			let bg = ui.create.div(".talkbg", container);
 			let typechanges = ui.create.div(".typechanges", bg);
 			let rightbg = ui.create.div(".talkrightbg", bg);
-
 			const typechange = {
 				quick: {
 					name: "快捷",
@@ -753,21 +830,17 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					click: () => createHistoryPanel(rightbg),
 				},
 			};
-
 			createTypeChangeButtons(typechanges, typechange, rightbg);
 			let dazi = ui.create.div(".dazi", "打字", bg);
 			let shuru = null;
-
 			setupInputHandler(dazi, shuru, rightbg, container);
 		}
-
 		function createQuickMessages(rightbg) {
 			let skills = game.me.getSkills(null, false, false).filter(skill => {
 				let info = get.info(skill);
 				return !info || !info.charlotte;
 			});
 			let skillsx = skills;
-
 			for (let skill of skills) {
 				let info = get.info(skill);
 				if (info.derivation) {
@@ -780,11 +853,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 				}
 			}
-
 			skillsx = skillsx.filter((item, index) => {
 				return skillsx.indexOf(item) === index;
 			});
-
 			for (let name of skillsx) {
 				if (!get.info(name)) continue;
 				let textList = game.parseSkillText(name, game.me.name);
@@ -808,7 +879,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					});
 				}
 			}
-
 			for (let i = 0; i < lib.quickVoice.length; i++) {
 				let chat = lib.quickVoice[i];
 				ui.create.div(".talkquick", chat, rightbg, function () {
@@ -817,7 +887,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 			}
 		}
-
 		function createEmotionPanel(rightbg) {
 			const gridStyle = {
 				display: "grid",
@@ -827,13 +896,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				margin: "0 auto",
 			};
 			let list1, list2;
-
 			function createDivWithStyle(className, content, style) {
 				const div = ui.create.div(className, content);
 				Object.assign(div.style, style);
 				return div;
 			}
-
 			function createEmotionButton(pack, emotionID) {
 				const button = ui.create.div(".card.fullskin", `<img src="${lib.assetURL}image/emotion/${pack}/${emotionID}.gif" width="80" height="80">`, () => {
 					if (game.online) game.send("emotion", game.onlineID, pack, emotionID);
@@ -847,7 +914,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 				return button;
 			}
-
 			function createEmotionPack(pack) {
 				const packDiv = ui.create.div(".card.fullskin", `<img src="${lib.assetURL}image/emotion/${pack}/1.gif" width="80" height="80">`, () => {
 					list2.innerHTML = "";
@@ -866,7 +932,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 				return packDiv;
 			}
-
 			if (!list1) list1 = createDivWithStyle(".emotionbg", rightbg, gridStyle);
 			else list1.style.display = "grid";
 			if (!list2) list2 = createDivWithStyle(".emotionbg", rightbg, gridStyle);
@@ -877,7 +942,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				list1.appendChild(emotionPack);
 			}
 		}
-
 		function createHistoryPanel(rightbg) {
 			const nameColor = "rgb(220, 170, 50)";
 			for (let chat of lib.chatHistory) {
@@ -886,7 +950,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			rightbg.scrollTop = rightbg.scrollHeight;
 		}
-
 		function createTypeChangeButtons(typechanges, typechange, rightbg) {
 			let allButtons = [];
 			for (let [buttonName, config] of Object.entries(typechange)) {
@@ -907,7 +970,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			typechange.quick.click();
 			if (allButtons.length > 0) allButtons[0].classList.add("typechangelight");
 		}
-
 		function setupInputHandler(dazi, shuru, rightbg, container) {
 			dazi.addEventListener("click", function (event) {
 				event.stopPropagation();
@@ -921,7 +983,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				shuru.style.display = "block";
 				shuru.focus();
 			});
-
 			ui.window.addEventListener("click", function (event) {
 				if (shuru && shuru.style.display === "block") {
 					if (!shuru.contains(event.target) && event.target !== dazi) {
@@ -929,7 +990,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 				}
 			});
-
 			document.addEventListener("keydown", function (event) {
 				if (shuru && shuru.style.display === "block" && event.key === "Enter") {
 					let inputValue = shuru.value.trim();
@@ -946,17 +1006,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			});
 		}
-
 		function createSortCardFunction() {
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
-
 			var cards = game.me.getCards("hs");
 			var sort2 = function (b, a) {
 				if (a.name != b.name) return lib.sort.card(a.name, b.name);
 				else if (a.suit != b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
 				else return a.number - b.number;
 			};
-
 			if (cards.length > 1) {
 				cards.sort(sort2);
 				cards.forEach(function (i, j) {
@@ -965,12 +1022,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				dui.queueNextFrameTick(dui.layoutHand, dui);
 			}
 		}
-
 		// 创建按钮容器
-		if (lib.config.extension_十周年UI_XPJ != "on") {
-			ui.anniubuttons = ui.create.div(lib.config["extension_十周年UI_rightLayout"] == "on" ? ".leftbuttons" : ".rightbuttons", ui.window);
-		}
-
+		ui.anniubuttons = ui.create.div(lib.config["extension_十周年UI_rightLayout"] == "on" ? ".leftbuttons" : ".rightbuttons", ui.window);
 		// 创建按钮
 		for (let [buttonName, config] of Object.entries(buttonConfigs)) {
 			let button = ui.create.div(".anniubutton", ui.anniubuttons);
@@ -978,7 +1031,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (config.click) button.onclick = config.click;
 		}
 	}
-
 	function createPolie() {
 		//右上角计时器
 		const createTimeNode = () => {
@@ -986,16 +1038,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			var cardPileNumberNode = ui.create.div(".cardPileNumber", ui.cardRoundTimeNode);
 			var roundNumberNode = ui.create.div(".roundNumber", ui.cardRoundTimeNode);
 			ui.timeNode = ui.create.div(".time", ui.cardRoundTimeNode);
-
 			return { cardPileNumberNode, roundNumberNode };
 		};
-
 		const setupConfig = () => {
 			lib.config.show_time3 = false;
 			lib.config.show_time2 = false;
 			lib.config.show_cardpile_number = false;
 		};
-
 		const setupRoundNumberUpdate = roundNumberNode => {
 			game.updateRoundNum = function () {
 				var roundNumber = Math.max(1, game.roundNumber || 1);
@@ -1003,7 +1052,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.cardRoundTimeNode.style.display = "block";
 			};
 		};
-
 		const setupCardNumberUpdate = cardPileNumberNode => {
 			game.updateCardNum = function (num, step) {
 				var item = cardPileNumberNode;
@@ -1026,7 +1074,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			};
 		};
-
 		const setupTimeUpdate = () => {
 			function updateTime() {
 				if (!ui.timeNode.starttime) ui.timeNode.starttime = get.utc();
@@ -1037,7 +1084,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			updateTime();
 			setInterval(updateTime, 1000);
 		};
-
 		const setupRoundNumberOverride = () => {
 			var originupdateRoundNumber = game.updateRoundNumber;
 			game.updateRoundNumber = function () {
@@ -1049,7 +1095,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}, cardNumber);
 			};
 		};
-
 		const hideOriginalElements = () => {
 			setTimeout(function () {
 				// 隐藏本体左上角时间
@@ -1072,7 +1117,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				});
 			}, 1000);
 		};
-
 		// 初始化
 		const { cardPileNumberNode, roundNumberNode } = createTimeNode();
 		setupConfig();
@@ -1081,7 +1125,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		setupTimeUpdate();
 		setupRoundNumberOverride();
 		hideOriginalElements();
-
 		if (game.updateCardNum) game.updateCardNum(0);
 		if (game.updateRoundNum) game.updateRoundNum();
 	}
@@ -1092,7 +1135,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		xiaopeijian(); //左下角小配件
 		createPolie(); //右上角牌堆数，计时器等配件
 	});
-
 	// 比较工具函数
 	const CompareUtils = {
 		type(a, b) {
@@ -1118,11 +1160,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			return a - b;
 		},
 	};
-
 	// 创建工具函数
 	const CreateUtils = {
 		control() {},
-
 		confirm() {
 			var confirm = ui.create.control("<span>确定</span>", "cancel");
 			confirm.classList.add("lbtn-confirm");
@@ -1144,14 +1184,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			this.setupConfirmEventListeners(confirm);
 			this.setupSkills2(confirm);
-
 			confirm.update = this.createUpdateFunction(confirm);
 			return confirm;
 		},
-
 		setupConfirmEventListeners(confirm) {
 			for (var k in confirm.node) {
 				confirm.node[k].classList.add("disabled");
@@ -1165,14 +1202,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 						return;
 					}
-
 					if (this.parentNode.custom) {
 						this.parentNode.custom(this.link, this);
 					}
 				});
 			}
 		},
-
 		setupSkills2(confirm) {
 			if (ui.skills2 && ui.skills2.skills.length) {
 				var skills = ui.skills2.skills;
@@ -1185,13 +1220,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						e.stopPropagation();
 						ui.click.skill(this.link);
 					});
-
 					item.dataset.type = "skill2";
 					if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
 				}
 			}
 		},
-
 		createUpdateFunction(confirm) {
 			return function () {
 				if (confirm.skills2) {
@@ -1213,7 +1246,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			};
 		},
 	};
-
 	// 点击工具函数
 	const ClickUtils = {
 		confirm(link, target) {
@@ -1226,7 +1258,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 		},
 	};
-
 	var plugin = {
 		name: "lbtn",
 		filter() {
@@ -1276,7 +1307,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			ui.create.confirm = function (str, func) {
 				var confirm = ui.confirm;
 				if (!confirm) {
@@ -1296,7 +1326,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 					confirm.str = str;
 				}
-
 				if (func) {
 					confirm.custom = func;
 				}

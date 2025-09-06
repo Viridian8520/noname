@@ -44,17 +44,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		createSkillControl() {
 			const isRightLayout = lib.config["extension_十周年UI_rightLayout"] == "on";
 			const className = isRightLayout ? ".skill-control" : ".skill-controlzuoshou";
-
 			const node = ui.create.div(className, ui.arena);
 			node.node = {
 				enable: ui.create.div(".enable", node),
 				trigger: ui.create.div(".trigger", node),
 			};
-
 			for (const key in plugin.controlElement) {
 				node[key] = plugin.controlElement[key];
 			}
-
 			return node;
 		},
 		initUpdateMethods() {
@@ -63,16 +60,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					const eSkills = player.getSkills("e", true, false).slice(0);
 					let skills = player.getSkills("invisible", null, false);
 					let gSkills = null;
-
 					if (ui.skills2 && ui.skills2.skills.length) {
 						gSkills = ui.skills2.skills;
 					}
-
 					skills = skills.filter(skill => {
 						const info = get.info(skill);
 						return !info || !info.nopop || skill.startsWith("olhedao_tianshu_");
 					});
-
 					const iSkills = player.invisibleSkills.slice(0);
 					game.expandSkills(iSkills);
 					skills.addArray(
@@ -81,7 +75,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							return info && info.enable;
 						})
 					);
-
 					if (player === game.me) {
 						const skillControl = ui.create.skillControl(clear);
 						skillControl.add(skills, eSkills);
@@ -89,7 +82,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						skillControl.update();
 						game.addVideo("updateSkillControl", player, clear);
 					}
-
 					const { xiandingji, juexingji } = plugin.processSkillMarks(player);
 					plugin.updateSkillMarks(player, xiandingji, juexingji);
 				},
@@ -98,25 +90,27 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		processSkillMarks(player) {
 			const xiandingji = {};
 			const juexingji = {};
-
 			player.getSkills("invisible", null, false).forEach(function (skill) {
 				const info = get.info(skill);
 				if (!info) return;
-
 				if (get.is.zhuanhuanji(skill, player) || info.limited || (info.intro && info.intro.content === "limited")) {
 					xiandingji[skill] = player.awakenedSkills.includes(skill);
 				}
-
-				if (info.juexingji || info.dutySkill) {
-					juexingji[skill] = player.awakenedSkills.includes(skill);
+				if (info.juexingji) {
+					if (player.awakenedSkills.includes(skill)) {
+						juexingji[skill] = true;
+					}
+				}
+				if (info.dutySkill) {
+					if (player.awakenedSkills.includes(skill)) {
+						juexingji[skill] = true;
+					}
 				}
 			});
-
 			return { xiandingji, juexingji };
 		},
 		initRewrites() {
 			const playerMethods = ["addSkill", "removeSkill", "addSkillTrigger", "removeSkillTrigger", "awakenSkill", "restoreSkill"];
-
 			playerMethods.forEach(method => {
 				app.reWriteFunction(lib.element.player, {
 					[method]: [
@@ -127,7 +121,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					],
 				});
 			});
-
 			app.reWriteFunction(lib.element.control, {
 				close: [
 					null,
@@ -138,7 +131,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			app.reWriteFunction(game, {
 				loop: [
 					function () {
@@ -178,21 +170,17 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					skill.forEach(item => this.add(item, eSkills));
 					return this;
 				}
-
 				const skills = game.expandSkills([skill]).map(item => app.get.skillInfo(item));
 				const enableSkills = this.getEnableSkills(skills);
 				const showSkills = enableSkills.length ? enableSkills : skills;
-
 				showSkills.forEach(item => {
 					if (this.hasExistingNode(item.id)) return;
-
 					if (item.type === "enable") {
 						this.createEnableSkillNode(item);
 					} else {
 						this.createTriggerSkillNode(item, eSkills);
 					}
 				});
-
 				return this;
 			},
 			getEnableSkills(skills) {
@@ -202,7 +190,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (item.name === skills[0].name) hasSame = true;
 					return true;
 				});
-
 				if (!hasSame) enableSkills.unshift(skills[0]);
 				return enableSkills;
 			},
@@ -213,7 +200,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				const skillName = get.translation(item.name).slice(0, 2);
 				const className = lib.skill[item.id].limited ? ".xiandingji" : ".skillitem";
 				const node = ui.create.div(className, this.node.enable, skillName);
-
 				node.dataset.id = item.id;
 				node.addEventListener("click", () => {
 					game.playAudio("..", "extension", "十周年UI", "audio/SkillBtn");
@@ -223,11 +209,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			createTriggerSkillNode(item, eSkills) {
 				if (!item.info || !item.translation) return;
 				if (eSkills && eSkills.includes(item.id)) return;
-
 				const skillName = get.translation(item.name).slice(0, 2);
 				const targetNode = lib.config.phonelayout ? this.node.trigger : this.node.enable;
 				const node = ui.create.div(".skillitem", targetNode, skillName);
-
 				node.dataset.id = item.id;
 			},
 			update() {
@@ -246,7 +230,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				Array.from(this.node.enable.childNodes).forEach(item => {
 					const isUsable = skills.includes(item.dataset.id);
 					const isSelected = _status.event.skill === item.dataset.id;
-
 					item.classList.toggle("usable", isUsable);
 					item.classList.toggle("select", isSelected);
 				});
@@ -254,11 +237,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			updateSkillLevel() {
 				const triggerCount = this.node.trigger.childNodes.length;
 				const enableCount = this.node.enable.childNodes.length;
-
 				const level1 = Math.min(4, triggerCount);
 				const level2 = enableCount > 2 ? 4 : enableCount > 0 ? 2 : 0;
 				const level = Math.max(level1, level2);
-
 				ui.arena.dataset.sclevel = level;
 			},
 		},
@@ -278,33 +259,26 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (this.isSameSkills(skills, node)) {
 				return node;
 			}
-
 			if (node) {
 				node.close();
 				node.delete();
 			}
-
 			if (!skills || !skills.length) return;
-
 			const newNode = ui.create.div(".control.skillControl", ui.skillControlArea);
 			Object.assign(newNode, lib.element.control);
-
 			skills.forEach(skill => {
 				const item = ui.create.div(newNode);
 				item.link = skill;
 				item.dataset.id = skill;
 				item.addEventListener(lib.config.touchscreen ? "touchend" : "click", ui.click.control);
 			});
-
 			newNode.skills = skills;
 			newNode.custom = ui.click.skill;
 			return newNode;
 		},
 		isSameSkills(skills, node) {
 			if (!node) return false;
-
 			if (!skills || !skills.length) return true;
-
 			for (let i = 0; i < node.skills.length; i++) {
 				if (node.skills[i] !== skills[i]) {
 					return false;
@@ -317,9 +291,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (!node) {
 				node = player.node.xSkillMarks = ui.create.div(".skillMarks", player);
 			}
-
+			node.style.display = "";
 			this.cleanupSkillMarks(node, xiandingji, juexingji);
-			this.createSkillMarks(node, xiandingji, juexingji);
+			this.createSkillMarks(node, xiandingji, juexingji, player);
 		},
 		cleanupSkillMarks(node, xiandingji, juexingji) {
 			Array.from(node.childNodes).forEach(item => {
@@ -327,33 +301,28 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (juexingji[item.dataset.id]) return;
 				item.remove();
 			});
-
 			Array.from(node.querySelectorAll(".juexingji")).forEach(item => {
 				if (!juexingji[item.dataset.id]) {
 					item.remove();
 				}
 			});
 		},
-		createSkillMarks(node, xiandingji, juexingji) {
+		createSkillMarks(node, xiandingji, juexingji, player) {
 			for (const skillId in xiandingji) {
+				if (player.hiddenSkills.includes(skillId) && player !== game.me) continue;
 				const info = lib.skill[skillId];
 				let item = node.querySelector(`[data-id="${skillId}"]`);
-
 				if (!item) {
 					const className = info.zhuanhuanji ? ".skillMarkItem.zhuanhuanji" : ".skillMarkItem.xiandingji";
 					item = ui.create.div(className, node, "");
 				}
-
 				item.classList.toggle("used", xiandingji[skillId]);
 				item.dataset.id = skillId;
 			}
-
 			for (const skillId in juexingji) {
-				if (!juexingji[skillId]) continue;
-
+				if (player.hiddenSkills.includes(skillId) && player !== game.me) continue;
 				const info = lib.skill[skillId];
 				if (node.querySelector(`[data-id="${skillId}"]`)) continue;
-
 				const className = info.dutySkill ? ".skillMarkItem.duty" : ".skillMarkItem.juexingji";
 				const item = ui.create.div(className, node, "");
 				item.dataset.id = skillId;
@@ -382,7 +351,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			app.reWriteFunction(lib.element.dialog, {
 				open: [
 					null,
@@ -433,21 +401,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				setName(name) {
 					name = get.translation(name) || name;
 					const hasName = name && name.trim();
-
 					this.classList.toggle("unshow", !hasName);
 					this.node.name.innerHTML = hasName || "";
 					return this;
 				},
 				setCount(count) {
 					const hasCount = typeof count === "number";
-
 					this.node.count.innerHTML = hasCount ? count : "";
 					this.node.count.classList.toggle("unshow", !hasCount);
 					return this;
 				},
 				setExtra(extra) {
 					if (!Array.isArray(extra)) extra = [extra];
-
 					const str = extra
 						.filter(item => item && typeof item === "string")
 						.map(item => {
@@ -457,7 +422,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							return "<div>" + item + "</div>";
 						})
 						.join("");
-
 					this.node.extra.classList.toggle("unshow", !str);
 					this.node.extra.innerHTML = str || "";
 					return this;
@@ -465,7 +429,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				setBackground(name, type) {
 					const skill = lib.skill[this.name];
 					if (skill && skill.intro && skill.intro.markExtra) return this;
-
 					if (type === "character") {
 						name = get.translation(name) || name;
 						this._characterMark = true;
@@ -477,7 +440,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					const node = this;
 					const info = node.info;
 					const player = node.parentNode.parentNode;
-
 					if (info.name) {
 						if (typeof info.name === "function") {
 							const named = info.name(player.storage[node.skill], player);
@@ -490,7 +452,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					} else if (info.name !== false) {
 						uiintro.add(get.translation(node.skill));
 					}
-
 					if (typeof info.mark === "function") {
 						const stint = info.mark(uiintro, player.storage[node.skill], player);
 						if (stint) {
@@ -512,7 +473,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							}
 						}
 					}
-
 					uiintro.add(ui.create.div(".placeholder.slim"));
 				},
 			},
@@ -521,9 +481,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			mark(e) {
 				e.stopPropagation();
 				delete this._waitingfordrag;
-
 				if (_status.dragged || _status.clicked || ui.intro) return;
-
 				const rect = this.getBoundingClientRect();
 				ui.click.touchpop();
 				ui.click.intro.call(this, {

@@ -16,12 +16,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				const effectName = isShousha ? "effect_youxikaishi_shousha" : "effect_youxikaishi";
 				const audio = isShousha ? "audio/game_start_shousha.mp3" : "audio/game_start.mp3";
 				const scaleFactor = isShousha ? 1.5 : 0.76;
-
 				game.playAudio("../extension", decadeUI.extensionName, audio);
 				const animation = decadeUI.animation;
 				const bounds = animation.getSpineBounds(effectName);
 				if (!bounds) return;
-
 				const sz = bounds.size;
 				const scale = Math.min(animation.canvas.width / sz.x, animation.canvas.height / sz.y) * scaleFactor;
 				animation.playSpine({
@@ -72,6 +70,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							common: "gold",
 							rare: "yu",
 							epic: "yan",
+							legend: "yan",
 						};
 						rarity = rarityMap[game.getRarity(target.name)];
 					} else if (longLevel === "sex") {
@@ -85,7 +84,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						const src1 = `${decadeUIPath}/assets/image/long_${rarity}1.png`;
 						const styles1 = { top: "-36px", right: "-26px", height: "133px", width: "80px", zIndex: "80" };
 						createAndAppendDragon(target, src1, styles1);
-
 						const src2 = `${decadeUIPath}/assets/image/long_${rarity}2.png`;
 						const styles2 = { bottom: "-10px", right: "-13px", height: "40px", width: "92px", zIndex: "99" };
 						createAndAppendDragon(target, src2, styles2);
@@ -231,12 +229,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			trigger: {
 				player: "phaseDrawBegin1",
 			},
+			filter(event, player) {
+				return get.population("qun") > 0;
+			},
 			content() {
 				var num = get.population("qun");
-				if (player.hasSkill("huangjintianbingfu")) {
+				if (player.hasSkill("hongfa", null, null, false)) {
 					num += player.getExpansions("huangjintianbingfu").length;
 				}
-
 				var cards = get.cards(num);
 				var dialog = decadeUI.content.chooseGuanXing(player, cards, cards.length);
 				dialog.caption = "【悟心】";
@@ -251,16 +251,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					cards,
 					dialog.callback
 				);
-
 				event.switchToAuto = function () {
 					var cards = dialog.cards[0].concat();
 					var cheats = [];
-
 					var next = player.getNext();
 					var friend = player;
 					var judges = friend.node.judges.childNodes;
 					if (judges.length > 0) cheats = decadeUI.get.cheatJudgeCards(cards, judges, friend != null);
-
 					if (friend) {
 						cards = decadeUI.get.bestValueCards(cards, friend);
 					} else {
@@ -268,7 +265,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							return get.value(a, next) - get.value(b, next);
 						});
 					}
-
 					cards = cheats.concat(cards);
 					var time = 500;
 					for (var i = 0; i < cards.length; i++) {
@@ -285,12 +281,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						time += 500;
 					}
 				};
-
 				if (event.isOnline()) {
 					event.player.send(function () {
 						if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
 					}, event.player);
-
 					event.player.wait();
 					decadeUI.game.wait();
 				} else if (!event.isMine()) {
@@ -299,7 +293,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		},
 	};
-
 	decadeUI.inheritSkill = {
 		identity_junshi: {
 			content() {
@@ -325,10 +318,8 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					event.finish();
 					return;
 				}
-
 				var cards = event.cards;
 				var gains = cards.length - event.num;
-
 				var zuiLun = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, gains);
 				zuiLun.caption = "【罪论】";
 				zuiLun.header2 = "获得的牌";
@@ -336,7 +327,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				zuiLun.callback = function () {
 					return this.cards[1].length == gains;
 				};
-
 				game.broadcast(
 					function (player, cards, gains, callback) {
 						if (!window.decadeUI) return;
@@ -351,19 +341,15 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					gains,
 					zuiLun.callback
 				);
-
 				var player = event.player;
 				event.switchToAuto = function () {
 					var cheats = [];
 					var cards = zuiLun.cards[0].concat();
-
 					var next = player.getNext();
 					var hasFriend = get.attitude(player, next) > 0;
-
 					// 判断下家是不是队友，令其生效或者失效
 					var judges = next.node.judges.childNodes;
 					if (judges.length > 0) cheats = decadeUI.get.cheatJudgeCards(cards, judges, hasFriend);
-
 					// 如果有【父荫】优先把好牌给队友
 					if (hasFriend && player.hasSkill("xinfu_fuyin")) {
 						cards = decadeUI.get.bestValueCards(cards, next);
@@ -372,7 +358,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							return get.value(a, player) - get.value(b, player);
 						});
 					}
-
 					cards = cheats.concat(cards);
 					var time = 500;
 					var gainNum = gains;
@@ -392,12 +377,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						gainNum--;
 					}
 				};
-
 				if (event.isOnline()) {
 					event.player.send(function () {
 						if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
 					}, event.player);
-
 					event.player.wait();
 					decadeUI.game.wait();
 				} else if (!event.isMine()) {
@@ -465,7 +448,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					dialog.classList.add("fullheight");
 					dialog.classList.add("noupdate");
 					dialog.videoId = id;
-
 					var canvas2 = document.createElement("canvas");
 					dialog.canvas_viewer = canvas2;
 					dialog.appendChild(canvas2);
@@ -479,7 +461,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					canvas2.width = 249;
 					canvas2.height = 249;
 					canvas2.style.border = "3px solid";
-
 					var ctx2 = canvas2.getContext("2d");
 					var img = new Image();
 					img.src = lib.assetURL + "image/card/" + name + ".png";
@@ -505,7 +486,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				var chooseButton = function (id, name) {
 					var event = _status.event;
 					_status.xinfu_pingcai_finished = false;
-
 					var dialog = ui.create.dialog("forcebutton", "hidden");
 					dialog.textPrompt = dialog.add('<div class="text center">擦拭掉宝物上的灰尘吧！</div>');
 					event.switchToAuto = function () {
@@ -523,13 +503,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					dialog.classList.add("fullheight");
 					dialog.classList.add("noupdate");
 					dialog.videoId = id;
-
 					var canvas = document.createElement("canvas");
 					var canvas2 = document.createElement("canvas");
-
 					dialog.appendChild(canvas2);
 					dialog.appendChild(canvas);
-
 					canvas.style.position = "absolute";
 					canvas.style.width = "249px";
 					canvas.style.height = "249px";
@@ -539,7 +516,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					canvas.width = 249;
 					canvas.height = 249;
 					canvas.style.border = "3px solid";
-
 					canvas2.style.position = "absolute";
 					canvas2.style.width = "249px";
 					canvas2.style.height = "249px";
@@ -549,19 +525,15 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					canvas2.width = 249;
 					canvas2.height = 249;
 					canvas2.style.border = "3px solid";
-
 					var ctx = canvas.getContext("2d");
 					var ctx2 = canvas2.getContext("2d");
-
 					var img = new Image();
 					img.src = lib.assetURL + "image/card/" + name + ".png";
 					img.onload = function () {
 						ctx2.drawImage(this, 0, 0, this.width, this.height, 0, 0, canvas2.width, canvas2.height);
 					};
-
 					ctx.fillStyle = "lightgray";
 					ctx.fillRect(0, 0, canvas.width, canvas.height);
-
 					canvas.onmousedown = function (ev) {
 						//if(_status.xinfu_pingcai_finished) return;
 						canvas.onmousemove = function (e) {
@@ -614,9 +586,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					canvas.ontouchend = function (ev) {
 						canvas.ontouchmove = null;
 					};
-
 					dialog.open();
-
 					game.pause();
 					game.countChoose();
 				};
@@ -683,7 +653,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 				xunxun.callback = function () {
 					return this.cards[0].length == 2 && this.cards[1].length == 2;
 				};
-
 				game.broadcast(
 					function (player, cards, callback) {
 						if (!window.decadeUI) return;
@@ -697,7 +666,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					cards,
 					xunxun.callback
 				);
-
 				event.switchToAuto = function () {
 					var cards = decadeUI.get.bestValueCards(xunxun.cards[0].concat(), player);
 					var time = 500;
@@ -715,25 +683,21 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						time += 500;
 					}
 				};
-
 				if (event.isOnline()) {
 					event.player.send(function () {
 						if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
 					}, event.player);
-
 					event.player.wait();
 					decadeUI.game.wait();
 				} else if (!event.isMine()) {
 					event.switchToAuto();
 				}
-
 				"step 1";
 				var first = ui.cardPile.firstChild;
 				var cards = event.cards2;
 				for (var i = 0; i < cards.length; i++) {
 					ui.cardPile.insertBefore(cards[i], first);
 				}
-
 				cards = event.cards1;
 				for (var i = 0; i < cards.length; i++) {
 					ui.cardPile.appendChild(cards[i]);
@@ -882,7 +846,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 								player.node.handcards1.insertBefore(hs[j], player.node.handcards1.firstChild);
 							});
 							dui.queueNextFrameTick(dui.layoutHand, dui);
-
 							cards = moved[0].slice();
 							if (cards.length) {
 								await game.cardsGotoOrdering(cards);
@@ -974,18 +937,14 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						cards,
 						dialog.callback
 					);
-
 					event.switchToAuto = function () {
 						var cards = dialog.cards[0].concat();
 						var cheats = [];
 						var judges;
-
 						var next = player.getNext();
 						var friend = get.attitude(player, next) < 0 ? null : next;
 						judges = next.node.judges.childNodes;
-
 						if (judges.length > 0) cheats = decadeUI.get.cheatJudgeCards(cards, judges, friend != null);
-
 						if (friend) {
 							cards = decadeUI.get.bestValueCards(cards, friend);
 						} else {
@@ -993,7 +952,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 								return get.value(a, next) - get.value(b, next);
 							});
 						}
-
 						cards = cheats.concat(cards);
 						var time = 500;
 						for (var i = 0; i < cards.length; i++) {
@@ -1010,12 +968,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							time += 500;
 						}
 					};
-
 					if (event.isOnline()) {
 						event.player.send(function () {
 							if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
 						}, event.player);
-
 						event.player.wait();
 						decadeUI.game.wait();
 					} else if (!event.isMine()) {
@@ -1045,12 +1001,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					cards,
 					guanxing.callback
 				);
-
 				event.switchToAuto = function () {
 					var cards = guanxing.cards[0].concat();
 					var cheats = [];
 					var judges = player.node.judges.childNodes;
-
 					if (judges.length) cheats = decadeUI.get.cheatJudgeCards(cards, judges, true);
 					if (cards.length) {
 						for (var i = 0; i >= 0 && i < cards.length; i++) {
@@ -1060,7 +1014,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 							}
 						}
 					}
-
 					var time = 500;
 					for (var i = 0; i < cheats.length; i++) {
 						setTimeout(
@@ -1075,7 +1028,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						);
 						time += 500;
 					}
-
 					for (var i = 0; i < cards.length; i++) {
 						setTimeout(
 							function (card, index, finished) {
@@ -1090,12 +1042,10 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 						time += 500;
 					}
 				};
-
 				if (event.isOnline()) {
 					event.player.send(function () {
 						if (!window.decadeUI && decadeUI.eventDialog) _status.event.finish();
 					}, event.player);
-
 					event.player.wait();
 					decadeUI.game.wait();
 				} else if (!event.isMine()) {
@@ -1361,7 +1311,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		},
 	};
-
 	decadeUI.inheritSubSkill = {
 		olziruo: {
 			sort: {
@@ -1392,7 +1341,6 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 			},
 		},
 	};
-
 	if (!_status.connectMode) {
 		for (var key in decadeUI.animateSkill) {
 			lib.skill[key] = decadeUI.animateSkill[key];

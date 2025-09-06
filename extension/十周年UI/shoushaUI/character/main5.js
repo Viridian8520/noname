@@ -260,7 +260,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 
 		// 创建技能信息
-		createSkillInfo(rightPane, player) {
+		createSkillInfo(rightPane, player, dialogContainer) {
 			rightPane.innerHTML = "<div></div>";
 			lib.setScroll(rightPane.firstChild);
 
@@ -281,7 +281,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			// 显示技能信息
 			if (oSkills.length) {
 				ui.create.div(".xcaption", "武将技能", rightPane.firstChild);
-				oSkills.forEach(skill => this.createSkillElement(skill, player, rightPane.firstChild));
+				oSkills.forEach(skill => this.createSkillElement(skill, player, rightPane.firstChild, dialogContainer));
 			}
 
 			// 显示装备区域
@@ -330,7 +330,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 
 		// 创建技能元素
-		createSkillElement(skillName, player, container) {
+		createSkillElement(skillName, player, container, dialogContainer) {
 			if (player.forbiddenSkills[skillName]) {
 				if (player.forbiddenSkills[skillName].length) {
 					ui.create.div(".xskill", "<div data-color>" + '<span style="opacity:1">' + lib.translate[skillName] + "</span>" + "</div>" + "<div>" + '<span style="opacity:1">' + "（与" + get.translation(player.forbiddenSkills[skillName]) + "冲突）" + get.skillInfoTranslation(skillName, player) + "</span>" + "</div>", container);
@@ -344,7 +344,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			} else if (lib.skill[skillName].frequent || lib.skill[skillName].subfrequent) {
 				this.createFrequentSkillElement(skillName, player, container);
 			} else if (lib.skill[skillName].clickable && player.isIn() && player.isUnderControl(true)) {
-				this.createClickableSkillElement(skillName, player, container);
+				this.createClickableSkillElement(skillName, player, container, dialogContainer);
 			} else {
 				ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player) + "</div>", container);
 			}
@@ -388,7 +388,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		},
 
 		// 创建可点击技能元素
-		createClickableSkillElement(skillName, player, container) {
+		createClickableSkillElement(skillName, player, container, dialogContainer) {
 			var id = skillName + "_idy";
 			id = ui.create.div(".xskill", "<div data-color>" + lib.translate[skillName] + "</div>" + "<div>" + get.skillInfoTranslation(skillName, player) + '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>' + "</div>", container);
 			var intronode = id.querySelector(".skillbutton");
@@ -400,6 +400,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				intronode.link = player;
 				intronode.func = lib.skill[skillName].clickable;
 				intronode.classList.add("pointerdiv");
+				intronode.listen(() => {
+					dialogContainer.hide();
+					game.resume2();
+				});
 				intronode.listen(ui.click.skillbutton);
 			}
 		},
@@ -525,7 +529,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 
 					// 创建技能信息
 					dialog.classList.add("single");
-					plugin.createSkillInfo(rightPane, player);
+					plugin.createSkillInfo(rightPane, player, container);
 
 					container.classList.remove("hidden");
 					if (!lib.config["extension_十周年UI_viewInformationPause"]) game.pause2();

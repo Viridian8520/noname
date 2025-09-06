@@ -2,7 +2,6 @@
 	top: calc(50% - var(--h) / 2 + var(--bt));
 	left: calc(50% - var(--w) / 2 + var(--bl));
 }
-
 /*第一页界面内容*/
 /*开始修改*/
 .character-dialog {
@@ -20,7 +19,6 @@
 	padding: 10px;
 	z-index: 13;
 }
-
 .character-dialog>.blackBg {
 	padding: 10px 25px;
 	position: relative;
@@ -29,12 +27,10 @@
 	top: 0;
 	left: -25px;
 }
-
 .blackBg.two {
 	margin-top: 8px;
 	height: 218px;
 }
-
 .character-dialog::before {
 	content: "";
 	top: calc(0% - var(--bt));
@@ -45,13 +41,11 @@
 	background-image: url("./images/OL_line/dialog4.png");
 	background-size: 100% 100%;
 }
-
 .character-dialog>div {
 	top: 0;
 	height: 100%;
 	position: absolute;
 }
-
 /*第一页武将头像和边框*/
 /*武将框*/
 .character-dialog>.blackBg.one>div.biankuang3 {
@@ -70,7 +64,6 @@
 	border-bottom-left-radius: 8px;
 	visibility: visible;
 }
-
 .character-dialog>.blackBg.one>div.biankuang3::before {
 	content: "";
 	position: absolute;
@@ -83,7 +76,6 @@
 	opacity: 0.4;
 	z-index: 61;
 }
-
 /*武将*/
 .character-dialog>.blackBg.one>div.biankuang2 {
 	width: 175px;
@@ -96,7 +88,6 @@
 	/* 新增投影 */
 	filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.5));
 }
-
 /*势力*/
 .biankuang4 {
 	width: 28px;
@@ -107,7 +98,6 @@
 	z-index: 60;
 	position: absolute;
 }
-
 .xinxi {
 	/*资料页启动按钮*/
 	background: url("./images/OL_line/xinxi.png");
@@ -117,7 +107,6 @@
 	height: 65px;
 	width: 80px;
 }
-
 /*武将名字*/
 .character-dialog>.name {
 	position: absolute;
@@ -145,7 +134,6 @@
 	white-space: normal;
 	/* 允许多行显示 */
 }
-
 .sjright {
 	background: url("./images/OL_line/sj_btn.png");
 	background-size: 100% 100%;
@@ -154,7 +142,6 @@
 	right: -45px;
 	top: 80px;
 }
-
 .sjleft {
 	background: url("./images/OL_line/sj_btn.png");
 	background-size: 100% 100%;
@@ -164,7 +151,6 @@
 	left: -55px;
 	top: 80px;
 }
-
 /*吊坠*/
 .diaozhui {
 	width: 80px;
@@ -175,7 +161,6 @@
 	z-index: 60;
 	position: absolute;
 }
-
 /*配件*/
 .peijian {
 	width: 270px;
@@ -186,7 +171,6 @@
 	z-index: 60;
 	position: absolute;
 }
-
 /*人气值*/
 .renqi {
 	left: -15px;
@@ -197,7 +181,6 @@
 	color: #efdbb6;
 	text-shadow: none;
 }
-
 /*胜率*/
 .shenglv {
 	left: 70px;
@@ -208,7 +191,6 @@
 	color: #efdbb6;
 	text-shadow: none;
 }
-
 /*逃率*/
 .taolv {
 	left: 165px;
@@ -219,7 +201,6 @@
 	color: #efdbb6;
 	text-shadow: none;
 }
-
 /*玩家名*/
 .wanjia {
 	font-size: 18px;
@@ -232,7 +213,6 @@
 	text-align: center;
 	z-index: 99;
 }
-
 /*大资料主页*/
 .bigdialog {
 	position: absolute;
@@ -245,7 +225,6 @@
 	transform: translate(-50%, -50%);
 	z-index: 75;
 }
-
 /*官阶*/
 .guanjie {
 	background-size: 100% 100%;
@@ -255,7 +234,6 @@
 	height: 17%;
 	top: 9%;
 }
-
 /*官阶文字*/
 .guanjiewenzi {
 	font-size: 16px;
@@ -267,7 +245,6 @@
 	left: 0%;
 	width: 104%;
 }
-
 /*资料页信誉分*/
 .xinyufen {
 	left: 22%;
@@ -278,7 +255,6 @@
 	color: #efdbb6;
 	text-shadow: none;
 }
-
 /*资料页人气值*/
 .renqizhi {
 	left: 22%;
@@ -289,7 +265,6 @@
 	color: #efdbb6;
 	text-shadow: none;
 }
-
 /* 将灯底图 */
 .jddialog {
 	background: url("./images/OL_line/jddialog.png");
@@ -300,7 +275,6 @@
 	top: 7.8%;
 	left: 31.3%;
 }
-
 /*每个将灯底图*/
 .jdditu {
 	display: inline-flex;
@@ -321,22 +295,18 @@
 	background: url("./images/OL_line/jdditu.png");
 	background-size: 100% 100%;
 }
-
 /* 文字闪烁动画 */
 @keyframes alternateImages {
-
 	0%,
 	49.9%,
 	99.9% {
 		opacity: 1.2;
 	}
-
 	24.9%,
 	74.9% {
 		opacity: 0.7;
 	}
 }
-
 /*将灯图标*/
 .jdtubiao {
 	background-size: 100% 100%;
@@ -344,7 +314,6 @@
 	height: 100%;
 	animation: alternateImages 4s ease-in-out infinite reverse;
 }
-
 /*将灯图标暗*/
 .jdtubiaoan {
 	background-size: 100% 100%;
@@ -352,46 +321,37 @@
 	height: 100%;
 	filter: grayscale(100%) brightness(0.6);
 }
-
 /*流水灯动画*/
 @keyframes flowingLights {
 	0% {
 		background-image: var(--first-image);
 		opacity: 1;
 	}
-
 	24.9% {
 		opacity: 0;
 	}
-
 	25% {
 		background-image: var(--second-image);
 		opacity: 0;
 	}
-
 	49.9% {
 		opacity: 1;
 	}
-
 	50% {
 		background-image: var(--second-image);
 		opacity: 1;
 	}
-
 	74.9% {
 		opacity: 0;
 	}
-
 	75% {
 		background-image: var(--first-image);
 		opacity: 0;
 	}
-
 	99.9% {
 		opacity: 1;
 	}
 }
-
 /*每个动画的图片*/
 .jdbiaodonghua {
 	width: 100%;
@@ -402,7 +362,6 @@
 	--first-image: url("./images/OL_line/biao1.png");
 	--second-image: url("./images/OL_line/biao2.png");
 }
-
 .jdcuidonghua {
 	width: 100%;
 	height: 100%;
@@ -412,7 +371,6 @@
 	--first-image: url("./images/OL_line/cui1.png");
 	--second-image: url("./images/OL_line/cui2.png");
 }
-
 .jdguodonghua {
 	width: 100%;
 	height: 100%;
@@ -422,7 +380,6 @@
 	--first-image: url("./images/OL_line/guo1.png");
 	--second-image: url("./images/OL_line/guo2.png");
 }
-
 .jdjiangdonghua {
 	width: 100%;
 	height: 100%;
@@ -432,7 +389,6 @@
 	--first-image: url("./images/OL_line/jiang1.png");
 	--second-image: url("./images/OL_line/jiang2.png");
 }
-
 .jdjiangjiedonghua {
 	width: 100%;
 	height: 100%;
@@ -442,7 +398,6 @@
 	--first-image: url("./images/OL_line/jiangjie1.png");
 	--second-image: url("./images/OL_line/jiangjie2.png");
 }
-
 .jdjiedonghua {
 	width: 100%;
 	height: 100%;
@@ -452,7 +407,6 @@
 	--first-image: url("./images/OL_line/jie1.png");
 	--second-image: url("./images/OL_line/jie2.png");
 }
-
 .jdmoudonghua {
 	width: 100%;
 	height: 100%;
@@ -462,7 +416,6 @@
 	--first-image: url("./images/OL_line/mou1.png");
 	--second-image: url("./images/OL_line/mou2.png");
 }
-
 .jdqidonghua {
 	width: 100%;
 	height: 100%;
@@ -472,7 +425,6 @@
 	--first-image: url("./images/OL_line/qi1.png");
 	--second-image: url("./images/OL_line/qi2.png");
 }
-
 .jdshandonghua {
 	width: 100%;
 	height: 100%;
@@ -482,7 +434,6 @@
 	--first-image: url("./images/OL_line/shan1.png");
 	--second-image: url("./images/OL_line/shan2.png");
 }
-
 .jdshendonghua {
 	width: 100%;
 	height: 100%;
@@ -492,7 +443,6 @@
 	--first-image: url("./images/OL_line/shen1.png");
 	--second-image: url("./images/OL_line/shen2.png");
 }
-
 .jdspdonghua {
 	width: 100%;
 	height: 100%;
@@ -502,7 +452,6 @@
 	--first-image: url("./images/OL_line/sp1.png");
 	--second-image: url("./images/OL_line/sp2.png");
 }
-
 .jdwenwudonghua {
 	width: 100%;
 	height: 100%;
@@ -512,7 +461,6 @@
 	--first-image: url("./images/OL_line/wenwu1.png");
 	--second-image: url("./images/OL_line/wenwu2.png");
 }
-
 .jdxiandonghua {
 	width: 100%;
 	height: 100%;
@@ -522,7 +470,6 @@
 	--first-image: url("./images/OL_line/xian1.png");
 	--second-image: url("./images/OL_line/xian2.png");
 }
-
 .jdzudonghua {
 	width: 100%;
 	height: 100%;
@@ -532,7 +479,6 @@
 	--first-image: url("./images/OL_line/zu1.png");
 	--second-image: url("./images/OL_line/zu2.png");
 }
-
 /*排位底图*/
 .paiweiditu {
 	background: url("./images/OL_line/paiweiditu.png");
@@ -543,7 +489,6 @@
 	height: 48%;
 	top: 5%;
 }
-
 /*段位图标*/
 .duanwei {
 	background-size: 100% 100%;
@@ -554,7 +499,6 @@
 	top: 38%;
 	transform: translate(-50%, -50%);
 }
-
 /*段位文字*/
 .duanweishuzi {
 	font-size: 17px;
@@ -571,7 +515,6 @@
 	width: 42%;
 	font-weight: 500;
 }
-
 /*排位类型*/
 .paiweiType {
 	font-size: 22px;
@@ -583,7 +526,6 @@
 	z-index: 81;
 	font-weight: 700;
 }
-
 /*排位类型切换小按钮*/
 .typeleft {
 	left: 10%;
@@ -593,7 +535,6 @@
 	width: 25px;
 	top: 2.7%;
 }
-
 .typeright {
 	right: 10%;
 	background: url("./images/OL_line/right.png");
@@ -602,7 +543,6 @@
 	width: 25px;
 	top: 2.7%;
 }
-
 /*胜率2*/
 .shenglvx {
 	font-size: 18px;
@@ -614,7 +554,6 @@
 	left: 20%;
 	white-space: pre-wrap;
 }
-
 /*擅长武将*/
 .shanchangdialog {
 	background: url("./images/OL_line/shanchangbigdialog.png");
@@ -624,7 +563,6 @@
 	height: 55.7%;
 	bottom: 0%;
 }
-
 .shanchang {
 	display: inline-flex;
 	justify-content: flex-start;
@@ -647,7 +585,6 @@
 	filter: none;
 	/* 移除原来的 drop-shadow */
 }
-
 /*擅长武将头像和边框*/
 /*换肤图标*/
 .huanfu {
@@ -659,7 +596,6 @@
 	right: -10px;
 	top: -10px;
 }
-
 /*擅长武将框*/
 .kuang {
 	width: 16.5%;
@@ -682,7 +618,6 @@
 	border-bottom-left-radius: 5px;
 	visibility: visible;
 }
-
 .kuang::before {
 	content: "";
 	position: absolute;
@@ -695,7 +630,6 @@
 	opacity: 0.4;
 	z-index: 1;
 }
-
 /*星星*/
 .xing {
 	width: 90%;
@@ -704,7 +638,6 @@
 	background-image: url("./images/OL_line/xing.png");
 	background-size: 100% 100%;
 }
-
 /*武将名*/
 .charName {
 	margin-top: 25px;
@@ -718,7 +651,6 @@
 	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 	/* 模拟黑色描边 */
 }
-
 /*势力图标*/
 .shili {
 	width: 26px;
@@ -727,7 +659,6 @@
 	z-index: 70;
 	margin-top: 0px;
 }
-
 /*资料页关闭按钮*/
 .guanbi {
 	width: 80px;
@@ -739,7 +670,6 @@
 	z-index: 100;
 	position: absolute;
 }
-
 /*玩家头像*/
 .minixingxiang {
 	opacity: 1;
@@ -757,7 +687,6 @@
 	z-index: 69;
 	text-align: center;
 }
-
 .minixingxiang::before {
 	content: "";
 	position: absolute;
@@ -768,7 +697,6 @@
 	background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 15%);
 	border-radius: 5px;
 }
-
 /*玩家名称*/
 .nameX {
 	font-size: 18px;
@@ -779,7 +707,6 @@
 	font-weight: 700;
 	position: relative;
 }
-
 /*资料页玩家等级*/
 .dengjiX {
 	right: 5%;
@@ -791,7 +718,6 @@
 	font-weight: 700;
 	text-shadow: 1px 1px 1px black;
 }
-
 /*资料页会员等级*/
 .huiyuanX {
 	left: 5%;
@@ -803,7 +729,6 @@
 	font-weight: 700;
 	text-shadow: 1px 1px 1px black;
 }
-
 /*武将牌不露头*/
 .character-dialog .biankuang2>div.left2 {
 	left: 19%;
@@ -819,7 +744,6 @@
 	transition-property: opacity, transform;
 	z-index: 69;
 }
-
 .character-dialog div.right {
 	left: 50%;
 	width: 50%;
@@ -827,7 +751,6 @@
 	/* padding: 20px 15px 20px 0; */
 	overflow: auto;
 }
-
 /*技能大窗口*/
 .character-dialog.single div.right {
 	top: -58%;
@@ -836,7 +759,6 @@
 	height: calc(170% - 20px);
 	/* background-color: #fefefe6b; */
 }
-
 .character-dialog>div.left>div {
 	top: 65%;
 	right: 30px;
@@ -846,12 +768,10 @@
 	position: absolute;
 	white-space: nowrap;
 }
-
 .character-dialog.single>div.left>div {
 	width: 105px;
 	position: absolute;
 }
-
 .character-dialog div.right>div {
 	position: absolute !important;
 	top: 0;
@@ -860,11 +780,9 @@
 	height: 100%;
 	overflow: auto;
 }
-
 .character-dialog div.right div {
 	position: relative;
 }
-
 .character-dialog div.right .xcaption {
 	background: url("./images/OL_line/quyu4.png") center/contain no-repeat;
 	background-size: 260px 30px;
@@ -882,12 +800,10 @@
 	padding: 10px 0;
 	font-family: "shousha";
 }
-
 .character-dialog div.right .xskill {
 	width: 100%;
 	bottom: 0%;
 }
-
 /*技能描述*/
 .character-dialog div.right .xskill>div {
 	/* display: inline;*/
@@ -899,7 +815,6 @@
 	font-weight: bold;
 	font-family: "shousha";
 }
-
 /*装备描述*/
 .character-dialog div.right .xskillx>div {
 	/* display: inline;*/
@@ -911,7 +826,6 @@
 	font-weight: bold;
 	font-family: "shousha";
 }
-
 .character-dialog div.right .xskill>div[data-color] {
 	display: inline-block;
 	color: #f7d229;
@@ -926,7 +840,6 @@
 	text-overflow: ellipsis;
 	box-sizing: border-box;
 	/* 确保宽度计算包含padding */
-
 	/* 新增关键代码：九宫格拉伸 */
 	border-image: url("./images/OL_line/btn4.png") 0 25 fill / 0 15px stretch;
 	/* 解释：
@@ -939,7 +852,6 @@
 	border-style: solid;
 	/* 必须设置border-style才能生效 */
 }
-
 /*装备框*/
 .character-dialog div.right .xskillx>div[data-color] {
 	display: inline-block;
@@ -949,7 +861,6 @@
 	font-weight: bold;
 	color: #f7d229;
 }
-
 /*主被动*/
 .character-dialog div.right>div>div.xskill>span.skill-type-tag {
 	position: relative;
@@ -962,22 +873,18 @@
 	font-family: "shousha";
 	text-shadow: none;
 }
-
 .character-dialog div.right .xskill>div[data-color="red"] {
 	color: #f7d229;
 	text-shadow: none;
 }
-
 .character-dialog div.right .xskill>div[data-color="black"] {
 	color: #f7d229;
 	text-shadow: none;
 }
-
 /*技能文本间距*/
 .character-dialog div.right .xskill+.xskill {
 	margin-top: 15px;
 }
-
 /*衍生技*/
 .character-dialog div.right>div>div.xskill>span.yanshengji {
 	position: relative;
@@ -990,7 +897,6 @@
 	font-family: "shousha";
 	text-shadow: none;
 }
-
 .character-dialog div.right>div>div.xskill>span.yanshengji::before {
 	content: "";
 	/* 设置图片的路径，需要替换为你实际的图片路径 */
@@ -1007,7 +913,6 @@
 	vertical-align: middle;
 	/* 使图片与文字垂直居中对齐 */
 }
-
 /*衍生技描述*/
 .character-dialog div.right>div>div.xskill>span.yanshengjiinfo {
 	display: block;

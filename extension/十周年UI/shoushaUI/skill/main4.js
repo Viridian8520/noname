@@ -4,7 +4,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-		content(next) {},
+		content(next) { },
 		precontent() {
 			// 添加小黄点样式
 			if (!document.getElementById("skill-yellow-dot-style")) {
@@ -56,12 +56,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (ui.skills2 && ui.skills2.skills.length) {
 						gSkills = ui.skills2.skills;
 					}
-
 					for (var i = 0; i < skills.length; i++) {
 						var info = get.info(skills[i]);
 						if (info && info.nopop && !skills[i].startsWith("olhedao_tianshu_")) skills.splice(i--, 1);
 					}
-
 					var iSkills = player.invisibleSkills.slice(0);
 					game.expandSkills(iSkills);
 					skills.addArray(
@@ -70,7 +68,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							return info && info.enable;
 						})
 					);
-
 					if (player === game.me) {
 						var skillControl = ui.create.skillControl(clear);
 						skillControl.add(skills, eSkills);
@@ -78,7 +75,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						skillControl.update();
 						game.addVideo("updateSkillControl", player, clear);
 					}
-
 					var juexingji = {};
 					var xiandingji = {};
 					player.getSkills("invisible", null, false).forEach(function (skill) {
@@ -87,12 +83,20 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						if (get.is.zhuanhuanji(skill, player) || info.limited || (info.intro && info.intro.content === "limited")) {
 							xiandingji[skill] = player.awakenedSkills.includes(skill);
 						}
-						if (info.juexingji || info.dutySkill) juexingji[skill] = player.awakenedSkills.includes(skill);
+						if (info.juexingji) {
+							if (player.awakenedSkills.includes(skill)) {
+								juexingji[skill] = true;
+							}
+						}
+						if (info.dutySkill) {
+							if (player.awakenedSkills.includes(skill)) {
+								juexingji[skill] = true;
+							}
+						}
 					});
 					plugin.updateSkillMarks(player, xiandingji, juexingji);
 				},
 			});
-
 			app.reWriteFunction(lib.element.player, {
 				addSkill: [
 					null,
@@ -141,7 +145,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			app.reWriteFunction(game, {
 				loop: [
 					function () {
@@ -167,7 +170,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			Object.assign(game.videoContent, {
 				updateSkillControl(player, clear) {
 					ui.updateSkillControl(player, clear);
@@ -184,7 +186,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					});
 					return this;
 				}
-
 				var self = this;
 				// 国战模式下，获取所有原生技能
 				let nativeSkills = [];
@@ -208,7 +209,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (item.name === skills[0].name) hasSame = true;
 					return true;
 				});
-
 				if (!hasSame) enableSkills.unshift(skills[0]);
 				var showSkills = enableSkills.length ? enableSkills : skills;
 				showSkills.forEach(function (item) {
@@ -216,7 +216,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (node) return;
 					let skillName = get.translation(item.name);
 					let finalName = skillName.slice(0, 2);
-
 					if (lib.skill[item.id] && lib.skill[item.id].zhuanhuanji) {
 						let imgType = "yang";
 						let player = game.me;
@@ -227,7 +226,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						let imgPath = "extension/十周年UI/shoushaUI/skill/online/mark_" + imgType + "OL.png";
 						finalName = '<img src="' + imgPath + '" style="vertical-align:middle;height:22px;margin-right:2px;">' + skillName;
 					}
-
 					if (item.type === "enable") {
 						node = ui.create.div(lib.skill[item.id].limited ? ".xiandingji" : ".skillitem", self.node.enable);
 						node.innerHTML = finalName;
@@ -267,21 +265,18 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (ui.skills) skills.addArray(ui.skills.skills);
 				if (ui.skills2) skills.addArray(ui.skills2.skills);
 				if (ui.skills3) skills.addArray(ui.skills3.skills);
-
 				Array.from(this.node.enable.childNodes).forEach(function (item) {
 					if (skills.includes(item.dataset.id)) {
 						item.classList.add("usable");
 					} else {
 						item.classList.remove("usable");
 					}
-
 					if (_status.event.skill === item.dataset.id) {
 						item.classList.add("select");
 					} else {
 						item.classList.remove("select");
 					}
 				});
-
 				var level1 = Math.min(4, this.node.trigger.childNodes.length);
 				var level2 = this.node.enable.childNodes.length > 2 ? 4 : this.node.enable.childNodes.length > 0 ? 2 : 0;
 				var level = Math.max(level1, level2);
@@ -317,7 +312,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				node.delete();
 			}
 			if (!skills && !skills.length) return;
-
 			node = ui.create.div(".control.skillControl", ui.skillControlArea);
 			Object.assign(node, lib.element.control);
 			skills.forEach(function (skill) {
@@ -335,7 +329,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			if (!node) {
 				node = player.node.xSkillMarks = ui.create.div(".skillMarks", player);
 			}
-
+			node.style.display = "";
 			Array.from(node.childNodes).forEach(function (item) {
 				if (skills1.hasOwnProperty(item.dataset.id)) return;
 				if (skills2[item.dataset.id]) return;
@@ -343,6 +337,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			});
 			//使限定技和转换技显示不同的样式
 			for (var k in skills1) {
+				if (player.hiddenSkills.includes(k) && player !== game.me) continue;
 				var info = lib.skill[k];
 				var item = node.querySelector('[data-id="' + k + '"]');
 				if (!item) {
@@ -363,7 +358,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			});
 			//使觉醒技和使命技不同
 			for (var k in skills2) {
-				if (!skills2[k]) continue;
+				if (player.hiddenSkills.includes(k) && player !== game.me) continue;
 				var info = lib.skill[k];
 				if (node.querySelector('[data-id="' + k + '"]')) continue;
 				var item;
@@ -392,7 +387,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			app.reWriteFunction(lib.element.dialog, {
 				open: [
 					null,
@@ -407,7 +401,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			app.reWriteFunction(lib.element.player, {
 				markSkill: [
 					function (args, name) {
@@ -418,7 +411,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			app.reWriteFunction(lib.configMenu.appearence.config, {
 				update: [
 					null,
@@ -427,7 +419,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			app.on("playerUpdateE", function (player) {
 				plugin.updateMark(player);
 			});
@@ -460,7 +451,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 				setExtra(extra) {
 					var str = "";
-
 					if (!Array.isArray(extra)) extra = [extra];
 					extra.forEach(function (item) {
 						if (!item || typeof item !== "string") return this;
@@ -470,7 +460,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 						str += "<div>" + item + "</div>";
 					});
-
 					if (str) {
 						this.node.extra.classList.remove("unshow");
 						this.node.extra.innerHTML = str;
@@ -506,7 +495,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					} else if (info.name !== false) {
 						uiintro.add(get.translation(node.skill));
 					}
-
 					if (typeof info.mark == "function") {
 						var stint = info.mark(uiintro, player.storage[node.skill], player);
 						if (stint) {

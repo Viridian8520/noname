@@ -1,7 +1,6 @@
 app.import(function (lib, game, ui, get, ai, _status, app) {
 	// 工具函数区
 	const extensionPath = `${lib.assetURL}extension/十周年UI/shoushaUI/`;
-
 	// 获取武将分包
 	function getPack(name) {
 		const pack = Object.keys(lib.characterPack).find(pack => lib.characterPack[pack][name]);
@@ -14,12 +13,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		return "暂无分包";
 	}
-
 	// 获取立绘图片路径
 	function getLihuiPath(originalPath) {
 		return originalPath.replace(/image\/character/, "image/lihui");
 	}
-
 	// 提取图片原始路径
 	function extractImagePath(bg) {
 		if (!bg) return "";
@@ -30,7 +27,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		return bg;
 	}
-
 	// 获取等阶图片路径
 	function getRarityIcon(rarity) {
 		return `${extensionPath}character/images/shizhounian/rarity_${rarity}.png`;
@@ -38,7 +34,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 	function getPeIcon(rarity) {
 		return `${extensionPath}character/images/shizhounian/pe_${rarity}.png`;
 	}
-
 	// 获取千幻等阶
 	function getQhlyLevel(name) {
 		let temp = "junk";
@@ -71,7 +66,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		return temp;
 	}
-
 	// 获取千幻皮肤名安全函数
 	function getQhlySkinTranslation(name) {
 		if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkinInfo === "function" && typeof game.qhly_getSkin === "function") {
@@ -79,7 +73,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		}
 		return "经典形象";
 	}
-
 	// 创建立绘div
 	function setLihuiDiv(skinDiv, playerSkin, fallbackUrl) {
 		const originalPath = extractImagePath(playerSkin);
@@ -92,7 +85,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 		};
 		testImg.src = getLihuiPath(originalPath);
 	}
-
 	// 主体插件
 	const plugin = {
 		name: "character",
@@ -227,7 +219,30 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						const translation = lib.translate[skillName];
 						if (translation && lib.translate[skillName + "_info"] && translation !== "" && lib.translate[skillName + "_info"] !== "") {
 							const isAwakened = !this.getSkills().includes(skillName) || this.awakenedSkills.includes(skillName);
-							const skillDiv = ui.create.div(".xskill", `<div data-color>${isAwakened ? '<span style="opacity:0.5">' + translation + "： </span>" : translation + "： "}</div><div>${isAwakened ? '<span style="opacity:0.5;text-indent:10px">' + get.skillInfoTranslation(skillName, this) + "</span>" : '<span style="text-indent:10px">' + get.skillInfoTranslation(skillName, this) + "</span>"}</div>`, rightPane.firstChild);
+							let skillContent = `<div data-color>${isAwakened ? '<span style="opacity:0.5">' + translation + "： </span>" : translation + "： "}</div><div>${isAwakened ? '<span style="opacity:0.5;text-indent:10px">' + get.skillInfoTranslation(skillName, this) + "</span>" : '<span style="text-indent:10px">' + get.skillInfoTranslation(skillName, this) + "</span>"}`;
+							if (lib.skill[skillName].clickable) {
+								skillContent += '<br><div class="menubutton skillbutton" style="position:relative;margin-top:5px">点击发动</div>';
+							}
+							skillContent += "</div>";
+							const skillDiv = ui.create.div(".xskill", skillContent, rightPane.firstChild);
+							if (lib.skill[skillName].clickable) {
+								const skillButton = skillDiv.querySelector(".skillbutton");
+								if (skillButton) {
+									if (!_status.gameStarted || (lib.skill[skillName].clickableFilter && !lib.skill[skillName].clickableFilter(this))) {
+										skillButton.classList.add("disabled");
+										skillButton.style.opacity = 0.5;
+									} else {
+										skillButton.link = this;
+										skillButton.func = lib.skill[skillName].clickable;
+										skillButton.classList.add("pointerdiv");
+										skillButton.listen(() => {
+											container.hide();
+											game.resume2();
+										});
+										skillButton.listen(ui.click.skillbutton);
+									}
+								}
+							}
 							// 自动发动
 							if (lib.skill[skillName].frequent || lib.skill[skillName].subfrequent) {
 								const underlinenode = ui.create.div(".underlinenode on gray", `【${translation}】自动发动`, rightPane.firstChild);

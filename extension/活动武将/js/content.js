@@ -34,24 +34,19 @@ export async function content(config, pack) {
 		var packs = Object.keys(lib.characterPack).filter(pack => lib.characterPack[pack][name]);
 		if (packs.length) packs.forEach(pack => delete lib.characterPack[pack][name]);
 	};
-	game.HDaddCharacter = function (name, character, packss) {
+	game.HDaddCharacter = function (name, character, packs = '') {
 		game.HDdeleteCharacter(name);
-		if (!packss) lib.character[name] = character;
-		else {
-			var packs = packss.split(':').filter(p => lib.config.all.characters.includes(p));
-			packs.forEach(pack => {
-				lib.characterPack[pack][name] = character;
-				if (_status['extension_活动武将_files']?.image.character.files.includes(`${name}.jpg`)) {
-					lib.characterPack[pack][name][4] ??= [];
-					lib.characterPack[pack][name][4].push(`ext:活动武将/image/character/${name}.jpg`);
-				}
-			});
-			if (packs.some(p => lib.config.characters.includes(p))) lib.character[name] = character;
+		if (_status['extension_活动武将_files']?.image.character.files.includes(`${name}.jpg`)) {
+			character[4] ??= [];
+			character[4].push(`ext:活动武将/image/character/${name}.jpg`);
 		}
-		if (lib.character[name] && _status['extension_活动武将_files']?.image.character.files.includes(`${name}.jpg`)) {
-			lib.character[name][4] ??= [];
-			lib.character[name][4].push(`ext:活动武将/image/character/${name}.jpg`);
+		const pack = packs.split(':').filter(p => lib.config.all.characters.includes(p))[0];
+		if (pack) {
+			lib.characterPack[pack][name] = character;
+			if (lib.config.characters.includes(pack)) lib.character[name] = character;
+			lib.config.forbidai[lib.config[`forbidai_user_${pack}`] ? 'add' : 'remove'](name);
 		}
+		else lib.character[name] = character;
 	};
 	//移动武将所在武将包
 	game.HDmoveCharacter = function (name, packss) {
@@ -122,7 +117,7 @@ export async function content(config, pack) {
 		lib.extensionMenu['extension_活动武将'].HDcheckNew = {
 			name: '检查更新公告',
 			clear: true,
-			onclick(bool) {
+			onclick() {
 				game.bolShowNewPack();
 			},
 		};
@@ -654,7 +649,7 @@ export async function content(config, pack) {
 			else {
 				window.rkbg.onclick = function () {
 					if (!window.dialogguagua) {
-						window.dialogguagua = ui.create.dialog('仁库', _status.renku);
+						window.dialogguagua = ui.create.dialog('仁库', _status.renku, "peaceDialog");
 						window.rkbg.innerHTML = '❌';
 					}
 					else {
@@ -1189,7 +1184,7 @@ export async function content(config, pack) {
 	//神将
 	lib.characterSort.extra.extra_ol.addArray(['ol_shen_dianwei']);
 	game.HDaddCharacter('shen_sunquan', ['male', 'shen', 4, ['bolyuheng', 'boldili'], ['wu']], 'extra');
-	game.HDaddCharacter('ol_shen_dianwei', ['male', 'shen', 4, ['juanjia', 'fh_qiexie', 'cuijue'], ['wei', ...['character:', 'die:'].map(i => i + 'shen_dianwei')]], 'extra');
+	game.HDaddCharacter('ol_shen_dianwei', ['male', 'shen', 4, ['juanjia', 'fh_qiexie', 'fh_cuijue'], ['wei', ...['character:', 'die:'].map(i => i + 'shen_dianwei')]], 'extra');
 
 	//界限突破
 	game.HDaddCharacter('dc_xushu', ['male', 'shu', 4, ['bolzhuhai', 'xsqianxin'], []], 'refresh');

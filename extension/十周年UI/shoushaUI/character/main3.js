@@ -33,13 +33,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				],
 			});
 		},
-
 		click: {
 			identity: function (e) {
 				e.stopPropagation();
 				var player = this.parentNode;
 				if (!game.getIdentityList) return;
-
 				if (player.node.guessDialog) {
 					player.node.guessDialog.classList.toggle("hidden");
 				} else {
@@ -51,7 +49,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					player.node.guessDialog = guessDialog;
 				}
 			},
-
 			playerIntro: function (e) {
 				// taffy: 修复浏览器右键会默认冒出选项喵
 				e.preventDefault();
@@ -60,17 +57,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (plugin.playerDialog) {
 					return plugin.playerDialog.show(this);
 				}
-
 				var container = ui.create.div(".popup-container.hidden", ui.window, function (e) {
 					if (e.target === container) {
 						container.hide();
 						game.resume2();
 					}
 				});
-
 				var player = this;
 				let playname = player === game.me ? lib.config.connect_nickname : get.translation(["缘之空", "小小恐龙", "自然萌", "海边的ebao", "小云云", "无语", "点点", "猫猫虫", "小爱莉", "冰佬", "鹿鹿", "黎佬", "小曦", "墨渊", "浮牢师", "U佬", "蓝宝", "影宝", "柳下跖", "k9", "扶苏", "皇叔"].randomGet(1));
-
 				// 创建对话框结构
 				var dialog = ui.create.div(".character-dialog.popped", container);
 				var leftPane = ui.create.div(".left", dialog);
@@ -79,7 +73,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				var biankuangname = ui.create.div(".biankuangname", dialog);
 				var mingcheng = ui.create.div(".mingcheng", dialog);
 				var dengji = ui.create.div(".dengji", dialog);
-
 				// 技能按钮
 				var skill = ui.create.div(".skillx", dialog);
 				skill.addEventListener("click", function (event) {
@@ -89,7 +82,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (equip) equip.classList.remove("active");
 					if (skill) skill.classList.add("active");
 				});
-
 				// 装备按钮
 				var equip = ui.create.div(".equip", dialog);
 				equip.addEventListener("click", function (event) {
@@ -99,7 +91,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (equip) equip.classList.add("active");
 					container.show(player);
 				});
-
 				// 清空右侧面板
 				function clearRightPane() {
 					if (rightPane.firstChild) {
@@ -108,16 +99,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 					}
 				}
-
 				// 创建资料页面
 				function createProfilePage() {
 					var zbdialog = ui.create.div(".zbdialog", dialog);
 					var caizhu = ui.create.div(".caizhu", dialog);
 					var shanchang = get.config("recentCharacter");
-
 					var leftPane = ui.create.div(lib.config.extension_十周年UI_ZLLT ? ".left" : ".left2", dialog);
 					leftPane.style.backgroundImage = player.node.avatar.style.backgroundImage;
-
 					// 装备对话框
 					zbdialog.onclick = function () {
 						var popuperContainer = ui.create.div(
@@ -129,7 +117,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						);
 						game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
 						var zbbigdialog = ui.create.div(".zbbigdialog", popuperContainer);
-
 						var guanbi = ui.create.div(".guanbi", popuperContainer, get.translation("   "));
 						guanbi.addEventListener("click", function (event) {
 							game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
@@ -137,7 +124,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							event.stopPropagation();
 						});
 					};
-
 					// 资料对话框
 					caizhu.onclick = function () {
 						var popuperContainer = ui.create.div(
@@ -148,35 +134,26 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							ui.window
 						);
 						game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
-
 						var bigdialog = ui.create.div(".bigdialog", popuperContainer);
 						var useless = ui.create.div(".useless", bigdialog);
 						var nameshutiao = ui.create.div(".nameshutiao", bigdialog);
 						nameshutiao.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + rarity + ".png");
-
 						var useless2 = ui.create.div(".useless2", bigdialog);
 						useless2.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/InfoBg2.png");
-
 						// 皮肤框
 						var pifuk = ui.create.div(".pifuk", bigdialog);
 						pifuk.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/pifuk.png");
-
 						// 皮肤名
 						var pos1 = player.node.avatar.style.backgroundImage.lastIndexOf("/");
 						var pos2 = player.node.avatar.style.backgroundImage.lastIndexOf("\\");
 						var pos = Math.max(pos1, pos2);
 						var skinname = pos < 0 ? player.node.avatar.style.backgroundImage : player.node.avatar.style.backgroundImage.substring(pos + 1).substring(0, player.node.avatar.style.backgroundImage.substring(pos + 1).lastIndexOf("."));
-
 						var pfzwm = skinname == player["name"] || skinname == player["name"] + "_shadow" || skinname == player["name"] + "2" || skinname == player["name"] + "3" || skinname == "default_silhouette_male" || skinname == "default_silhouette_female" || skinname == "default_silhouette_double" ? "经典形象" : skinname;
-
 						var pifuming = ui.create.div(".pifuming", bigdialog, get.translation(pfzwm));
-
 						// 武将名
 						var wujiangming = ui.create.div(".wujiangming", bigdialog, get.translation(player["name"]));
-
 						// 玩家名
 						var wanjiaming = ui.create.div(".wanjiaming", bigdialog, playname);
-
 						// VIP图标
 						var vipimg = document.createElement("div");
 						vipimg.id = "vip-img";
@@ -188,12 +165,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							position:relative;
 							background-size: 100% 100%;
 						`;
-
 						var viptuji = ["vip0", "vip1", "vip2", "vip3", "vip4", "vip5", "vip6", "vip7"];
 						var vipPath = player._vipCache || (player._vipCache = viptuji.randomGet());
 						vipimg.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + vipPath + ".png");
 						wanjiaming.appendChild(vipimg);
-
 						// 公会信息
 						var gonghui = ui.create.div(
 							".gonghui",
@@ -209,7 +184,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 									).name
 							)
 						);
-
 						var gonghuiimg = document.createElement("div");
 						gonghuiimg.id = "gonghui-img";
 						gonghuiimg.style.cssText = `
@@ -222,7 +196,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						`;
 						gonghuiimg.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + player._guildInfo.icon + ".png");
 						gonghui.appendChild(gonghuiimg);
-
 						// 玩家数据
 						if (!player.profileData) {
 							player.profileData = {
@@ -234,7 +207,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								jiangling: Math.floor(Math.random() * (99 - 10 + 1)) + 10,
 							};
 						}
-
 						// 创建数据组件
 						var xinyu = ui.create.div(".xinyu", bigdialog, get.translation(player.profileData.xinyu + "<br>" + "信誉"));
 						var meili = ui.create.div(".meili", bigdialog, get.translation(player.profileData.meili + "<br>" + "魅力"));
@@ -242,53 +214,43 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						var wujiang1 = ui.create.div(".wujiang1", bigdialog, get.translation(player.profileData.wujiang1 + "<br>" + "武将"));
 						var pifu1 = ui.create.div(".pifu1", bigdialog, get.translation(player.profileData.pifu1 + "<br>" + "皮肤"));
 						var jiangling = ui.create.div(".jiangling", bigdialog, get.translation(player.profileData.jiangling + "<br>" + "将灵"));
-
 						var changyongwujiang = ui.create.div(".changyongwujiang", bigdialog, get.translation("武将展示"));
-
 						// 称号
 						var minichenghao = ui.create.div(".minichenghao", bigdialog);
 						var chenghaotu = ["ch0", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16", "ch17", "ch18", "ch19", "ch20", "ch21", "ch22", "ch23", "ch24", "ch25", "ch26"];
-
 						if (!player.chenghaoData) {
 							player.chenghaoData = {
 								img: chenghaotu.randomGet(),
 							};
 						}
 						minichenghao.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.chenghaoData.img}.png`);
-
 						// 拜师
 						var baishi = ui.create.div(".baishi", bigdialog);
 						var baishitu = ["b1", "b2", "b3"];
-
 						if (!player.baishiData) {
 							player.baishiData = {
 								img: baishitu.randomGet(),
 							};
 						}
 						baishi.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.baishiData.img}.png`);
-
 						// 历史最高
 						var wngs = ui.create.div(".wngs", bigdialog);
 						var wngstu = ["s1", "s2", "s3", "s4", "s5", "s6"];
-
 						if (!player.historyData) {
 							player.historyData = {
 								img: wngstu.randomGet(),
 							};
 						}
 						wngs.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.historyData.img}.png`);
-
 						// 将灯
 						var deng = ui.create.div(".deng", bigdialog);
 						var dengto = ["d1", "d2", "d3", "d4", "d5", "d6", "d7"];
-
 						if (!player.lampData) {
 							player.lampData = {
 								img: dengto.randomGet(),
 							};
 						}
 						deng.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.lampData.img}.png`);
-
 						// 关闭按钮
 						var haoyou3 = ui.create.div(".haoyou3", bigdialog, get.translation("   "));
 						haoyou3.addEventListener("click", function (event) {
@@ -296,14 +258,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							popuperContainer.delete(200);
 							event.stopPropagation();
 						});
-
 						var shanchang4 = ui.create.div(".shanchang4", bigdialog);
 						shanchang4.style.backgroundImage = player.node.avatar.style.backgroundImage;
-
 						// 迷你头像
 						var minixingxiang = ui.create.div(".minixingxiang", bigdialog);
 						var xingxiangtu = ["xingxiang0", "xingxiang1", "xingxiang2", "xingxiang3", "xingxiang4", "xingxiang5"];
-
 						if (!player.miniXingxiangData) {
 							player.miniXingxiangData = {
 								img: xingxiangtu.randomGet(),
@@ -312,7 +271,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						minixingxiang.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.miniXingxiangData.img}.png`);
 					};
 				}
-
 				// 设置背景
 				var extensionPath = lib.assetURL + "extension/十周年UI/shoushaUI/";
 				var group = player.group;
@@ -321,11 +279,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 				var url = extensionPath + "character/images/xinsha/yemian.png";
 				dialog.style.backgroundImage = 'url("' + url + '")';
-
 				// 创建皮肤区域
 				var skin1 = ui.create.div(".skin1", dialog);
 				var skin2 = ui.create.div(".skin2", dialog);
-
 				// 获取武将名称
 				var name = player.name1 || player.name;
 				var name2 = player.name2;
@@ -335,19 +291,16 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				if (player.classList.contains("unseen2") && player !== game.me) {
 					name2 = "unknown";
 				}
-
 				// 设置主将立绘
 				if (name != "unknown") {
 					var playerSkin = player.style.backgroundImage;
 					if (!playerSkin) playerSkin = player.childNodes[0].style.backgroundImage;
-
 					let originalPath = "";
 					if (playerSkin.indexOf('url("') == 0) {
 						originalPath = playerSkin.slice(5, playerSkin.indexOf('")'));
 					} else if (playerSkin.indexOf("url('") == 0) {
 						originalPath = playerSkin.slice(5, playerSkin.indexOf("')"));
 					}
-
 					// 先尝试lihui路径
 					let lihuiPath = originalPath.replace(/image\/character/, "image/lihui");
 					let testImg = new Image();
@@ -364,19 +317,16 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var url = extensionPath + "character/images/unknown.png";
 					skin1.style.backgroundImage = 'url("' + url + '")';
 				}
-
 				// 设置副将立绘
 				if (name2) {
 					if (name2 != "unknown") {
 						var playerSkin2 = player.childNodes[1].style.backgroundImage;
-
 						let originalPath = "";
 						if (playerSkin2.indexOf('url("') == 0) {
 							originalPath = playerSkin2.slice(5, playerSkin2.indexOf('")'));
 						} else if (playerSkin2.indexOf("url('") == 0) {
 							originalPath = playerSkin2.slice(5, playerSkin2.indexOf("')"));
 						}
-
 						// 先尝试lihui路径
 						let lihuiPath = originalPath.replace(/image\/character/, "image/lihui");
 						let testImg = new Image();
@@ -394,13 +344,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						skin2.style.backgroundImage = 'url("' + url + '")';
 					}
 				}
-
 				// 设置等阶
 				var rarity = game.getRarity(name);
 				if (!rarity) rarity = "junk";
 				var pe = ui.create.div(".pe1", dialog);
 				var url;
-
 				if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkin === "function" && typeof game.qhly_getSkinInfo === "function") {
 					try {
 						var temp;
@@ -438,7 +386,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					url = extensionPath + "character/images/xinsha/pe_" + rarity + ".png";
 				}
 				pe.style.backgroundImage = 'url("' + url + '")';
-
 				// 设置武将名称显示
 				let value = "";
 				let value2, value3;
@@ -453,7 +400,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					value2 = "经典形象";
 				}
 				value += value2 + "*" + get.translation(name);
-
 				if (name2) {
 					value += "<br>";
 					if (lib.config["extension_千幻聆音_enable"] && typeof game.qhly_getSkin === "function" && typeof game.qhly_getSkinInfo === "function") {
@@ -468,10 +414,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 					value += value3 + "*" + get.translation(name2);
 				}
-
 				var pn = ui.create.div(".pn1");
 				pe.appendChild(pn);
-
 				// 关闭按钮
 				var diaozhui = ui.create.div(".diaozhui", dialog);
 				diaozhui.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/guanbi.png");
@@ -480,45 +424,35 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					container.hide();
 					game.resume2();
 				});
-
 				// 龙框
 				var longkuang = ui.create.div(".longkuang", dialog);
 				longkuang.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/" + group + ".png");
-
 				// 等级标识
 				var level = ui.create.div(".level", dialog);
 				var leveltu = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
-
 				if (!player.levelData) {
 					player.levelData = {
 						img: leveltu.randomGet(),
 					};
 				}
 				level.setBackgroundImage(`extension/十周年UI/shoushaUI/character/images/xinsha/${player.levelData.img}.png`);
-
 				// 技能框
 				var wjkuang = ui.create.div(".wjkuang", dialog);
 				wjkuang.setBackgroundImage("extension/十周年UI/shoushaUI/character/images/xinsha/jineng.png");
-
 				// 武将技能展示
 				var jineng = ui.create.div(".jineng", dialog, get.translation("武将技能"));
-
 				// 武将姓名
 				var wjname = ui.create.div(".wjname", dialog, get.translation(player["name"]));
-
 				// 玩家名
 				var wanjiaming2 = ui.create.div(".wanjiaming2", dialog, playname);
-
 				leftPane.innerHTML = "<div></div>";
 				rightPane.innerHTML = "<div></div>";
 				lib.setScroll(rightPane.firstChild);
-
 				// 显示函数
 				container.show = function (player, bool, under) {
 					if (under) {
 						createProfilePage();
 					}
-
 					var oSkills = player.getSkills(null, false, false).slice(0);
 					oSkills = oSkills.filter(function (skill) {
 						if (!lib.skill[skill] || skill == "jiu") return false;
@@ -526,13 +460,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						return lib.translate[skill + "_info"] && lib.translate[skill + "_info"] != "";
 					});
 					if (player == game.me && player.hiddenSkills.length) oSkills.addArray(player.hiddenSkills);
-
 					var allShown = player.isUnderControl() || (!game.observe && game.me && game.me.hasSkillTag("viewHandcard", null, player, true));
 					var shownHs = player.getShownCards();
-
 					if (bool) {
 						if (skill) skill.classList.add("active");
-
 						// 显示武将技能
 						if (oSkills.length) {
 							oSkills.forEach(function (name) {
@@ -585,6 +516,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 										intronode.link = player;
 										intronode.func = lib.skill[name].clickable;
 										intronode.classList.add("pointerdiv");
+										intronode.listen(() => {
+											container.hide();
+											game.resume2();
+										});
 										intronode.listen(ui.click.skillbutton);
 									}
 								} else {
@@ -611,7 +546,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								ui.create.div(".xskillx", "<div data-color>" + str[0] + "</div><div>" + str[1] + "</div>", rightPane.firstChild);
 							});
 						}
-
 						// 显示手牌区域
 						if (shownHs.length) {
 							ui.create.div(".xcaption", player.hasCard(card => !shownHs.includes(card), "h") ? "明置的手牌" : "手牌区域", rightPane.firstChild);
@@ -643,7 +577,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								});
 							}
 						}
-
 						// 显示判定区域
 						var judges = player.getVCards("j");
 						if (judges.length) {
@@ -654,7 +587,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 								rightPane.firstChild.appendChild(cardx);
 							});
 						}
-
 						if (!shownHs.length && !allShown && !judges.length && !eSkills.length) {
 							ui.create.div(".noxcaption", rightPane.firstChild);
 						}
@@ -662,7 +594,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					container.classList.remove("hidden");
 					if (!lib.config["extension_十周年UI_viewInformationPause"]) game.pause2();
 				};
-
 				plugin.characterDialog = container;
 				container.show(player, true, true);
 			},

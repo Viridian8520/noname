@@ -17,24 +17,19 @@
 	transition: opacity 0.3s linear;
 	z-index: 0;
 }
-
 .card::after {
 	display: none;
 }
-
 .card.selected::before {
 	opacity: 1;
 }
-
 #arena > .card.thrown {
 	z-index: 5;
 }
-
 #arena > .card.thrown.gainingcard,
 #arena > .card.thrown.drawingcard {
 	z-index: 6;
 }
-
 .card > .animation {
 	position: absolute;
 	width: 100%;
@@ -49,11 +44,9 @@
 	opacity: 0;
 	pointer-events: none;
 }
-
 .card > .animation[data-nature="fire"] {
 	text-shadow: 0 0 4px #fff, 0 -5px 4px #ff3, 2px -10px 6px #fd3, -2px -15px 10px #f80, 2px -25px 20px #f20;
 }
-
 .card > .animation[data-nature="thunder"]::before {
 	content: "";
 	display: block;
@@ -70,7 +63,6 @@
 	z-index: -1;
 	pointer-events: none;
 }
-
 .card > .animation-player {
 	display: block;
 	position: absolute;
@@ -82,7 +74,6 @@
 	pointer-events: none;
 	z-index: 8;
 }
-
 /*出牌来源提示*/
 .card > .used-info {
 	opacity: 0;
@@ -105,11 +96,9 @@
 	font-family: "STHeiti", "SimHei", "Microsoft JhengHei", "Microsoft YaHei", "WenQuanYi Micro Hei", Helvetica, Arial, sans-serif !important;
 	z-index: 4;
 }
-
 .card.thrown:not(.drawingcard):not(.movingcard) > .used-info:not(:empty) {
 	opacity: 1;
 }
-
 /*卡牌转换提示*/
 .card > .gaintag.info,
 .card.button > .gaintag.info {
@@ -132,16 +121,13 @@
 	pointer-events: none;
 	z-index: 2;
 }
-
 .card > .gaintag.info:empty,
 .card.button > .gaintag.info:empty {
 	display: none;
 }
-
 .card[data-low="1"] > .gaintag.info {
 	top: calc(70% - 16px);
 }
-
 /*卡名辅助显示及控制*/
 .card > .name,
 .card.fullskin > .name,
@@ -159,15 +145,12 @@
 	border-radius: 2px;
 	z-index: 1;
 }
-
 .card.decade-card:not(*[data-card-type="basic"]) > .name {
 	bottom: 20px;
 }
-
 #window[data-card-alternate-name-visible="off"] .card > .name {
 	display: none;
 }
-
 /****** 转换牌显示 ******/
 .card > .temp-name {
 	position: absolute;
@@ -192,17 +175,14 @@
 	background-size: cover;
 	background-position: center;
 }
-
 .card > .temp-name[data-nature="fire"] {
 	color: red;
 	text-shadow: 0 0 4px #fff, 0 -5px 4px #ff3, 2px -10px 6px #fd3, -2px -15px 10px #f80, 2px -25px 20px #f20;
 }
-
 .card > .temp-name[data-nature="thunder"] {
 	color: blue;
 	text-shadow: 0 0 5px lightblue, 0 0 10px lightblue;
 }
-
 /* .card>.temp-name[data-nature='thunder']::before { */
 /* content:''; */
 /* display: block; */
@@ -217,18 +197,15 @@
 /* -webkit-clip-path: polygon(100% 0, 20% 50%, 37% 60%, 0 100%, 80% 50%, 63% 40%); */
 /* transform: scale(0.8); */
 /* } */
-
 .card > .temp-name:empty {
 	display: none;
 }
-
 .handcards.nsanruo > .card.decade-card[data-card-type="trick"]:not(*[data-card-multitarget="1"]),
 .handcards.nsanruo > .card.decade-card[data-card-name="sha"] {
 	background-image: url("../../../image/character/ns_liuzhang.jpg") !important;
 	background-position: center;
 	background-size: cover !important;
 }
-
 /*转化花色点数显示*/
 .card > .tempsuitnum {
 	font-size: 25px;
@@ -248,36 +225,30 @@
 	z-index: 2;
 	-webkit-text-size-adjust: none;
 }
-
 .card[data-virtual="1"] > .tempsuitnum {
 	display: none;
 }
-
 .card > .tempsuitnum > .num {
 	left: -11px;
 	position: relative;
 }
-
 .card > .tempsuitnum > .suit {
 	left: -10px;
 	top: -22px;
 	position: relative;
 }
-
 .card[data-suit="heart"] > .suit-num,
 .card[data-suit="diamond"] > .suit-num,
 .card[data-tempsn="heart"] > .tempsuitnum,
 .card[data-tempsn="diamond"] > .tempsuitnum {
 	color: #df0101;
 }
-
 .card[data-suit="club"] > .suit-num,
 .card[data-suit="spade"] > .suit-num,
 .card[data-tempsn="club"] > .tempsuitnum,
 .card[data-tempsn="spade"] > .tempsuitnum {
 	color: #010101;
 }
-
 .dui-mobile .card > .tempsuitnum > .suit {
 	font-size: 16px;
 }

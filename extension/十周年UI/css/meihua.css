@@ -7,7 +7,6 @@
 	overflow: scroll;
 	opacity: 1;
 }
-
 .handdisplays .handcard {
 	position: relative;
 	margin-top: 5px;
@@ -19,7 +18,6 @@
 	font-family: "yuanli";
 	font-size: 13px;
 }
-
 .baby_skill {
 	display: flex;
 	flex-direction: row;
@@ -32,7 +30,6 @@
 	padding: 2px 2px 2px 2px;
 	box-sizing: border-box;
 }
-
 .baby_skill_box {
 	display: flex;
 	align-items: center;

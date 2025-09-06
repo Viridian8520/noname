@@ -10,21 +10,17 @@
 	/*整体上移*/
 	z-index: 3;
 }
-
 #arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#mebg,
 #arena:not(.single-handcard):not(.chess).cxy-new-ui>.lbtn-controls~#me {
 	left: 40px !important;
 }
-
 .lbtn-controls~#me #handcards1 {
 	--lessw: 40px;
 }
-
 .lbtn-controls>div {
 	display: block;
 	position: relative;
 }
-
 .buttonyjcm {
 	--w: 56px;
 	--h: calc(var(--w) * 275 / 71);
@@ -40,7 +36,6 @@
 	left: calc(100% - 147px);
 	background-color: rgba(0, 0, 0, 0.5);
 }
-
 .buttonyjcm>.controls {
 	--w: 56px;
 	--h: calc(var(--w) * 55 / 71);
@@ -61,7 +56,6 @@
 	justify-content: center;
 	/* 文字左右居中 */
 }
-
 /*---------新版小配件--------*/
 .jiluButton_new {
 	display: block;
@@ -78,7 +72,6 @@
 	z-index: 4;
 	margin-left: 10px;
 }
-
 .huanfuButton_new {
 	display: block;
 	--w: 53px;
@@ -93,7 +86,6 @@
 	z-index: 3;
 	margin-left: 10px;
 }
-
 .xiaolianButton_new {
 	display: block;
 	--w: 53px;
@@ -108,13 +100,10 @@
 	z-index: 3;
 	margin-left: 10px;
 }
-
 /*-----------------------------*/
-
 .lbtn-confirm:not(.closing).removing {
 	opacity: 1 !important;
 }
-
 .control {
 	--height: 32px;
 	width: auto !important;
@@ -123,7 +112,6 @@
 	line-height: normal;
 	padding: 0;
 }
-
 .control>div {
 	background-image: url("./images/uibutton/btnnnor.png");
 	background-size: 100% 100%;
@@ -142,14 +130,12 @@
 	font-family: "yuanli";
 	font-size: 20px;
 }
-
 /*无懈按钮位置*/
 #arena>#dui-controls>.control.stayleft {
 	left: calc(50% - 420px) !important;
 	margin-bottom: 5px !important;
 	order: 3;
 }
-
 .control>div.primary2 {
 	/*取消按钮*/
 	bottom: 1.8px;
@@ -170,7 +156,6 @@
 	overflow: visible;
 	transition: none;
 }
-
 .control>div.primary {
 	/*确认按钮*/
 	color: #f5d79e;
@@ -189,21 +174,17 @@
 	background-size: 100% 100%;
 	background-image: url("./images/uibutton/new_btnn.png");
 }
-
 .control>div.disabled:not([data-type="endButton"]) {
 	background-size: 100% 100%;
 }
-
 .control>div.disabled:not([data-type="endButton"]) {
 	/*-webkit-filter: grayscale(100%);*/
 	filter: grayscale(100%);
 	/*-webkit-filter: brightness(100%);*/
 }
-
 .lbtn-confirm[data-skill]>[data-type="skill2"] {
 	display: none;
 }
-
 /*------有点懒具体看main1.css---------------*/
 .handcardNumber {
 	bottom: 0px;
@@ -213,7 +194,6 @@
 	color: #f5d78e;
 	z-index: 1;
 }
-
 .handcardNumber>.cardPicture {
 	left: 110px;
 	bottom: 10px;
@@ -229,7 +209,6 @@
 	position: relative;
 	z-index: -1;
 }
-
 /*手牌数参数*/
 .handcardNumber>.cardNumber {
 	left: 115px;
@@ -243,7 +222,6 @@
 	letter-spacing: 0.35px;
 	/*字体间距*/
 }
-
 .cardRoundNumber {
 	top: 16px;
 	left: 25px;
@@ -251,7 +229,6 @@
 	font-family: "yuanli";
 	text-shadow: #b4a993 0.2px 0.2px 0.2px, #b4a993 0.2px -0.2px 0.2px, #b4a993 -0.2px 0.2px 0.2px, #b4a993 -0.2px -0.2px 0.2px;
 }
-
 .cardRoundNumber>.cardPileNumber {
 	left: 20px;
 	top: -15px;
@@ -265,7 +242,6 @@
 	position: relative;
 	z-index: 2;
 }
-
 .cardRoundNumber>.cardPileNumber>span {
 	left: 12px;
 	/*牌堆数右移，越大越靠右*/
@@ -278,7 +254,6 @@
 	color: #cda448;
 	font-size: 18px;
 }
-
 .cardRoundNumber>.roundNumber,
 .cardRoundNumber>.time {
 	/*游戏时间*/
@@ -292,7 +267,6 @@
 	color: #fae2bc;
 	z-index: 3;
 }
-
 .cardRoundNumber>.time {
 	/*游戏时间*/
 	top: 48px;
@@ -301,9 +275,7 @@
 	font-size: 17px;
 	color: #e0c192;
 }
-
 /*托管中图片（）*/
-
 #autonode>div:last-child {
 	z-index: 10;
 	margin-bottom: -75px !important;
@@ -323,7 +295,6 @@
 	-webkit-text-fill-color: transparent;
 	text-shadow: none !important;
 }
-
 /*身份任务主公*/
 .Tipzhugong {
 	position: fixed;
@@ -339,7 +310,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务忠臣*/
 .Tipzhongchen {
 	position: fixed;
@@ -355,7 +325,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务反贼*/
 .Tipfanzei {
 	position: fixed;
@@ -371,7 +340,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务内奸*/
 .Tipneijian {
 	position: fixed;
@@ -387,7 +355,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务地主*/
 .Tipdizhu {
 	position: fixed;
@@ -403,7 +370,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务农民*/
 .Tipnongmin {
 	position: fixed;
@@ -419,7 +385,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务虎队*/
 .Tiphu {
 	position: fixed;
@@ -435,7 +400,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务魏国*/
 .Tipweiguo {
 	position: fixed;
@@ -451,7 +415,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务蜀国*/
 .Tipshuguo {
 	position: fixed;
@@ -467,7 +430,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务吴国*/
 .Tipwuguo {
 	position: fixed;
@@ -483,7 +445,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务晋国*/
 .Tipjinguo {
 	position: fixed;
@@ -499,7 +460,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务野心家*/
 .Tipyexinjia {
 	position: fixed;
@@ -515,7 +475,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务群雄*/
 .Tipqunxiong {
 	position: fixed;
@@ -531,7 +490,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*身份任务未选择*/
 .Tipundefined {
 	position: fixed;
@@ -547,7 +505,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*容错选项*/
 .Tipweizhi {
 	position: fixed;
@@ -563,7 +520,6 @@
 	left: calc(100% - 460.5px);
 	bottom: calc(100% - 185px);
 }
-
 /*左手模式*/
 /*换肤*/
 .huanfuButton_new1 {
@@ -580,7 +536,6 @@
 	border-radius: 1px;
 	z-index: 3;
 }
-
 .jiluButton_new1 {
 	display: block;
 	--w: 47px;
@@ -595,7 +550,6 @@
 	border-radius: 1px;
 	z-index: 4;
 }
-
 /*.meiguiButton_new1 {*/
 /*display: block;*/
 /*--w: 79px;*/
@@ -623,7 +577,6 @@
 	background-size: 100% 100%;
 	z-index: 3;
 }
-
 /*------左手手牌显示---------------*/
 .handcardNumber1 {
 	bottom: 0px;
@@ -633,7 +586,6 @@
 	color: #f5d78e;
 	z-index: 1;
 }
-
 .handcardNumber1>.cardPicture {
 	left: 130px;
 	bottom: -6px;
@@ -648,7 +600,6 @@
 	transform: scaleX(-1);
 	z-index: -1;
 }
-
 /*手牌数参数*/
 .handcardNumber1>.cardNumber {
 	left: 160px;
@@ -661,4 +612,75 @@
 	white-space: nowrap;
 	letter-spacing: 0.35px;
 	/*字体间距*/
+}
+
+/* 背景选择器相关样式 */
+.bgdialog {
+	/*切换背景的背景图*/
+	position: absolute;
+	background: url("./images/OL_line/bg/bgdialog.png");
+	background-size: 100% 100%;
+	width: 70%;
+	height: 90%;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+.backgroundsbg {
+	/*背景背景*/
+	width: 100%;
+	height: 82%;
+	top: 11.5%;
+	left: 0.5%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+.backgrounds {
+	/*每一个背景图*/
+	background-size: 100% 100%;
+	left: 3.55%;
+	width: 29%;
+	height: 34%;
+	position: relative;
+	border: 2px solid #d2b48c;
+	min-width: 200px;
+	object-fit: cover;
+	margin-left: 1%;
+	margin-bottom: 1%;
+	border-radius: 6px;
+}
+.buttontext {
+	/* 每一个背景图的文字 */
+	position: absolute;
+	bottom: 0;
+	height: 20%;
+	background-color: #2e1e10;
+	width: 100%;
+	text-align: center;
+	font-weight: 500;
+	font-family: "shousha";
+	color: #efdbb6;
+	text-shadow: none;
+	font-size: 25px;
+}
+.bgback {
+	/*背景返回按钮*/
+	width: 80px;
+	height: 40px;
+	top: 5%;
+	right: 8%;
+	background-image: url("./images/OL_line/uibutton/back.png");
+	background-size: 100% 100%;
+	z-index: 100;
+	position: absolute;
+}
+.bgxuanzhong {
+	/*背景的选中效果*/
+	background: url("./images/OL_line/bg/gou.png");
+	background-size: 100% 100%;
+	width: 45%;
+	height: 60%;
+	left: 50%;
+	top: 40%;
+	transform: translate(-50%, -50%);
 }

@@ -8,7 +8,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				ui.cardRoundTime.updateRoundCard();
 			}
 		};
-
 		// 创建问号按钮（仅限特定模式）
 		if (["identity", "doudizhu", "guozhan", "versus", "single", "martial"].includes(lib.config.mode)) {
 			var wenhao = ui.create.node("img");
@@ -20,7 +19,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				wenhao.onclick = function () {
 					var popuperContainer = ui.create.div(".popup-container", ui.window);
 					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3");
-
 					// 根据模式显示不同提示
 					if (lib.config.mode == "identity") {
 						showIdentityTip(popuperContainer);
@@ -31,7 +29,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					} else if (lib.config.mode == "guozhan") {
 						showGuozhanTip(popuperContainer);
 					}
-
 					// 添加关闭事件
 					popuperContainer.addEventListener("click", event => {
 						game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
@@ -41,13 +38,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			}
 			document.body.appendChild(wenhao);
 		}
-
 		// 创建阴影背景
 		var shadowBg = ui.create.node("img");
 		shadowBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/yinying.png";
 		shadowBg.style.cssText = "display: block;width: 100%;height: 20%;position: absolute;bottom: 0px;background-color: transparent;z-index:-1";
 		document.body.appendChild(shadowBg);
-
 		// 创建主按钮背景
 		var mainButtonBg = ui.create.node("img");
 		mainButtonBg.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/CD/new_button3.png";
@@ -58,7 +53,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			mainButtonBg.style.transform = "scale(0.95)";
 		};
 		document.body.appendChild(mainButtonBg);
-
 		// 创建主按钮点击区域
 		var mainButton = ui.create.node("div");
 		const isTouchBtn = lib.config.phonelayout;
@@ -69,28 +63,23 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			createMainMenu();
 		};
 		document.body.appendChild(mainButton);
-
 		// 创建整理手牌按钮
 		var sortButton = ui.create.node("img");
 		sortButton.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/new_zhengli.png";
-
 		// 根据布局设置按钮位置
 		if (lib.config["extension_十周年UI_rightLayout"] == "on") {
 			sortButton.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 46px);left: calc(100% - 375px);background-color: transparent;z-index:2";
 		} else {
 			sortButton.style.cssText = "display: block;--w: 88px;--h: calc(var(--w) * 81/247);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 33px);right: calc(100% - 367.2px);background-color: transparent;z-index:2;";
 		}
-
 		sortButton.onclick = function () {
 			if (!game.me || game.me.hasSkillTag("noSortCard")) return;
-
 			var cards = game.me.getCards("hs");
 			var sort2 = function (b, a) {
 				if (a.name != b.name) return lib.sort.card(a.name, b.name);
 				else if (a.suit != b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
 				else return a.number - b.number;
 			};
-
 			if (cards.length > 1) {
 				cards.sort(sort2);
 				cards.forEach(function (i, j) {
@@ -99,17 +88,14 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				dui.queueNextFrameTick(dui.layoutHand, dui);
 			}
 		};
-
 		// 定时检测手牌数，动态显示/隐藏整理按钮
 		sortButton._interval = setInterval(function () {
 			if (!game.me) return;
 			var num = game.me.getCards("hs").length;
 			sortButton.style.display = num >= 4 ? "block" : "none";
 		}, 1000);
-
 		document.body.appendChild(sortButton);
 	});
-
 	// 辅助函数：显示身份提示
 	function showIdentityTip(container) {
 		if (game.me.identity == "zhu") {
@@ -122,7 +108,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			ui.create.div(".Tipneijian", container);
 		}
 	}
-
 	// 辅助函数：显示斗地主提示
 	function showDoudizhuTip(container) {
 		if (game.me.identity == "zhu") {
@@ -131,7 +116,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			ui.create.div(".Tipnongmin", container);
 		}
 	}
-
 	// 辅助函数：显示国战提示
 	function showGuozhanTip(container) {
 		if (game.me.group == "unknown" || game.me.group == "undefined") {
@@ -154,7 +138,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			ui.create.div(".Tipweizhi", container);
 		}
 	}
-
 	// 辅助函数：创建主菜单
 	function createMainMenu() {
 		var popuperContainer = ui.create.div(
@@ -164,15 +147,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			},
 			ui.window
 		);
-
 		popuperContainer.addEventListener("click", event => {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/back.mp3");
 			event.stopPropagation();
 			popuperContainer.delete(200);
 		});
-
 		var HOME = ui.create.div(".buttonyjcm", popuperContainer);
-
 		// 创建设置按钮
 		var SZ = ui.create.div(".controls", HOME);
 		SZ.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/button/button_sz.png");
@@ -185,16 +165,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			ui.system1.classList.remove("shown");
 			ui.system2.classList.remove("shown");
 		});
-
 		// 创建背景按钮
 		var BJ = ui.create.div(".controls", HOME);
 		BJ.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/button/button_bj.png");
 		BJ.addEventListener("click", event => {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
-			var Backgrounds = ["一将成名"];
-			ui.background.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/background/" + Backgrounds.randomGet() + ".jpg");
+			openBackgroundSelector();
 		});
-
 		// 创建托管按钮
 		var TG = ui.create.div(".controls", HOME);
 		TG.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/button/button_tg.png");
@@ -202,7 +179,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
 			ui.click.auto();
 		});
-
 		// 创建退出按钮
 		var TC = ui.create.div(".controls", HOME);
 		TC.setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/button/button_tc.png");
@@ -211,14 +187,183 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 			window.location.reload();
 		});
 	}
-
+	// 辅助函数：打开背景选择器
+	function openBackgroundSelector() {
+		var popuperContainer = ui.create.div(
+			".popup-container",
+			{
+				background: "rgba(0, 0, 0, 0.8)",
+			},
+			ui.window
+		);
+		var guanbi = ui.create.div(".bgback", popuperContainer, function (e) {
+			game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3");
+			popuperContainer.hide();
+			game.resume2();
+		});
+		var bigdialog = ui.create.div(".bgdialog", popuperContainer);
+		var bgbg = ui.create.div(".backgroundsbg", bigdialog);
+		loadBackgroundImages(bgbg);
+	}
+	// 辅助函数：加载背景图片
+	function loadBackgroundImages(container) {
+		let path = "image/background/";
+		game.getFileList(path, function (folders, files) {
+			let systemFiles = [];
+			let customFiles = [];
+			// 获取隐藏的系统背景列表
+			let hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
+			for (let tempbackground of files) {
+				let fileName = tempbackground.replace(/\.[^/.]+$/, "");
+				let fileExtension = tempbackground.split(".").pop();
+				if (!fileExtension || fileName.startsWith("oltianhou_")) continue;
+				// 检查系统背景是否被隐藏
+				if (fileName.startsWith("cdv_bg_") || fileName.startsWith("custom_bg_")) {
+					customFiles.push(tempbackground);
+				} else {
+					// 系统背景：检查是否在隐藏列表中
+					if (!hiddenBgs.includes(fileName)) {
+						systemFiles.push(tempbackground);
+					}
+				}
+			}
+			let orderedFiles = systemFiles.concat(customFiles);
+			for (let tempbackground of orderedFiles) {
+				let fileName = tempbackground.replace(/\.[^/.]+$/, "");
+				let img = ui.create.div(".backgrounds", container);
+				img.dataset.name = fileName;
+				img.setBackgroundImage(path + tempbackground);
+				if (fileName == lib.config.image_background) ui.create.div(".bgxuanzhong", img);
+				img.addEventListener("click", function () {
+					let allSelectedElements = document.querySelectorAll(".bgxuanzhong");
+					allSelectedElements.forEach(function (selectedElement) {
+						selectedElement.parentNode.removeChild(selectedElement);
+					});
+					ui.create.div(".bgxuanzhong", img);
+					game.saveConfig("image_background", fileName);
+					lib.init.background();
+					game.updateBackground();
+				});
+				let customNameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
+				let backgroundName = lib.configMenu.appearence.config.image_background.item[fileName] ? lib.configMenu.appearence.config.image_background.item[fileName] : (customNameMap[fileName] || fileName);
+				ui.create.div(".buttontext", backgroundName, img);
+			}
+			// 添加 "添加背景" 项（放在末尾）
+			(function(container){
+				var addItem = ui.create.div(".backgrounds", container);
+				ui.create.div(".buttontext", "添加背景", addItem);
+				var input = document.createElement("input");
+				input.type = "file";
+				input.accept = "image/*";
+				input.multiple = true; // 支持多选
+				input.style.display = "none";
+				document.body.appendChild(input);
+				var write = (data, dir, name) => (game.promises && game.promises.writeFile) ? game.promises.writeFile(data, dir, name) : new Promise(resolve => game.writeFile(data, dir, name, resolve));
+				addItem.addEventListener("click", function(){
+					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+					input.click();
+				});
+				input.onchange = function(e){
+					var files = e.target.files;
+					if(!files || files.length === 0) return;
+					var processFiles = async function() {
+						var nameMap = lib.config.extension_十周年UI_customBackgroundNames || {};
+						for(var i = 0; i < files.length; i++) {
+							var file = files[i];
+							if(!file) continue;
+							var base = (game.writeFile ? "cdv_" : "custom_") + "bg_" + Date.now() + "_" + i;
+							var targetName = base + ".jpg";
+							var originName = (file.name || "").replace(/\.[^/.]+$/, "");
+							nameMap[base] = originName || base;
+							try {
+								await write(file, "image/background", targetName);
+								if(i === 0) {
+									game.saveConfig("image_background", base);
+									lib.init.background();
+									game.updateBackground();
+								}
+							} catch(err) {
+								console && console.error && console.error("导入背景失败:", err);
+							}
+						}
+						lib.config.extension_十周年UI_customBackgroundNames = nameMap;
+						game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap);
+						while(container.firstChild){ container.removeChild(container.firstChild); }
+						loadBackgroundImages(container);
+					};
+					processFiles();
+				};
+				// 删除背景（紧随添加背景后）
+				var delItem = ui.create.div(".backgrounds", container);
+				ui.create.div(".buttontext", "删除背景", delItem);
+				delItem.addEventListener("click", function(){
+					game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/button.mp3");
+					var tips = ui.create.div(".buttontext", "点击要删除的自定义背景或隐藏系统背景", delItem);
+					var onClickToDelete = function(ev){
+						var target = ev.currentTarget;
+						var fname = target && target.dataset && target.dataset.name;
+						if(!fname){ return; }
+						// 检查是否为系统背景
+						if(!(fname.startsWith("cdv_bg_") || fname.startsWith("custom_bg_"))){
+							// 系统背景：隐藏而不是删除
+							if(confirm("是否隐藏此系统背景？")){
+								// 获取隐藏背景列表
+								var hiddenBgs = lib.config.extension_十周年UI_hiddenSystemBackgrounds || [];
+								if(!hiddenBgs.includes(fname)){
+									hiddenBgs.push(fname);
+									lib.config.extension_十周年UI_hiddenSystemBackgrounds = hiddenBgs;
+									game.saveConfig("extension_十周年UI_hiddenSystemBackgrounds", hiddenBgs);
+								}
+								// 如果当前背景被隐藏，切换到默认背景
+								if(lib.config.image_background == fname){
+									game.saveConfig("image_background", "default");
+									lib.init.background();
+									game.updateBackground();
+								}
+								// 重新加载背景列表
+								while(container.firstChild){ container.removeChild(container.firstChild); }
+								loadBackgroundImages(container);
+							}
+							cleanup();
+							return;
+						}
+						// 自定义背景：删除
+						if(confirm("是否删除此背景？（此操作不可撤销）")){
+							var nameMap2 = lib.config.extension_十周年UI_customBackgroundNames || {};
+							if(nameMap2[fname]){
+								delete nameMap2[fname];
+								lib.config.extension_十周年UI_customBackgroundNames = nameMap2;
+								game.saveConfig("extension_十周年UI_customBackgroundNames", nameMap2);
+							}
+							if(fname.startsWith("cdv_bg_")){
+								game.removeFile("image/background/" + fname + ".jpg");
+							}else{
+								game.deleteDB("image", fname);
+							}
+							if(lib.config.image_background == fname){
+								game.saveConfig("image_background", "default");
+								lib.init.background();
+								game.updateBackground();
+							}
+							while(container.firstChild){ container.removeChild(container.firstChild); }
+							loadBackgroundImages(container);
+						}
+						cleanup();
+					};
+					var items = Array.from(container.querySelectorAll('.backgrounds'));
+					items.slice(0, Math.max(0, items.length - 2)).forEach(function(n){
+						n.addEventListener('click', onClickToDelete, { once: true });
+					});
+					function cleanup(){ if(tips && tips.remove) tips.remove(); }
+				});
+			})(container);
+		});
+	}
 	var plugin = {
 		name: "lbtn",
-
 		filter() {
 			return !["chess", "tafang"].includes(get.mode());
 		},
-
 		content(next) {
 			lib.skill._uicardupdate = {
 				trigger: {
@@ -242,7 +387,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				},
 			};
 		},
-
 		precontent() {
 			// 扩展游戏视频内容
 			Object.assign(game.videoContent, {
@@ -262,7 +406,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					if (!ui.handcardNumber) return;
 				},
 			});
-
 			// 重写UI创建函数
 			app.reWriteFunction(ui.create, {
 				me: [
@@ -292,7 +435,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			// 重写配置菜单
 			app.reWriteFunction(lib.configMenu.appearence.config, {
 				update: [
@@ -308,21 +450,17 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					},
 				],
 			});
-
 			// 重写确认对话框
 			ui.create.confirm = function (str, func) {
 				var confirm = ui.confirm;
 				if (!confirm) {
 					confirm = ui.confirm = plugin.create.confirm();
 				}
-
 				confirm.node.ok.classList.add("disabled");
 				confirm.node.cancel.classList.add("disabled");
-
 				if (_status.event.endButton) {
 					ui.confirm.node.cancel.classList.remove("disabled");
 				}
-
 				if (str) {
 					if (str.indexOf("o") !== -1) {
 						confirm.node.ok.classList.remove("disabled");
@@ -332,19 +470,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 					confirm.str = str;
 				}
-
 				if (func) {
 					confirm.custom = func;
 				}
-
 				ui.updatec();
 				confirm.update();
 			};
 		},
-
 		create: {
 			control() {},
-
 			confirm() {
 				var confirm = ui.create.control("<span>确定</span>", "cancel");
 				confirm.classList.add("lbtn-confirm");
@@ -352,16 +486,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					ok: confirm.firstChild,
 					cancel: confirm.lastChild,
 				};
-
 				if (_status.event.endButton) {
 					_status.event.endButton.close();
 				}
-
 				confirm.node.ok.link = "ok";
 				confirm.node.ok.classList.add("primary");
 				confirm.node.cancel.classList.add("primary2");
 				confirm.custom = plugin.click.confirm;
-
 				app.reWriteFunction(confirm, {
 					close: [
 						function () {
@@ -369,7 +500,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						},
 					],
 				});
-
 				// 为按钮添加事件监听
 				for (var k in confirm.node) {
 					confirm.node[k].classList.add("disabled");
@@ -383,13 +513,11 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							}
 							return;
 						}
-
 						if (this.parentNode.custom) {
 							this.parentNode.custom(this.link, this);
 						}
 					});
 				}
-
 				// 处理技能按钮
 				if (ui.skills2 && ui.skills2.skills.length) {
 					var skills = ui.skills2.skills;
@@ -402,12 +530,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 							e.stopPropagation();
 							ui.click.skill(this.link);
 						});
-
 						item.dataset.type = "skill2";
 						if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
 					}
 				}
-
 				confirm.update = function () {
 					if (confirm.skills2) {
 						if (_status.event.skill && _status.event.skill !== confirm.dataset.skill) {
@@ -426,13 +552,10 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					}
 					if (ui.updateSkillControl) ui.updateSkillControl(game.me, true);
 				};
-
 				return confirm;
 			},
-
 			handcardNumber() {
 				var node3 = ui.create.div(".settingButton", ui.arena, plugin.click.setting);
-
 				// 根据布局模式创建不同的按钮
 				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
 					var node6 = ui.create.div(".huanfuButton_new", ui.arena, plugin.click.huanfu);
@@ -445,9 +568,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					var node8 = ui.create.div(".meiguiButton_new1", ui.arena, plugin.click.meigui);
 					var node9 = ui.create.div(".xiaolianButton_new1", ui.arena, plugin.click.xiaolian);
 				}
-
 				var node4 = ui.create.div(".tuoguanButton", ui.arena, ui.click.auto);
-
 				// 创建手牌数显示
 				if (lib.config["extension_十周年UI_rightLayout"] == "on") {
 					var node = ui.create.div(".handcardNumber", ui.arena).hide();
@@ -462,33 +583,25 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						cardNumber: ui.create.div(".cardNumber1", node),
 					};
 				}
-
 				node.updateCardnumber = function () {
 					if (!game.me) return;
-
 					var cardNumber2 = game.me.countCards("h") || 0;
 					var cardNumber = game.me.getHandcardLimit() || 0;
 					var numbercolor = "white";
-
 					if (cardNumber2 > cardNumber) numbercolor = "red";
 					if (cardNumber == Infinity) cardNumber = "∞";
-
 					this.node.cardNumber.innerHTML = "<span>" + "<font color=" + numbercolor + " > " + cardNumber2 + "</font>" + '<sp style="font-size:20px; font-family:yuanli; color:#FFFCF5;">' + " / " + "</sp>" + cardNumber + "</span>";
 					this.show();
-
 					game.addVideo("updateCardnumber", null, {
 						cardNumber: cardNumber,
 					});
 				};
-
 				node.node.cardNumber.interval = setInterval(function () {
 					ui.handcardNumber.updateCardnumber();
 				}, 1000);
-
 				game.addVideo("createhandcardNumber");
 				return node;
 			},
-
 			cardRoundTime() {
 				var node = ui.create.div(".cardRoundNumber", ui.arena).hide();
 				node.node = {
@@ -496,7 +609,6 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 					roundNumber: ui.create.div(".roundNumber", node),
 					time: ui.create.div(".time", node),
 				};
-
 				node.updateRoundCard = function () {
 					var cardNumber = ui.cardPile.childNodes.length || 0;
 					var roundNumber = Math.max(1, game.roundNumber || 1);
@@ -508,11 +620,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						roundNumber: roundNumber,
 					});
 				};
-
 				node.setNumberAnimation = function (num, step) {
 					var item = this.node.cardPileNumber;
 					clearTimeout(item.interval);
-
 					if (!item._num) {
 						item.innerHTML = "<span>" + num + "</span>";
 						item._num = num;
@@ -530,47 +640,37 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 						}
 					}
 				};
-
 				ui.time4 = node.node.time;
 				ui.time4.starttime = get.utc();
 				ui.time4.interval = setInterval(function () {
 					var num = Math.round((get.utc() - ui.time4.starttime) / 1000);
 					var timeStr = "";
-
 					if (num >= 3600) {
 						var num1 = Math.floor(num / 3600);
 						var num2 = Math.floor((num - num1 * 3600) / 60);
 						var num3 = num - num1 * 3600 - parseInt(num2) * 60;
-
 						num1 = num1 < 10 ? "0" + num1.toString() : num1.toString();
 						num2 = num2 < 10 ? "0" + num2.toString() : num2.toString();
 						num3 = num3 < 10 ? "0" + num3.toString() : num3.toString();
-
 						timeStr = num1 + ":" + num2 + ":" + num3;
 					} else {
 						var num1 = Math.floor(num / 60);
 						var num2 = num - num1 * 60;
-
 						num1 = num1 < 10 ? "0" + num1.toString() : num1.toString();
 						num2 = num2 < 10 ? "0" + num2.toString() : num2.toString();
-
 						timeStr = num1 + ":" + num2;
 					}
-
 					ui.time4.innerHTML = "<span>" + timeStr + "</span>";
 				}, 1000);
-
 				game.addVideo("createCardRoundTime");
 				return node;
 			},
 		},
-
 		click: {
 			huanfu() {
 				game.playAudio("../extension/十周年UI/shoushaUI/lbtn/images/CD/huanfu.mp3");
 				window.zyile_charactercard ? window.zyile_charactercard(player, false) : ui.click.charactercard(game.me.name, game.zhu, lib.config.mode == "mode_guozhan" ? "guozhan" : true);
 			},
-
 			confirm(link, target) {
 				if (link === "ok") {
 					ui.click.ok(target);
@@ -581,36 +681,30 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			},
 		},
-
 		compare: {
 			type(a, b) {
 				if (a === b) return 0;
 				var types = ["basic", "trick", "delay", "equip"].addArray([a, b]);
 				return types.indexOf(a) - types.indexOf(b);
 			},
-
 			name(a, b) {
 				if (a === b) return 0;
 				return a > b ? 1 : -1;
 			},
-
 			nature(a, b) {
 				if (a === b) return 0;
 				var nature = [undefined, "fire", "thunder"].addArray([a, b]);
 				return nature.indexOf(a) - nature.indexOf(b);
 			},
-
 			suit(a, b) {
 				if (a === b) return 0;
 				var suit = ["diamond", "heart", "club", "spade"].addArray([a, b]);
 				return suit.indexOf(a) - suit.indexOf(b);
 			},
-
 			number(a, b) {
 				return a - b;
 			},
 		},
 	};
-
 	return plugin;
 });
