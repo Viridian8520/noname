@@ -39,6 +39,8 @@ export const characterPackFunc = function () {
 					["pot_weiyan_fail", []],
 				],
 				taffyold_pot_yuji: [["pot_yuji_shadow", []]],
+				taffyold_sb_sp_zhugeliang: [["sb_zhugeliang", []]],
+				taffyoldtwo_sb_sp_zhugeliang: [["sb_zhugeliang", []]],
 			},
 			characterFilter: { ...characterFilters },
 			characterTitle: {
@@ -82,12 +84,12 @@ export const characterPackFunc = function () {
 			pinyins: { ...pinyins },
 		};
 		const whiteList = new Set([...oobj.characterSort.taffy_character.taffy_old_ol, ...oobj.characterSort.taffy_character.taffy_old_mb, ...oobj.characterSort.taffy_character.taffy_old_dc, ...oobj.characterSort.taffy_character.taffy_old_etc, ...oobj.characterSort.taffy_character.taffy_mobile_changshi, "taffymb_shen_caocao", "taffyre_xuyou", "taffy_liubianxing", "taffyshen_shamoke", "taffyre_shamoke"]);
-		["taffyold_baby_shen_simayi", "taffyold_wechat_ji_guanyu", "taffyold_wechat_ji_caocao", "taffyold_wechat_ji_zhugeliang", "taffyold_wechat_ji_sunce"].forEach(i => {
+		["taffyold_baby_shen_simayi", "taffyold_wechat_ji_guanyu", "taffyold_wechat_ji_caocao", "taffyold_wechat_ji_zhugeliang", "taffyold_wechat_ji_sunce", "taffyoldtwo_yao_yuanshu"].forEach(i => {
 			whiteList.delete(i);
 		});
 		const specialDetails = {
 			taffydc_guanning: {
-				character: "character:ddd_guanning",
+				character: "ext:永雏塔菲/image/character/taffydc_guanning.jpg",
 				die: "die:../../extension/永雏塔菲/audio/die/taffydc_guanning.mp3",
 			},
 			taffyhuiwan_xushao: {

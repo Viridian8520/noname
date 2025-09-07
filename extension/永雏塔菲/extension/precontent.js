@@ -305,6 +305,24 @@ export const PRECONTENT = function (config) {
 					showName: "尊",
 				},
 			],
+			[
+				"旧韩氏",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("韩氏")}`,
+				},
+			],
+			[
+				"旧新杀谋",
+				{
+					/**
+					 * @returns {string}
+					 */
+					getSpan: () => `${get.prefixSpan("旧")}${get.prefixSpan("新杀")}${get.prefixSpan("谋")}`,
+				},
+			],
 		];
 		prefixList.forEach(i => {
 			lib.namePrefix.set(i[0], i[1]);

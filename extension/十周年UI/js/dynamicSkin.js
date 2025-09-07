@@ -7639,6 +7639,18 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 					x: [0, 0.4],
 					y: [0, 0.5],
 				},
+				special: {
+					觉醒: {
+						name: "zhugeliang/国之柱石",
+					},
+					condition: {
+						shimingjiSuccess: {
+							transform: "觉醒",
+							effect: "shaohui",
+							play: "play",
+						},
+					},
+				},
 			},
 			国之柱石: {
 				name: "诸葛亮/国之柱石/XingXiang",
@@ -8352,6 +8364,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		taffyhuiwan_sunquan: decadeUI.dynamicSkin.sunquan,
 		taffyhuiwanplus_sunquan: decadeUI.dynamicSkin.sunquan,
 		taffyold_v_sunquan: decadeUI.dynamicSkin.sunquan,
+		taffyoldtwo_v_sunquan: decadeUI.dynamicSkin.sunquan,
 
 		// 孙茹
 		dc_sunru: decadeUI.dynamicSkin.sunru,
@@ -8590,13 +8603,13 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		re_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
 		ps2066_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
 		ps_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
-		taffyold_sb_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
 		sp_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
 		ol_sp_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
 		re_sp_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
 		sb_sp_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
 		jd_sb_sp_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
 		taffyold_sb_sp_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
+		taffyoldtwo_sb_sp_zhugeliang: decadeUI.dynamicSkin.zhugeliang,
 
 		// 幻诸葛亮
 		jsrg_zhugeliang: decadeUI.dynamicSkin.huan_zhugeliang,

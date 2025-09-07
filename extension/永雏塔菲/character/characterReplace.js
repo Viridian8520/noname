@@ -4,7 +4,7 @@ const characterReplaces = {
 	xushao: ["xushao", "jsrg_xushao", "taffydc_xushao", "taffyre_xushao"],
 	niufudongxie: ["tw_niufudongxie", "taffyold_tw_niufudongxie"],
 	zhangmancheng: ["dc_zhangmancheng", "tw_zhangmancheng", "taffyold_tw_zhangmancheng", "taffyold_dc_zhangmancheng"],
-	sunquan: ["sunquan", "re_sunquan", "v_sunquan", "dc_sunquan", "xin_sunquan", "sb_sunquan", "jd_sb_sunquan", "ty_sunquan", "ps_sunquan", "pe_jun_sunquan", "taffyhuiwan_sunquan", "taffyhuiwanplus_sunquan", "taffyold_v_sunquan"],
+	sunquan: ["sunquan", "re_sunquan", "v_sunquan", "dc_sunquan", "xin_sunquan", "sb_sunquan", "jd_sb_sunquan", "ty_sunquan", "ps_sunquan", "pe_jun_sunquan", "taffyhuiwan_sunquan", "taffyhuiwanplus_sunquan", "taffyold_v_sunquan", "taffyoldtwo_v_sunquan"],
 	shen_caocao: ["shen_caocao", "old_caocao", "ca_shen_caocao", "taffymb_shen_caocao"],
 	shen_simayi: ["shen_simayi", "xin_simayi", "new_simayi", "taffyold_baby_shen_simayi", "taffyold_xin_simayi", "taffyold_new_simayi"],
 	ruiji: ["ruiji", "dc_ruiji", "taffyold_ruiji"],
@@ -14,8 +14,7 @@ const characterReplaces = {
 	yuantanyuanshang: ["yuantanyuanshang", "yuantanyuanxiyuanshang", "taffyold_yuantanyuanshang"],
 	zhanghua: ["zhanghua", "taffyold_zhanghua"],
 	ol_pengyang: ["ol_pengyang", "sp_pengyang", "std_pengyang", "taffyold_ol_pengyang"],
-	sp_zhugeliang: ["sp_zhugeliang", "ol_sp_zhugeliang", "re_sp_zhugeliang", "sb_sp_zhugeliang", "jd_sb_sp_zhugeliang", "taffyold_sb_sp_zhugeliang"],
-	zhugeliang: ["zhugeliang", "re_zhugeliang", "ps2066_zhugeliang", "ps_zhugeliang", "huan_zhugeliang", "jsrg_zhugeliang", "taffyold_sb_zhugeliang"],
+	sp_zhugeliang: ["sp_zhugeliang", "ol_sp_zhugeliang", "re_sp_zhugeliang", "sb_sp_zhugeliang", "jd_sb_sp_zhugeliang", "taffyold_sb_sp_zhugeliang", "taffyoldtwo_sb_sp_zhugeliang"],
 	guanyu: ["guanyu", "re_guanyu", "jsp_guanyu", "ol_sb_guanyu", "wu_guanyu", "dc_jsp_guanyu", "sb_guanyu", "tw_jsp_guanyu", "xia_guanyu", "jsrg_guanyu", "jd_sb_guanyu", "drag_guanyu", "ty_guanyu", "jx_guanyu", "ps_guanyu", "old_guanyu", "junk_guanyu", "taffyold_sb_guanyu", "taffyold_ol_sb_guanyu"],
 	bailingyun: ["bailingyun", "taffyold_bailingyun"],
 	zhonghui: ["zhonghui", "xin_zhonghui", "re_zhonghui", "old_zhonghui", "pe_zhonghui", "clan_zhonghui", "yj_zhonghui", "std_zhonghui", "taffyold_clan_zhonghui"],
@@ -70,7 +69,7 @@ const characterReplaces = {
 	liujinliupei: ["liujinliupei", "taffyold_liujinliupei"],
 	chendao: ["chendao", "pot_chendao", "ns_chendao", "old_chendao", "taffyold_pot_chendao"],
 	yangxiu: ["yangxiu", "clan_yangxiu", "taffyold_clan_yangxiu"],
-	zhanghe: ["zhanghe", "re_zhanghe", "sp_ol_zhanghe", "yj_zhanghe", "sp_zhanghe", "sb_zhanghe", "tw_yj_zhanghe", "huan_zhanghe", "jsrg_zhanghe", "taffywn_zhanghe"],
+	zhanghe: ["zhanghe", "re_zhanghe", "sp_ol_zhanghe", "yj_zhanghe", "sp_zhanghe", "sb_zhanghe", "tw_yj_zhanghe", "huan_zhanghe", "jsrg_zhanghe"],
 	tw_zhugejun: ["tw_zhugejun", "dc_zhugejun", "taffyold_dc_zhugejun"],
 	xiahouxuan: ["xiahouxuan", "ddd_xiahouxuan", "dc_xiahouxuan", "taffyold_dc_xiahouxuan"],
 	weiyan: ["re_weiyan", "ol_weiyan", "weiyan", "yj_weiyan", "huan_weiyan", "pot_weiyan", "taffyold_pot_weiyan"],
@@ -78,6 +77,7 @@ const characterReplaces = {
 	yl_luzhi: ["yl_luzhi", "ol_sb_yl_luzhi", "sb_yl_luzhi", "tw_yl_luzhi", "jsrg_yl_luzhi", "taffyold_ol_sb_yl_luzhi"],
 	wuhujiang: ["wuhujiang", "hanshiwuhu", "taffyold_hanshiwuhu"],
 	xiahouxuan: ["xiahouxuan", "ddd_xiahouxuan", "dc_xiahouxuan", "taffyzunxiang_xiahouxuan"],
+	renwan: ["renwan", "taffyold_renwan"],
 };
 
 export default characterReplaces;
