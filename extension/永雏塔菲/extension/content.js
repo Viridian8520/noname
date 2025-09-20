@@ -104,6 +104,39 @@ export const CONTENT = function (config, pack) {
 		});
 	}
 	// 修正本体武将的技能
+	lib.skill.zombielongmu.filter = function (event, player) {
+		const target = event.player;
+		if (event.name === "recover") {
+			return _status.currentPhase === player && target !== player;
+		}
+		if (get.is.playerNames(target, "zombie_zombie")) {
+			return false;
+		}
+		if (event.reserveOut) {
+			return false;
+		}
+		return (
+			target !== player &&
+			player.hasAllHistory("useSkill", evt => {
+				if (evt.type !== "player") {
+					return false;
+				}
+				if (!Array.isArray(evt.targets) || !evt.targets.includes(target)) {
+					return false;
+				}
+				let skill = evt.skill,
+					info = get.info(skill);
+				if (!info || info.charlotte) {
+					return false;
+				}
+				if (skill === get.sourceSkillFor(skill)) {
+					return true;
+				}
+				info = get.info(get.sourceSkillFor(skill));
+				return info && !info.charlotte;
+			})
+		);
+	};
 	// 一些全局技能
 	lib.skill._taffy_dieKillEffect = {
 		trigger: {

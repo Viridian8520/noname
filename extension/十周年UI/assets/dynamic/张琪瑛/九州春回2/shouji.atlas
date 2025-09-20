@@ -1,0 +1,174 @@
+
+shouji.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+dandao/glow_23
+  rotate: false
+  xy: 240, 137
+  size: 167, 173
+  orig: 167, 173
+  offset: 0, 0
+  index: -1
+dandao/shouji/shouji_36
+  rotate: false
+  xy: 2, 29
+  size: 236, 281
+  orig: 450, 450
+  offset: 100, 93
+  index: -1
+dandao/shouji/shouji_37
+  rotate: false
+  xy: 1673, 163
+  size: 336, 322
+  orig: 450, 450
+  offset: 43, 76
+  index: -1
+dandao/shouji/shouji_38
+  rotate: false
+  xy: 1296, 2
+  size: 336, 342
+  orig: 450, 450
+  offset: 43, 62
+  index: -1
+dandao/shouji/shouji_39
+  rotate: false
+  xy: 1673, 487
+  size: 337, 373
+  orig: 450, 450
+  offset: 42, 46
+  index: -1
+dandao/shouji/shouji_40
+  rotate: false
+  xy: 1329, 346
+  size: 342, 403
+  orig: 450, 450
+  offset: 44, 31
+  index: -1
+dandao/shouji/shouji_41
+  rotate: false
+  xy: 1642, 862
+  size: 346, 411
+  orig: 450, 450
+  offset: 45, 27
+  index: -1
+dandao/shouji/shouji_42
+  rotate: false
+  xy: 1277, 751
+  size: 363, 419
+  orig: 450, 450
+  offset: 41, 23
+  index: -1
+dandao/shouji/shouji_43
+  rotate: false
+  xy: 896, 743
+  size: 379, 427
+  orig: 450, 450
+  offset: 38, 19
+  index: -1
+dandao/shouji/shouji_44
+  rotate: false
+  xy: 896, 1172
+  size: 403, 434
+  orig: 450, 450
+  offset: 26, 15
+  index: -1
+dandao/shouji/shouji_45
+  rotate: false
+  xy: 896, 1608
+  size: 427, 438
+  orig: 450, 450
+  offset: 15, 12
+  index: -1
+dandao/shouji/shouji_46
+  rotate: false
+  xy: 449, 1604
+  size: 445, 442
+  orig: 450, 450
+  offset: 5, 8
+  index: -1
+dandao/shouji/shouji_47
+  rotate: false
+  xy: 2, 712
+  size: 445, 442
+  orig: 450, 450
+  offset: 5, 8
+  index: -1
+dandao/shouji/shouji_48
+  rotate: false
+  xy: 2, 1601
+  size: 445, 445
+  orig: 450, 450
+  offset: 5, 5
+  index: -1
+dandao/shouji/shouji_49
+  rotate: false
+  xy: 2, 1156
+  size: 445, 443
+  orig: 450, 450
+  offset: 5, 7
+  index: -1
+dandao/shouji/shouji_50
+  rotate: false
+  xy: 449, 1165
+  size: 445, 437
+  orig: 450, 450
+  offset: 5, 13
+  index: -1
+dandao/shouji/shouji_51
+  rotate: false
+  xy: 2, 312
+  size: 445, 398
+  orig: 450, 450
+  offset: 5, 52
+  index: -1
+dandao/shouji/shouji_52
+  rotate: false
+  xy: 449, 768
+  size: 445, 395
+  orig: 450, 450
+  offset: 5, 55
+  index: -1
+dandao/shouji/shouji_53
+  rotate: false
+  xy: 1325, 1654
+  size: 445, 392
+  orig: 450, 450
+  offset: 5, 58
+  index: -1
+dandao/shouji/shouji_54
+  rotate: false
+  xy: 449, 374
+  size: 445, 392
+  orig: 450, 450
+  offset: 5, 58
+  index: -1
+dandao/shouji/shouji_55
+  rotate: false
+  xy: 896, 364
+  size: 431, 377
+  orig: 450, 450
+  offset: 19, 67
+  index: -1
+dandao/shouji/shouji_56
+  rotate: false
+  xy: 1325, 1275
+  size: 431, 377
+  orig: 450, 450
+  offset: 19, 67
+  index: -1
+dandao/shouji/shouji_57
+  rotate: false
+  xy: 449, 13
+  size: 425, 359
+  orig: 450, 450
+  offset: 25, 77
+  index: -1
+dandao/shouji/shouji_58
+  rotate: false
+  xy: 876, 27
+  size: 418, 335
+  orig: 450, 450
+  offset: 32, 92
+  index: -1

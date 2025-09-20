@@ -1,0 +1,153 @@
+
+shouji.png
+size: 1023,1023
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+texiao/chusha/shouji01/00020
+  rotate: false
+  xy: 236, 571
+  size: 216, 216
+  orig: 316, 284
+  offset: 46, 39
+  index: -1
+texiao/chusha/shouji01/00022
+  rotate: false
+  xy: 464, 805
+  size: 216, 216
+  orig: 316, 284
+  offset: 46, 39
+  index: -1
+texiao/chusha/shouji01/00024
+  rotate: false
+  xy: 2, 93
+  size: 216, 216
+  orig: 316, 284
+  offset: 46, 39
+  index: -1
+texiao/chusha/shouji01/00026
+  rotate: false
+  xy: 682, 805
+  size: 216, 216
+  orig: 316, 284
+  offset: 46, 39
+  index: -1
+texiao/chusha/shouji01/00028
+  rotate: false
+  xy: 236, 353
+  size: 216, 216
+  orig: 316, 284
+  offset: 46, 39
+  index: -1
+texiao/chusha/shouji01/00030
+  rotate: true
+  xy: 230, 153
+  size: 198, 206
+  orig: 316, 284
+  offset: 54, 48
+  index: -1
+texiao/chusha/shouji01/00032
+  rotate: true
+  xy: 454, 245
+  size: 164, 194
+  orig: 316, 284
+  offset: 76, 46
+  index: -1
+texiao/chusha/shouji02/00020
+  rotate: false
+  xy: 900, 905
+  size: 119, 116
+  orig: 316, 284
+  offset: 99, 88
+  index: -1
+texiao/chusha/shouji02/00022
+  rotate: false
+  xy: 454, 411
+  size: 190, 196
+  orig: 316, 284
+  offset: 64, 48
+  index: -1
+texiao/chusha/shouji02/00024
+  rotate: false
+  xy: 236, 789
+  size: 226, 232
+  orig: 316, 284
+  offset: 46, 30
+  index: -1
+texiao/chusha/shouji02/00026
+  rotate: false
+  xy: 2, 783
+  size: 232, 238
+  orig: 316, 284
+  offset: 43, 27
+  index: -1
+texiao/chusha/shouji02/00028
+  rotate: false
+  xy: 2, 543
+  size: 232, 238
+  orig: 316, 284
+  offset: 43, 27
+  index: -1
+texiao/chusha/shouji02/00030
+  rotate: false
+  xy: 2, 311
+  size: 226, 230
+  orig: 316, 284
+  offset: 46, 31
+  index: -1
+texiao/chusha/shouji02/00032
+  rotate: false
+  xy: 464, 609
+  size: 200, 194
+  orig: 316, 284
+  offset: 59, 50
+  index: -1
+texiao/chusha/shouji02/00034
+  rotate: false
+  xy: 666, 609
+  size: 200, 194
+  orig: 316, 284
+  offset: 59, 50
+  index: -1
+texiao/chusha/shouji02/00036
+  rotate: false
+  xy: 646, 414
+  size: 191, 193
+  orig: 316, 284
+  offset: 61, 49
+  index: -1
+texiao/chusha/shouji02/00038
+  rotate: true
+  xy: 650, 221
+  size: 191, 183
+  orig: 316, 284
+  offset: 58, 49
+  index: -1
+texiao/chusha/shouji02/00040
+  rotate: true
+  xy: 839, 412
+  size: 195, 182
+  orig: 316, 284
+  offset: 55, 50
+  index: -1
+texiao/chusha/shouji02/00042
+  rotate: true
+  xy: 835, 216
+  size: 194, 181
+  orig: 316, 284
+  offset: 55, 51
+  index: -1
+texiao/chusha/shouji02/00044
+  rotate: false
+  xy: 438, 83
+  size: 197, 160
+  orig: 316, 284
+  offset: 53, 72
+  index: -1
+texiao/chusha/shouji02/00046
+  rotate: true
+  xy: 637, 22
+  size: 197, 159
+  orig: 316, 284
+  offset: 53, 73
+  index: -1

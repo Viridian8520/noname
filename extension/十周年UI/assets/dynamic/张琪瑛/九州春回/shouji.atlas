@@ -1,0 +1,230 @@
+
+shouji.png
+size: 1698,1698
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+gongji/shouji/shouji_33
+  rotate: false
+  xy: 1240, 577
+  size: 275, 255
+  orig: 435, 435
+  offset: 73, 92
+  index: -1
+gongji/shouji/shouji_34
+  rotate: false
+  xy: 408, 1309
+  size: 404, 387
+  orig: 435, 435
+  offset: 4, 26
+  index: -1
+gongji/shouji/shouji_35
+  rotate: false
+  xy: 2, 1306
+  size: 404, 390
+  orig: 435, 435
+  offset: 4, 24
+  index: -1
+gongji/shouji/shouji_36
+  rotate: false
+  xy: 2, 914
+  size: 404, 390
+  orig: 435, 435
+  offset: 4, 24
+  index: -1
+gongji/shouji/shouji_37
+  rotate: false
+  xy: 2, 526
+  size: 402, 386
+  orig: 435, 435
+  offset: 5, 26
+  index: -1
+gongji/shouji/shouji_38
+  rotate: false
+  xy: 2, 233
+  size: 304, 291
+  orig: 435, 435
+  offset: 77, 66
+  index: -1
+gongji/shouji/shouji_39
+  rotate: true
+  xy: 1402, 1393
+  size: 303, 283
+  orig: 435, 435
+  offset: 78, 69
+  index: -1
+gongji/shouji/shouji_40
+  rotate: true
+  xy: 705, 999
+  size: 308, 279
+  orig: 435, 435
+  offset: 76, 75
+  index: -1
+gongji/shouji/shouji_41
+  rotate: true
+  xy: 308, 218
+  size: 306, 280
+  orig: 435, 435
+  offset: 70, 78
+  index: -1
+gongji/shouji/shouji_42
+  rotate: false
+  xy: 893, 435
+  size: 279, 279
+  orig: 435, 435
+  offset: 68, 81
+  index: -1
+gongji/shouji/shouji_43
+  rotate: false
+  xy: 1238, 1114
+  size: 275, 277
+  orig: 435, 435
+  offset: 73, 80
+  index: -1
+gongji/shouji/shouji_44
+  rotate: true
+  xy: 607, 435
+  size: 279, 284
+  orig: 435, 435
+  offset: 71, 79
+  index: -1
+gongji/shouji/shouji_45
+  rotate: true
+  xy: 701, 716
+  size: 281, 286
+  orig: 435, 435
+  offset: 70, 77
+  index: -1
+gongji/shouji/shouji_46
+  rotate: true
+  xy: 408, 716
+  size: 284, 291
+  orig: 435, 435
+  offset: 69, 76
+  index: -1
+gongji/shouji/shouji_47
+  rotate: false
+  xy: 1109, 1395
+  size: 291, 301
+  orig: 435, 435
+  offset: 64, 70
+  index: -1
+gongji/shouji/shouji_48
+  rotate: false
+  xy: 814, 1392
+  size: 293, 304
+  orig: 435, 435
+  offset: 64, 70
+  index: -1
+gongji/shouji/shouji_49
+  rotate: false
+  xy: 408, 1002
+  size: 295, 305
+  orig: 435, 435
+  offset: 63, 70
+  index: -1
+gongji/shouji/shouji_50
+  rotate: true
+  xy: 590, 151
+  size: 282, 284
+  orig: 435, 435
+  offset: 73, 75
+  index: -1
+gongji/shouji/shouji_51
+  rotate: false
+  xy: 876, 157
+  size: 284, 276
+  orig: 435, 435
+  offset: 73, 85
+  index: -1
+gongji/shouji/shouji_52
+  rotate: false
+  xy: 1240, 834
+  size: 267, 278
+  orig: 435, 435
+  offset: 88, 85
+  index: -1
+gongji/shouji/shouji_53
+  rotate: false
+  xy: 986, 1110
+  size: 250, 280
+  orig: 435, 435
+  offset: 87, 85
+  index: -1
+gongji/shouji/shouji_54
+  rotate: false
+  xy: 989, 828
+  size: 249, 280
+  orig: 435, 435
+  offset: 87, 85
+  index: -1
+gongji/shouji/shouji_55
+  rotate: false
+  xy: 1162, 153
+  size: 249, 280
+  orig: 435, 435
+  offset: 87, 85
+  index: -1
+gongji/shouji/shouji_56
+  rotate: false
+  xy: 1413, 313
+  size: 238, 262
+  orig: 435, 435
+  offset: 98, 86
+  index: -1
+gongji/shouji/shouji_57
+  rotate: true
+  xy: 1413, 75
+  size: 236, 260
+  orig: 435, 435
+  offset: 99, 88
+  index: -1
+gongji/shouji/shouji_58
+  rotate: true
+  xy: 2, 3
+  size: 228, 252
+  orig: 435, 435
+  offset: 107, 96
+  index: -1
+gongji/shouji/shouji_59
+  rotate: true
+  xy: 256, 13
+  size: 203, 223
+  orig: 435, 435
+  offset: 112, 125
+  index: -1
+gongji/shouji/shouji_60
+  rotate: true
+  xy: 1517, 788
+  size: 199, 176
+  orig: 435, 435
+  offset: 117, 132
+  index: -1
+gongji/shouji/shouji_61
+  rotate: false
+  xy: 406, 531
+  size: 199, 183
+  orig: 435, 435
+  offset: 116, 122
+  index: -1
+gongji/shouji/shouji_62
+  rotate: true
+  xy: 1515, 1191
+  size: 200, 181
+  orig: 435, 435
+  offset: 115, 120
+  index: -1
+gongji/shouji/shouji_63
+  rotate: true
+  xy: 1515, 989
+  size: 200, 180
+  orig: 435, 435
+  offset: 115, 120
+  index: -1
+gongji/shouji/shouji_64
+  rotate: true
+  xy: 1517, 586
+  size: 200, 169
+  orig: 435, 435
+  offset: 115, 129
+  index: -1

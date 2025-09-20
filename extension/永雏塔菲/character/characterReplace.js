@@ -13,7 +13,7 @@ const characterReplaces = {
 	caopi: ["caopi", "v_caopi", "re_caopi", "sb_caopi", "tw_sb_caopi", "huan_caopi", "ps_caopi", "sxrm_caopi", "pe_jun_caopi", "taffyold_sb_caopi"],
 	yuantanyuanshang: ["yuantanyuanshang", "yuantanyuanxiyuanshang", "taffyold_yuantanyuanshang"],
 	zhanghua: ["zhanghua", "taffyold_zhanghua"],
-	ol_pengyang: ["ol_pengyang", "sp_pengyang", "std_pengyang", "taffyold_ol_pengyang"],
+	ol_pengyang: ["ol_pengyang", "sp_pengyang", "taffyold_ol_pengyang"],
 	sp_zhugeliang: ["sp_zhugeliang", "ol_sp_zhugeliang", "re_sp_zhugeliang", "sb_sp_zhugeliang", "jd_sb_sp_zhugeliang", "taffyold_sb_sp_zhugeliang", "taffyoldtwo_sb_sp_zhugeliang"],
 	guanyu: ["guanyu", "re_guanyu", "jsp_guanyu", "ol_sb_guanyu", "wu_guanyu", "dc_jsp_guanyu", "sb_guanyu", "tw_jsp_guanyu", "xia_guanyu", "jsrg_guanyu", "jd_sb_guanyu", "drag_guanyu", "ty_guanyu", "jx_guanyu", "ps_guanyu", "old_guanyu", "junk_guanyu", "taffyold_sb_guanyu", "taffyold_ol_sb_guanyu"],
 	bailingyun: ["bailingyun", "taffyold_bailingyun"],
@@ -71,12 +71,11 @@ const characterReplaces = {
 	yangxiu: ["yangxiu", "clan_yangxiu", "taffyold_clan_yangxiu"],
 	zhanghe: ["zhanghe", "re_zhanghe", "sp_ol_zhanghe", "yj_zhanghe", "sp_zhanghe", "sb_zhanghe", "tw_yj_zhanghe", "huan_zhanghe", "jsrg_zhanghe"],
 	tw_zhugejun: ["tw_zhugejun", "dc_zhugejun", "taffyold_dc_zhugejun"],
-	xiahouxuan: ["xiahouxuan", "ddd_xiahouxuan", "dc_xiahouxuan", "taffyold_dc_xiahouxuan"],
+	xiahouxuan: ["xiahouxuan", "dc_xiahouxuan", "pe_xiahouxuan", "taffyold_dc_xiahouxuan", "taffyzunxiang_xiahouxuan"],
 	weiyan: ["re_weiyan", "ol_weiyan", "weiyan", "yj_weiyan", "huan_weiyan", "pot_weiyan", "taffyold_pot_weiyan"],
 	yuji: ["xin_yuji", "re_yuji", "yuji", "pot_yuji", "diy_yuji", "ns_yuji", "ns_yujisp", "taffyold_pot_yuji"],
 	yl_luzhi: ["yl_luzhi", "ol_sb_yl_luzhi", "sb_yl_luzhi", "tw_yl_luzhi", "jsrg_yl_luzhi", "taffyold_ol_sb_yl_luzhi"],
 	wuhujiang: ["wuhujiang", "hanshiwuhu", "taffyold_hanshiwuhu"],
-	xiahouxuan: ["xiahouxuan", "ddd_xiahouxuan", "dc_xiahouxuan", "taffyzunxiang_xiahouxuan"],
 	renwan: ["renwan", "taffyold_renwan"],
 };
 

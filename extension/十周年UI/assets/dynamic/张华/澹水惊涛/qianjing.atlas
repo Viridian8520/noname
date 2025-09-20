@@ -1,0 +1,17 @@
+qianjing.png
+size:2048,512
+filter:Linear,Linear
+scale:0.6
+qiancengshui
+bounds:625,17,427,214
+offsets:0,1,429,215
+qiancengshui4
+bounds:277,2,354,466
+offsets:0,0,354,467
+rotate:180
+qiancengshui5
+bounds:619,286,689,182
+rotate:180
+shuilangz
+bounds:2,173,502,295
+offsets:0,2,502,297
