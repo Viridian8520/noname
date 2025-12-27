@@ -543,12 +543,14 @@ game.import("card", function () {
 				fullskin: true,
 				type: "equip",
 				subtype: "equip3",
+				bingzhu: ["徐晃"],
 				distance: { globalTo: 1 },
 			},
 			zhuque: {
 				fullskin: true,
 				type: "equip",
 				subtype: "equip1",
+				bingzhu: ["周瑜"],
 				distance: { attackFrom: -3 },
 				ai: {
 					basic: {
@@ -561,6 +563,7 @@ game.import("card", function () {
 				fullskin: true,
 				type: "equip",
 				subtype: "equip1",
+				bingzhu: ["孙坚"],
 				distance: { attackFrom: -1 },
 				ai: {
 					basic: {
@@ -573,6 +576,7 @@ game.import("card", function () {
 				fullskin: true,
 				type: "equip",
 				subtype: "equip2",
+				bingzhu: ["兀突骨", "孟获", "祝融"],
 				ai: {
 					value(card, player, index, method) {
 						if (player.isDisabled(2)) {
@@ -666,6 +670,7 @@ game.import("card", function () {
 				fullskin: true,
 				type: "equip",
 				subtype: "equip2",
+				bingzhu: ["马超"],
 				loseDelay: false,
 				onLose() {
 					player.addTempSkill("baiyin_skill_lose");
@@ -750,6 +755,9 @@ game.import("card", function () {
 				equipSkill: true,
 				enable: "phaseUse",
 				onChooseToUse(event) {
+					if (game.online) {
+						return;
+					}
 					const cards = event.player.getVCards("e").filter(card => card.name == "muniu" && !card?.storage?.used);
 					event.set("muniu_skill", cards);
 				},
