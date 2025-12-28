@@ -923,17 +923,14 @@ const packs = function () {
         },
     };
     for (let i in decadeQiHuan.character) {
-        decadeQiHuan.character[i][4] ??= [];
+        if (Array.isArray(decadeQiHuan.character[i])) decadeQiHuan.character[i] = get.convertedCharacter(decadeQiHuan.character[i]);
+        decadeQiHuan.character[i].transBin ??= [];
         if (_status['extension_活动武将_files']?.audio.die.files.includes(`${i}.mp3`)) {
-            decadeQiHuan.character[i][4].push('die:ext:活动武将/audio/die:true');
-            decadeQiHuan.translate[`#ext:活动武将/audio/die/${i}:die`] = '点击播放阵亡配音';
+            decadeQiHuan.character[i].dieAudios ??= [];
+            decadeQiHuan.character[i].dieAudios.push('ext:活动武将/audio/die:true');
+            decadeQiHuan.translate[`#ext:活动武将/audio/die/${i}:die`] ??= '点击播放阵亡配音';
         }
-        // taffy: 注释decadeQiHuan.js原版代码
-        // decadeQiHuan.character[i][4].push(((lib.device || lib.node) ? 'ext:' : 'db:extension-') + '活动武将/image/character/' + i + '.jpg');
-        /* taffy分界线 */
-        // taffy: 修复Web端武将图片不可见问题
-        decadeQiHuan.character[i][4].push('ext:活动武将/image/character/' + i + '.jpg');
-        /* taffy分界线 */
+        if (_status['extension_活动武将_files']?.image.character.files.includes(`${i}.jpg`)) decadeQiHuan.character[i].img = `extension/活动武将/image/character/${i}.jpg`;
     }
     lib.config.all.characters.push('decadeQiHuan');
     lib.config.all.sgscharacters.push('decadeQiHuan');

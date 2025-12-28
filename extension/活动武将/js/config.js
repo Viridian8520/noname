@@ -1,4 +1,5 @@
 import { lib, game, ui, get, ai, _status } from '../../../noname.js';
+import security from '../../../noname/util/security.js';
 export let config = {
 	/*
 	//总有一天会维护好的功能
@@ -14,6 +15,82 @@ export let config = {
 		},
 	},
 	*/
+	HDcheckNew: {
+		name: (() => {
+			//孩子们，牢大在天上化为彩虹看着你们（bushi）
+			const text = '点击查看更新公告';
+			if (!document.getElementById('hd-rainbow-style')) {
+				const style = document.createElement('style');
+				style.id = 'hd-rainbow-style';
+				let css = '';
+				for (let i = 0; i < text.length; i++) {
+					const animName = `hd_bol_author_${i}`;
+					css += `@keyframes ${animName}{`;
+					for (let j = 0; j <= 20; j++) {
+						const r = Math.floor(Math.random() * 255);
+						const g = Math.floor(Math.random() * 255);
+						const b = Math.floor(Math.random() * 255);
+						css += `${j * 5}%{color:rgb(${r},${g},${b});text-shadow:0 0 5px rgba(${r},${g},${b},0.8);}`;
+					}
+					css += `}`;
+				}
+				style.innerHTML = css;
+				document.head.appendChild(style);
+			}
+			return [...text].map((ch, i) => {
+				const delay = (i * 0.3).toFixed(1);
+				return `<span style="display:inline-block; animation:hd_bol_author_${i} 3s linear ${delay}s infinite; font-weight:bold; transition:color 0.5s;">${ch}</span>`;
+			}).join('');
+		})(),
+		clear: true,
+		onclick() {
+			game.closeMenu();
+			const extname = '活动武将', dialog = ui.create.dialog();
+			dialog.classList.add('fullwidth');
+			dialog.classList.add('fullheight');
+			dialog.add(ui.create.div('.placeholder'));
+			const controls = ui.controls.slice();
+			if (controls.length > 0) controls.forEach(i => i.hide());
+			const closeButton = ui.create.div('.menubutton.round', '<span style="font-size:22px;">×</span>', dialog, () => {
+				dialog.close();
+				if (controls.length > 0) controls.forEach(i => i.show());
+			});
+			closeButton.style.top = `40px`;
+			closeButton.style.left = `calc(100% - 155px)`;
+			dialog.add(`${extname} ${lib.extensionPack[extname].version} 更新内容`);
+			dialog.add(ui.create.div('.placeholder'));
+			const changeLogList = _status.HDWJ_ChangeLog;
+			changeLogList.forEach(item => {
+				switch (item.type) {
+					case 'text':
+						const list = Array.isArray(item.data) ? item.data : [item.data];
+						if (item.addText) list.forEach(value => dialog.addText(value));
+						else {
+							list.forEach(value => {
+								const li = document.createElement('li');
+								li.innerHTML = value;
+								li.style.textAlign = item.textAlign || 'center';
+								dialog.content.appendChild(li);
+							});
+						}
+						break;
+					case 'players':
+						dialog.addSmall([item.data, 'character']);
+						dialog.classList.add('forcebutton');
+						dialog.classList.add('withbg');
+						break;
+					case 'cards':
+						dialog.addSmall([item.data.map(value => [get.translation(get.type(value)), '', value]), 'vcard']);
+						dialog.classList.add('forcebutton');
+						dialog.classList.add('withbg');
+						break;
+					default:
+						return;
+				}
+			});
+			dialog.open();
+		},
+	},
 	FenJieXianA: {
 		clear: true,
 		name: '<li>功能杂项（点击折叠）',
@@ -35,6 +112,11 @@ export let config = {
 				delete _status[config];
 			}
 		},
+	},
+	showDerivation: {
+		name: '技能翻译优化',
+		intro: '结合get.poptip方法优化有衍生技的技能翻译',
+		init: false,
 	},
 	HD_shanshan: {
 		name: '牌堆加入【闪闪】',
@@ -70,9 +152,9 @@ export let config = {
 		name: '编辑欢杀将池',
 		clear: true,
 		onclick() {
-			var container = ui.create.div('.popup-container.editor');
+			var container = ui.create.div(".popup-container.editor2", ui.window);
 			var node = container;
-			var map = lib.config.extension_活动武将_PingJianName || lib.skill.minipingjian.getList();
+			var map = game.getExtensionConfig('活动武将', 'PingJianName') || lib.skill.minipingjian.getList();
 			var str = '//编辑欢杀将池，此将池仅影响欢乐三国杀武将包中的角色发动技能的武将筛选范围，不会涉及禁将层面';
 			str += '\nPingJianName=[\n';
 			for (var i = 0; i < map.length; i++) {
@@ -83,57 +165,39 @@ export let config = {
 			node.code = str;
 			ui.window.classList.add('shortcutpaused');
 			ui.window.classList.add('systempaused');
-			var saveInput = function () {
-				var code;
-				if (container.editor) code = container.editor.getValue();
-				else if (container.textarea) code = container.textarea.value;
+			var saveInput = function (/**@type {import("@codemirror/view").EditorView}*/view) {
+				var resultCode = view.state.doc.toString();
+				var PingJianName = null;
 				try {
-					var PingJianName = null;
-					eval(code);
+					PingJianName = security.exec2(resultCode).PingJianName;
 					if (!Array.isArray(PingJianName)) {
-						throw ('err');
+						throw "err";
 					}
-				}
-				catch (e) {
-					var tip = lib.getErrorTip(e) || '';
-					alert('代码语法有错误，请仔细检查（' + e + '）' + tip);
+				} catch (e) {
+					if (e == "err") {
+						alert("代码格式有错误，请对比示例代码仔细检查");
+					} else {
+						var tip = lib.getErrorTip(e) || "";
+						alert("代码语法有错误，请仔细检查（" + e + "）" + tip);
+					}
 					window.focus();
-					if (container.editor) container.editor.focus();
-					else if (container.textarea) container.textarea.focus();
+					view.dom.focus();
 					return;
 				}
-				game.saveConfig('extension_活动武将_PingJianName', PingJianName);
+				game.saveExtensionConfig('活动武将', 'PingJianName', PingJianName);
 				ui.window.classList.remove('shortcutpaused');
 				ui.window.classList.remove('systempaused');
 				container.delete();
-				container.code = code;
+				container.code = resultCode;
 				delete window.saveNonameInput;
 			};
-			window.saveNonameInput = saveInput;
-			var editor = ui.create.editor(container, saveInput);
-			if (node.aced) {
-				ui.window.appendChild(node);
-				node.editor.setValue(node.code, 1);
-			}
-			else if (lib.device == 'ios') {
-				ui.window.appendChild(node);
-				if (!node.textarea) {
-					var textarea = document.createElement('textarea');
-					editor.appendChild(textarea);
-					node.textarea = textarea;
-					lib.setScroll(textarea);
-				}
-				node.textarea.value = node.code;
-			}
-			else {
-				if (!window.CodeMirror) {
-					import('../../../game/codemirror.js').then(() => {
-						lib.codeMirrorReady(node, editor);
-					});
-					lib.init.css(lib.assetURL + 'layout/default', 'codemirror');
-				}
-				else lib.codeMirrorReady(node, editor);
-			}
+			ui.create.editor2(container, {
+				language: 'javascript',
+				value: str,
+				saveInput,
+			}).then(editor => {
+				window.saveNonameInput = () => saveInput(editor);
+			});
 		},
 	},
 	reset_PingJianName: {
@@ -301,38 +365,6 @@ export let config = {
 			'<br><li>进入残局激昂bgm',
 		init: false,
 	},
-	FenJieXianD: {
-		clear: true,
-		name: '<li>关于国战（点击折叠）',
-		onclick() {
-			const innerHTML = get.plainText(this.innerHTML);
-			const goon = innerHTML.endsWith('（点击折叠）'), config = `hdwj_config_${innerHTML.slice(0, -6)}}`;
-			this.innerHTML = `<li>${this.textContent.slice(0, -6)}${goon ? '（点击展开）' : '（点击折叠）'}`;
-			if (goon) {
-				_status[config] ??= [];
-				let item = this.nextSibling;
-				while (item && ['（点击折叠）', '（点击展开）', '删除此扩展'].every(i => !item.innerHTML.includes(i))) {
-					item.hide();
-					_status[config].add(item);
-					item = item.nextSibling;
-				}
-			}
-			else {
-				for (const item of _status[config]) item.show();
-				delete _status[config];
-			}
-		},
-	},
-	HD_gzfazheng: {
-		name: '法正修改',
-		intro: '开启此选项后，国战法正【眩惑】调整为OL/手杀版本（重启生效）',
-		init: false,
-	},
-	HD_gzbianfuren: {
-		name: '卞夫人修改',
-		intro: '开启此选项后，国战卞夫人【挽危】调整为OL/十周年版本（重启生效）',
-		init: false,
-	},
 	FenJieXianE: {
 		clear: true,
 		name: '<li>扩展彩蛋（点击折叠）',
@@ -363,16 +395,6 @@ export let config = {
 	XvXiang: {
 		name: '彩蛋·虚像',
 		intro: '开启此选项后，线下包的五个虚拟偶像将获得【虚像】',
-		init: false,
-	},
-	DanJi: {
-		name: '彩蛋·千里走单骑',
-		intro: '开启此选项后，在正常模式中可以使用：蔡阳，普净，胡班（位于活动武将“其他武将”包）',
-		init: false,
-	},
-	SCS: {
-		name: '彩蛋·十常侍',
-		intro: '开启此选项后，在正常模式中可以使用十常侍单人版（位于活动武将“其他武将”包）',
 		init: false,
 	},
 }

@@ -7,60 +7,8 @@ import { help } from './js/help.js';
 
 lib.init.css(lib.assetURL + 'extension/活动武将', 'extension');
 
-//更新公告
-game.bolShowNewPack = function () {
-	//更新告示
-	var HuoDong_update = [
-		'/setPlayer/',
-		'bugfix',
-		'欢杀新武将：喵曹婴、葛玄、界曹叡、念曹丕、蔡瑁张允、辛毗',
-		'微杀新武将：',
-		'其他新武将：旧董翓、玄蝶祢衡',
-		'优化念诸葛“定乱”、念吕布“踏阵”、念周瑜“奏乐”游戏流程',
-		'To be continued...',
-	];
-	//更新武将
-	var HuoDong_players = [
-		'bfake_miheng', 'Mmiao_caoying', 'Mbaby_gexuan', 'Mbaby_caorui', 'old_dongxie', 'Mnian_caopi',
-		'Mbaby_caimaozhangyun', 'Mbaby_xinpi',
-	];
-	//加载
-	var dialog = ui.create.dialog(
-		'<span class="text center">' +
-		'新人制作扩展，希望大家支持<br>新人技术不足，希望大家包涵' +
-		'<br>' +
-		'<a href="https://github.com/HuoDong-Update-Organization/HuoDong-update">点击前往活动武将Github仓库</a>' +
-		'<br>' +
-		'活动武将 ' + lib.extensionPack.活动武将.version + ' 更新内容' +
-		'</span>', 'hidden');
-	for (var i = 0; i < HuoDong_update.length; i++) {
-		if (HuoDong_update[i] == '/setPlayer/') {
-			if (HuoDong_players.length) dialog.addSmall([HuoDong_players, 'character']);
-		}
-		else {
-			var li = document.createElement('li');
-			li.innerHTML = HuoDong_update[i];
-			li.style.textAlign = 'left';
-			dialog.content.appendChild(li);
-		}
-	}
-	dialog.open();
-	var hidden = false;
-	if (!ui.auto.classList.contains('hidden')) {
-		ui.auto.hide();
-		hidden = true;
-	}
-	game.pause();
-	var control = ui.create.control('确定', function () {
-		dialog.close();
-		control.close();
-		if (hidden) ui.auto.show();
-		game.resume();
-	});
-};
-
 let extensionPackage = {
-	name: "活动武将",
+	name: '活动武将',
 	editable: false,
 	content: content,
 	precontent: precontent,

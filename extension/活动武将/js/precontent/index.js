@@ -1,6 +1,5 @@
 import { lib, game, ui, get, ai, _status } from '../../../../noname.js';
 import FaDongCharacter from './FaDongCharacter.js';
-import NianShouCharacter from './NianShouCharacter.js';
 import hezongkangqincharacter from './hezongkangqincharacter.js';
 import decadeQiHuan from './decadeQiHuan.js';
 import decadeZhuoGui from './decadeZhuoGui.js';
@@ -230,6 +229,7 @@ export async function precontent(bilibilicharacter) {
             });
         },
     };
+    /*
     //点击显示
     game.getBolPhone = function () {
         //获取浏览器navigator对象的userAgent属性（浏览器用于HTTP请求的用户代理头的值）
@@ -274,11 +274,53 @@ export async function precontent(bilibilicharacter) {
         const id = Math.random().toString(36).slice(-8);
         return "<a id='" + id + "' style='color:unset' href=\"javascript:get.bolskillTips('" + str2 + "','" + id + "');\">" + str1 + "※</a>";
     };
-    get.YunLvInform = () => get.bolInformX('韵律技', '韵律技分为平和仄两种状态，韵律技初始默认状态为平，满足转韵条件时韵律技会转成另一种状态并重置技能的发动次数');
-    get.RenWangInform = () => get.bolInformX('仁望值', '拥有涉及仁望值技能的角色于游戏开始时获得1点仁望值，且其出牌阶段结束时，其根据以下满足的条件数增加等量的仁望值：①本阶段有角色获得过累计两张牌；②本阶段有角色回复过体力；③本阶段未对其他角色造成过伤害。一名角色的仁望值上限为5。');
-    get.ZhengSuInform = () => get.bolInformX('整肃', '<li>技能发动者从“擂进”、“变阵”、“鸣止”三个选项中选择一个令目标执行，若其于其本回合弃牌阶段结束后达成选项条件，则选择整肃奖励。<br><li>整肃奖励：选择摸两张牌或回复1点体力<br><li>擂进：回合内所有于出牌阶段使用的牌点数递增且不少于三张。<br><li>变阵：回合内所有于出牌阶段使用的牌花色相同且不少于两张。<br><li>鸣止：回合内所有于弃牌阶段弃置的牌花色均不相同且不少于两张。');
-    get.MouLveInform = () => get.bolInformX('谋略值', '上限为5，拥有谋略值的角色可以发动技能【妙计】（每回合限一次，你可以：①失去1点谋略值，视为使用【过河拆桥】；②失去2点谋略值，视为使用【无懈可击】；③失去3点谋略值，视为使用【无中生有】）');
-    get.ShiwuInform = () => get.bolInformX('奋武技', '奋武技的使用次数为本轮你造成和受到的伤害值+1，至多为5');
+    */
+    //适配poptip
+    lib.poptip.add({
+        name: '韵律技',
+        id: 'rule_yunlvSkill',
+        info: '三国杀微服机制，和转换技类似，韵律技分为平和仄两种状态，韵律技初始默认状态为平，满足转韵条件时韵律技会转成另一种状态并重置技能的发动次数。',
+    });
+    lib.poptip.add({
+        name: '仁望值',
+        id: 'rule_renwangnum',
+        info: '三国杀外服机制（已废弃），拥有涉及仁望值技能的角色于游戏开始时获得1点仁望值，且其出牌阶段结束时，其根据以下满足的条件数增加等量的仁望值：①本阶段有角色获得过累计两张牌；②本阶段有角色回复过体力；③本阶段未对其他角色造成过伤害。一名角色的仁望值上限为5。',
+    });
+    lib.poptip.add({
+        name: '整肃',
+        id: 'rule_zhengsu',
+        info: '<li>技能发动者从“擂进”、“变阵”、“鸣止”三个选项中选择一个令目标执行，若其于其本回合弃牌阶段结束后达成选项条件，则选择整肃奖励。<br><li>整肃奖励：选择摸两张牌或回复1点体力<br><li>擂进：回合内所有于出牌阶段使用的牌点数递增且不少于三张。<br><li>变阵：回合内所有于出牌阶段使用的牌花色相同且不少于两张。<br><li>鸣止：回合内所有于弃牌阶段弃置的牌花色均不相同且不少于两张。',
+    });
+    lib.poptip.add({
+        name: '谋略值',
+        id: 'rule_moulvenum',
+        info: `上限为5，拥有谋略值的角色可以发动技能${get.poptip('wechatmiaoji')}。`,
+    });
+    lib.poptip.add({
+        name: '奋武技',
+        id: 'rule_shiwuSkill',
+        info: '奋武技的使用次数为本轮你造成和受到的伤害值+1，至多为5。',
+    });
+    lib.poptip.add({
+        name: '移志技',
+        id: 'rule_yizhiSkill',
+        info: '同普通转换技类似，移志技拥有“昔”和“今”两种状态及对应效果且只有在相应状态下拥有相应效果。技能初始状态为“昔”，在满足特定条件下转换状态至“今”。',
+    });
+    lib.poptip.add({
+        name: '移志',
+        id: 'rule_yizhi',
+        info: '移志技的转换状态操作，如无说明，则默认每局游戏仅可执行一次。',
+    });
+    lib.poptip.add({
+        name: '强攻',
+        id: 'rule_qianggong',
+        info: '强攻是一种特殊的选项。选择强攻时，先执行此项，然后依次执行其余选项。执行完毕后，须从所有选项删除不为强攻的一项。当所有选项仅剩余强攻和另一选项时，不能选择强攻。',
+    });
+    lib.poptip.add({
+        name: '牢大',
+        id: 'rule_mamba',
+        info: 'Man! What can I say? Mamba out!',
+    });
     //----------------游戏播报·始----------------
     lib.skill._OpenTheGame = {
         charlotte: true,
@@ -524,8 +566,6 @@ export async function precontent(bilibilicharacter) {
         //--------------------武将包--------------------//
         //诸侯伐董
         game.import('character', FaDongCharacter);
-        //生肖年兽
-        game.import('character', NianShouCharacter);
         //合纵抗秦
         game.import('character', hezongkangqincharacter);
         //戚宦之争——我补完了！！！
@@ -546,4 +586,36 @@ export async function precontent(bilibilicharacter) {
         game.import('character', huodongcharacter);
         //--------------------卡牌包--------------------//
     }
+    //更新公告
+    game.showExtensionChangeLog((() => {
+        //更新告示
+        _status.HDWJ_ChangeLog = [
+            {
+                type: 'text',
+                data: [
+                    '新人制作扩展，希望大家支持',
+                    '新人技术不足，希望大家包涵',
+                    '<a href="https://github.com/HuoDong-Update-Organization/HuoDong-update">点击前往活动武将Github仓库</a>'
+                ],
+            },
+            {
+                type: 'players',
+                data: [
+                    'Mbaby_caoying', 'Mbaby_xurong',
+                    'bilibili_longjiuzhen', 'bilibili_liuguanzhang',
+                ],
+            },
+            {
+                type: 'text',
+                textAlign: 'left',
+                data: [
+                    'bugfix、素材补充、技能调整',
+                    '欢乐三国杀新增和修改武将：曹婴、徐荣、曹冲、曹纯',
+                    '杂谈新武将：龙九帧、三人组',
+                    'To be continued...',
+                ],
+            },
+        ];
+        return _status.HDWJ_ChangeLog;
+    })(), '活动武将');
 }

@@ -7,7 +7,7 @@
 
 ## 项目本体版本
 
-- v1.10.17.4
+- v1.11.0
 
 ## 自改内容
 
@@ -18,7 +18,6 @@
 - 引入标记补充扩展
 - 引入手杀MVP扩展
 - 引入无名补丁扩展
-- 引入指示线扩展
 - 引入拖拽指示线扩展
 - 引入活动武将扩展
 - 自制永雏塔菲扩展：
@@ -138,34 +137,46 @@
 
 ## 启动方法
 
-- 双击 `noname-server.exe` 即可游玩（支持文件读写）
+- 环境要求
+> **提示：** 请参考 [本地文档](./docs/how-to-start.md) 或 [github文档](https://github.com/libnoname/noname/wiki/%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8C%E6%97%A0%E5%90%8D%E6%9D%80%EF%BC%88%E7%A8%8B%E5%BA%8F%E5%91%98%E7%89%88%EF%BC%89) 配置环境。
+  - [Node.js](https://nodejs.org/) ^20.19.0 || >=22.12.0
+  - [pnpm](https://pnpm.io/) >= 9
+  - Webview: Chromium >= 91 || Safari >=16.4.0 (暂不支持Firefox)
 
-- 安装 `Node.js` 后，下载/克隆仓库到本地，用终端打开项目根目录后，输入如下命令后即可游玩（支持文件读写）
-
-  ```
-  npm install body-parser express minimist
-  node noname-server.js
-  ```
-
-  之后再启动只需输入 `node noname-server.js` 即可游玩
-
-  启动联机服务：
+- 安装环境完成后，下载/克隆仓库到本地，用终端打开项目根目录后，输入如下命令后即可本地游玩
 
   ```
-  cd game
-  node server.js
+  pnpm install
+  pnpm start
   ```
 
-- 部署仓库至自己的服务器后即可在线游玩，由于新版无名杀本体启用了 `ServiceWorker`，必须部署至证书有效的 https 域名才可正常运行游戏
+  之后再启动只需输入 `pnpm serve` 即可本地游玩
 
-- 将本仓库压缩包通过 [本体官方客户端](https://github.com/libnoname/noname/releases/tag/chromium91-client) 进行导入即可游玩
+- 如果想要在线游玩/在客户端游玩，需要输入如下命令对项目进行构建，构建后的产物均位于 `dist` 目录下
 
-- 通过 `VSCode` 的 `Live-Server` 插件启动 `index.html`（不支持文件读写，部分扩展可能不兼容）
+  ```
+  pnpm build:full
+  ```
+
+- 启动联机服务：将 `scripts/server.js` 重命名为 `server.cjs` 后，在根目录输入如下命令即可
+
+  ```
+  node scripts/server.cjs
+  ```
+
+- 将构建后的产物部署至服务器后即可在线游玩
+
+- 将构建后的产物打包成压缩包，然后通过本体官方客户端进行导入即可在客户端游玩
+
+## 客户端下载
+
+- 安卓： <https://github.com/nonameShijian/noname-shijian-android/releases/tag/v1.6.8>
+- PC:  <https://github.com/nonameShijian/noname/releases/tag/v1.75>
 
 ## 游玩环境
 
-- PC端游玩推荐使用 Chromium 内核的浏览器（Edge、Chrome 等）
-- 移动端游玩推荐使用支持原生 WebView 的浏览器
+- 网页端推荐使用 Chrome 系内核浏览器游玩，暂不支持 Firefox 浏览器
+- 请尽量保证游玩的 Chrome 系浏览器或手机 Webview 的内核版本大于等于91
 
 ## 已知问题
 
@@ -174,4 +185,4 @@
 
 ## 在线部署地址
 
-- Github Pages（暂不支持文件读写）：https://viridian8520.github.io/noname/
+- Github Pages：https://viridian8520.github.io/noname/

@@ -104,7 +104,10 @@ window.qhly_import(function(lib, game, ui, get, ai, _status){
                 func();
             }else{
                 lib.init.css(lib.assetURL+'layout/default','codemirror');
-                import('../../../../game/codemirror.js').then(() => {
+                // taffy: 注释code.js原版代码喵
+                // import('../../../../game/codemirror.js').then(() => {
+                // taffy: 适配本体工程化喵
+                import('codemirror').then(() => {
                     func();
                 });
             }

@@ -1,5 +1,8 @@
 'use strict';
-importScripts('../../../十周年UI/spine.js', '../../../十周年UI/animation.js');
+// taffy: 注释dw.js原版代码喵
+// importScripts('../../../十周年UI/spine.js', '../../../十周年UI/animation.js');
+// taffy: 适配十周年UI新更改
+importScripts('../../../十周年UI/src/libs/spine.js', '../../../十周年UI/animation.js');
 
 Array.prototype.remove = function (item) {
     var index = this.indexOf(item);

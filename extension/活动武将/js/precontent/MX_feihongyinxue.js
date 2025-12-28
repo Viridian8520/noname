@@ -119,7 +119,7 @@ const packs = function () {
                         var player = _status.event.player, target = _status.event.target;
                         if (get.attitude(player, target) <= 0) return 0;
                         var sum = target.countCards('hs', card => target.canSaveCard(card, target)) + target.hp;
-                        if ((player.hasSkill('fh_yuejian') && !player.hasSkill('fh_yuejian_used') && !get.is.blocked('fh_yuejian', player)) || (player.hasSkill('miniyuejian') && !player.hasSkill('miniyuejian_used') && !get.is.blocked('miniyuejian', player))) sum++;
+                        if ((player.hasSkill('fh_yuejian') && !player.hasSkill('fh_yuejian_used') && !get.is.blocked('fh_yuejian', player))) sum++;
                         if (player.countCards('hs', card => target.canSaveCard(card, target)) + sum <= 0) return 0;
                         if (target.canSaveCard(cardx, target) && ui.selected.cards.filter(card => target.canSaveCard(card, target)).length + sum > 0) return 12 - get.value(cardx);
                         return 7 - get.value(cardx);
@@ -2647,7 +2647,7 @@ const packs = function () {
                                     player.tempname.addArray(list);
                                     for (let name of list) lib.skill.qiexie.createCard(name);
                                 }, player, list);
-                                let cards = list.map(name => game.createCard(`qiexie_${name}`, 'none', get.character(name).maxHp));
+                                let cards = list.map(name => game.createCard(`qiexie_${name}`, 'none', 'none'));
                                 player.$gain2(cards);
                                 await game.delayx();
                                 for (let card of cards) await player.equip(card);
@@ -4698,16 +4698,13 @@ const packs = function () {
         },
     };
     for (let i in MX_feihongyinxue.character) {
-        MX_feihongyinxue.character[i][4] ??= [];
-        MX_feihongyinxue.character[i][4].add('character:' + i.slice(6));
-        if (_status['extension_活动武将_files']?.audio.die.files.includes(`${i}.mp3`)) {
-            MX_feihongyinxue.character[i][4].push('die:ext:活动武将/audio/die:true');
-            MX_feihongyinxue.translate[`#ext:活动武将/audio/die/${i}:die`] = '点击播放阵亡配音';
-        }
-        if (!MX_feihongyinxue.character[i][4].some(tag => tag.indexOf('die:') == 0)) MX_feihongyinxue.character[i][4].add('die:' + i.slice(6));
-        //MX_feihongyinxue.translate[i+'_ab']=MX_feihongyinxue.translate[i].slice(2);
-        var trans = MX_feihongyinxue.translate[i];
-        if (trans.indexOf('飞鸿神') == 0) MX_feihongyinxue.translate[i + '_prefix'] = '飞鸿|神';
+        if (Array.isArray(MX_feihongyinxue.character[i])) MX_feihongyinxue.character[i] = get.convertedCharacter(MX_feihongyinxue.character[i]);
+        MX_feihongyinxue.character[i].transBin ??= [];
+        MX_feihongyinxue.character[i].dieAudios ??= [];
+        if (!MX_feihongyinxue.character[i].dieAudios.length) MX_feihongyinxue.character[i].dieAudios.push(i.slice(6));
+        MX_feihongyinxue.character[i].img = `image/character/${i.slice(6)}.jpg`;
+        let trans = MX_feihongyinxue.translate[i];
+        if (trans.startsWith('飞鸿神')) MX_feihongyinxue.translate[i + '_prefix'] = '飞鸿|神';
         else MX_feihongyinxue.translate[i + '_prefix'] = trans.slice(0, 2);
     }
     lib.namePrefix.set('飞鸿', {
@@ -4819,7 +4816,7 @@ const packs = function () {
         //获取额外牌堆的牌
         get.fh_cardPile = function (filter) {
             if (!_status.fh_cardPile) {
-                console('本局游戏未开启额外牌堆');
+                console.warn('本局游戏未开启额外牌堆');
                 return;
             }
             if (!filter) filter = () => true;
@@ -4856,7 +4853,7 @@ const packs = function () {
                                     if (cfgNodes[i].textContent === '仅点将可用') {
                                         const addIntro = document.createElement('div');
                                         addIntro.classList.add('config', 'pointerspan');
-                                        addIntro.innerHTML = '<span style="font-family: yuanli">本包前言：<br>2023年活动武将年底大活，开启此包游戏将会加入额外牌堆机制，游戏牌堆会加入一张方片12的' + get.bolInformX(...['fh_yinyueqiang', 'fh_yinyueqiang_info'].map(i => lib.translate[i])) + '，此包建议单独开启使用</span>';
+                                        addIntro.innerHTML = '<span style="font-family: yuanli">本包前言：<br>2023年活动武将年底大活，开启此包游戏将会加入额外牌堆机制，游戏牌堆会加入一张方片12的' + get.poptip('fh_yinyueqiang') + '，此包建议单独开启使用</span>';
                                         cfgNodes[i].parentNode.insertBefore(addIntro, cfgNodes[i].nextSibling);
                                         break;
                                     }

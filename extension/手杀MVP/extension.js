@@ -18,7 +18,17 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
                 } catch (err) {
                     return false;
                 }
-                return http.status != 404;
+                // taffy: 注释extension.js原版代码喵
+                // return http.status != 404;
+                /* taffy分界线 */
+                // taffy: 判断为媒体类型才返回true
+                if (!(http.status >= 200 && http.status < 300)) {
+                    return false;
+                }
+                var contentType = http.getResponseHeader('Content-Type') || '';
+                var isMediaFile = /^(image|audio|video)\//i.test(contentType);
+                return isMediaFile;
+                /* taffy分界线 */
             },
             getFileName2:function(path) {
                 var pos1 = path.lastIndexOf('/');
@@ -1978,6 +1988,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
                     var skinname = game.getFileName2(player.node.avatar.style.backgroundImage);
                     var skin = lib.assetURL + "extension/千幻聆音/sanguoyuanhua/" + playername + "/" + skinname + ".jpg";
                     var yuanhua = lib.assetURL + "extension/千幻聆音/sanguoyuanhua/" + playername + "/" + playername + ".jpg";
+                    console.log('game.LiHuiFileExist(skin)', game.LiHuiFileExist(skin));
+                    console.log('player.node.avatar.style.backgroundImage', player.node.avatar.style.backgroundImage);
+                    
+                    
                     if (game.LiHuiFileExist(skin)) avatar.style.backgroundImage = 'url("' + lib.assetURL + "extension/千幻聆音/sanguoyuanhua/" + playername + "/" + skinname +  ".jpg" + '")';
                     // else if (game.LiHuiFileExist(yuanhua)) avatar.style.backgroundImage = 'url("' + lib.assetURL + "extension/千幻聆音/sanguoyuanhua/" + playername + "/" + playername + ".jpg" + '")';
                     else {

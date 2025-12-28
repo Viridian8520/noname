@@ -199,7 +199,7 @@ const packs = function () {
                     player.loseHp();
                     target.damage('nocard');
                     'step 1'
-                    if (!target.In() || target.hasHistory('damage', function (evt) {
+                    if (!target.isIn() || target.hasHistory('damage', function (evt) {
                         return evt.getParent('bilibili_kuangxi') == event && evt._dyinged;
                     })) player.addTempSkill('bilibili_kuangxi_silent');
                 },
@@ -484,17 +484,9 @@ const packs = function () {
         },
     };
     for (let i in FaDongCharacter.character) {
-        FaDongCharacter.character[i][4] ??= [];
-        if (_status['extension_活动武将_files']?.audio.die.files.includes(`${i}.mp3`)) {
-            FaDongCharacter.character[i][4].push('die:ext:活动武将/audio/die:true');
-            FaDongCharacter.translate[`#ext:活动武将/audio/die/${i}:die`] = '点击播放阵亡配音';
-        }
-        // taffy: 注释FaDongCharacter.js原版代码
-        // FaDongCharacter.character[i][4].push(((lib.device || lib.node) ? 'ext:' : 'db:extension-') + '活动武将/image/character/' + i + '.jpg');
-        /* taffy分界线 */
-        // taffy: 修复Web端武将图片不可见问题
-        FaDongCharacter.character[i][4].push('ext:活动武将/image/character/' + i + '.jpg');
-        /* taffy分界线 */
+        if (Array.isArray(FaDongCharacter.character[i])) FaDongCharacter.character[i] = get.convertedCharacter(FaDongCharacter.character[i]);
+        FaDongCharacter.character[i].transBin ??= [];
+        if (_status['extension_活动武将_files']?.image.character.files.includes(`${i}.jpg`)) FaDongCharacter.character[i].img = `extension/活动武将/image/character/${i}.jpg`;
     }
     lib.config.all.characters.push('FaDongCharacter');
     lib.config.all.sgscharacters.push('FaDongCharacter');

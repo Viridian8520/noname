@@ -2364,7 +2364,17 @@ export let CONTENT = function (config, pack) {
       } catch (err) {
         return false;
       }
-      return http.status != 404;
+      // taffy: 注释extension.js原版代码喵
+      // return http.status != 404;
+      /* taffy分界线 */
+      // taffy: 判断为媒体类型才返回true
+      if (!(http.status >= 200 && http.status < 300)) {
+          return false;
+      }
+      var contentType = http.getResponseHeader('Content-Type') || '';
+      var isMediaFile = /^(image|audio|video)\//i.test(contentType);
+      return isMediaFile;
+      /* taffy分界线 */
     }
     if (lib.config.qhly_jianghun === undefined) lib.config.qhly_jianghun = 114514;
     if (!lib.config.qhly_shoushadengjie) lib.config.qhly_shoushadengjie = {};

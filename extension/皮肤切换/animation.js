@@ -1711,7 +1711,12 @@ if (decadeModule)
 						//	这个是专门播放全屏位置的动画
 						animation.loadSpine(file.name, file.fileType, function () {
 							read();
-							animation.prepSpine(this.name);
+							// taffy: 注释animations.js原版代码喵
+							// animation.prepSpine(this.name);
+							/* taffy分界线 */
+							// taffy: 修复this不存在的问题
+							animation.prepSpine(this?.name || file.name);
+							/* taffy分界线 */
 						});
 					}
 				}

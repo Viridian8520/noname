@@ -2829,9 +2829,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
                             // taffy: 注释extension.js原版代码喵
                             // game.playAudio('../extension/十周年UI/audio/effect_loseHp.mp3');
                             /* taffy分界线 */
-                            // taffy: 更正音频路径喵
-                            game.playAudio('../extension/标记补充/audio/effect_loseHp.mp3');
-                            /* taffy分界线 */
                         },
                     },
 
